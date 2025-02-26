@@ -1,0 +1,31 @@
+﻿html,body{
+  height: 100%;
+  width: 100%;
+  /* overflow: hidden; */
+}
+.img-container img{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+.container-fluid{
+  overflow: hidden;
+}
+.form-container{
+  background-color: #D8EFF7;
+  
+}
+.logo-img{
+  width: 14%;
+  height: auto;
+}
+.ps-label{
+  font-size: 36px;
+  color: #1D7BB9;
+}
+input{
+  height: 25%;
+}
+.input-group{
+  
+}

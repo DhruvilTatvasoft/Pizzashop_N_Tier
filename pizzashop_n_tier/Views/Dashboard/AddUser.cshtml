@@ -1,0 +1,155 @@
+@{
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+}
+@model UserDetailModel
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<link rel="stylesheet" href="~/css/adduser.css">
+
+<body>
+    <div class="container-fluid w-100 h-100 p-0">
+
+        <div id="nav-sidebar"></div>
+        <div class="row p-0 h-100 d-flex">
+
+            <div class="content pt-3 w-100">
+                <div class="mb-4">
+                    <h1>Add new User</h1>
+                </div>
+                <div class="form-container shadow me-4">
+
+                    <div>
+                        <form class="ps-3 pe-3 pb-3 d-flex flex-column" method="post" asp-action="AddUserPost"
+                            asp-controller="Dashboard">
+                            <div class="form-group w-100 ">
+                                <div>
+                                    <div class="row">
+                                        <div class="form-floating mb-2 col-6">
+                                            <input type="text" class="form-control  pb-1" asp-for="firstname"
+                                                id="floatingInput" placeholder="name@example.com">
+                                            <label for="floatingInput">First Name</label>
+                                        </div>
+                                        <div class="form-floating mb-2 col-6">
+                                            <input type="text" class="form-control" asp-for="lastname"
+                                                id="floatingInput" placeholder="name@example.com">
+                                            <label for="floatingInput">Last name</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-floating mb-2 col-6">
+                                            <input type="text" class="form-control col-6" asp-for="email"
+                                                id="floatingInput" placeholder="name@example.com">
+                                            <label for="floatingInput">User Name</label>
+                                        </div>
+                                        <div class="form-floating mb-2 col-6">
+                                            <select class="form-select" aria-label="Floating label select example">
+                                                @foreach (var item in Model.Role)
+                                                {
+                                                    <option value="@item">@item</option>
+                                                }
+                                            </select>
+                                            <label for="floatingInput">Role</label>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="form-floating mb-2 col-6">
+                                            <input type="text" class="form-control col-6" asp-for="username"
+                                                id="floatingInput" placeholder="name@example.com">
+                                            <label for="floatingInput">Email</label>
+                                        </div>
+                                        <div class="form-floating mb-2 col-6">
+                                            <input type="tel" class="form-control col-6" asp-for="Phone"
+                                                asp-formaction="City" id="floatingInput" placeholder="name@example.com">
+                                            <label for="floatingInput">Password</label>
+                                        </div>
+                                    </div>
+                                    <div class="row fileUploadRow me-1 ms-1 mb-3">
+                                        <div class="container-fluid " style="padding: 0%;">
+                                            <input type="file" id="fileUpload1" hidden>
+                                            <div class="row d-flex justify-content-center">
+                                                <label for="fileUpload1" class="fileUploadLabel">
+                                                    <img src="/images/icons8-cloud-upload-50.png"
+                                                        style="margin-left: 47%;">
+                                                </label>
+                                            </div>
+                                            <div style="text-align: center;" class="mb-2 ms-3">Browse Files</div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row mb-2">
+                                        <div class="form-floating col-4 ">
+                                            <select class="form-select" aria-label="Floating label select example">
+                                                @foreach (var item in Model.Country)
+                                                {
+                                                    <option value="@item">@item</option>
+                                                }
+                                            </select>
+
+                                            <label for="floatingSelect">Country</label>
+                                        </div>
+                                        <div class="form-floating col-4">
+                                            <select class="form-select" aria-label="Floating label select example">
+                                                @foreach (var item in Model.State)
+                                                {
+                                                    <option value="@item">@item</option>
+                                                }
+                                            </select>
+                                            <label for="floatingSelect">State</label>
+                                        </div>
+                                        <div class="form-floating col-4">
+                                            <select class="form-select" aria-label="Floating label select example">
+                                                @foreach (var item in Model.City)
+                                                {
+                                                    <option value="@item">@item</option>
+                                                }
+                                            </select>
+                                            <label for="floatingSelect">City</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="form-floating mb-3 col-4">
+                                            <input type="text" class="form-control" asp-for="Zipcode" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">Zipcode</label>
+                                        </div>
+                                        <div class="form-floating mb-3 col-4">
+                                            <input type="text" class="form-control" asp-for="address" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">Address</label>
+                                        </div>
+                                        <div class="form-floating mb-3 col-4">
+                                            <input type="number" class="form-control" asp-for="Phone" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">Phone</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button type="submit" class="btn btn-primary me-2">Submit</button>
+                                <button type="button" class="btn btn-outline-primary">cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    </script>
+
+
+
+
+
+</body>
+
+</html>

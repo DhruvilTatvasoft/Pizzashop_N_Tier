@@ -1,0 +1,9 @@
+/* _content/pizzashop_n_tier/Views/Shared/_Layout.cshtml.rz.scp.css */
+.hero-img[b-1b51vrzukc]{
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+body[b-1b51vrzukc]{
+  background-color: aqua;
+}

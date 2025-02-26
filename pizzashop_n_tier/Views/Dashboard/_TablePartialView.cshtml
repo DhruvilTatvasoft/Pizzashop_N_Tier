@@ -1,0 +1,115 @@
+@model userpagingdetailmodel
+<table class="table mb-0">
+  <thead>
+    <tr>
+      <th scope="col">
+        <label for="" class="ps-4">Name</label>
+        <a href=""><img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+      </th>
+      <th scope="col">Email</th>
+      <th scope="col">phone</th>
+      <th scope="col">
+        <label for="">Role</label>
+        <a href="edituser.html"><img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+      </th>
+      <th scope="col">status @Model.users.Count</th>
+    </tr>
+  </thead>
+  <tbody>
+    @foreach (users user in Model.users)
+    {
+      <tr>
+        <td class="ps-4">@user.Firstname @user.Lastname</td>
+        <td>@user.Email</td>
+        <td>@user.phone</td>
+        <td>@user.role</td>
+
+        <td class="d-flex align-items-center ">
+          <div class="d-flex justify-content-start w-100 pb-2 h-100">
+            <a href="edituser.html">
+              <img src="~/images/pencil-square.svg" class="me-2" alt="">
+            </a>
+            <a href="" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
+              <img src="~/images/trash-fill.svg" alt="">
+            </a>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</table>
+<div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
+  <label for="items per page:"></label>
+  <div class="dropdown">
+    <button class="btn btn-white dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown"
+      aria-expanded="false">
+      Dropdown button
+    </button>
+    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+      <li><a class="dropdown-item" href="#">Action</a></li>
+      <li><a class="dropdown-item" href="#">Another action</a></li>
+      <li><a class="dropdown-item" href="#">Something else here</a></li>
+    </ul>
+  </div>
+  <label for="" class="me-2">Showing 1-4 of @(Model.totalusers)</label>
+
+  <div class="d-flex mt-1">
+    <button type="button" id="previous" class="btn btn-outline-dark btn2"
+      data-page="@(Model.CurrentPageIndex - 1)" style="
+                              padding: 6px;" @(Model.CurrentPageIndex == 1 ? "disabled" : "")><img
+        src="~/images/right-arrow-svgrepo-com.svg" style="width:25px; rotate: 180deg;" alt=""></button>
+    <button type="button" id="next" class="btn btn-outline-dark btn2 mb-2" data-page="@(Model.CurrentPageIndex + 1)"
+      data-page="@(Model.CurrentPageIndex + 1)" style="
+                              padding: 6px;" @(Model.CurrentPageIndex == Model.PageCount ? "disabled" : "")><img
+        src="~/images/right-arrow-svgrepo-com.svg" style="width:25px" alt=""></button>
+  </div>
+
+  <script>
+    @* var currentpage = $(this).data('page');
+    function loadPage(pageIndex) {
+      $.ajax({
+        url: '@Url.Action("getUsers", "Dashboard")',
+        type: "GET",
+        data: { currentPage: pageIndex },
+        cache: false,
+        success: function (result) {
+          console.log(@Model.CurrentPageIndex);
+         
+        }
+      });
+    } *@
+      $("#next").click(function () {
+        var currentpage = $(this).data('page');
+        $.ajax({
+          url: '@Url.Action("getUsers", "Dashboard")',
+          data: { currentPage: currentpage },
+          method: 'GET',
+          success: function (data) {
+            $("#t-container").html(data);
+            console.log(@Model.CurrentPageIndex);
+            console.log(currentpage);  
+          },
+          error: function () {
+            console.error('Error fetching partial view.');
+          }
+        });
+      });   
+      $("#previous").click(function () {
+        var currentpage = $(this).data('page');
+        $.ajax({
+          url: '@Url.Action("getUsers", "Dashboard")',
+          data: { currentPage: currentpage },
+          method: 'GET',
+          success: function (data) {
+            $("#t-container").html(data);
+            console.log(@Model.CurrentPageIndex);
+            console.log(currentpage);
+            @* var nextPage = currentpage - 1;
+            $("#next").data('currentPage', nextPage); *@
+          },
+          error: function () {
+            console.error('Error fetching partial view.');
+          }
+        });
+      });   
+  </script>

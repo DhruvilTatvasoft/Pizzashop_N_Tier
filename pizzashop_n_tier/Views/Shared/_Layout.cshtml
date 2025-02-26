@@ -1,0 +1,36 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - learn_dotnet</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+</head>
+<body>
+    
+    <div class="container-fluid vh-100 p-0">
+        <div class="row h-100">
+            <div class="col-lg-6 col-md-6 img-container p-0">
+              <img src="~/images/dominos_background.jpg" alt="">
+            </div>
+            <div class="col-lg-6 col-md-6 form-container d-flex align-items-center justify-content-center">
+                <div class="pizashop-logo mb-4">
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="~/images/pizzashop_logo.png" class="logo-img" alt="Company Logo"/>
+                        <label for="" class="ps-label">PIZZASHOP</label>
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>  
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
