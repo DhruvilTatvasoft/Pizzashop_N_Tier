@@ -40,6 +40,14 @@ public class DashboardController : Controller{
         };
         return View(model);
     }
+
+    [HttpPost]
+    public IActionResult ResetPassword(chang_p_model model){
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username",req);
+        _user.changePass(model,email);
+        return RedirectToAction("ShowDashboard", "Dashboard");
+    }
     public IActionResult Logout(){
         HttpContext.Response.Cookies.Delete("token");
         HttpContext.Response.Cookies.Delete("username");
@@ -48,8 +56,17 @@ public class DashboardController : Controller{
     public IActionResult AddUser(){
         return View();
     }
-    public IActionResult getUsers(){
-        return View();
+    public IActionResult getUsers(int currentPage = 1){
+        userpagingdetailmodel model = new userpagingdetailmodel();  
+        model = _user.loadusers(model,currentPage,5);
+        return PartialView("_TablePartialView",model);
+    }
+    public IActionResult getSearchedUser(string search){
+        userpagingdetailmodel model = new userpagingdetailmodel();  
+        model = _user.getSearcheduser(search);
+
+        return PartialView("_TablePartialView",model);
+        
     }
     public IActionResult getSearchedUser(){
         return View();

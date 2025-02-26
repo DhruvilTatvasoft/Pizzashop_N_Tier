@@ -13,6 +13,7 @@
         <a href="edituser.html"><img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
       </th>
       <th scope="col">status @Model.users.Count</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
@@ -23,6 +24,14 @@
         <td>@user.Email</td>
         <td>@user.phone</td>
         <td>@user.role</td>
+        <td>
+          @if(user.IsActive){
+            <span class="badge bg-success">Active</span>
+          }
+          else{
+            <span class="badge bg-secondary">Inactive</span>
+          }
+        
 
         <td class="d-flex align-items-center ">
           <div class="d-flex justify-content-start w-100 pb-2 h-100">

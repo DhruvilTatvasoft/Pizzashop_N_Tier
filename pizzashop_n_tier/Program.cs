@@ -1,4 +1,5 @@
 using BAL.Implementations;
+using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
 
@@ -13,6 +14,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<ICookieService,CookieService>();
 builder.Services.AddScoped<IGenericRepository,GenericRepository>();
 builder.Services.AddScoped<ILogin,LoginImpl>();
+builder.Services.AddScoped<IAESService,AESImple>();
 builder.Services.AddScoped<IEmailGenService,EmailGenService>();
 builder.Services.AddScoped<IUser,UserImpl>();
 

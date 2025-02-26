@@ -18,7 +18,10 @@ nav a {
     margin-right: 2%;
     border-color: transparent;
 }
-
+.form-control:disabled {
+    background-color: #c6c6c6;
+    opacity: 1;
+}
 nav {
     position: relative;
     z-index: 1;
