@@ -20,26 +20,29 @@
     @foreach (users user in Model.users)
     {
       <tr>
-        <td class="ps-4">@user.Firstname @user.Lastname</td>
+        <td class="ps-4">@user.name</td>
+        @* <input type="text" value="@user.userid" hidden></input> *@
         <td>@user.Email</td>
         <td>@user.phone</td>
-        <td>@user.role</td>
+        <td>@user.role @user.userid</td>
         <td>
-          @if(user.IsActive){
+          @if (user.IsActive)
+          {
             <span class="badge bg-success">Active</span>
           }
-          else{
+          else
+          {
             <span class="badge bg-secondary">Inactive</span>
           }
-        
+
 
         <td class="d-flex align-items-center ">
           <div class="d-flex justify-content-start w-100 pb-2 h-100">
-            <a href="edituser.html">
-              <img src="~/images/pencil-square.svg" class="me-2" alt="">
+            <a href='@Url.Action("EditUser","Dashboard", new {Id = @user.userid})'>
+              <img src="~/images/pencil-square.svg"  style="cursor: pointer;" class="me-2" alt="">
             </a>
-            <a href="" data-bs-toggle="modal" data-bs-target="#exampleModalCenter">
-              <img src="~/images/trash-fill.svg" alt="">
+            <a>
+              <img src="~/images/trash-fill.svg" id="deleteuser" onclick="deleteuser(@user.userid)" style="cursor: pointer;" alt="">
             </a>
           </div>
         </td>
@@ -63,8 +66,8 @@
   <label for="" class="me-2">Showing 1-4 of @(Model.totalusers)</label>
 
   <div class="d-flex mt-1">
-    <button type="button" id="previous" class="btn btn-outline-dark btn2"
-      data-page="@(Model.CurrentPageIndex - 1)" style="
+    <button type="button" id="previous" class="btn btn-outline-dark btn2" data-page="@(Model.CurrentPageIndex - 1)"
+      style="
                               padding: 6px;" @(Model.CurrentPageIndex == 1 ? "disabled" : "")><img
         src="~/images/right-arrow-svgrepo-com.svg" style="width:25px; rotate: 180deg;" alt=""></button>
     <button type="button" id="next" class="btn btn-outline-dark btn2 mb-2" data-page="@(Model.CurrentPageIndex + 1)"
@@ -91,34 +94,70 @@
         var currentpage = $(this).data('page');
         $.ajax({
           url: '@Url.Action("getUsers", "Dashboard")',
-          data: { currentPage: currentpage },
-          method: 'GET',
-          success: function (data) {
-            $("#t-container").html(data);
-            console.log(@Model.CurrentPageIndex);
-            console.log(currentpage);  
-          },
-          error: function () {
-            console.error('Error fetching partial view.');
-          }
-        });
-      });   
-      $("#previous").click(function () {
-        var currentpage = $(this).data('page');
-        $.ajax({
-          url: '@Url.Action("getUsers", "Dashboard")',
-          data: { currentPage: currentpage },
+          data: { currentPage: currentpage, search: $("#search-record").val() },
           method: 'GET',
           success: function (data) {
             $("#t-container").html(data);
             console.log(@Model.CurrentPageIndex);
             console.log(currentpage);
-            @* var nextPage = currentpage - 1;
-            $("#next").data('currentPage', nextPage); *@
           },
           error: function () {
             console.error('Error fetching partial view.');
           }
         });
-      });   
+      });
+    $("#previous").click(function () {
+      var currentpage = $(this).data('page');
+      $.ajax({
+        url: '@Url.Action("getUsers", "Dashboard")',
+        data: { currentPage: currentpage },
+        method: 'GET',
+        success: function (data) {
+          $("#t-container").html(data);
+          console.log(@Model.CurrentPageIndex);
+          console.log(currentpage);
+          @* var nextPage = currentpage - 1;
+            $("#next").data('currentPage', nextPage); *@
+          },
+        error: function () {
+          console.error('Error fetching partial view.');
+        }
+      });
+    });
+
+    function deleteuser(userid) {
+      $.ajax({
+        url: '@Url.Action("DeleteUser", "Dashboard")',
+        type: 'GET',
+        data: { Id: userid },
+        success: function (response) {
+          console.log(userid);
+        },
+      });
+    };
+    function edituser(userid) {
+      console.log("OK");
+      $.ajax({
+        url: '@Url.Action("EditUser", "Dashboard")',
+        type: 'GET',
+        data: { Id: userid },
+        success: function (response) {
+          @* Window.location.href = '@Url.Action("EditUser", "Dashboard")'+'?Id='+userid; *@
+        },
+      });
+    };
+
+
+    @* function deleteUser(){
+        var id = $("#deleteuser").data('Id');
+        console.log(id);
+      $.ajax ({
+        url:@Url.Action("aeleteUser","Dashboard"),
+        type: 'GET',
+        data:{Id :id},
+        success : function(response){
+        console.log(Id);
+        },
+      });
+    });   *@
   </script>

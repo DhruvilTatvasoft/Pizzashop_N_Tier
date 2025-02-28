@@ -20,23 +20,23 @@
 
             <div class="content pt-3 w-100">
                 <div class="mb-4">
-                    <h1>Add new User</h1>
+                    <h1>Edit User</h1>
                 </div>
                 <div class="form-container shadow me-4">
 
                     <div>
-                        <form class="ps-3 pe-3 pb-3 d-flex flex-column" action="@Url.Action("AddUser", "Dashboard")" method="post" >
+                        <form class="ps-3 pe-3 pb-3 d-flex flex-column" method="post" action="@Url.Action("EditUser", "Dashboard",new {Id = Model.userid})">
                             <div class="form-group w-100 ">
                                 <div>
                                     <div class="row">
                                         <div class="form-floating mb-2 col-6">
-                                            <input type="text" class="form-control  pb-1" asp-for="firstname" placeholder="name@example.com">
+                                            <input type="text" class="form-control  pb-1" asp-for="firstname"
+                                                id="floatingInput" placeholder="name@example.com">
                                             <label for="floatingInput">First Name</label>
                                         </div>
                                         <div class="form-floating mb-2 col-6">
                                             <input type="text" class="form-control" asp-for="lastname"
                                                 id="floatingInput" placeholder="name@example.com">
-
                                             <label for="floatingInput">Last name</label>
                                         </div>
                                     </div>
@@ -63,9 +63,12 @@
                                             <label for="floatingInput">Email</label>
                                         </div>
                                         <div class="form-floating mb-2 col-6">
-                                            <input type="tel" class="form-control col-6" asp-for="password"
-                                                asp-formaction="City" id="floatingInput" placeholder="name@example.com">
-                                            <label for="floatingInput">Password</label>
+                                            <select class="form-select"  id="status" asp-for="status"
+                                                aria-label="Floating label select example">
+                                                <option value="Active">Active</option>
+                                                <option value="InActive">InActive</option>
+                                            </select>
+                                            <label for="floatingInput">status</label>
                                         </div>
                                     </div>
                                     <div class="row fileUploadRow me-1 ms-1 mb-3">

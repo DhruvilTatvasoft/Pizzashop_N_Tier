@@ -1,0 +1,34 @@
+ html,
+    body {
+        height: 100%;
+        width: 100%;
+        /* overflow-x: hidden; */
+        overflow-y: hidden;
+    }
+
+    
+    table{
+        overflow-x: scroll;
+    }
+
+   
+
+
+    .content {
+        width: 100%;
+        background-color: #E9EAEB;
+        padding-left: 19%;
+        overflow: hidden;
+    }
+
+   
+    h1 {
+        color: #0066A7;
+        font-weight: bold;
+    }
+
+  
+
+    td:nth-child(2){
+        text-align: end;
+    }

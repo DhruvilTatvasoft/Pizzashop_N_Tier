@@ -29,8 +29,16 @@
       "PackagePath": "staticwebassets\\css\\myprofile.css"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\permissions.css",
+      "PackagePath": "staticwebassets\\css\\permissions.css"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\resetpass.css",
       "PackagePath": "staticwebassets\\css\\resetpass.css"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\roles.css",
+      "PackagePath": "staticwebassets\\css\\roles.css"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\showuser.css",

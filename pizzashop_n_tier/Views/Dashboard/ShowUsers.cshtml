@@ -19,12 +19,11 @@
         <h1>User</h1>
         <div class="search-add d-flex">
 
-          <input type="search" class="form-control" id="search-record" onsearch="search()" aria-describedby="emailHelp"
+          <input type="search" class="form-control" id="search-record" onkeyup="loadPage(1)" aria-describedby="emailHelp"
             placeholder="Search">
-          <form method="GET" asp-action="AddUser" asp-controller="Dashboard">
+          <form method="GET" asp-controller="Dashboard" asp-action="AddUser">
             <button type="submit" class="btn btn-primary" style="height:100%;">+ Add <span>user </span></button>
           </form>
-
         </div>
       </div>
       <div class="form-container shadow" id="t-container"></div>
@@ -54,31 +53,22 @@
   </div>
   <script>
     $(document).ready(function () {
-      loadPage(1);
+      loadPage();
     });
     function loadPage(pageIndex) {
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
         type: "GET",
-        data: { currentPage: pageIndex },
+        data: { currentPage: pageIndex,search : $("#search-record").val()},
         cache: false,
         success: function (data) {
           $("#t-container").html(data);
+          console.log(pageIndex);
         }
       });
     };
-function search(){
-      $.ajax({
-        url: '@Url.Action("getSearchedUser", "Dashboard")',
-        type: "GET",
-        data: { search: $("#search-record").val() },
-        cache: false,
-        success: function (data){        
-          $("#t-container").html(data);
-        }
-      });
-    };
-     @*  *@
+
+    
   </script>
   <script>
   </script>

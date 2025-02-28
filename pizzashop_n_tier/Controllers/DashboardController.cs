@@ -1,5 +1,7 @@
+using System.Reflection.Metadata.Ecma335;
 using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 public class DashboardController : Controller{
     
@@ -8,10 +10,13 @@ public class DashboardController : Controller{
     public readonly IUser _user;
 
     public readonly ICookieService _cookieService;
-    public DashboardController(ILogin log,IUser user,ICookieService cookieService){
+
+    public readonly IEmailGenService _emailService;
+    public DashboardController(ILogin log,IUser user,ICookieService cookieService,IEmailGenService emailService){
         _log = log;
         _user = user;
         _cookieService = cookieService;
+        _emailService = emailService;
     }
     public IActionResult ShowDashboard(){
         return View();
@@ -45,7 +50,7 @@ public class DashboardController : Controller{
     public IActionResult ResetPassword(chang_p_model model){
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username",req);
-        _user.changePass(model,email);
+        _user.changePass(req,model,email);
         return RedirectToAction("ShowDashboard", "Dashboard");
     }
     public IActionResult Logout(){
@@ -53,25 +58,81 @@ public class DashboardController : Controller{
         HttpContext.Response.Cookies.Delete("username");
         return RedirectToAction("Index","Login");
     }
-    public IActionResult AddUser(){
-        return View();
-    }
-    public IActionResult getUsers(int currentPage = 1){
-        userpagingdetailmodel model = new userpagingdetailmodel();  
-        model = _user.loadusers(model,currentPage,5);
-        return PartialView("_TablePartialView",model);
-    }
-    public IActionResult getSearchedUser(string search){
-        userpagingdetailmodel model = new userpagingdetailmodel();  
-        model = _user.getSearcheduser(search);
 
+    [HttpGet]
+    public IActionResult AddUser(){
+        UserDetailModel model = new UserDetailModel();
+        model.Role = _user.getRoles();
+        model.Country = _user.getAllCountries();
+        return View(model);
+    }
+    [HttpPost]
+    public IActionResult AddUser(UserDetailModel model){
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username",req);
+        Console.WriteLine("in post method");
+        _user.saveNewUser(model,email);
+        _emailService.emailForForgetPass(req,model.email,model.password);
+        return View("showUsers");
+    }
+    public IActionResult getUsers(string search,int currentPage = 1){
+        userpagingdetailmodel model = new userpagingdetailmodel();  
+        model = _user.loadusers(model,currentPage,5,search);
         return PartialView("_TablePartialView",model);
-        
     }
-    public IActionResult getSearchedUser(){
-        return View();
+    public IActionResult getSearchedUser(string search,int currentPage = 1){
+        userpagingdetailmodel model = new userpagingdetailmodel();  
+        Console.WriteLine("searching user");
+        model = _user.loadusers(model,currentPage,5,search);
+        Console.WriteLine("searched");
+        return PartialView("_TablePartialView",model);
     }
+
+     [HttpGet]
+        public IActionResult GetStates(int countryId)
+        {
+            var states = _user.getStates(countryId);
+            return Json(new SelectList(states, "Stateid", "Statename"));
+        }
+   [HttpGet]
+        public IActionResult DeleteUser(int Id){
+            _user.deleteUser(Id);
+            return View("showUsers");
+        }
+[HttpGet]
+        public IActionResult EditUser(int Id){
+            UserDetailModel model = new UserDetailModel();
+            Console.WriteLine("In edit user");
+          model =  _user.getUserDetails(Id);
+            return View(model);
+        }
+[HttpPost]
+public IActionResult EditUser(UserDetailModel model,int Id){
+    _user.updateUser(model,Id);
+    return View("showUsers");
+}
+
+        // JSON endpoint: Get Cities for a State
+        [HttpGet]
+        public IActionResult GetCities(int stateId)
+        {
+            var cities = _user.getStateCities(stateId);
+            return Json(new SelectList(cities, "Cityid", "Cityname"));
+        }
+[HttpGet]
+        public IActionResult Roles(){
+            RolesModel model = new RolesModel();
+            model.Role = _user.getAllRoles();
+            return View(model);
+        }
     public IActionResult showUsers(){
         return View();
     }
-}
+
+    [HttpGet]
+    public IActionResult PermissionsOfRole(int Id){
+        PermissionsModel model = new PermissionsModel();
+        model = _user.permissionsForRole(Id);
+        return View("permissions",model);
+    }
+}  

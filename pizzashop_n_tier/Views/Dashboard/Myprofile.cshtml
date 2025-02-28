@@ -64,7 +64,7 @@
                       <select class="form-select" asp-for="country" aria-label="Floating label select example">
                         @foreach (var item in Model.Country)
                         {
-                          <option value="@item">@item</option>
+                          <option value="@item">@item.Countryname</option>
                         }
                       </select>
                       <label for="floatingSelect">Country</label>
@@ -73,16 +73,16 @@
                       <select class="form-select" asp-for="state" aria-label="Floating label select example">
                           @foreach (var item in Model.State)
                         {
-                          <option value="@item">@item</option>
+                          <option value="@item">@item.Statename</option>
                         }
                       </select>
                       <label for="floatingSelect">State</label>
                     </div>
                     <div class="form-floating col-4">
-                      <select class="form-select" asp-for="city" aria-label="Floating label select example">
+                      <select class="form-select" asp-for="City" aria-label="Floating label select example">
                           @foreach (var item in Model.City)
                         {
-                          <option value="@item">@item</option>
+                          <option value="@item">@item.Cityname</option>
                         }
                       </select>
                       <label for="floatingSelect">City</label>
