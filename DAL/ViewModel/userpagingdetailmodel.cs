@@ -7,39 +7,23 @@ public class userpagingdetailmodel{
     
     public int PageCount { get; set; }
 
-    public searcheduser searcheduser{
-        get;
-        set;
-    }
     public int totalusers{
         get;
         set;
     }
+
+    public void loadUsers()
+    {
+        throw new NotImplementedException();
+    }
 }
 
-public class searcheduser{
-    public String fname{
-        get;
-        set;
-    }
-    public String lname{
-        get;
-        set;
-    }
-    public String email{
-        get;
-        set;
-    }
-    public String phone{
-        get;
-        set;
-    }
-    public String role{
-        get;
-        set;
-    }
-}
+
 public class users{
+    public string name{
+        get;
+        set;
+    }
     public int userid{
         get;
         set;
@@ -61,6 +45,10 @@ public class users{
         set;
     }
     public String role{
+        get;
+        set;
+    }
+    public bool IsActive{
         get;
         set;
     }

@@ -12,11 +12,14 @@ public class DashboardController : Controller{
     public readonly ICookieService _cookieService;
 
     public readonly IEmailGenService _emailService;
-    public DashboardController(ILogin log,IUser user,ICookieService cookieService,IEmailGenService emailService){
+
+    public readonly IMenuService    _menuService;
+    public DashboardController(ILogin log,IUser user,ICookieService cookieService,IEmailGenService emailService,IMenuService menuService){
         _log = log;
         _user = user;
         _cookieService = cookieService;
         _emailService = emailService;
+        _menuService = menuService;
     }
     public IActionResult ShowDashboard(){
         return View();
@@ -97,7 +100,7 @@ public class DashboardController : Controller{
    [HttpGet]
         public IActionResult DeleteUser(int Id){
             _user.deleteUser(Id);
-            return View("showUsers");
+            return View("getUsers");
         }
 [HttpGet]
         public IActionResult EditUser(int Id){
@@ -131,8 +134,38 @@ public IActionResult EditUser(UserDetailModel model,int Id){
 
     [HttpGet]
     public IActionResult PermissionsOfRole(int Id){
-        PermissionsModel model = new PermissionsModel();
+    //     PermissionsModel model = new PermissionsModel();
+    //     model = _user.permissionsForRole(Id);
+    //     return View("permissions",model);
+     PermissionsModel2 model = new PermissionsModel2();
+        model.roleid = Id;
         model = _user.permissionsForRole(Id);
         return View("permissions",model);
     }
+
+// [HttpGet]
+//     public IActionResult PermissionOfRole(int Id){
+       
+//     }
+    [HttpPost]
+    public IActionResult UpdatePermissions(PermissionsModel model){
+        _user.updatePermissions(model);
+         return RedirectToAction("permissionsOfRole", "Dashboard");
+    }
+
+
+    [HttpGet]
+    public IActionResult Menu(){
+        MenuModel model = new MenuModel();
+         _menuService.GetCategories(model);
+        return View(model);
+    }
+
+    public IActionResult Addcategory(MenuModel model){
+         var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username",req);
+        _menuService.addNewcategory(model,email);
+        return View("Menu",model);
+    }
+
 }  

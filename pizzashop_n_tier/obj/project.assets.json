@@ -3606,11 +3606,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectUniqueName": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "projectName": "pizzashop_n_tier",
-      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
+      "outputPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -3625,11 +3625,11 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
-              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
+            "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
+              "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
             },
-            "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"
+            "c:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
+              "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"
             }
           }
         }

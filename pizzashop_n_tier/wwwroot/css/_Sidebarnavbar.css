@@ -52,6 +52,7 @@ html,
     }
     .dropbtn{
         background-color: transparent;
+
     }
     .dropdown-menu[data-bs-popper] {
         top: 100%;
@@ -74,7 +75,7 @@ html,
     li img {
         width: 10%;
     }
-
+   
     li {
         font-size: 90%;
         padding-left: 0;
@@ -99,11 +100,11 @@ html,
     }
 
     .tg-btn {
-        background-image: url('sidebar icons/icons8-menu-squared-50.png');
+        background-image: url('~/images/icons8-menu-squared-50.png');
         border: 0;
         width: 40px;
         height: 40px;
-        background-color: unset;
+        /* background-color: unset; */
         background-size: 40px;
     }
     .close-btn{

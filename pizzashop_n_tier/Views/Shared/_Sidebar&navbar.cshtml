@@ -16,6 +16,7 @@
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
 <link rel="stylesheet" href="~/css/_Sidebarnavbar.css">
+
 <body>
     <div class="container-fluid w-100 h-100 p-0">
         <nav class="navbar sticky-top navbar-light d-flex">
@@ -53,35 +54,34 @@
                 </div>
                 <ul>
                     <li class="ps-2">
-                        <img src="~/images/dashboard-interface.png" class="me-2" alt="">
-                        <a href="">Dashboard</a>
+                       
+                        <a href=""> <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt="">Dashboard</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/group.png" class="me-2" alt="">
-                        <a  asp-controller="Dashboard" asp-action="showUsers">Users</a>
+                        
+                        <a asp-controller="Dashboard" asp-action="showUsers"><img src="~/images/group.png" class="me-2 side-img" alt="">Users</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-user-settings-32.png" class="me-2" alt="">
-                        <a  asp-controller="Dashboard" asp-action="Roles">Role and Permission</a>
+                        <a asp-controller="Dashboard" asp-action="Roles"><img src="~/images/icons8-user-settings-32.png" class="me-2" alt="">Role and Permission</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-restaurant-menu-24.png" class="me-2" alt="">
-                        <a href="">Menu</a>
+                        
+                        <a  asp-controller="Dashboard" asp-action="Menu"><img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" alt="">Menu</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-stop-30.png" class="me-2" alt="">
+                        <img src="~/images/icons8-stop-30.png" class="me-2 side-img" alt="">
                         <a href="">Table And Section</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-tax-money-50.png" class="me-2" alt="">
-                        <a href="">Taxes And Fees</a>
+                        
+                        <a href=""><img src="~/images/icons8-tax-money-50.png" class="me-2" alt="">Taxes And Fees</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-order-30.png" class="me-2" alt="">
-                        <a href="">Orders</a>
+                        
+                        <a href=""><img src="~/images/icons8-order-30.png" class="me-2 side-img" alt="">Orders</a>
                     </li>
                     <li class="ps-2">
-                        <img src="~/images/icons8-customer-64.png" class="me-2" alt="">
+                        <img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt="">
                         <a href="">Customers</a>
                     </li>
                 </ul>
@@ -97,7 +97,8 @@
                             <h5 class="mb-2">Are you sure you want to Logout?</h5>
                             <div class="d-flex">
                                 <form method="post" asp-controller="Dashboard" asp-action="Logout">
-                                    <button type="submit" class="btn btn-primary me-2" data-bs-dismiss="modal">yes</button>
+                                    <button type="submit" class="btn btn-primary me-2"
+                                        data-bs-dismiss="modal">yes</button>
                                 </form>
                                 <button type="button" class="btn btn-outline-primary">No</button>
                             </div>
@@ -113,6 +114,20 @@
             </main>
 
         </div>
+
+        <script>
+            document.querySelector(".tg-btn").addEventListener("click", function () {
+                document.querySelector(".sidebar").style.display = "block";
+            
+                document.querySelector(".container-fluid").style.padding = "";
+                console.log("done")
+            });
+            document.querySelector(".close-btn").addEventListener("click", function () {
+                document.querySelector(".sidebar").style.display = "none";
+                console.log("done")
+
+            });
+        </script>
 </body>
 
 </html>

@@ -1,5 +1,7 @@
 
 
+using System.Dynamic;
+
 public class PasswordModel
 {
    public string newpass{
@@ -14,4 +16,5 @@ public class PasswordModel
     set;
     get;
    }
+
 }

@@ -6,6 +6,8 @@ using Microsoft.EntityFrameworkCore.Metadata.Internal;
 public interface IEmailGenService{
     void generateEmail(HttpRequest req,string email);
     void Send(string from, string to, string subject, string html);
+
+    void emailForForgetPass(HttpRequest req,string email,string password);
 } 
 public class EmailGenService : IEmailGenService{
     public void generateEmail(HttpRequest req, string email){
@@ -18,6 +20,12 @@ public class EmailGenService : IEmailGenService{
         Console.WriteLine("sended successfully on : "+rstlink);
     }
 
+    public void emailForForgetPass(HttpRequest req,string email,string password){
+        string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/emailbody.cshtml");
+        emailBody = emailBody.Replace("{{useremail}}",email);
+        emailBody = emailBody.Replace("{{userpassword}}",password);
+        Send("test.dotnet@etatvasoft.com",email,"sending email",emailBody);
+    }
     public void Send(string from, string to, string subject, string html)
     {
         using (SmtpClient smtpClient = new SmtpClient("mail.etatvasoft.com", 587))

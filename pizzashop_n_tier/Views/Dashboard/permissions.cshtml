@@ -1,89 +1,160 @@
 @{
-    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+  Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
 }
-@model PermissionsModel
+@model PermissionsModel2
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
 </head>
 <link rel="stylesheet" href="~/css/permissions.css">
 
 <body>
-    <div class="container-fluid w-100 h-100 p-0">
-        <div id="nav-sidebar"></div>
-        <div class="row p-0 h-100 d-flex">
+  <div class="container-fluid w-100 h-100 p-0">
+    <div id="nav-sidebar"></div>
+    <div class="row p-0 h-100 d-flex">
 
-            <div class="content pt-3 w-100">
-                <div class="mb-4 header d-flex">
-                    <h1>Permissions</h1>
-                    <button class="btn btn-outline-primary me-3" style="margin-left: auto;" >back</button>
-                </div>
-                <div class="form-container shadow me-4 p-3">
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                        <label for="floatingInput" class="floatlabel">Email address</label>
-                      </div>
-
-                      <div class="table-container">
-                        <table class="table">
-                            <thead>
-                              <tr>
-                                <th scope="col">
-                                    <div class="form-check">
-                                        <input class="form-check-input headcheck" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                          Permissions
-                                        </label>
-                                      </div>
-                                </th>
-                                <th scope="col">can View</th>
-                                <th scope="col">can Add/Edit</th>
-                                <th scope="col">can Delete</th>
-                              </tr>
-                            </thead>
-                            <tbody>  
-                                @foreach(var rp in Model.pages){
-                                    <tr>
-                                        <th scope="row">
-                                    <div class="form-check">
-                                        <input class="form-check-input col1" type="checkbox" value="" id="flexCheckDefault">
-                                        <label class="form-check-label" for="flexCheckDefault">
-                                          @rp.name
-                                        </label>
-                                      </div>
-                                </th>
-                                <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked">
-                                      </div>
-
-                                </td>
-                                <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                                      </div>
-
-                                </td>
-                                <td>
-                                    <div class="form-check form-switch">
-                                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked>
-                                      </div>
-                                </td>
-                              </tr>
-                                }
-                            </tbody>
-                          </table>
-                      </div>
-                      <div class="w-100 h-50 d-flex justify-content-end" >
-                        <button type="submit" class="btn btn-primary me-2">submit</button>
-                        <button type="reset" class="btn btn-outline-primary">cancel</button>
-                      </div>
-                </div>
-            </div>
+      <div class="content pt-3 w-100">
+        <div class="mb-4 header d-flex">
+          <h1>Permissions</h1>
+          <form method="get" class="back-form" asp-controller="Dashboard" asp-action="Roles">
+            <button class="btn btn-outline-primary me-3 w-100" type="submit">back</button>
+          </form>
         </div>
+        <div class="form-container shadow me-4 p-3">
+          <div class="form-floating mb-3">
+            <input type="email" class="form-control" id="floatingInput" asp-for="rolename"
+              placeholder="name@example.com" disabled>
+            <label for="floatingInput" class="floatlabel">Role</label>
+          </div>
+
+          <form id="form">
+            <div class="table-container">
+              <table class="table">
+                <thead>
+                  <tr>
+                    <th scope="col">
+                      <div class="form-check">
+                        <input class="form-check-input headcheck" type="checkbox" value="" id="flexCheckDefault">
+                        <label class="form-check-label" for="flexCheckDefault">
+                          Permissions
+                        </label>
+                      </div>
+                    </th>
+                    <th scope="col">can View</th>
+                    <th scope="col">can Add/Edit</th>
+                    <th scope="col">can Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+
+                  @foreach (var rp in Model.plist)
+                  {
+                    <tr>
+                      <th scope="row">
+                        <div class="form-check">
+                          <input class="form-check-input col1" type="checkbox" id="flexCheckDefault"
+                            @(Model.gpermissionid.Contains(rp.Permissionid) ? "checked" : "")>
+                          <label class="form-check-label" for="flexCheckDefault">
+                            @rp.Permissionname
+                          </label>
+                        </div>
+                      </th>
+                      <td>
+                       
+                        <div class="form-check form-switch">
+                          <input class="form-check-input toggle" type="checkbox" asp-for="@Model.grantedPermissions.FirstOrDefault(gp=>gp.Permissionid == rp.Permissionid).Canview" id="flexSwitchCheckChecked">
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input toggle" type="checkbox" asp-for="@Model.grantedPermissions.FirstOrDefault(gp=>gp.Permissionid == rp.Permissionid).Canedit" id="flexSwitchCheckChecked">
+                        </div>
+                      </td>
+                      <td>
+                        <div class="form-check form-switch">
+                          <input class="form-check-input toggle" type="checkbox" asp-for=" @Model.grantedPermissions.FirstOrDefault(gp=>gp.Permissionid == rp.Permissionid).Candelete" id="flexSwitchCheckChecked">
+                        </div>
+                      </td>
+                    </tr>
+                  }
+                </tbody>
+              </table>
+            </div>
+            <div class="w-25 h-50 d-flex justify-content-end" style="margin-left: auto;">
+              <button type="submit" class="btn btn-primary me-2 w-50 ">Update</button>
+              <button type="reset" class="btn btn-outline-primary w-50">cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
+  </div>
+
+  <script>
+    let checkAll = document.querySelector(".headcheck");
+    checkAll.addEventListener('change', checkAllCheckBoxes);
+    function checkAllCheckBoxes() {
+      let checkboxes = document.querySelectorAll(".col1");
+      checkboxes.forEach(function (checkbox) {
+        checkbox.checked = checkAll.checked;
+      });
+    }
+
+document.querySelector(".col1").on("change",uncheckToggle());
+  function uncheckToggle(){
+    let toggle = document.querySelectorAll(".toggle");
+    let mastercheck = document.querySelector(".col1");
+    if(!mastercheck.checked){
+      toggle.forEach(function(toggle){
+        toggle.checked = false;
+      }
+    }
+  };
+
+    function checkAllCheckBoxes2() {
+      let checkboxes = document.querySelectorAll(".col1");
+      checkboxes.forEach(function (checkbox) {
+
+        if (!checkbox.checked) {
+          checkAll.checked = false;
+        }
+        else {
+          checkAll.checked = true;
+        }
+      });
+    }
+
+    function updatePermissions() {
+      let selectedCheckboxes = [];
+      document.querySelectorAll(".col1:checked").forEach((checked) => {
+        selectedCheckboxes.push(parseInt(checked.value));
+      })
+      return selectedCheckboxes;
+    }
+
+    document.querySelector("#form").on("submit", updatePermAjax());
+
+    function updatePermAjax() {
+      var x = updatePermissions();
+      var data = new FormData(this);
+      $.ajax({
+        url: '@Url.Action("UpdatePermissions", "Dashboard")',
+        type: 'post',
+        contentType: 'application/json',
+        data: data,
+        success: function (response) {
+          console.log(x);
+        },
+        error: function (xhr, status, error) {
+          console.log(xhr.responseText);
+        }
+      });
+    };
+  </script>
 </body>
+
 </html>
