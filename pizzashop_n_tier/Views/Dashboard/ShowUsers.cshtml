@@ -59,7 +59,7 @@
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
         type: "GET",
-        data: { currentPage: pageIndex,search : $("#search-record").val()},
+        data: { currentPage: pageIndex,maxRows:$("#dropdown").val(),search : $("#search-record").val()},
         cache: false,
         success: function (data) {
           $("#t-container").html(data);

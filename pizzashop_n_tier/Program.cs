@@ -18,6 +18,8 @@ builder.Services.AddScoped<IAESService,AESImple>();
 builder.Services.AddScoped<IEmailGenService,EmailGenService>();
 builder.Services.AddScoped<IUser,UserImpl>();
 builder.Services.AddScoped<IMenuService,MenuImpl>();
+builder.Services.AddScoped<IItemService,ItemsImple>();
+builder.Services.AddScoped<IItemRepository,ItemRepository>();
 
 builder.Services.AddSession(options =>
 {

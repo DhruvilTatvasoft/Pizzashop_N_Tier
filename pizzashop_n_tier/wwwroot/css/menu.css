@@ -163,9 +163,12 @@ html,
         border-radius: 50%;
         background-color: white;
     }
+    .form-check{
+        padding-left:0px;
+    }
 
     .row .form-check input {
-        height: 13px;
+        height: 16px;
     }
 
     .form-floating>.form-control-plaintext~label,
@@ -267,7 +270,7 @@ html,
     }
 
     .menusidebar{
-        width: 15%;
+        width: 20%;
         /* border-right-width: 20px; */
         border-right-color:#0066A7 ;
         background-color: #F7F7F7;

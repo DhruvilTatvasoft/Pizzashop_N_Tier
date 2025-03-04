@@ -3,14 +3,10 @@ public class MenuModel{
         get;
         set;
     }
-    public string categoryname{
-        get;
-        set;
-    }
-    public string categorydescription{
-        get;
-        set;
-    }
+   public Menu m{
+    get;
+    set;
+   }
 }
 public class Menu{
    public int categoryId{

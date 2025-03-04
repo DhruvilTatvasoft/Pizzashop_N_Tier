@@ -57,7 +57,7 @@
       aria-expanded="false">
       Dropdown button
     </button>
-    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+    <ul class="dropdown-menu" id=" dropdownMenu" aria-labelledby="dropdownMenuButton1">
       <li><a class="dropdown-item" href="#">Action</a></li>
       <li><a class="dropdown-item" href="#">Another action</a></li>
       <li><a class="dropdown-item" href="#">Something else here</a></li>
@@ -89,7 +89,7 @@
          
         }
       });
-    } *@
+    } *@  
       $("#next").click(function () {
         var currentpage = $(this).data('page');
         $.ajax({
@@ -131,7 +131,8 @@
         type: 'GET',
         data: { Id: userid },
         success: function (response) {
-          console.log(response);
+         @* $.(body).html(response); *@
+         $("table").html(response)
         },
       });
     };

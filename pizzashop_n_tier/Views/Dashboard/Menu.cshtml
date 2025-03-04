@@ -1,15 +1,17 @@
 @{
-  Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
 }
 @model MenuModel
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="~/css/menu.css">
 </head>
+
 <body>
     <div class="container-fluid w-100 h-100 p-0">
         <div id="nav-sidebar"></div>
@@ -17,18 +19,21 @@
             <div class="content pt-3 w-100 h-100">
                 <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
                     <h1>User</h1>
-                    </div>
-                    <div class="form-container shadow">
-                        <div>
-                            <div class="navpanel w-100 mb-2">
-                                <button type="submit" class="h-100 item" style="width:7% ; ">Items</button>
-                                <button type="submit" class="h-100 mod" style="width:7% ;">Modifiers</button>
-                            </div>
+                </div>
+                <div class="form-container shadow">
+                    <div>
+                        <div class="navpanel w-100 mb-2">
+                            <button type="submit" class="h-100 item" style="width:7% ; ">Items</button>
+                            <button type="submit" class="h-100 mod" style="width:7% ;">Modifiers</button>
                         </div>
-                        <div class="d-flex w-100 h-100">
-                            <div class="menusidebar h-100 ">
+                    </div>
+                    <div class="d-flex w-100 h-100" id="menu-container">
+
+                        <div class="menusidebar h-100 "></div>
+                        <div class="menubody bg-white h-100"></div>
+                        @* <div class="menusidebar h-100 ">
                                 
-                                <div class="d-flex justify-content-between p-2 mb-3">
+                               <div class="d-flex justify-content-between p-2 mb-3">
                                     <label class=" c-text">Category</label>
                                     <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"> + </button>
                                 </div>
@@ -38,17 +43,17 @@
                                         <ul class=" mt-2 w-100 h-100 ">
 
                                             @foreach(var x in @Model.menuList){
-                                                    <li class="w-100"> <label for="" class="ms-0">@x.categoryName</label> </li>
+                                                    <li class="w-100"> <label for="" class="ms-0">∷ @x.categoryName</label> </li>
                                             }
                                            
                                         </ul>
                                     </div>
-                                </div>
+                                </div> *@
 
 
 
-                            </div>
-                            <div class="menubody bg-white h-100">
+                        @* </div> *@
+                        @* <div class="menubody bg-white h-100">
                                 <h3 class="p-2">Items</h3>
                                 <div class="d-flex justify-content-end w-100 ">
                                         <div>
@@ -271,165 +276,247 @@
                                        </div>
 
                                 </div>
+                            </div> *@
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <!-- Button trigger modal -->
+
+        <!-- Modal -->
+       
+
+        <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                        <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+                        <h5 class="mb-3">Are you sure you want to delete this item?</h5>
+                        <div>
+                            <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
+                            <button type="button" class="btn btn-outline-primary">No</button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+
+                    <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
+                    <div class="modal-body w-100 d-flex flex-column">
+                        <div class="row w-100">
+                            <div class="left col-8">
+                                <div class="row d-flex justify-content-between model-row">
+                                    <div class="form-floating col-6">
+                                        <select class="form-select model-select" id="floatingSelect"
+                                            aria-label="Floating label select example">
+                                            <option selected>Open this select menu</option>
+                                            <option value="1">One</option>
+                                            <option value="2">Two</option>
+                                            <option value="3">Three</option>
+                                        </select>
+                                        <label for="floatingSelect" class="model-label">Category</label>
+                                    </div>
+                                    <div class="form-floating mb-3 col-6">
+                                        <input type="email" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com">
+                                        <label for="floatingInput" class="model-label">Name</label>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-between  model-row">
+                                    <div class="col-3 w-25">
+                                        <div class="form-floating col-3 w-100">
+                                            <select class="form-select model-select model-select" id="floatingSelect"
+                                                aria-label="Floating label select example">
+                                                <option selected>Select a type</option>
+                                                <option value="1">One</option>
+                                                <option value="2">Two</option>
+                                                <option value="3">Three</option>
+                                            </select>
+                                            <label for="floatingSelect">Item Type*</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 w-25">
+                                        <div class="form-floating mb-3 col-3 w-100">
+                                            <input type="email" class="form-control" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">Rate</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 w-25">
+                                        <div class="form-floating mb-3 col-3 w-100">
+                                            <input type="email" class="form-control" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">Quantity</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 w-25">
+                                        <div class="form-floating mb-3 col-3 w-100">
+                                            <input type="email" class="form-control" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput">unit</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-between">
+                                    <div class="col-3">
+                                        <div class="form-check form-switch pe-0">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                                                style="height:35px;width:65px;">
+                                            <label class="form-check-label model-label "
+                                                for="flexSwitchCheckDefault">Available</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-check form-switch">
+                                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault"
+                                                style="height:35px;width:65px;">
+                                            <label class="form-check-label model-label" for="flexSwitchCheckDefault"
+                                                class="model-label">Default Tax</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3 p-0 ps-1">
+                                        <div class="form-floating mb-3 col-3 w-100">
+                                            <input type="email" class="form-control" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput" class="model-label">tax percentage</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-3">
+                                        <div class="form-floating mb-3 col-3 w-100">
+                                            <input type="email" class="form-control" id="floatingInput"
+                                                placeholder="name@example.com">
+                                            <label for="floatingInput" class="model-label">Short code</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-12 mb-2">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" placeholder="Leave a comment here"
+                                                id="floatingTextarea2" style="height: 100px"></textarea>
+                                            <label for="floatingTextarea2">description</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mb-2">
+                                    <div class="col-12">
+                                        <div class="form-floating">
+                                            <textarea class="form-control" placeholder="Leave a comment here"
+                                                id="floatingTextarea2" style="height: 100px"></textarea>
+                                            <label for="floatingTextarea2">Comments</label>
+                                        </div>
+                                    </div>
+                                </div>
+
                             </div>
-                        </div>
-                        
-                    </div>
-                </div>
-            </div>
-            <!-- Button trigger modal -->
-  
-  <!-- Modal -->
-  <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        <div class="modal-header d-flex justify-content-between">
-          <h5 class="modal-title" id="exampleModalLongTitle">Add Category</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-            <form method="Post" asp-controller="Dashboard" asp-action="AddCatgory">
-            <input type="email" class="form-control mb-3" asp-controller="Dashboard" asp-action="Addcategory"  id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Name*">
-            <textarea type="text" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Description"></textarea>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary" data-dismiss="modal">Add</button>
-          <button type="reset" class="btn btn-outline-primary">cancel</button>
-        </div>
-            </form>
-        </div>
-      </div>
-    </div>
-  </div>
 
-  <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        
-        <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-            <img src="images/icons/icons8-alert-48.png" style="width:70px" class="mb-1"alt="">
-            <h5 class="mb-3">Are you sure you want to delete this item?</h5>
-            <div>
-                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Yes</button>
-                <button type="button" class="btn btn-outline-primary">No</button>
-            </div>
-        </div>
-       
-      </div>
-    </div>
-  </div>
-  <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered" role="document">
-      <div class="modal-content">
-        
-          <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
-        <div class="modal-body w-100 d-flex flex-column">
-            <div class="row w-100">
-                <div class="left col-8">
-                    <div class="row d-flex justify-content-between model-row">
-                        <div class="form-floating col-6">
-                            <select class="form-select model-select" id="floatingSelect" aria-label="Floating label select example">
-                              <option selected>Open this select menu</option>
-                              <option value="1">One</option>
-                              <option value="2">Two</option>
-                              <option value="3">Three</option>
-                            </select>
-                            <label for="floatingSelect" class="model-label">Category</label>
-                          </div>
-                          <div class="form-floating mb-3 col-6">
-                            <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                            <label for="floatingInput" class="model-label">Name</label>
-                          </div>
-                    </div>
-                    <div class="row d-flex justify-content-between  model-row" >
-                        <div class="col-3 w-25">
-                            <div class="form-floating col-3 w-100">
-                                <select class="form-select model-select model-select" id="floatingSelect" aria-label="Floating label select example">
-                                  <option selected>Select a type</option>
-                                  <option value="1">One</option>
-                                  <option value="2">Two</option>
-                                  <option value="3">Three</option>
-                                </select>
-                                <label for="floatingSelect">Item Type*</label>
-                              </div>
+                            <div class="right col-4 h-100" style="background-color: antiquewhite;"></div>
                         </div>
-                        <div class="col-3 w-25">
-                            <div class="form-floating mb-3 col-3 w-100">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Rate</label>
-                              </div>
-                        </div>
-                        <div class="col-3 w-25">
-                            <div class="form-floating mb-3 col-3 w-100">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput">Quantity</label>
-                              </div>
-                        </div>
-                        <div class="col-3 w-25">
-                            <div class="form-floating mb-3 col-3 w-100">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput" >unit</label>
-                              </div>
-                        </div>
-                    </div>
-                    <div class="row d-flex justify-content-between">
-                        <div class="col-3">
-                            <div class="form-check form-switch pe-0">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" style="height:35px;width:65px;">
-                                <label class="form-check-label model-label " for="flexSwitchCheckDefault" >Available</label>
-                              </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-check form-switch">
-                                <input class="form-check-input" type="checkbox" id="flexSwitchCheckDefault" style="height:35px;width:65px;">
-                                <label class="form-check-label model-label" for="flexSwitchCheckDefault"class="model-label">Default Tax</label>
-                              </div>
-                        </div>
-                        <div class="col-3 p-0 ps-1">
-                            <div class="form-floating mb-3 col-3 w-100">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput" class="model-label">tax percentage</label>
-                              </div>
-                        </div>
-                        <div class="col-3">
-                            <div class="form-floating mb-3 col-3 w-100">
-                                <input type="email" class="form-control" id="floatingInput" placeholder="name@example.com">
-                                <label for="floatingInput" class="model-label">Short code</label>
-                              </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-12 mb-2">
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                                <label for="floatingTextarea2">description</label>
-                              </div>
-                        </div>
-                    </div>
-                    <div class="row mb-2">
-                        <div class="col-12">
-                            <div class="form-floating">
-                                <textarea class="form-control" placeholder="Leave a comment here" id="floatingTextarea2" style="height: 100px"></textarea>
-                                <label for="floatingTextarea2">Comments</label>
-                              </div>
+
+                        <div>
+                            <button class="btn btn-primary">submit</button>
+                            <button class="btn btn-outline-primary">cancel</button>
                         </div>
                     </div>
 
                 </div>
-                
-                <div class="right col-4 h-100" style="background-color: antiquewhite;"></div>
-            </div>
-
-            <div>
-                <button class="btn btn-primary">submit</button>
-                <button class="btn btn-outline-primary">cancel</button>
             </div>
         </div>
-       
+        @* <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header d-flex justify-content-between">
+                        <h5 class="modal-title" id="exampleModalLongTitle">Add Category</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="Post" asp-controller="Dashboard" asp-action="AddCatgory">
+                            <input type="email" class="form-control mb-3" asp-controller="Dashboard"
+                                asp-action="Addcategory" id="exampleInputEmail1" aria-describedby="emailHelp"
+                                placeholder="Name*">
+                            <textarea type="text" class="form-control" id="exampleInputEmail1"
+                                aria-describedby="emailHelp" placeholder="Description"></textarea>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-primary" data-dismiss="modal">Add</button>
+                                <button type="reset" class="btn btn-outline-primary">cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div> *@
+
+<form method="Post" asp-controller="Dashboard" asp-action="AddCategory">
+<div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="border-bottom: none;">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body pb-0">
+          <div class="mb-3">
+            @* <label for="recipient-name" class="col-form-label">Recipient:</label> *@
+            <input type="text" class="form-control" placeholder="Name" asp-for="categoryname"style="height:10%;" id="recipient-name">
+          </div>
+          <div class="mb-3">
+            <textarea class="form-control" placeholder="Description" style="height:100%;" asp-for="categorydescription" id="message-text"></textarea>
+          </div>
+      </div>
+      <div class="modal-footer pt-0" style="border-top: none;">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">+Add</button>
       </div>
     </div>
   </div>
-  
+</div>
+</form>
+
+        <script>
+            $("document").ready(function () {
+                loadCategories();
+                loadItemData(1);
+                @* loadItemData(); *@
+    });
+
+            function loadCategories() {
+                $.ajax({
+                    url: '@Url.Action("CategoriesData", "Dashboard")',
+                    type: "GET",
+                    cache: false,
+                    success: function (data) {
+                        $(".menusidebar").html(data);
+
+                    }
+                });
+            };
+            function loadItemData(categoryId) {
+                $.ajax({
+                    url: '@Url.Action("ItemsData", "Dashboard")',
+                    type: "GET",
+                    data: { categoryId: categoryId },
+                    cache: false,
+                    success: function (data) {
+                        $(".menubody").html(data);
+                        console.log(categoryId);
+                    }
+                });
+            };
+
+
+        </script>
+
 </body>
+
 </html>

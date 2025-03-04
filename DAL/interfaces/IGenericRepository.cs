@@ -39,5 +39,7 @@ public interface IGenericRepository
     List<Permission> getAllPermissions();
     string getRolename(int roleid);
     List<Category> getAllCategories();
-    void addNewCategory(string categoryName, string categoryDescription,int createdBy);
+    void addNewCategory(string categoryName, string categoryDescription,string createdBy);
+
+   
 }

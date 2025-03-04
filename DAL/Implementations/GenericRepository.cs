@@ -377,6 +377,10 @@ public class GenericRepository : IGenericRepository
         category.Description = categoryDescription;
         category.Modifiedat = DateTime.Now;
         category.Createdby = _context.Logins.FirstOrDefault(lg=>lg.Email == createdBy).Id;
-
+        _context.Categories.Add(category);
+        _context.SaveChanges();
+        
     }
+
+
 }

@@ -20,14 +20,16 @@
           <h1>My Profile</h1>
         </div>
         <div class="form-container shadow">
-          <div class="bg-img"></div>
+          <div class="bg-img">
+            <img src="~/images/profile_div_bg.jpg" class="profile-icon" style="height:90%;"alt="" />
+          </div>
           <div class="d-flex">
             <div class="pfp d-flex align-items-center justify-content-center">
               <img src="~/images/icons8-manager-64.png" class="profile-icon" alt="" />
             </div>
             <div class="d-flex flex-column justify-content-start">
-              <h2>Admin </h2>
-              <small>@Model.username</small>
+              <h2>Admin</h2>
+              <h2 class="Username">@Model.username</h2>
             </div>
           </div>
 
@@ -79,14 +81,15 @@
                       <label for="floatingSelect">State</label>
                     </div>
                     <div class="form-floating col-4">
-                      <select class="form-select" asp-for="City" aria-label="Floating label select example">
+                      <select class="form-select" asp-for="state" aria-label="Floating label select example">
                           @foreach (var item in Model.City)
                         {
                           <option value="@item">@item.Cityname</option>
                         }
                       </select>
-                      <label for="floatingSelect">City</label>
+                      <label for="floatingSelect">State</label>
                     </div>
+                    
                   </div>
 
                   <div class="row">
@@ -107,9 +110,11 @@
                 <button type="submit" class="btn btn-primary me-2">
                   Update
                 </button>
-                <button type="button" class="btn btn-outline-primary">
-                  cancel
+                
+                <button type="submit" class="btn btn-outline-primary">
+                 <a asp-action="ShowDashboard" asp-controller="Dashboard" style="text-decoration: none;">cancel</a>
                 </button>
+                
               </div>
             </form>
           </div>

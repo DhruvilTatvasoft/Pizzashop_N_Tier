@@ -23,6 +23,7 @@
             <div class="d-flex align-items-center w-100">
                 <div class="toggle-icon ps-3">
                     <button class="tg-btn" type="button">
+                        <img src="~/images/menus.png" style="width:12px;" alt="">
                     </button>
                 </div>
                 <div class="dropdown me-5" style="margin-left: auto;">
@@ -44,7 +45,9 @@
         <div class="row p-0 h-100 d-flex">
             <div class="bg-white sidebar d-md-block ps-0 pe-0 h-100">
                 <div class="w-100 d-flex pt-1 pe-2 d-md-none">
-                    <button class="close-btn"></button>
+                    <button class="close-btn">
+                    <img src="~/images/close.png" style="width:10px;" alt="">
+                    </button>
                 </div>
                 <div class="d-flex justify-content-start align-items-center ps-1 pe-3 pt-2 pb-2">
                     <div class="row d-flex align-items-center justify-content-start">
@@ -52,37 +55,42 @@
                         <h4 class="col-6 ps-1">PIZZASHOP</h4>
                     </div>
                 </div>
-                <ul>
+                <ul> <a asp-controller="Dashboard" asp-action="showDashboard"> 
                     <li class="ps-2">
-                       
-                        <a href=""> <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt="">Dashboard</a>
+                       <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label for="">Dashboard</label>
                     </li>
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="showUsers">
                     <li class="ps-2">
-                        
-                        <a asp-controller="Dashboard" asp-action="showUsers"><img src="~/images/group.png" class="me-2 side-img" alt="">Users</a>
+                        <img src="~/images/group.png" class="me-2 side-img" alt=""><label for="">Users</label></a>
                     </li>
+                    <a asp-controller="Dashboard" asp-action="Roles">
                     <li class="ps-2">
-                        <a asp-controller="Dashboard" asp-action="Roles"><img src="~/images/icons8-user-settings-32.png" class="me-2" alt="">Role and Permission</a>
+                        <img src="~/images/icons8-user-settings-32.png"  class="me-2" style="width:20px;" alt=""><label for="">Role and Permission</label>
                     </li>
+                    </a>
+                    <a asp-controller="Dashboard" asp-action="Menu">
                     <li class="ps-2">
-                        
-                        <a  asp-controller="Dashboard" asp-action="Menu"><img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" alt="">Menu</a>
+                        <img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" style="width:20px;"alt=""><label for="">Menu</label>
                     </li>
+                    </a>
+                    <a href="">
                     <li class="ps-2">
                         <img src="~/images/icons8-stop-30.png" class="me-2 side-img" alt="">
-                        <a href="">Table And Section</a>
+                        <label for="">Table And Section</label>
+                    </li>
+                        </a>
+                    <li class="ps-2">
+                        
+                        <a href=""><img src="~/images/icons8-tax-money-50.png" class="me-2" alt=""><label for="">Taxes And Fees</label></a>
                     </li>
                     <li class="ps-2">
                         
-                        <a href=""><img src="~/images/icons8-tax-money-50.png" class="me-2" alt="">Taxes And Fees</a>
+                        <a href="" style="text-decoration: none;"><img src="~/images/icons8-order-30.png"  class="me-2 side-img"  style="width:20px;" alt=""><label for="">Orders</label></a>
                     </li>
                     <li class="ps-2">
                         
-                        <a href=""><img src="~/images/icons8-order-30.png" class="me-2 side-img" alt="">Orders</a>
-                    </li>
-                    <li class="ps-2">
-                        <img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt="">
-                        <a href="">Customers</a>
+                        <a href=""><img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt=""><label for="">Customers</label></a>
                     </li>
                 </ul>
             </div>
