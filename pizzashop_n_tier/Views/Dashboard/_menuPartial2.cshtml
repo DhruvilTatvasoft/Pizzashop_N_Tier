@@ -3,9 +3,12 @@
 <h3 class="p-2">Items</h3>
 <div class="d-flex justify-content-end w-100 ">
     <div class="me-3">
- <input type="email" class="form-control h-100 " id="exampleFormControlInput1" placeholder="Search">
+
+        @* <input type="email" class="form-control h-100 " onkeyup="searchItem()" id="exampleFormControlInput1" placeholder="Search"> *@
+
     </div>
-    <button class="btn btn-outline-dark me-2"><img src="~/images/trash-fill.svg" alt=""></button>
+    <button class="btn btn-outline-dark me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
+            onclick='DeleteMultipleItems()' alt=""></button>
     <button class="btn btn-outline-dark me-2" type="submit" data-bs-toggle="modal"
         data-bs-target="#exampleModalCenter3">+ New Item</button>
 
@@ -42,41 +45,50 @@
                 <tr>
                     <th scope="row">
 
-                        
-                            <input class="form-check-input col1" type="checkbox" value="" id="flexCheckDefault">
-                            <label class="form-check-label" for="flexCheckDefault">
-                                <img src="~/images/dining-menu.png" style="width:20%;" alt="">
-                                <label for="" style="font-size: 14px;">@item.Itemname</label>
-                            </label>
-                     
-                    </th>
-                    <td>@if(item.Itemtype){<img src="~/images/veg-icon.svg" style="width:25px" alt="">}else{<img src="~/images/non-veg-icon.svg" style="width:25px" alt="">}</td>
-                    <td>@item.Itemrate</td>
-                    <td>@item.Itemquantity</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ? "checked" : "unchecked")>   
-                        </div>
-                    </td>
-                    <td>
-                        <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                            <a href="">
-                                <img src="~/images/pencil-square.svg" class="me-2" alt="">
-                            </a>
-                            <a href="" data-bs-toggle="modal" data-bs-target="#exampleModalCenter2">
-                                <img src="~/images/trash-fill.svg" alt="">
-                            </a>
-                        </div>
 
-                    </td>
-                </tr>
-            }
+                        <input class="form-check-input checkedItems" type="checkbox" value="@item.Itemid" />
+                        <label class="form-check-label" for="flexCheckDefault">
+                            <img src="~/images/dining-menu.png" style="width:20%;" alt="">
+                            <label for="" style="font-size: 14px;">@item.Itemname</label>
+                        </label>
+
+                    </th>
+                    <td>@if(item.Itemtype){
+                    <img src="~/images/veg-icon.svg" style="width:25px" alt="">
+                }else
+                {
+
+                    <img
+                            src="~/images/non-veg-icon.svg" style="width:25px" alt="">
+                }
+</td>
+                <td>@item.Itemrate</td>
+                <td>@item.Itemquantity</td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ?
+                                                                                                                                "checked" : "unchecked")>
+                    </div>
+                </td>
+                <td>
+                    <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                        <a href="">
+                            <img src="~/images/pencil-square.svg" class="me-2" alt="">
+                        </a>
+                        <a href="" data-bs-toggle="modal" data-bs-target="#exampleModalCenter2">
+                            <img src="~/images/trash-fill.svg" alt="">
+                        </a>
+                    </div>
+
+                </td>
+            </tr>
+                        }
         </tbody>
     </table>
     <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
         <div class="d-flex justify-content-center align-items-center">
-            <label for="">items per page:</label>
-            <div class="dropdown mt-2">
+            <label for="" class="me-2">items per page:</label>
+            <div class="dropdown mt-2 me-2">
                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
 
                     <option value="1" selected>1</option>
@@ -97,9 +109,169 @@
                     style="width:25px" alt=""></button>
             <button type="button" class="btn btn-outline-dark btn2 mb-2" style="
                                            padding: 5.8px;
-                                       "><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;"
-                    alt=""></button>
+                                       "><img src="~/images/left-chevron-svgrepo-com.svg"
+                    style="width:25px;rotate: 180deg;" alt=""></button>
         </div>
     </div>
+    <script>
 
+        function loadPageData() {
+            $.ajax({})
+        }
+        function DeleteMultipleItems() {
+            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
+            @* console.log(typeof (selectedItems)); *@
+            var result = selectedItems.map(function (x) {
+                return parseInt(x);
+            });
+            console.log(result);
+            $.ajax({
+                url: '@Url.Action("DeleteItems", "Dashboard")',
+                data: { selectedItems: selectedItems },
+                method: 'POST',
+                success: function (data) {
+                    $(".menubody").html(data);
+                }
+
+            });
+        };
+
+
+
+    </script>
 </div>
+<form method="post" asp-controller="Dashboard" asp-action="AddItem">
+    <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+
+                <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
+                <div class="modal-body w-100 d-flex flex-column">
+                    <div class="row w-100">
+                        <div class="left col-8">
+                            <div class="row d-flex justify-content-between model-row">
+                                <div class="form-floating col-6">
+                                    <select class="form-select model-select" asp-for="@Model.i.Categoryid"
+                                        id="floatingSelect" aria-label="Floating label select example">
+                                        @foreach (var c in Model.categories)
+                                        {
+                                            <option value="@c.Categoryid" selected>@c.Categoryname</option>
+                                        }
+                                    </select>
+                                    <label for="floatingSelect" class="model-label">Category</label>
+                                </div>
+                                <div class="form-floating mb-3 col-6">
+                                    <input type="text" class="form-control" id="floatingInput"
+                                        asp-for="@Model.i.Itemname">
+                                    <label for="floatingInput" class="model-label">Name</label>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between  model-row">
+                                <div class="col-3 w-25">
+                                    <div class="form-floating col-3 w-100">
+                                        <select class="form-select model-select model-select"
+                                            asp-for="@Model.i.Itemtype" id="floatingSelect"
+                                            aria-label="Floating label select example">
+                                            <option value="true">veg</option>
+                                            <option value="false">Non-veg</option>
+                                        </select>
+                                        <label for="floatingSelect" class="model-label">Item Type*</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="@Model.i.Itemrate">
+                                        <label for="floatingInput" class="model-label">Rate</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" asp-for="@Model.i.Itemquantity"
+                                            id="floatingInput" placeholder="name@example.com">
+                                        <label for="floatingInput" class="model-label">Quantity</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <select class="form-select model-select model-select" id="floatingSelect"
+                                            asp-for="@Model.i.Unitid" aria-label="Floating label select example">
+                                            @foreach (var u in Model.units)
+                                            {
+                                                <option value="@u.Unitid">@u.Unitname</option>
+                                            }
+                                        </select>
+                                        <label for="floatingInput" class="model-label"
+                                            asp-for="@Model.i.Unitid">unit</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-3">
+                                    <div class="form-check form-switch d-flex align-items-center w-100 h-100 pe-0">
+                                        <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
+                                            asp-for="@Model.i.Isavailable" style="height:35px;width:65px;margin:0px;">
+                                        <label class="form-check-label model-label "
+                                            for="flexSwitchCheckDefault">Available</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check form-switch d-flex align-items-center  w-100 h-100">
+                                        <input class="form-check-input m-0 me-2" type="checkbox"
+                                            id="flexSwitchCheckDefault" style="height:35px;width:65px;"
+                                            asp-for="@Model.i.Isdefaulttax">
+                                        <label class="form-check-label model-label" for="flexSwitchCheckDefault">Default
+                                            Tax</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 p-0 ps-1">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="@Model.i.Taxpercentage">
+                                        <label for="floatingInput" class="model-label">tax percentage</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="text" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="@Model.i.Shortcode">
+                                        <label for="floatingInput" class="model-label">Short code</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                            id="floatingTextarea2" style="height: 100px"
+                                            asp-for="@Model.i.Description"></textarea>
+                                        <label for="floatingTextarea2">description</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                            id="floatingTextarea2" style="height: 100px"></textarea>
+                                        <label for="floatingTextarea2">Comments</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="right col-4 h-100" style="background-color: antiquewhite;"></div>
+                    </div>
+
+                    <div>
+                        <button class="btn btn-primary" type="submit">submit</button>
+                        <button class="btn btn-outline-primary">cancel</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

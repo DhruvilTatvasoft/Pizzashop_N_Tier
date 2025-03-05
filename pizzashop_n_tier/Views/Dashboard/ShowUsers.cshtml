@@ -55,11 +55,11 @@
     $(document).ready(function () {
       loadPage();
     });
-    function loadPage(pageIndex) {
+    function loadPage(pageIndex,pageSize) {
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
         type: "GET",
-        data: { currentPage: pageIndex,maxRows:$("#dropdown").val(),search : $("#search-record").val()},
+        data: { currentPage: pageIndex,maxRows:$("#dropdown").val(),search : $("#search-record").val(),maxRows :pageSize},
         cache: false,
         success: function (data) {
           $("#t-container").html(data);

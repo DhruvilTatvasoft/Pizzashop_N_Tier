@@ -2,6 +2,7 @@ using System.Reflection.Metadata.Ecma335;
 using AspNetCoreGeneratedDocument;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class DashboardController : Controller
 {
@@ -92,17 +93,17 @@ public class DashboardController : Controller
         _emailService.emailForForgetPass(req, model.email, model.password);
         return View("showUsers");
     }
-    public IActionResult getUsers(string search, int currentPage = 1)
+    public IActionResult getUsers(string search,int maxRows=1,int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
-        model = _user.loadusers(model, currentPage, 5, search);
+        model = _user.loadusers(model, currentPage, maxRows, search);
         return PartialView("_TablePartialView", model);
     }
-    public IActionResult getSearchedUser(string search, int currentPage = 1)
+    public IActionResult getSearchedUser(string search, int maxRows=1,int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         Console.WriteLine("searching user");
-        model = _user.loadusers(model, currentPage, 5, search);
+        model = _user.loadusers(model, currentPage, maxRows, search);
         Console.WriteLine("searched");
         return PartialView("_TablePartialView", model);
     }
@@ -207,6 +208,36 @@ public class DashboardController : Controller
         ItemModel model = new ItemModel();
         _itemService.getItemsForcategory(categoryId,model);
         return PartialView("_menuPartial2",model);
+    }
+    public IActionResult EditCategory(MenuModel model){
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        _menuService.editCategory(model,email);
+        return RedirectToAction("Menu");
+    }
+
+    public IActionResult DeleteCategory(int categoryId){
+        _menuService.deleteCategory(categoryId);
+        return View("Menu");
+    }
+
+    public IActionResult searchItems(ItemModel model){
+        return PartialView("_menuPartial2",model);
+    }
+
+[HttpPost]
+    public IActionResult AddItem(ItemModel model){
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        _itemService.addItem(model.i,email);
+        return PartialView("Menu");
+    }
+
+    [HttpPost]
+    public IActionResult DeleteItems(List<int> selectedItems){
+        _itemService.deleteItems(selectedItems);
+        Console.WriteLine("items deleted");
+        return View("Menu");
     }
 
 }

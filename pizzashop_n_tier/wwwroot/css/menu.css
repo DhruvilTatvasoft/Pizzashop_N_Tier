@@ -1,10 +1,6 @@
-html,
-    body {
-        height: 100%;
-        width: 100%;
-        overflow-x: hidden;
-        /* overflow-y: hidden; */
-    }
+body{
+    overflow-y: hidden;
+}
 
     nav a {
         margin-left: auto;
@@ -117,6 +113,21 @@ html,
     .scrollbox ul li:hover label{
         color: #0066A7;
     }
+    .model-label{
+        font-size: 12px;
+        padding-bottom: 0px;
+    }
+
+    .form-floating>.form-control-plaintext~label,
+    .form-floating>.form-control:focus~label,
+    .form-floating>.form-control:not(:placeholder-shown)~label,
+    .form-floating>.form-select~label {
+        color: rgba(var(--bs-body-color-rgb), .65);
+        transform: scale(.85) translateY(-.5rem) translateX(-0.4rem);
+      
+    }
+    
+
     .scrollbox ul li{
         padding:25px    ;
     }
@@ -142,6 +153,8 @@ html,
     position: absolute;
     width: 100%;
  }
+
+
     .form-container {
         width: 97%;
         height: 80%;
@@ -171,13 +184,7 @@ html,
         height: 16px;
     }
 
-    .form-floating>.form-control-plaintext~label,
-    .form-floating>.form-control:focus~label,
-    .form-floating>.form-control:not(:placeholder-shown)~label,
-    .form-floating>.form-select~label {
-        color: rgba(var(--bs-body-color-rgb), .65);
-        transform: scale(.85) translateY(-.5rem) translateX(1.10rem);
-    }
+   
 
     .form-floating>label {
         position: absolute;
@@ -268,7 +275,9 @@ html,
         background-color: white;
         
     }
-
+   input label{
+    font-size: 12px;
+   }
     .menusidebar{
         width: 20%;
         /* border-right-width: 20px; */
@@ -314,7 +323,7 @@ html,
     --bs-gutter-x: 0.5rem;
 }
 #exampleModalCenter3{
-    --bs-modal-width: 55%;
+    --bs-modal-width: 70%;
     --bs-modal-height: 55%;
 }
     @media (max-width: 992px) {
