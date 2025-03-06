@@ -8,11 +8,12 @@
 
     <div class="scrollbox w-100 h-100">
         <ul class=" mt-2 w-100 h-100 ">
+           
             @foreach (var category in Model.menuList)
             {
                 <li class="w-100">
 
-                    <label for="" class="ms-0" style="font-size: 13px;"  onclick="loadItemData(@category.categoryId)">≣ @category.categoryName</label>
+                    <label for="" class="ms-0" style="font-size: 13px;"  onclick="loadTableData(@category.categoryId)">≣ @category.categoryName</label>
                     <div class="d-flex" style="margin-left:auto;">
                         <img src="~/images/edit.png" class="pe-2" onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')" style="width:25px;cursor:pointer;" alt="">
                         <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deletecategory(@category.categoryId)" alt="">

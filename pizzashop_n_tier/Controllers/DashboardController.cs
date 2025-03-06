@@ -18,7 +18,7 @@ public class DashboardController : Controller
     public readonly IMenuService _menuService;
 
     public readonly IItemService _itemService;
-    public DashboardController(ILogin log, IUser user, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService,IItemService itemService)
+    public DashboardController(ILogin log, IUser user, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -93,13 +93,13 @@ public class DashboardController : Controller
         _emailService.emailForForgetPass(req, model.email, model.password);
         return View("showUsers");
     }
-    public IActionResult getUsers(string search,int maxRows=1,int currentPage = 1)
+    public IActionResult getUsers(string search, int maxRows = 1, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         model = _user.loadusers(model, currentPage, maxRows, search);
         return PartialView("_TablePartialView", model);
     }
-    public IActionResult getSearchedUser(string search, int maxRows=1,int currentPage = 1)
+    public IActionResult getSearchedUser(string search, int maxRows = 1, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         Console.WriteLine("searching user");
@@ -182,7 +182,8 @@ public class DashboardController : Controller
         return View();
     }
 
-    public IActionResult loadCategoryAndItems(){
+    public IActionResult loadCategoryAndItems()
+    {
 
         return PartialView("_menuPartial3");
     }
@@ -195,49 +196,79 @@ public class DashboardController : Controller
         return PartialView("_menuPartial1", model);
     }
 
-[HttpPost]
+    [HttpPost]
     public IActionResult AddCategory(MenuModel model)
     {
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        _menuService.addNewcategory(model,email);
+        _menuService.addNewcategory(model, email);
         return View("Menu", model);
     }
-    public IActionResult ItemsData(int categoryId){
+    public IActionResult ItemsData(int categoryId)
+    {
         Console.WriteLine(categoryId);
         ItemModel model = new ItemModel();
-        _itemService.getItemsForcategory(categoryId,model);
-        return PartialView("_menuPartial2",model);
+        _itemService.getItemsForcategory(categoryId, model);
+        // model.searchItemName = "dfdf";
+        return PartialView("_menuPartial3", model);
     }
-    public IActionResult EditCategory(MenuModel model){
+    public IActionResult LoadItemPage(int categoryId)
+    {
+        ItemModel model = new ItemModel();
+        model.categoryId = categoryId;
+        _itemService.getItemsForcategory(categoryId, model);
+        return PartialView("_menuPartial2", model);
+    }
+    public IActionResult EditCategory(MenuModel model)
+    {
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        _menuService.editCategory(model,email);
+        _menuService.editCategory(model, email);
         return RedirectToAction("Menu");
     }
-
-    public IActionResult DeleteCategory(int categoryId){
+    public IActionResult DeleteCategory(int categoryId)
+    {
         _menuService.deleteCategory(categoryId);
         return View("Menu");
     }
 
-    public IActionResult searchItems(ItemModel model){
-        return PartialView("_menuPartial2",model);
-    }
-
-[HttpPost]
-    public IActionResult AddItem(ItemModel model){
+    [HttpPost]
+    public IActionResult AddItem(ItemModel model)
+    {
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        _itemService.addItem(model.i,email);
+        _itemService.addItem(model.i, email);
         return PartialView("Menu");
     }
 
     [HttpPost]
-    public IActionResult DeleteItems(List<int> selectedItems){
+    public IActionResult DeleteItems(List<int> selectedItems)
+    {
         _itemService.deleteItems(selectedItems);
         Console.WriteLine("items deleted");
         return View("Menu");
     }
+    [HttpPost]
+    public IActionResult SearchItem(string searchedItem, int categoryid)
+    {
+        ItemModel model = new ItemModel();
+        model.items = _itemService.getSearchedItem(searchedItem, model, categoryid);
+        model.searchItemName = searchedItem;
+        Console.WriteLine("searching works");
+        return PartialView("_menuPartial3", model);
+    }
+
+    [HttpPost]
+    public bool deleteItem(int itemid, int categoryId)
+    {
+        return _itemService.deleteItem(itemid);
+
+    }
+    [HttpGet]
+    public IActionResult deleteItem(int itemid)
+    {
+        return PartialView("_deleteModal");
+    }
+
 
 }

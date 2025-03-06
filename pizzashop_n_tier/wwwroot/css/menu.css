@@ -1,5 +1,5 @@
 body{
-    overflow-y: hidden;
+    /* overflow-y: hidden; */
 }
 
     nav a {
@@ -149,10 +149,10 @@ body{
         background-color: unset;
         background-size: 40px;
     }
- form{
+ /* form{
     position: absolute;
     width: 100%;
- }
+ } */
 
 
     .form-container {
@@ -203,9 +203,7 @@ body{
         transition: opacity .1s ease-in-out, transform .1s ease-in-out;
     }
 
-    form {
-        padding-top: 8%;
-    }
+   
     h2{
         position: absolute;
     top: 14%;

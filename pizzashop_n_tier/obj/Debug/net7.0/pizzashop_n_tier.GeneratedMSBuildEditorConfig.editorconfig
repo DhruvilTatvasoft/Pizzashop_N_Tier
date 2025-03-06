@@ -56,12 +56,20 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXFNob3dVc2Vycy5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/_deleteModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXF9kZWxldGVNb2RhbC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/_menuPartial1.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXF9tZW51UGFydGlhbDEuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/_menuPartial2.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXF9tZW51UGFydGlhbDIuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/_menuPartial3.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRGFzaGJvYXJkXF9tZW51UGFydGlhbDMuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/_TablePartialView.cshtml]
