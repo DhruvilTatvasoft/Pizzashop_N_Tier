@@ -162,9 +162,7 @@ h2 {
 .input-group span img{
     width: 13px;
 }
-.input-group span{
-    height : 31px;
-}
+
 
 @media (max-width: 992px) {
     li {
@@ -178,8 +176,6 @@ h2 {
     .sidebar {
         display: none;
     }
-
-
 }
 
 @media (max-width: 767px) {

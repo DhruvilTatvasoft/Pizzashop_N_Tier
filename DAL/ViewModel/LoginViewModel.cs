@@ -9,6 +9,7 @@ public class LoginViewModel
         set;
     }
     [Required(ErrorMessage ="password is required")]
+    [DataType(DataType.Password)]
     public string password{
         get;
         set;

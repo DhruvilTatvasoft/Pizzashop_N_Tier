@@ -40,12 +40,14 @@
                   <div class="row">
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control pb-1" id="floatingInput" placeholder="name@example.com"
-                        asp-for="firstname" , />
+                        asp-for="firstname"  />
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">First Name</label>
                     </div>
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control" id="floatingInput" asp-for="lastname" ,
                         placeholder="name@example.com" />
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">Last name</label>
                     </div>
                   </div>
@@ -53,11 +55,13 @@
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control col-6" id="floatingInput" asp-for="username" ,
                         placeholder="name@example.com" />
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">User Name</label>
                     </div>
                     <div class="form-floating mb-2 col-6">
                       <input type="tel" class="form-control col-6" id="floatingInput" asp-for="Phone" ,
                         placeholder="name@example.com" />
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">Phone</label>
                     </div>
                   </div>
@@ -70,6 +74,7 @@
                         }
                       </select>
                       <label for="floatingSelect">Country</label>
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                     </div>
                     <div class="form-floating col-4">
                       <select class="form-select" asp-for="state" aria-label="Floating label select example">
@@ -79,6 +84,7 @@
                         }
                       </select>
                       <label for="floatingSelect">State</label>
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                     </div>
                     <div class="form-floating col-4">
                       <select class="form-select" asp-for="state" aria-label="Floating label select example">
@@ -88,6 +94,7 @@
                         }
                       </select>
                       <label for="floatingSelect">State</label>
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                     </div>
                     
                   </div>
@@ -96,12 +103,14 @@
                     <div class="form-floating mb-3 col-8">
                       <input type="text" class="form-control" asp-for="address" , id="floatingInput"
                         placeholder="name@example.com" />
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">Address</label>
                     </div>
                     <div class="form-floating mb-3 col-4">
                       <input type="number" class="form-control" id="floatingInput" asp-for="Zipcode" ,
                         placeholder="name@example.com" />
                       <label for="floatingInput">Zipcode</label>
+                        <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                     </div>
                   </div>
                 </div>
@@ -110,7 +119,6 @@
                 <button type="submit" class="btn btn-primary me-2">
                   Update
                 </button>
-                
                 <button type="submit" class="btn btn-outline-primary">
                  <a asp-action="ShowDashboard" asp-controller="Dashboard" style="text-decoration: none;">cancel</a>
                 </button>

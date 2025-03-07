@@ -4,7 +4,7 @@ using DAL.Data;
 using Microsoft.AspNetCore.Http;
 
 public interface IUser{
-    void changePass(HttpRequest req,chang_p_model model,string email);
+    bool changePass(HttpRequest req,chang_p_model model,string email,string password);
     List<Country> getAllCountries();
     List<City> getStateCities(int stateId);
     string getPass(string v);

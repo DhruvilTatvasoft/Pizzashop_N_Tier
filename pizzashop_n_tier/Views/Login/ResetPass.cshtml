@@ -56,13 +56,14 @@
                         <label for="" class="label-1 mb-3">Reset Password</label><br>
                         <!-- <input type="text" class="form-control mb-4" placeholder="Username" required /> -->
                         <div class="input-group mb-3 d-flex flex-column w-100">
-                            <input type="text" class="form-control w-100 mb-3" id="emailInput" name="newpass"placeholder="New Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                            <input type="text" class="form-control w-100 " id="emailInput" name="confirmpass" placeholder="Confirm Password" aria-label="Recipient's username" aria-describedby="basic-addon2" required>
-                            <input type="text" hidden class="form-control w-100 " id="emailInput" name="email" asp-for="email" placeholder="Confirm Password" aria-label="Recipient's username" aria-describedby="basic-addon2" >
+                            <input type="text" class="form-control w-100  mb-2 " id="emailInput" name="newpass"placeholder="New Password" aria-label="Recipient's username" aria-describedby="basic-addon2" >
+                            <span asp-validation-for="confirmpass" class="text-danger invalidmsg mb-2"></span>
+                            <input type="text" class="form-control w-100 " id="emailInput" name="confirmpass" placeholder="Confirm Password" aria-label="Recipient's username" aria-describedby="basic-addon2" >
+                            <span asp-validation-for="confirmpass" class="text-danger invalidmsg mt-2"></span>
+                            <input type="text" hidden class="form-control w-100 mb-2" id="emailInput" name="email" asp-for="email" placeholder="Confirm Password" aria-label="Recipient's username" aria-describedby="basic-addon2" >
                           </div>
-                         
                         <button type="submit" class="btn btn-primary w-100" >submit</button>
-                        <div class="w-100 d-flex justify-content-center mt-2">
+                        <div class="w-100 d-flex justify-content-center  mb-2">
                             <a asp-controller="Login" asp-action="Index" style="text-decoration: none;">Back to Login</a>
                         </div>
                       </form>

@@ -11,7 +11,10 @@ public class userpagingdetailmodel{
         get;
         set;
     }
-
+    public int maxRows{
+        get;
+        set;
+    }
     public void loadUsers()
     {
         throw new NotImplementedException();

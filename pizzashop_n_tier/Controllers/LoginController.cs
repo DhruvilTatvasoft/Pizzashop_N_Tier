@@ -1,5 +1,6 @@
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace pizzashop_n_tier.Controllers;
 
@@ -37,9 +38,15 @@ public class LoginController : Controller
     [HttpPost]
     public IActionResult Index(LoginViewModel lgnmdl)
     {
+
+        if (!ModelState.IsValid)
+        {
+            return View(lgnmdl);
+        }
         Console.WriteLine(_log.checkloggerInDb(lgnmdl));
         if (_log.checkloggerInDb(lgnmdl))
         {
+
             var token = _log.saveLogger(lgnmdl);
             var res = HttpContext.Response;
             if (lgnmdl.IsChecked)
@@ -47,20 +54,41 @@ public class LoginController : Controller
                 _CookieService.setInCookie(token, res, "token");
             }
             _CookieService.setInCookie(lgnmdl.username, res, "username");
+            _CookieService.setInCookie(lgnmdl.password, res, "password");
             Console.WriteLine("-----");
             return RedirectToAction("showDashboard", "Dashboard");
         }
-        return View();
+        else
+        {
+            Console.WriteLine("adderror");
+            ModelState.AddModelError("username", "Invalid Email or Password");
+            ModelState.AddModelError("password", "Invalid Email or Password");
+            return View(lgnmdl);
+        }
+        // return View();
+
     }
 
     [HttpPost]
     public async Task<IActionResult> ForgetPass(string Email)
     {
+        if(Email == null){
+             ModelState.AddModelError("username", "Enter Your Registered Email Address");
+            LoginViewModel model = new LoginViewModel();
+             return View(model);
+        }
+        if(!ModelState.IsValid){
+            LoginViewModel model = new LoginViewModel();
+            return View(model);
+        }
         if (_log.emailExist(Email))
         {
             Console.WriteLine("email generated");
             var req = HttpContext.Request;
             _emailGenService.generateEmail(req, Email);
+        }
+        else{
+             ModelState.AddModelError("username", "Email does not exist !! Register First !!");
         }
         return View();
     }
@@ -73,6 +101,13 @@ public class LoginController : Controller
     [HttpPost]
     public IActionResult ResetPass(PasswordModel model)
     {
+        if(model.confirmpass != model.newpass){
+            ModelState.AddModelError("confirmpass", "Password and Confirm Password does not match");
+            return View(model);
+        }
+        if(!ModelState.IsValid){
+            return View(model);
+        }
         _log.updatePass(model);
         return View("Index");
     }

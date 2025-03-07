@@ -21,13 +21,16 @@ public class UserImpl : IUser
         _emailService = emailService;
     }
 
-    public void changePass(HttpRequest req, chang_p_model model, string email)
+    public bool changePass(HttpRequest req, chang_p_model model, string email,string password)
     {
-        if (model.confirmpass == model.newpass)
+        if (model.oldpass == password && model.confirmpass == model.newpass)
         {
             string EncryptedPass = _aesservice.Encrypt(model.newpass);
             _repository.changePass(model, email, EncryptedPass);
-
+    return true;
+        }
+        else{
+            return false;
         }
     }
 
@@ -95,10 +98,11 @@ public class UserImpl : IUser
 
         List<users> userlist = _repository.getUsersForPage(currentPage, maxRows, search);
         model.users = userlist;
-
         model.PageCount = (int)Math.Ceiling(_repository.getUserCount() / Convert.ToDecimal(maxRows));
         model.CurrentPageIndex = currentPage;
-        model.totalusers = userlist.Count();
+        model.totalusers = (int)_repository.getUserCount();
+        model.maxRows = maxRows;
+        // model.totalusers = userlist.Count();
         return model;
     }
 

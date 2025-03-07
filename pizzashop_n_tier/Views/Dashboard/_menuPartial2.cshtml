@@ -7,8 +7,8 @@
          <input type="email" class="form-control h-100 " onkeyup="searchItem(@Model.categoryId)" asp-for="searchItemName" id="searchedItem" placeholder="Search"> 
          @* <input type="email" class="form-control h-100 "asp-for="searchItemName" id="categoryid"  placeholder="Search">  *@
     </div>
-    <button class="btn btn-outline-dark me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
-            onclick='DeleteMultipleItems()' alt=""></button>
+    <button class="btn btn-outline-dark me-2" onclick='DeleteMultipleItems()'><img src="~/images/trash-fill.svg" style="cursor: pointer;"
+             alt=""></button>
     <button class="btn btn-outline-dark me-2" type="submit" data-bs-toggle="modal"
         data-bs-target="#exampleModalCenter3">+ New Item</button>
 <input type="text" id="categoryid_hidden" value="@Model.categoryId" hidden>
@@ -19,6 +19,7 @@
     <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
         <div class="d-flex justify-content-center align-items-center">
             <label for="" class="me-2">items per page:</label>
+    using Microsoft.Extensions.Options;
             <div class="dropdown mt-2 me-2">
                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
 
@@ -50,24 +51,7 @@
         })
 
         
-        function DeleteMultipleItems() {
-            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
-            @* console.log(typeof (selectedItems)); *@
-            var result = selectedItems.map(function (x) {
-                return parseInt(x);
-            });
-            console.log(result);
-            $.ajax({
-                url: '@Url.Action("DeleteItems", "Dashboard")',
-                data: { selectedItems: selectedItems },
-                method: 'POST',
-                success: function (data) {
-                    $(".menubody").html(data);
-                }
-
-            });
-        };
-
+       
     function searchItem(categoryId) {
             var SearchedItem = $('#searchedItem').val();
             if(SearchedItem.length > 4){
@@ -208,10 +192,18 @@
                             </div>
 
                         </div>
-                        <div class="right col-4 h-100" style="background-color: antiquewhite;"> abcd</div>
+                        <div class="right col-4" style="background-color: antiquewhite;"> <div class="dropdown mt-2 me-2"></div>
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                    
+                    <option value="1" selected><label for="" class="fs-2">Select Modifier Groups(s)</label></option>
+                   @foreach(var m in @Model.modifiergroups){
+                    <option value="@m.Modifiergroupid">@m.Modifiergroupname</option>
+                   }
+                </select>
+            </div></div>
                     </div>
 
-                    <div>
+                    <div class="pb-3 ps-3">
                         <button class="btn btn-primary" type="submit">submit</button>
                         <button class="btn btn-outline-primary">cancel</button>
                     </div>

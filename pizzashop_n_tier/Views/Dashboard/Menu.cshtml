@@ -87,29 +87,49 @@
                 });
             };
 
-        function deleteItemGet(itemid) {
+            function DeleteMultipleItems() {
+                var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
+                @* console.log(typeof (selectedItems)); *@
+            var result = selectedItems.map(function (x) {
+                    return parseInt(x);
+                });
+                var categoryId = document.getElementById("categoryid_hidden").value;
+                console.log(result);
+                $.ajax({
+                    url: '@Url.Action("DeleteItems", "Dashboard")',
+                    data: { selectedItems: selectedItems, categoryId: categoryId },
+                    method: 'POST',
+                    success: function (data) {
+                        $("table").html(data);
+                    }
+
+                });
+            };
+
+
+            function deleteItemGet(itemid) {
                 console.log("clicked");
                 console.log(itemid);
-                    $.ajax({
-                        url: '@Url.Action("deleteItem", "Dashboard")',
-                        type: "GET",
-                        data: { itemid: itemid },
-                        success: function (data) {
-                            $('#deletemodel').html(data);
-                $('#exampleModalCenter8').modal('show');
-                            $('#itemid_hidden').val(itemid);
-                        }
-                    });
+                $.ajax({
+                    url: '@Url.Action("deleteItem", "Dashboard")',
+                    type: "GET",
+                    data: { itemid: itemid },
+                    success: function (data) {
+                        $('#deletemodel').html(data);
+                        $('#exampleModalCenter8').modal('show');
+                        $('#itemid_hidden').val(itemid);
+                    }
+                });
 
-           };
-             function deleteItemPost() {
+            };
+            function deleteItemPost() {
                 console.log("clicked");
                 var itemid = $('#itemid_hidden').val();
                 var categoryId = $('#categoryid_hidden').val();
                 $.ajax({
                     url: '@Url.Action("deleteItem", "Dashboard")',
                     type: "POST",
-                    data: {itemid:  itemid},
+                    data: { itemid: itemid },
                     success: function (data) {
                         $('table').html(data);
                         loadTableData(categoryId)
@@ -121,7 +141,7 @@
 
         </script>
 
-        
+
 
 
 

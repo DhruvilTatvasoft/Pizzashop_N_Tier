@@ -14,12 +14,21 @@ public class MenuImpl : IMenuService
 
     public void addNewcategory(MenuModel model,string email)
     {
-        string categoryName = model.categoryname;
-        string categoryDescription = model.categorydescription;
-        _itemRepository.addNewCategory(categoryName,categoryDescription,email);
+        Menu m = model.m;
+        _itemRepository.addNewCategory(m.categoryName,m.description,email);
     }
 
-   
+    public void deleteCategory(int categoryId)
+    {
+        _itemRepository.deleteCategory(categoryId);
+    }
+
+    public void editCategory(MenuModel model,string email){
+        Menu m = model.m;
+        _itemRepository.EditCategory(m,email);
+    }
+
+    
 
     public MenuModel GetCategories(MenuModel model)
     {

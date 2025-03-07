@@ -17,6 +17,8 @@ public class DashboardController : Controller
 
     public readonly IMenuService _menuService;
 
+    private readonly ICookieService _CookieService;
+
     public readonly IItemService _itemService;
     public DashboardController(ILogin log, IUser user, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
@@ -43,21 +45,22 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult updateProfile(UserDetailModel model)
     {
+        // if(model.firstname == null || model.lastname == null ||model.username == null ||  model.Phone == null || model.country == null || model.state == null || model.address == null || model.Zipcode == null ){
+        if(ModelState.IsValid ){ 
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         Console.WriteLine("in update profile");
         _user.updateUser(model, email);
         return View("Myprofile", model);
+        }  
+        else{
+            return View("Myprofile",model);
+        }
     }
     [HttpGet]
     public IActionResult ResetPassword()
     {
-        var req = HttpContext.Request;
-        var model = new chang_p_model
-        {
-            oldpass = _user.getPass(_cookieService.getValueFromCookie("username", req))
-        };
-        return View(model);
+        return View();
     }
 
     [HttpPost]
@@ -65,8 +68,17 @@ public class DashboardController : Controller
     {
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        _user.changePass(req, model, email);
-        return RedirectToAction("ShowDashboard", "Dashboard");
+        string password = _cookieService.getValueFromCookie("password", req);
+        if (_user.changePass(req, model, email, password))
+        {
+            var res = HttpContext.Response;
+            _CookieService.setInCookie(model.newpass, res, "password");
+            return RedirectToAction("index", "LoginController");
+        }
+        else{
+             ModelState.AddModelError("oldpass", "Please enter correct Password");
+             return View(model);
+        }
     }
     public IActionResult Logout()
     {
@@ -242,11 +254,14 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public IActionResult DeleteItems(List<int> selectedItems)
+    public IActionResult DeleteItems(List<int> selectedItems, int categoryId)
     {
         _itemService.deleteItems(selectedItems);
         Console.WriteLine("items deleted");
-        return View("Menu");
+        ItemModel model = new ItemModel();
+        model.categoryId = categoryId;
+        _itemService.getItemsForcategory(categoryId, model);
+        return PartialView("_menuPartial3", model);
     }
     [HttpPost]
     public IActionResult SearchItem(string searchedItem, int categoryid)
