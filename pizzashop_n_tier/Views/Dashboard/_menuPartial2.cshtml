@@ -19,7 +19,6 @@
     <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
         <div class="d-flex justify-content-center align-items-center">
             <label for="" class="me-2">items per page:</label>
-    using Microsoft.Extensions.Options;
             <div class="dropdown mt-2 me-2">
                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
 
@@ -89,7 +88,9 @@
                                         {
                                             <option value="@c.Categoryid" selected>@c.Categoryname</option>
                                         }
+                                        
                                     </select>
+
                                     <label for="floatingSelect" class="model-label">Category</label>
                                 </div>
                                 <div class="form-floating mb-3 col-6">

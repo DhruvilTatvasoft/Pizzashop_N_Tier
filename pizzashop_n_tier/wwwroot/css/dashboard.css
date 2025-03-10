@@ -69,13 +69,13 @@ html,
         font-weight: bold;
         color: #0066A7;
     }
-
+/* 
     .sticky-top {
         position: -webkit-sticky;
         position: sticky;
         top: 0;
         z-index: 0;
-    }
+    } */
 
     li a {
         text-decoration: none;

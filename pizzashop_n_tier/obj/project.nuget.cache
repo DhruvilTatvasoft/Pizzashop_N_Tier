@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "pXlg2fa8OndHTCT6S3QONqFLODuvXHi+mEZ/6VegcldRWxrV6yvmxlbL76EqHa2UEHceZHqbU1eUSwaXfMR3Iw==",
+  "dgSpecHash": "qg2xR5VY0Wkoa1HAZMnzQfI2AbQpvhhjuQVc25tZ9f81c5W1sATLvVglOaUcUJTfUHoHNX+BOd6/Xquhq3a8kg==",
   "success": true,
   "projectFilePath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pct78\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\humanizer.core\\2.14.1\\humanizer.core.2.14.1.nupkg.sha512",
+    "C:\\Users\\pct78\\.nuget\\packages\\jquery\\1.6.3\\jquery.1.6.3.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\microsoft.aspnetcore.authentication.jwtbearer\\7.0.4\\microsoft.aspnetcore.authentication.jwtbearer.7.0.4.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\1.1.1\\microsoft.bcl.asyncinterfaces.1.1.1.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\microsoft.csharp\\4.5.0\\microsoft.csharp.4.5.0.nupkg.sha512",
@@ -73,7 +74,8 @@
     "C:\\Users\\pct78\\.nuget\\packages\\system.text.json\\7.0.0\\system.text.json.7.0.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\system.threading.tasks\\4.3.0\\system.threading.tasks.4.3.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\system.threading.tasks.extensions\\4.5.4\\system.threading.tasks.extensions.4.5.4.nupkg.sha512",
-    "C:\\Users\\pct78\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512"
+    "C:\\Users\\pct78\\.nuget\\packages\\system.windows.extensions\\5.0.0\\system.windows.extensions.5.0.0.nupkg.sha512",
+    "C:\\Users\\pct78\\.nuget\\packages\\toastr\\2.1.1\\toastr.2.1.1.nupkg.sha512"
   ],
   "logs": []
 }

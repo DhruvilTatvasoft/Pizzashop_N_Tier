@@ -15,6 +15,9 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+  @* <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> *@
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 <link rel="stylesheet" href="~/css/_Sidebarnavbar.css">
 
 <body>
@@ -135,6 +138,45 @@
                 console.log("done")
 
             });
+
+             $(function () {
+            var message = '@Html.Raw(TempData["ToastrMessage"])';
+            var type = '@Html.Raw(TempData["ToastrType"])';
+            if (message.trim() !== '') {
+                switch(type){
+                    case 'success':
+                    toastr.success(message)
+                    break;
+                    case 'error':
+                    toastr.error(message)
+                    break;
+                    case 'warning':
+                    toastr.warning(message)
+                    break;
+                    case 'info':
+                    toastr.info(message)
+                }
+            }
+        });
+    toastr.options = {
+        "closeButton": true,      // Show close button
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,      // Show progress bar
+        "positionClass": "toast-top-right", // Change position
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "2000",        // Auto-close after 5 seconds
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+
         </script>
 </body>
 

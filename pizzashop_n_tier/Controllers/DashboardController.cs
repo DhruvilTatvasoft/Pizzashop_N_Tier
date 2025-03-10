@@ -1,5 +1,6 @@
 using System.Reflection.Metadata.Ecma335;
 using AspNetCoreGeneratedDocument;
+using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -35,6 +36,7 @@ public class DashboardController : Controller
     }
     public IActionResult Myprofile()
     {
+
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         // Console.WriteLine("email from session" + email);
@@ -45,16 +47,24 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult updateProfile(UserDetailModel model)
     {
+        model.Role = _user.getRoles();
+        model.Country = _user.getAllCountries();
         // if(model.firstname == null || model.lastname == null ||model.username == null ||  model.Phone == null || model.country == null || model.state == null || model.address == null || model.Zipcode == null ){
-        if(ModelState.IsValid ){ 
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        Console.WriteLine("in update profile");
-        _user.updateUser(model, email);
-        return View("Myprofile", model);
-        }  
-        else{
-            return View("Myprofile",model);
+        if (ModelState.IsValid)
+        {
+            var req = HttpContext.Request;
+            string email = _cookieService.getValueFromCookie("username", req);
+            Console.WriteLine("in update profile");
+            _user.updateUser(model, email);
+            TempData["ToastrMessage"] = "profile updated successfully";
+            TempData["ToastrType"] = "success";
+            return View("Myprofile", model);
+        }
+        else
+        {
+            TempData["ToastrMessage"] = "Some fields are neccessary to Fill";
+            TempData["ToastrType"] = "error";
+            return View("Myprofile", model);
         }
     }
     [HttpGet]
@@ -73,17 +83,24 @@ public class DashboardController : Controller
         {
             var res = HttpContext.Response;
             _CookieService.setInCookie(model.newpass, res, "password");
+            TempData["ToastrMessage"] = "Password Changed successfully";
+            TempData["ToastrType"] = "success";
             return RedirectToAction("index", "LoginController");
         }
-        else{
-             ModelState.AddModelError("oldpass", "Please enter correct Password");
-             return View(model);
+        else
+        {
+            ModelState.AddModelError("oldpass", "Please enter correct Password");
+            TempData["ToastrMessage"] = "Incorrect current password";
+            TempData["ToastrType"] = "error";
+            return View(model);
         }
     }
     public IActionResult Logout()
     {
         HttpContext.Response.Cookies.Delete("token");
         HttpContext.Response.Cookies.Delete("username");
+        TempData["ToastrMessage"] = "Logout successfully";
+        TempData["ToastrType"] = "success";
         return RedirectToAction("Index", "Login");
     }
 
@@ -98,20 +115,43 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult AddUser(UserDetailModel model)
     {
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        Console.WriteLine("in post method");
-        _user.saveNewUser(model, email);
-        _emailService.emailForForgetPass(req, model.email, model.password);
-        return View("showUsers");
+        model.Role = _user.getRoles();
+        model.Country = _user.getAllCountries();
+        if (_user.IsUserExist(model.email))
+        {
+            TempData["ToastrMessage"] = "User already exist";
+            TempData["ToastrType"] = "error";
+            return View(model);
+        }
+        if (ModelState.IsValid)
+        {
+            var req = HttpContext.Request;
+            string email = _cookieService.getValueFromCookie("username", req);
+            Console.WriteLine("in post method");
+            _user.saveNewUser(model, email);
+            _emailService.emailForForgetPass(req, model.email, model.password);
+            TempData["ToastrMessage"] = "New User added Successfully";
+            TempData["ToastrType"] = "success";
+            return View("showUsers");
+        }
+        else
+        {
+            Console.WriteLine(ModelState.ErrorCount);
+            model.Role = _user.getRoles();
+            model.Country = _user.getAllCountries();
+            TempData["ToastrMessage"] = "some fields are neccessary to Fill";
+            TempData["ToastrType"] = "error";
+            return View(model);
+        }
     }
-    public IActionResult getUsers(string search, int maxRows = 1, int currentPage = 1)
+
+    public IActionResult getUsers(string search, int maxRows = 5, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         model = _user.loadusers(model, currentPage, maxRows, search);
         return PartialView("_TablePartialView", model);
     }
-    public IActionResult getSearchedUser(string search, int maxRows = 1, int currentPage = 1)
+    public IActionResult getSearchedUser(string search, int maxRows = 5, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         Console.WriteLine("searching user");
@@ -130,11 +170,14 @@ public class DashboardController : Controller
     public IActionResult DeleteUser(int Id)
     {
         _user.deleteUser(Id);
-        return View("getUsers");
+        TempData["ToastrMessage"] = "User Deleted successfully";
+        TempData["ToastrType"] = "success";
+        return View("showUsers");
     }
     [HttpGet]
     public IActionResult EditUser(int Id)
     {
+
         UserDetailModel model = new UserDetailModel();
         Console.WriteLine("In edit user");
         model = _user.getUserDetails(Id);
@@ -143,8 +186,17 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult EditUser(UserDetailModel model, int Id)
     {
-        _user.updateUser(model, Id);
-        return View("showUsers");
+
+        if (ModelState.IsValid)
+        {
+            _user.updateUser(model, Id);
+            return View("showUsers");
+        }
+        else
+        {
+            model = _user.getUserDetails(Id);
+            return View(model);
+        }
     }
 
     // JSON endpoint: Get Cities for a State
@@ -211,10 +263,25 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult AddCategory(MenuModel model)
     {
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        _menuService.addNewcategory(model, email);
-        return View("Menu", model);
+        if (ModelState.IsValid)
+        {
+            var req = HttpContext.Request;
+            string email = _cookieService.getValueFromCookie("username", req);
+            if (_menuService.addNewcategory(model, email))
+            {
+                return View("Menu", model);
+            }
+            else
+            {
+                TempData["ToastrMessage"] = "Category Already exist";
+                TempData["ToastrType"] = "error";
+                return View("Menu", model);
+            }
+        }
+        else
+        {
+            return PartialView("_menuPartial1", model);
+        }
     }
     public IActionResult ItemsData(int categoryId)
     {
@@ -233,24 +300,66 @@ public class DashboardController : Controller
     }
     public IActionResult EditCategory(MenuModel model)
     {
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        _menuService.editCategory(model, email);
-        return RedirectToAction("Menu");
+        _menuService.GetCategories(model);
+        if (ModelState.IsValid)
+        {
+            var req = HttpContext.Request;
+            string email = _cookieService.getValueFromCookie("username", req);
+            _menuService.editCategory(model, email);
+            TempData["ToastrMessage"] = "Category Updated Successfully";
+            TempData["ToastrType"] = "success";
+
+        }
+        else if(model.m.categoryName == null ||model.m.description == null){
+            TempData["ToastrMessage"] = "some fields are neccessary to Fill";
+            TempData["ToastrType"] = "Error";
+        }
+
+        return PartialView("_menuPartialView1",model);
+
+
+        // return PartialView("_menuPartial1", model);
+
     }
     public IActionResult DeleteCategory(int categoryId)
     {
-        _menuService.deleteCategory(categoryId);
+        if (ModelState.IsValid)
+        {
+            _menuService.deleteCategory(categoryId);
+            TempData["ToastrMessage"] = "category deleted Successfully";
+            TempData["ToastrType"] = "success";
+        }
+        TempData["ToastrMessage"] = "Error occured while deleting category";
+        TempData["ToastrType"] = "error";
         return View("Menu");
+    }
+
+    [HttpPost]
+    public IActionResult AddCategoryPost(MenuModel model,string categoryName,string categoryDesc){
+         var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        model.m.categoryName = categoryName;
+        model.m.description = categoryDesc;
+        model.m.categoryId = 56;
+        _menuService.addNewcategory(model,email);
+        return RedirectToAction("CategoriesData");
     }
 
     [HttpPost]
     public IActionResult AddItem(ItemModel model)
     {
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        _itemService.addItem(model.i, email);
-        return PartialView("Menu");
+        _itemService.getItemsForcategory(model.i.Categoryid, model);
+        if (ModelState.IsValid)
+        {
+            var req = HttpContext.Request;
+            string email = _cookieService.getValueFromCookie("username", req);
+            _itemService.addItem(model.i, email);
+            return PartialView("Menu");
+        }
+        else
+        {
+            return PartialView("_menuPartial3", model);
+        }
     }
 
     [HttpPost]
@@ -284,6 +393,5 @@ public class DashboardController : Controller
     {
         return PartialView("_deleteModal");
     }
-
 
 }
