@@ -102,7 +102,8 @@ public class LoginImpl : ILogin, IJwtTokenGenService
             State = _repository.getAllStates(),
             Phone = user.Phonenumber,
             Zipcode = user.Zipcode,
-            username = user.Username
+            username = user.Username,
+            ProfilePath= user.Profilephoto
         };
         return ud;
     }

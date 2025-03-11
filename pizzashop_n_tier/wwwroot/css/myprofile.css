@@ -18,10 +18,7 @@ html,
       border-color: transparent;
     }
 
-    nav {
-      position: relative;
-      z-index: 1;
-    }
+    
 
     nav {
       background-color: #0066a7;
@@ -131,6 +128,8 @@ html,
       padding: 10px;
       border-radius: 50%;
       background-color: white;
+      cursor: pointer;
+      z-index: 1;
     }
  
 
@@ -145,6 +144,30 @@ html,
       color: rgba(var(--bs-body-color-rgb), 0.65);
       transform: scale(0.85) translateY(-0.5rem) translateX(1.1rem);
     }
+
+    .camera-icon-container img {
+      width: 17px;
+    } 
+    #avatar{
+        width: 10%;
+        position: absolute;
+        left: 5%;
+        height: 100%;
+        /* display: none; */
+    }
+    .camera-icon-container {
+      width: 34px;
+      height: 34px;
+      background-color: #d3d3d3;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      top: 11%;
+      right: 89%;
+      z-index: 2;
+  }
 
     .form-floating > label {
       position: absolute;

@@ -20,8 +20,13 @@
     @foreach (users user in Model.users)
     {
       <tr>
-        <td class="ps-4">@user.name</td>
-        @* <input type="text" value="@user.userid" hidden></input> *@
+        @if(user.profilepic != null){
+        <td class="ps-3" style="width:28%;"><img src="@user.profilepic" class="profile-icon me-3" id="profileicon" alt="" style="object-fit: cover; " />@user.name</td>
+        }
+        else{
+
+        <td class="ps-3"><img src="~/images/manager.png" class="profile-icon me-3" id="profileicon" alt="" style="object-fit: cover; " />@user.name</td>
+        }
         <td>@user.Email</td>
         <td>@user.phone</td>
         <td>@user.role @user.userid</td>
@@ -36,7 +41,7 @@
           }
 
 
-        <td class="d-flex align-items-center ">
+        <td class="align-items-center ">
           <div class="d-flex justify-content-start w-100 pb-2 h-100">
             <a href='@Url.Action("EditUser", "Dashboard", new { Id = @user.userid })'>
               <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">

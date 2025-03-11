@@ -12,10 +12,11 @@ public class MenuImpl : IMenuService
         _itemRepository = itemRepository;
      }
 
-    public void addNewcategory(MenuModel model,string email)
+    public bool addNewcategory(MenuModel model,string email)
     {
         Menu m = model.m;
-        _itemRepository.addNewCategory(m.categoryName,m.description,email);
+        bool temp = _itemRepository.addNewCategory(m.categoryName,m.description,email) ;
+        return temp;
     }
 
     public void deleteCategory(int categoryId)

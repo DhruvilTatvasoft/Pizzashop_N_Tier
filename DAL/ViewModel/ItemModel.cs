@@ -1,11 +1,11 @@
 using DAL.Data;
 
 public class ItemModel{
-    public List<Item> items {
+    public List<Item>? items {
         get;
         set;
     }
-    public Item i{
+    public Item? i{
         get;
         set;
     }
@@ -13,24 +13,24 @@ public class ItemModel{
         get;
         set;
     }
-    public List<Category> categories{
+    public List<Category>? categories{
         get;
         set;
     }
-    public List<Unit> units{
+    public List<Unit>? units{
         get;
         
         set;
     }
-    public List<Modifiergroup> modifiergroups{
+    public List<Modifiergroup>? modifiergroups{
         get;
         set;
     }
-    public string searchItemName{
+    public string? searchItemName{
         get;
         set;
     }
-    public int itemId{
+    public int? itemId{
         get;
         set;
     }

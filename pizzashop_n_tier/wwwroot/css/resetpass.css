@@ -18,11 +18,6 @@ nav a {
     border-color: transparent;
 }
 
-nav {
-    position: relative;
-    z-index: 1;
-
-}
 
 nav {
     background-color: #0066A7;
@@ -45,7 +40,7 @@ ul li {
 .sidebar {
     width: 15%;
     position: fixed;
-    z-index: 2;
+    z-index: 9;
     top: 0;
     left: 0;
     display: block;

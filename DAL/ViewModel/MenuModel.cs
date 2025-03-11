@@ -1,13 +1,13 @@
 using System.ComponentModel.DataAnnotations;
 
 public class MenuModel{
-    public List<Menu> menuList{
+    public List<Menu>? menuList{
         get;
         set;
     }
 
    [Required] 
-   public Menu m{
+   public Menu? m{
     get;
     set;
    }
@@ -18,11 +18,13 @@ public class Menu{
         get;
         set;
     }
-   public string categoryName{
+    [Required(ErrorMessage = "Category name is required.")]
+       public string? categoryName{
         get;
         set;
     }
-   public string description{
+    [Required(ErrorMessage = "Category Description is required.")]
+   public string? description{
         get;
         set;
     }

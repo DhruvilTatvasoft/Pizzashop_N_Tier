@@ -129,7 +129,7 @@ public class GenericRepository : IGenericRepository
 
     public decimal getUserCount()
     {
-        return _context.Users.Count();
+        return _context.Users.Where(u=>u.Isdeleted == false).Count();
     }
 
     public User getUserDetailFromDb(int userid)
@@ -173,7 +173,8 @@ public class GenericRepository : IGenericRepository
                         Email = u.Email,
                         IsActive = u.Isactive ?? false,
                         phone = u.Phonenumber.ToString(),
-                        role = _context.Roles.FirstOrDefault(r => r.Roleid == u.Roleid).Rolename
+                        role = _context.Roles.FirstOrDefault(r => r.Roleid == u.Roleid).Rolename,
+                        profilepic = u.Profilephoto
                     });
 
         user = user.Where(x => search == null || x.name.ToLower().Contains(search.ToLower()));
@@ -184,7 +185,7 @@ public class GenericRepository : IGenericRepository
         return userlist;
     }
 
-    public void saveNewUserInDb(UserDetailModel model, string email, string pass)
+    public void saveNewUserInDb(UserDetailModel model, string email, string pass,string imagePath)
     {
         var log = _context.Logins.FirstOrDefault(lg => lg.Email == email);
         if (log == null)
@@ -211,6 +212,7 @@ public class GenericRepository : IGenericRepository
             Cityid = model.cityid,
             Address = model.address,
             Zipcode = model.Zipcode,
+            Profilephoto = imagePath, 
             Isdeleted = false
         };
 
@@ -246,19 +248,44 @@ public class GenericRepository : IGenericRepository
         }
     }
 
-    public void updateUserInDb(UserDetailModel model, string email)
+    public void updateUserInDb(UserDetailModel model, string email,string imagePath)
     {
+
+        // string? imagePath = null;
+
+        // if ( != null)
+        // {
+        //     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+        //     if (!Directory.Exists(uploadsFolder))
+        //     {
+        //         Directory.CreateDirectory(uploadsFolder);
+        //     }
+
+        //     var uniqueFileName = $"{Guid.NewGuid()}_{addEditUser.ImageFile.FileName}";
+        //     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+        //     using (var fileStream = new FileStream(filePath, FileMode.Create))
+        //     {
+        //         await addEditUser.ImageFile.CopyToAsync(fileStream);
+        //     }
+
+        //     imagePath = $"/uploads/{uniqueFileName}";
+
+
         var user = _context.Users.FirstOrDefault(u => u.Email == email);
         Console.WriteLine(email + " for updateuser");
         user.Firstname = model.firstname;
         user.Lastname = model.lastname;
         user.Username = model.username;
         user.Phonenumber = model.Phone;
-        user.Countryid = _context.Countries.FirstOrDefault(c => c.Countryname == model.country).Countryid;
-        user.Cityid = _context.Cities.FirstOrDefault(c => c.Cityname == model.city).Cityid;
-        user.Stateid = _context.States.FirstOrDefault(s => s.Statename == model.state).Stateid;
+        user.Countryid = _context.Countries.FirstOrDefault(c => c.Countryid == model.countryid).Countryid;
+        user.Cityid = _context.Cities.FirstOrDefault(c => c.Cityid == model.cityid).Cityid;
+        user.Stateid = _context.States.FirstOrDefault(s => s.Stateid == model.stateid).Stateid;
         user.Address = model.address;
         user.Zipcode = model.Zipcode;
+        if(imagePath != null){
+        user.Profilephoto = imagePath;
+        }
         _context.Users.Update(user);
         _context.SaveChanges();
     }
@@ -307,7 +334,7 @@ public class GenericRepository : IGenericRepository
 
     }
 
-    public void updateUserInDb(UserDetailModel model, int id)
+    public void updateUserInDb(UserDetailModel model, int id,string imagePath)
     {
        var user = _context.Users.FirstOrDefault(u => u.Userid == id);
         Console.WriteLine(id + " for updateuser");
@@ -321,6 +348,7 @@ public class GenericRepository : IGenericRepository
         user.Stateid = model.stateid;
         user.Address = model.address;
         user.Zipcode = model.Zipcode;
+        user.Profilephoto = imagePath;
         _context.Users.Update(user);
         _context.SaveChanges();
     }
@@ -382,5 +410,14 @@ public class GenericRepository : IGenericRepository
         
     }
 
-
+    public bool IsUserExist(string email)
+    {
+        User u = _context.Users.FirstOrDefault(u=>u.Email == email);
+        if(u != null){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
 }

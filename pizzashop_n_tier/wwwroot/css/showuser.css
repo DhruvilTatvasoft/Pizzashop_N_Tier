@@ -83,7 +83,9 @@ html,
     }
 
     .profile-icon {
-        width: 100%;
+        border-radius: 50%;
+    width: 11%;
+    border: 3px solid gray;
     }
 
     

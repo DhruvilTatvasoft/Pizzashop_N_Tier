@@ -13,10 +13,6 @@ public class PermissionsModel{
 }
 public class page{
 
-//  public bool wantsToChange{
-//         get;
-//         set;
-//     }
 public int permissionid{
     get;
     set;

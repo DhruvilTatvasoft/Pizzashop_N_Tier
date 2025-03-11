@@ -11,6 +11,8 @@ public interface IUser{
     List<string> getRoles();
     List<State> getStates(int countryId);
 
+    bool IsUserExist(string email);
+
     // userpagingdetailmodel getSearcheduser(string search);
     userpagingdetailmodel loadusers(userpagingdetailmodel model,int currentPage,int maxRows,string search);
     public void updateUser(UserDetailModel model,string email);

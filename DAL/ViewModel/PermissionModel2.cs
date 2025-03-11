@@ -23,4 +23,8 @@ public class PermissionsModel2{
         get;
         set;
     }
+    public List<PermissionModel3> permissionModel{
+        get;
+        set;
+    }
 }

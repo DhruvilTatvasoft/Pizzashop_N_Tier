@@ -26,7 +26,7 @@
 
                     <div>
                         <form class="ps-3 pe-3 pb-3 d-flex flex-column" method="post"
-                            action="@Url.Action("EditUser", "Dashboard",new {Id = Model.userid})">
+                            action="@Url.Action("EditUser", "Dashboard",new {Id = Model.userid})" enctype="multipart/form-data">
                             <div class="form-group w-100 ">
                                 <div>
                                     <div class="row">
@@ -69,7 +69,7 @@
                                     <div class="row">
                                         <div class="form-floating mb-2 col-6">
                                             <input type="text" class="form-control col-6" asp-for="email"
-                                                id="floatingInput" placeholder="name@example.com" disabled>
+                                                id="floatingInput" placeholder="name@example.com" >>
                                             <label for="floatingInput">Email</label>
                                             @* <span asp-validation-for="email" class="mb-4 text-danger invalidmsg"></span> *@
 
@@ -77,17 +77,21 @@
                                         <div class="form-floating mb-2 col-6">
                                             <select class="form-select" id="status" asp-for="status"
                                                 aria-label="Floating label select example">
-                                                <option value="Active">Active</option>
+                                                @if(Model.status ?? false){
+                                                <option value="Active" selected>Active</option>
                                                 <option value="InActive">InActive</option>
+                                                }
+                                                else{
+                                                <option value="Active">Active</option>
+                                                <option value="InActive" selected>InActive</option>
+                                                }
                                             </select>
                                             <label for="floatingInput">status</label>
-                                           
-
                                         </div>
                                     </div>
                                     <div class="row fileUploadRow me-1 ms-1 mb-3">
                                         <div class="container-fluid " style="padding: 0%;">
-                                            <input type="file" id="fileUpload1" hidden>
+                                            <input type="file" id="fileUpload1" asp-for="profilePicPath" hidden>
                                             <div class="row d-flex justify-content-center">
                                                 <label for="fileUpload1" class="fileUploadLabel">
                                                     <img src="/images/icons8-cloud-upload-50.png"
@@ -119,7 +123,7 @@
                                             </select>
                                             </select>
                                             <label for="floatingSelect">State</label>
-                        <span asp-validation-for="state" class="mb-4 text-danger invalidmsg"></span>
+                        <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span>
 
                                         </div>
                                         <div class="form-floating col-4">
@@ -128,7 +132,7 @@
                                                 <option value="">select city</option>
                                             </select>
                                             <label for="floatingSelect">City</label>
-                                            <span asp-validation-for="city" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="cityid" class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                     </div>
 

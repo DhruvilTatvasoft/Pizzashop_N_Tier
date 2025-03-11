@@ -22,11 +22,7 @@ nav a {
     background-color: #c6c6c6;
     opacity: 1;
 }
-nav {
-    position: relative;
-    z-index: 1;
 
-}
 
 nav {
     background-color: #0066A7;
@@ -46,14 +42,7 @@ ul li {
     width: 100%;
 }
 
-.sidebar {
-    width: 15%;
-    position: fixed;
-    z-index: 2;
-    top: 0;
-    left: 0;
-    display: block;
-}
+
 
 .sidebar-img {
     width: 35%;

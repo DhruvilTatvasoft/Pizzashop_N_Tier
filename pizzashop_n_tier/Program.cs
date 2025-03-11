@@ -20,6 +20,7 @@ builder.Services.AddScoped<IUser,UserImpl>();
 builder.Services.AddScoped<IMenuService,MenuImpl>();
 builder.Services.AddScoped<IItemService,ItemsImple>();
 builder.Services.AddScoped<IItemRepository,ItemRepository>();
+builder.Services.AddScoped<IImagePath,imagePathImpl>();
 
 builder.Services.AddSession(options =>
 {

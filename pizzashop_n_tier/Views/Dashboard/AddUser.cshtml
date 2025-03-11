@@ -26,7 +26,7 @@
 
                     <div>
                         <form class="ps-3 pe-3 pb-3 d-flex flex-column" action="@Url.Action("AddUser", "Dashboard")"
-                            method="post">
+                            method="post" enctype="multipart/form-data">
                             <div class="form-group w-100 ">
                                 <div>
                                     <div class="row">
@@ -83,7 +83,7 @@
                                     </div>
                                     <div class="row fileUploadRow me-1 ms-1 mb-3">
                                         <div class="container-fluid " style="padding: 0%;">
-                                            <input type="file" id="fileUpload1" hidden>
+                                            <input type="file" asp-for="profilePicPath" id="fileUpload1" hidden>
                                             <div class="row d-flex justify-content-center">
                                                 <label for="fileUpload1" class="fileUploadLabel">
                                                     <img src="/images/icons8-cloud-upload-50.png"

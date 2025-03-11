@@ -23,7 +23,7 @@
           "System.Diagnostics.DiagnosticSource": "5.0.0",
           "System.Memory.Data": "1.0.2",
           "System.Numerics.Vectors": "4.5.0",
-          "System.Text.Encodings.Web": "7.0.0",
+          "System.Text.Encodings.Web": "8.0.0",
           "System.Text.Json": "7.0.0",
           "System.Threading.Tasks.Extensions": "4.5.4"
         },
@@ -71,6 +71,17 @@
           }
         }
       },
+      "Microsoft.AspNetCore.Http.Abstractions/2.3.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Http.Features": "2.3.0",
+          "System.Text.Encodings.Web": "8.0.0"
+        }
+      },
+      "Microsoft.AspNetCore.Http.Features/2.3.0": {
+        "dependencies": {
+          "Microsoft.Extensions.Primitives": "8.0.0"
+        }
+      },
       "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
         "runtime": {
           "lib/netstandard2.1/Microsoft.Bcl.AsyncInterfaces.dll": {
@@ -98,7 +109,7 @@
           "System.Security.Cryptography.Cng": "5.0.0",
           "System.Security.Principal.Windows": "5.0.0",
           "System.Text.Encoding.CodePages": "7.0.0",
-          "System.Text.Encodings.Web": "7.0.0"
+          "System.Text.Encodings.Web": "8.0.0"
         },
         "runtime": {
           "lib/netcoreapp3.1/Microsoft.Data.SqlClient.dll": {
@@ -210,7 +221,7 @@
       "Microsoft.EntityFrameworkCore.Tools/9.0.2": {},
       "Microsoft.Extensions.Caching.Abstractions/7.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "7.0.0"
+          "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
       "Microsoft.Extensions.Caching.Memory/7.0.0": {
@@ -219,12 +230,12 @@
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
           "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
           "Microsoft.Extensions.Options": "7.0.0",
-          "Microsoft.Extensions.Primitives": "7.0.0"
+          "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
       "Microsoft.Extensions.Configuration.Abstractions/7.0.0": {
         "dependencies": {
-          "Microsoft.Extensions.Primitives": "7.0.0"
+          "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
       "Microsoft.Extensions.DependencyInjection/7.0.0": {
@@ -235,7 +246,7 @@
       "Microsoft.Extensions.DependencyInjection.Abstractions/7.0.0": {},
       "Microsoft.Extensions.DependencyModel/7.0.0": {
         "dependencies": {
-          "System.Text.Encodings.Web": "7.0.0",
+          "System.Text.Encodings.Web": "8.0.0",
           "System.Text.Json": "7.0.0"
         },
         "runtime": {
@@ -257,10 +268,17 @@
       "Microsoft.Extensions.Options/7.0.0": {
         "dependencies": {
           "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
-          "Microsoft.Extensions.Primitives": "7.0.0"
+          "Microsoft.Extensions.Primitives": "8.0.0"
         }
       },
-      "Microsoft.Extensions.Primitives/7.0.0": {},
+      "Microsoft.Extensions.Primitives/8.0.0": {
+        "runtime": {
+          "lib/net7.0/Microsoft.Extensions.Primitives.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
       "Microsoft.Identity.Client/4.45.0": {
         "dependencies": {
           "Microsoft.IdentityModel.Abstractions": "6.21.0"
@@ -501,7 +519,7 @@
       "System.Memory/4.5.4": {},
       "System.Memory.Data/1.0.2": {
         "dependencies": {
-          "System.Text.Encodings.Web": "7.0.0",
+          "System.Text.Encodings.Web": "8.0.0",
           "System.Text.Json": "7.0.0"
         },
         "runtime": {
@@ -610,10 +628,25 @@
         }
       },
       "System.Text.Encoding.CodePages/7.0.0": {},
-      "System.Text.Encodings.Web/7.0.0": {},
+      "System.Text.Encodings.Web/8.0.0": {
+        "runtime": {
+          "lib/net7.0/System.Text.Encodings.Web.dll": {
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        },
+        "runtimeTargets": {
+          "runtimes/browser/lib/net7.0/System.Text.Encodings.Web.dll": {
+            "rid": "browser",
+            "assetType": "runtime",
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.23.53103"
+          }
+        }
+      },
       "System.Text.Json/7.0.0": {
         "dependencies": {
-          "System.Text.Encodings.Web": "7.0.0"
+          "System.Text.Encodings.Web": "8.0.0"
         }
       },
       "System.Threading.Tasks/4.3.0": {
@@ -659,6 +692,7 @@
       },
       "DAL/1.0.0": {
         "dependencies": {
+          "Microsoft.AspNetCore.Http.Abstractions": "2.3.0",
           "Microsoft.EntityFrameworkCore.Design": "7.0.20",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.2",
@@ -711,6 +745,20 @@
       "sha512": "sha512-yMCO9yU1kNQ5MomCnGDNsjPyIvnxHu4U7AfRkLmzZuzCeOGGA5XiehmpfzzqlyIs8wbSR/c6jbuLexedfKgjgA==",
       "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.4",
       "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.7.0.4.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Http.Abstractions/2.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-39r9PPrjA6s0blyFv5qarckjNkaHRA5B+3b53ybuGGNTXEj1/DStQJ4NWjFL6QTRQpL9zt7nDyKxZdJOlcnq+Q==",
+      "path": "microsoft.aspnetcore.http.abstractions/2.3.0",
+      "hashPath": "microsoft.aspnetcore.http.abstractions.2.3.0.nupkg.sha512"
+    },
+    "Microsoft.AspNetCore.Http.Features/2.3.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-f10WUgcsKqrkmnz6gt8HeZ7kyKjYN30PO7cSic1lPtH7paPtnQqXPOveul/SIPI43PhRD4trttg4ywnrEmmJpA==",
+      "path": "microsoft.aspnetcore.http.features/2.3.0",
+      "hashPath": "microsoft.aspnetcore.http.features.2.3.0.nupkg.sha512"
     },
     "Microsoft.Bcl.AsyncInterfaces/1.1.1": {
       "type": "package",
@@ -852,12 +900,12 @@
       "path": "microsoft.extensions.options/7.0.0",
       "hashPath": "microsoft.extensions.options.7.0.0.nupkg.sha512"
     },
-    "Microsoft.Extensions.Primitives/7.0.0": {
+    "Microsoft.Extensions.Primitives/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-um1KU5kxcRp3CNuI8o/GrZtD4AIOXDk+RLsytjZ9QPok3ttLUelLKpilVPuaFT3TFjOhSibUAso0odbOaCDj3Q==",
-      "path": "microsoft.extensions.primitives/7.0.0",
-      "hashPath": "microsoft.extensions.primitives.7.0.0.nupkg.sha512"
+      "sha512": "sha512-bXJEZrW9ny8vjMF1JV253WeLhpEVzFo1lyaZu1vQ4ZxWUlVvknZ/+ftFgVheLubb4eZPSwwxBeqS1JkCOjxd8g==",
+      "path": "microsoft.extensions.primitives/8.0.0",
+      "hashPath": "microsoft.extensions.primitives.8.0.0.nupkg.sha512"
     },
     "Microsoft.Identity.Client/4.45.0": {
       "type": "package",
@@ -1139,12 +1187,12 @@
       "path": "system.text.encoding.codepages/7.0.0",
       "hashPath": "system.text.encoding.codepages.7.0.0.nupkg.sha512"
     },
-    "System.Text.Encodings.Web/7.0.0": {
+    "System.Text.Encodings.Web/8.0.0": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-OP6umVGxc0Z0MvZQBVigj4/U31Pw72ITihDWP9WiWDm+q5aoe0GaJivsfYGq53o6dxH7DcXWiCTl7+0o2CGdmg==",
-      "path": "system.text.encodings.web/7.0.0",
-      "hashPath": "system.text.encodings.web.7.0.0.nupkg.sha512"
+      "sha512": "sha512-yev/k9GHAEGx2Rg3/tU6MQh4HGBXJs70y7j1LaM1i/ER9po+6nnQ6RRqTJn1E7Xu0fbIFK80Nh5EoODxrbxwBQ==",
+      "path": "system.text.encodings.web/8.0.0",
+      "hashPath": "system.text.encodings.web.8.0.0.nupkg.sha512"
     },
     "System.Text.Json/7.0.0": {
       "type": "package",

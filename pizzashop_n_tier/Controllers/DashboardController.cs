@@ -45,11 +45,18 @@ public class DashboardController : Controller
         return View(m);
     }
     [HttpPost]
-    public IActionResult updateProfile(UserDetailModel model)
+    public IActionResult updateProfile(UserDetailModel model, IFormFile profilePicPath)
     {
         model.Role = _user.getRoles();
         model.Country = _user.getAllCountries();
-        // if(model.firstname == null || model.lastname == null ||model.username == null ||  model.Phone == null || model.country == null || model.state == null || model.address == null || model.Zipcode == null ){
+        ModelState.Remove("city");
+        ModelState.Remove("role");
+        ModelState.Remove("email");
+        ModelState.Remove("state");
+        ModelState.Remove("status");
+        ModelState.Remove("password");
+        ModelState.Remove("profilePicPath");
+        ModelState.Remove("ProfilePath");
         if (ModelState.IsValid)
         {
             var req = HttpContext.Request;
@@ -58,7 +65,7 @@ public class DashboardController : Controller
             _user.updateUser(model, email);
             TempData["ToastrMessage"] = "profile updated successfully";
             TempData["ToastrType"] = "success";
-            return View("Myprofile", model);
+            return RedirectToAction("Myprofile");
         }
         else
         {
@@ -123,6 +130,11 @@ public class DashboardController : Controller
             TempData["ToastrType"] = "error";
             return View(model);
         }
+        ModelState.Remove("city");
+        ModelState.Remove("Status");
+        ModelState.Remove("state");
+        ModelState.Remove("profilePicPath");
+        ModelState.Remove("ProfilePath");
         if (ModelState.IsValid)
         {
             var req = HttpContext.Request;
@@ -186,15 +198,23 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult EditUser(UserDetailModel model, int Id)
     {
-
+        // ModelState.Remove("city");
+        // ModelState.Remove("ProfilePath");
+        // ModelState.Remove("password");
+        // ModelState.Remove("email");
+        // ModelState.Remove("Status");
         if (ModelState.IsValid)
         {
             _user.updateUser(model, Id);
+            TempData["ToastrMessage"] = "User updated successfully";
+            TempData["ToastrType"] = "success";
             return View("showUsers");
         }
         else
         {
             model = _user.getUserDetails(Id);
+            TempData["ToastrMessage"] = "some fields are required";
+            TempData["ToastrType"] = "error";
             return View(model);
         }
     }
@@ -310,12 +330,13 @@ public class DashboardController : Controller
             TempData["ToastrType"] = "success";
 
         }
-        else if(model.m.categoryName == null ||model.m.description == null){
+        else if (model.m.categoryName == null || model.m.description == null)
+        {
             TempData["ToastrMessage"] = "some fields are neccessary to Fill";
             TempData["ToastrType"] = "Error";
         }
 
-        return PartialView("_menuPartialView1",model);
+        return PartialView("_menuPartialView1", model);
 
 
         // return PartialView("_menuPartial1", model);
@@ -335,32 +356,33 @@ public class DashboardController : Controller
     }
 
     [HttpPost]
-    public IActionResult AddCategoryPost(MenuModel model,string categoryName,string categoryDesc){
-         var req = HttpContext.Request;
+    public IActionResult AddCategoryPost(MenuModel model, string categoryName, string categoryDesc)
+    {
+        var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         model.m.categoryName = categoryName;
         model.m.description = categoryDesc;
         model.m.categoryId = 56;
-        _menuService.addNewcategory(model,email);
+        _menuService.addNewcategory(model, email);
         return RedirectToAction("CategoriesData");
     }
 
-    [HttpPost]
-    public IActionResult AddItem(ItemModel model)
-    {
-        _itemService.getItemsForcategory(model.i.Categoryid, model);
-        if (ModelState.IsValid)
-        {
-            var req = HttpContext.Request;
-            string email = _cookieService.getValueFromCookie("username", req);
-            _itemService.addItem(model.i, email);
-            return PartialView("Menu");
-        }
-        else
-        {
-            return PartialView("_menuPartial3", model);
-        }
-    }
+    // [HttpPost]
+    // public IActionResult AddItem(ItemModel model)
+    // {
+    //     _itemService.getItemsForcategory(model.i.Categoryid, model);
+    //     if (ModelState.IsValid)
+    //     {
+    //         var req = HttpContext.Request;
+    //         string email = _cookieService.getValueFromCookie("username", req);
+    //         _itemService.addItem(model.i, email);
+    //         return PartialView("Menu");
+    //     }
+    //     else
+    //     {
+    //         return PartialView("_menuPartial3", model);
+    //     }
+    // }
 
     [HttpPost]
     public IActionResult DeleteItems(List<int> selectedItems, int categoryId)
@@ -386,7 +408,6 @@ public class DashboardController : Controller
     public bool deleteItem(int itemid, int categoryId)
     {
         return _itemService.deleteItem(itemid);
-
     }
     [HttpGet]
     public IActionResult deleteItem(int itemid)
@@ -394,4 +415,19 @@ public class DashboardController : Controller
         return PartialView("_deleteModal");
     }
 
+    [HttpGet]
+    public IActionResult OpenAddItemModel()
+    {
+        ItemModel model = new ItemModel();
+        _itemService.getItemsForcategory(1,model);
+        return PartialView("_add_edititem",model);
+    }
+    [HttpPost]
+    public IActionResult AddNewItem(ItemModel model)
+    {
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        _itemService.addItem(model.i, email);
+        return RedirectToAction("ItemsData",new {categoryId = model.i.Categoryid});
+    }
 }

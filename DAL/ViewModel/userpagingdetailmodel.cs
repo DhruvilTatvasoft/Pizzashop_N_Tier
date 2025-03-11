@@ -55,4 +55,8 @@ public class users{
         get;
         set;
     }
+    public string profilepic{
+        get;
+        set;
+    }
 }

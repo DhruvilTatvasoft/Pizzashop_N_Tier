@@ -15,7 +15,7 @@ public class ItemRepository : IItemRepository
        return itemList;
     }
 
-      public void addNewCategory(string categoryName, string categoryDescription,string createdBy)
+      public bool addNewCategory(string categoryName, string categoryDescription,string createdBy)
     {
         Category cexist = _context.Categories.Where(c => c.Categoryname == categoryName).FirstOrDefault();
         if(cexist == null || cexist.Isdeleted == true){
@@ -28,9 +28,10 @@ public class ItemRepository : IItemRepository
         category.Createdby = _context.Logins.FirstOrDefault(lg=>lg.Email == createdBy).Id;
         _context.Categories.Add(category);
         _context.SaveChanges();
+        return true;
         }
         else{
-            throw new Exception("Category already exists.");
+            return false;
         }
     }
 

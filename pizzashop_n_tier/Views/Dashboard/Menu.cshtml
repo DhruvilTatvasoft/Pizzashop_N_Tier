@@ -34,6 +34,8 @@
                         <div class="menubody bg-white h-100"></div>
                         <div id="deletemodel">
                         </div>
+                        <div id="AddItemModelDiv">
+                        </div>
                     </div>
 
                 </div>
@@ -50,8 +52,8 @@
             $("document").ready(function () {
                 loadCategories();
                 loadItemData(1);
-                @* loadTableData(1); *@
-    });
+
+            });
 
             function loadCategories() {
                 $.ajax({
@@ -105,8 +107,6 @@
 
                 });
             };
-
-
             function deleteItemGet(itemid) {
                 console.log("clicked");
                 console.log(itemid);
@@ -136,9 +136,18 @@
                 });
 
             };
-           
-        
-     
+            function openAddItemModal() {
+                console.log("model opened");
+                $.ajax({
+                    url: '@Url.Action("OpenAddItemModel", "Dashboard")',
+                    method: 'GET',
+                    success: function (data) {
+                        console.log(data);
+                        $("#AddItemModelDiv").html(data);
+                        $("#exampleModalCenter3").modal('show');
+                    }
+                });
+            }
         </script>
 
 </body>

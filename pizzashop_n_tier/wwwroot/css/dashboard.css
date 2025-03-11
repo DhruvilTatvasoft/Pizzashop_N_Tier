@@ -18,11 +18,7 @@ html,
         border-color: transparent;
     } */
 
-    nav {
-        position: relative;
-        z-index: 1;
-
-    }
+    
     .dropbtn{
         background-color: transparent
     }
@@ -50,15 +46,7 @@ html,
         width: 100%;
     }
 
-    .sidebar {
-        width: 15%;
-        position: fixed;
-        z-index: 2;
-        top: 0;
-        left: 0;
-        display: block;
-    }
-
+    
     .sidebar-img {
         width: 35%;
         padding-right: 0px;

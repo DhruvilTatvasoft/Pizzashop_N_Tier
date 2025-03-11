@@ -12,8 +12,8 @@ public interface IGenericRepository
     List<Country> getAllCountries();
     List<State> getAllStates();
     List<City> getAllCities();
-    void updateUserInDb(UserDetailModel model, string email);
-    void updateUserInDb(UserDetailModel model,int id);
+    void updateUserInDb(UserDetailModel model, string email,string imagePath);
+    void updateUserInDb(UserDetailModel model,int id,string imagePath);
     string getPass(string email);
     void changePass(chang_p_model model, string email,string pass);
     List<users> getUsersForPage(int currentPage,int maxRows,string search);
@@ -23,7 +23,7 @@ public interface IGenericRepository
     List<State> getStatesForCountry(int countryId);
     List<string> getRoles();
     List<City> getStateCities(int stateId);
-    void saveNewUserInDb(UserDetailModel model,string email,string pass);
+    void saveNewUserInDb(UserDetailModel model,string email,string pass,string imagePath);
     void deleteUserFromDb(int userId);
     User getUserDetailFromDb(int userid);
 
@@ -40,6 +40,5 @@ public interface IGenericRepository
     string getRolename(int roleid);
     List<Category> getAllCategories();
     void addNewCategory(string categoryName, string categoryDescription,string createdBy);
-
-   
+    bool IsUserExist(string email);
 }

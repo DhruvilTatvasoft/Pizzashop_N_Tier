@@ -13,27 +13,35 @@ public class UserImpl : IUser
     public IGenericRepository _repository;
     public IAESService _aesservice;
 
+    public IImagePath _imagePath;
+
     public IEmailGenService _emailService;
-    public UserImpl(IGenericRepository repository, IAESService aESService, IEmailGenService emailService)
+    public UserImpl(IGenericRepository repository, IAESService aESService, IEmailGenService emailService,IImagePath imagePath)
     {
         _repository = repository;
         _aesservice = aESService;
         _emailService = emailService;
+        _imagePath = imagePath;
     }
 
-    public bool changePass(HttpRequest req, chang_p_model model, string email,string password)
+    public bool changePass(HttpRequest req, chang_p_model model, string email, string password)
     {
         if (model.oldpass == password && model.confirmpass == model.newpass)
         {
             string EncryptedPass = _aesservice.Encrypt(model.newpass);
             _repository.changePass(model, email, EncryptedPass);
-    return true;
+            return true;
         }
-        else{
+        else
+        {
             return false;
         }
     }
 
+    public bool IsUserExist(string email)
+    {
+        return _repository.IsUserExist(email);
+    }
     public List<Country> getAllCountries()
     {
         return _repository.getAllCountries();
@@ -108,7 +116,28 @@ public class UserImpl : IUser
 
     public void updateUser(UserDetailModel model, string email)
     {
-        _repository.updateUserInDb(model, email);
+
+        string? imagePath = null;
+
+        if (model.profilePicPath != null)
+        {
+            var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads");
+            if (!Directory.Exists(uploadsFolder))
+            {
+                Directory.CreateDirectory(uploadsFolder);
+            }
+
+            var uniqueFileName = $"{Guid.NewGuid()}_{model.profilePicPath.FileName}";
+            var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+            using (var fileStream = new FileStream(filePath, FileMode.Create))
+            {
+                model.profilePicPath.CopyTo(fileStream);
+            }
+
+            imagePath = $"/uploads/{uniqueFileName}";
+        }
+        _repository.updateUserInDb(model, email, imagePath);
     }
 
     public void saveNewUser(UserDetailModel model, string email)
@@ -116,8 +145,10 @@ public class UserImpl : IUser
         try
         {
             var pass = _aesservice.Encrypt(model.password);
+
+            string imagePath = _imagePath.getImagePath(model.profilePicPath);
             Console.WriteLine("saving user");
-            _repository.saveNewUserInDb(model, email, pass);
+            _repository.saveNewUserInDb(model, email, pass,imagePath);
 
         }
         catch (Exception e)
@@ -158,7 +189,8 @@ public class UserImpl : IUser
 
     public void updateUser(UserDetailModel model, int id)
     {
-        _repository.updateUserInDb(model, id);
+        string imagePath = _imagePath.getImagePath(model.profilePicPath);
+        _repository.updateUserInDb(model, id,imagePath);
     }
 
     public PermissionsModel2 permissionsForRole(int roleid)
