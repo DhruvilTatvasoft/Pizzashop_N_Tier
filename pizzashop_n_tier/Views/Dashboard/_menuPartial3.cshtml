@@ -56,13 +56,29 @@
                 </td>
                 <td>
                     <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                            <img src="~/images/pencil-square.svg" class="me-2" alt="">
+                            <img src="~/images/pencil-square.svg" class="me-2" onclick="EditItemGet(@item.Itemid)" alt="">
                             <img src="~/images/trash-fill.svg" onclick="deleteItemGet(@item.Itemid)" style="cursor: pointer;" alt="">
                        
                     </div>
                 </td>
             </tr>
 }
+
+<script>
+
+    function EditItemGet(itemid){
+        $.ajax({
+                url: '@Url.Action("EditItem", "Dashboard")',
+                method: 'GET',
+                data: { itemid : itemid },
+                success: function (data) {
+                    console.log(data);
+                    
+                }
+            });
+    }
+
+</script>
 </tbody>
 
 

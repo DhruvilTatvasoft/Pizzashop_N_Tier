@@ -32,6 +32,12 @@ public class ItemsImple : IItemService
         }
     }
 
+    public Item getItemFromId(int itemid)
+    {
+        Item item = _itemRepository.getItem(itemid);
+        return item;
+    }
+
     public void getItemsForcategory(int categoryId,ItemModel model)
     {
         List<Item> itemList = _itemRepository.getItemsForCategory(categoryId);

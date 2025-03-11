@@ -103,4 +103,9 @@ public class ItemRepository : IItemRepository
         List<Modifiergroup> modifiergroups = _context.Modifiergroups.ToList();
         return modifiergroups;
     }
+
+    public Item getItem(int itemid)
+    {
+       return _context.Items.FirstOrDefault(i=>i.Itemid == itemid);
+    }
 }

@@ -430,4 +430,11 @@ public class DashboardController : Controller
         _itemService.addItem(model.i, email);
         return RedirectToAction("ItemsData",new {categoryId = model.i.Categoryid});
     }
+
+    public IActionResult EditItem(int itemid){
+        ItemModel model = new ItemModel();
+        model.i = _itemService.getItemFromId(itemid);
+         _itemService.getItemsForcategory(1,model);
+         return PartialView("_add_edititem",model);
+    }
 }

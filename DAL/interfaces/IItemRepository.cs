@@ -13,4 +13,5 @@ public interface IItemRepository {
     bool deleteItemFromDb(int itemId);
     List<Item> getSearchedItemFromDb(string searchedItem,int categoryId);
     List<Modifiergroup> getAllModifierGroups();
+    Item getItem(int itemid);
 }
