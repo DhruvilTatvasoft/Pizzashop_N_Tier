@@ -1,5 +1,3 @@
-@* <form method="post" asp-controller="Dashboard" asp-action="AddItem"> *@
-
 @model ItemModel
 <form id="AddItemForm">
     <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog"
@@ -123,93 +121,71 @@
 
                         </div>
                         <div class="right col-4" style="background-color: antiquewhite;">
-                            <div class="dropdown mt-2 me-2"></div>
-                            <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+                            <div class="dropdown mt-2 me-2">
+                                <select class="form-select form-select-lg mb-1" id="modifier-group"
+                                    onchange="getModifier()" aria-label=".form-select-lg example">
 
-                                <option value="1" selected><label for="" class="fs-2">Select Modifier Groups(s)</label>
-                                </option>
-                                @foreach (var m in @Model.modifiergroups)
-                                {
-                                    <option value="@m.Modifiergroupid">@m.Modifiergroupname</option>
-                                }
-                            </select>
+                                    <option value="1" selected><label for="" class="fs-2">Select Modifier
+                                            Groups(s)</label>
+                                    </option>
+                                    @foreach (var m in @Model.modifiergroups)
+                                    {
+                                        <option value="@m.Modifiergroupid">@m.Modifiergroupname</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="loadModifiers p-3">
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="pb-3 ps-3">
-                    <button class="btn btn-primary" type="submit">submit</button>
-                    <button class="btn btn-outline-primary">cancel</button>
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-outline-primary">Cancel</button>
                 </div>
             </div>
-
         </div>
     </div>
     </div>
 </form>
 
 <script>
-    @* $("#AddItemForm").on('submit',
-        function {
-            console.log("data posted");
-            var data = new FormData(this);
-            $.ajax({
-                url: "/Dashboard/AddNewItem",
-                method: 'POST',
-                data: data,
-                success: function (data) {
-                    $("table").html(data);
-                }
-            });
-        }
-    ) *@
 
-        @* $("#AddItemForm").on('submit',
-        function  {
-            console.log("model opened");
-            $.ajax({
-                url: "/Dashboard/AddNewItem",
-                method: 'POST',
-                success: function (data) {
-                    $("table").html(data);
-                }
-            });
-        }
-    ); *@
-
-        @* $("#AddItemForm").on('submit', function () {
-            $.ajax({
-                url: '/Dashboard/AddNewItem',
-                type: 'post',
-                data: { model: data },
-                success: function (data) {
-                    $("table").html(data);
-                },
-                error: function () {
-                    alert("error while saving data!");
-                },
-        ); *@
-
-        $("#AddItemForm").on('submit', function (e) {
-            e.preventDefault();
-            console.log("model opened");
-            var data = new FormData(this);
-
-            @* data = $('#AddItemForm').serialize(); *@
-
-            for (var pair of data.entries()) {
-                console.log(pair[0] + ': ' + pair[1]);
+    function getModifier() {
+        console.log("changed");
+        var temp = "#modifiergroup_"+ $('#modifier-group').val();
+        console.log(temp);
+        var modifiergroup = document.querySelector(temp);
+        if(modifiergroup == null){
+        $.ajax({
+            url: 'getModifiers',
+            type: 'GET',
+            data: { modifiergroupid: $('#modifier-group').val() },
+            success: function (data) {
+                $(".loadModifiers").append(data);
             }
-            console.log(data);
-            $.ajax({
-                url: "/Dashboard/AddNewItem",
-                method: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                    $("#exampleModalCenter3").modal("hide");
-                    $("table").html(data);
-                }
-            });
         });
+        }
+    }
+
+    $("#AddItemForm").on('submit', function (e) {
+        e.preventDefault();
+        console.log("model opened");
+        var data = new FormData(this);
+        for (var pair of data.entries()) {
+            console.log(pair[0] + ': ' + pair[1]);
+        }
+        console.log(data);
+        $.ajax({
+            url: "/Dashboard/AddNewItem",
+            method: 'POST',
+            data: data,
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#exampleModalCenter3").modal("hide");
+                $("table").html(data);
+            }
+        });
+    });
 </script>

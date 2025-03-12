@@ -22,6 +22,8 @@ public class ItemModel{
         
         set;
     }
+
+    public List<Modifier>? modifiers{get;set;}
     public List<Modifiergroup>? modifiergroups{
         get;
         set;

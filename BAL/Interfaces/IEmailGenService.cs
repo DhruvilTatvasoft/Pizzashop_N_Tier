@@ -1,5 +1,6 @@
 using System.Net;
 using System.Net.Mail;
+using BAL.Interfaces;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
@@ -10,9 +11,16 @@ public interface IEmailGenService{
     void emailForForgetPass(HttpRequest req,string email,string password);
 } 
 public class EmailGenService : IEmailGenService{
+
+    private readonly IAESService _AesService;
+
+    public EmailGenService(IAESService aesService){
+        _AesService = aesService;
+    }
     public void generateEmail(HttpRequest req, string email){
        
         string baseUrl = $"{req.Scheme}://{req.Host}";
+        // string Email = _AesService.Encrypt(email);
         string rstlink = $"{baseUrl}/Login/ResetPass?email={email}";
         string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
         emailBody = emailBody.Replace("{{reset_Link}}", rstlink);

@@ -6,7 +6,6 @@
     </button>
 </div>
 <div class="scrollbar w-100">
-
     <div class="scrollbox w-100 h-100">
         <ul class=" mt-2 w-100 h-100 ">
            
@@ -54,7 +53,6 @@
         </div>
     </div>
 </form>
-
  <form method="Post" asp-controller="Dashboard" asp-action="AddCategory">
             <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
@@ -66,7 +64,7 @@
                         </div>
                         <div class="modal-body pb-0">
                             <div class="mb-3">
-                                @* <label for="recipient-name" class="col-form-label">Recipient:</label> *@
+                               
                                 <input type="text" class="form-control" placeholder="Name" asp-for="m.categoryName"
                                     style="height:10%;" id="recipient-name" required>
                                 <span asp-validation-for="@Model.m.categoryName" class="text-danger"></span>
@@ -85,11 +83,7 @@
                 </div>
             </div>
         </form>
-
-
 <script>
-
-
 function openEditModal(categoryId,categoryname,description){
     console.log(categoryId);
     $('#exampleModal6').modal('show');
@@ -97,8 +91,6 @@ function openEditModal(categoryId,categoryname,description){
     $('#recipient-name').val(categoryname);
     $('#hiddnField').val(categoryId);
    };
-
-
    function deletecategory(categoryId) {
         $.ajax({
             url: '@Url.Action("DeleteCategory", "Dashboard")',
@@ -111,17 +103,5 @@ function openEditModal(categoryId,categoryname,description){
             }
         });
     };
-
-    @* function editCategory(categoryId) {
-        $.ajax({
-            url: '@Url.Action("editCategory", "Dashboard")',
-            type: "GET",
-            data: { categoryId: categoryId },
-            cache: false,
-            success: function (data) {
-                $(".menubody").html(data);
-                console.log(categoryId);
-            }
-        });
-    }; *@
 </script>
+

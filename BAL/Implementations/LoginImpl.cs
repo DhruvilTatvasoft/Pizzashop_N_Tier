@@ -103,7 +103,10 @@ public class LoginImpl : ILogin, IJwtTokenGenService
             Phone = user.Phonenumber,
             Zipcode = user.Zipcode,
             username = user.Username,
-            ProfilePath= user.Profilephoto
+            ProfilePath= user.Profilephoto,
+            stateid = (int)user.Stateid,
+            countryid = (int)user.Countryid,
+            cityid = (int)user.Cityid,
         };
         return ud;
     }

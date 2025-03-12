@@ -81,36 +81,17 @@ public class UserImpl : IUser
         }
     }
 
-    // public userpagingdetailmodel getSearcheduser(string search)
-    // {
-    //     Console.WriteLine("in BAL of search user");
-    //     var userlist = _repository.getSearcheduser(search);
-    //     var model = new userpagingdetailmodel();
-    //     var ulist = new List<users>();
-    //     foreach(var user in userlist){
-    //         users u = new users();
-    //         u.Firstname = user.Firstname;
-    //         u.Lastname = user.Lastname;
-    //         u.Email = user.Email;
-    //         u.role = _repository.getUserRole(user.Roleid);
-    //         u.IsActive = user.Isactive ?? false;
-    //         ulist.Add(u);
-    //     }
-    //     model.users = ulist;
-    //     model.totalusers = ulist.Count();
-    //     return model;
-    // }
 
-    public userpagingdetailmodel loadusers(userpagingdetailmodel model, int currentPage, int maxRows, string search)
+    public userpagingdetailmodel loadusers(userpagingdetailmodel model, int currentPage, int maxRows, string search,string sortBy,string sortOrder)
     {
 
-        List<users> userlist = _repository.getUsersForPage(currentPage, maxRows, search);
+        List<users> userlist = _repository.getUsersForPage(currentPage, maxRows, search,sortBy,sortOrder);
         model.users = userlist;
         model.PageCount = (int)Math.Ceiling(_repository.getUserCount() / Convert.ToDecimal(maxRows));
         model.CurrentPageIndex = currentPage;
         model.totalusers = (int)_repository.getUserCount();
         model.maxRows = maxRows;
-        // model.totalusers = userlist.Count();
+
         return model;
     }
 
@@ -195,22 +176,7 @@ public class UserImpl : IUser
 
     public PermissionsModel2 permissionsForRole(int roleid)
     {
-        //  List<Rolesandpermission> rp = _repository.getPemissionsFromDb(roleid);
-        //  PermissionsModel model = new PermissionsModel();
-        //  List<page> pages = new List<page>();
-        // foreach(var x in rp){
-        //  string pname = _repository.getPermissionName(x.Permissionid);
-        //  page p = new page();
-        //  p.name = pname;
-        //  p.permissionid = x.Permissionid;
-        //  p.can_Edit = x.Canedit;
-        //  p.can_view = x.Canview;
-        //  p.can_delete = x.Candelete;
-        //  p.wantsToChange = false;
-        // pages.Add(p);
-        // }
-        // model.pages = pages;
-        // return model;
+        
         List<Permission> plist = _repository.getAllPermissions();
         List<Rolesandpermission> rp = _repository.getPemissionsFromDb(roleid);
         List<int> gpermissionid = new List<int>();
@@ -222,20 +188,11 @@ public class UserImpl : IUser
         model.plist = plist;
         model.gpermissionid = gpermissionid;
         model.grantedPermissions = rp;
+        model.roleid = roleid;
         model.rolename = _repository.getRolename(roleid);
         return model;
     }
 
-    // public void updatePermissions(int[] permissionIDs,PermissionsModel model)
-    // {
-
-    //     var roleid = model.Role;
-    //    foreach(var page in model.pages){
-    //     if(permissionIDs.Contains(page.permissionid)){
-    //         _repository.updatePermission(page.permissionid,page.can_delete,page.can_Edit,page.can_view,roleid);
-    //     }
-    //    }
-    // }
 
     public void updatePermissions(PermissionsModel model)
     {

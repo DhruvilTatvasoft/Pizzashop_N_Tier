@@ -1,48 +1,44 @@
 @model RolesModel
 @{
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
-}
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
+    ViewBag.Title = "Roles Page";
+
+}
+
+
 <link rel="stylesheet" href="~/css/roles.css">
 
-<body>
-    <div class="row p-0 h-100 d-flex">
-        <div class="content pt-3 w-100">
-            <div class="header  mb-4 d-flex">
-                <div>
-                    <h1>User</h1>
-                </div>
+
+<div class="row p-0 h-100 d-flex">
+    <div class="content pt-3 w-100">
+        <div class="header  mb-4 d-flex">
+            <div>
+                <h1>User</h1>
             </div>
-            <div class="w-75 p-4 bg-white">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">Role</th>
-                            <th scope="col" style="text-align: end;">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var role in Model.Role)
-                        {
+        </div>
+        <div class="w-75 p-4 bg-white">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">Role</th>
+                        <th scope="col" style="text-align: end;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var role in Model.Role)
+                    {
                         <tr>
                             <td>@role.Rolename</td>
                             <td scope="col" style="text-align: end;">
-                            <a href= '@Url.Action("PermissionsOfRole","Dashboard",new {Id = @role.Roleid})'><img src="~/images/pencil-square.svg" alt=""></a></td>
+                                <a href='@Url.Action("PermissionsOfRole", "Dashboard", new { Id = @role.Roleid })'><img
+                                        src="~/images/pencil-square.svg" alt=""></a>
+                            </td>
                         </tr>
-                        }
-                    </tbody>
-                </table>
-            </div>
+                    }
+                </tbody>
+            </table>
         </div>
     </div>
-    </div>
-</body>
-
-</html>
+</div>
+</div>

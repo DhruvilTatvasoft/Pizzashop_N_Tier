@@ -16,7 +16,7 @@ public interface IGenericRepository
     void updateUserInDb(UserDetailModel model,int id,string imagePath);
     string getPass(string email);
     void changePass(chang_p_model model, string email,string pass);
-    List<users> getUsersForPage(int currentPage,int maxRows,string search);
+    List<users> getUsersForPage(int currentPage,int maxRows,string search,string sortBy,string sortOrder);
     decimal getUserCount();
     List<User> getSearcheduser(string search,int currentPage,int maxRows);
     string getUserRole(int id);

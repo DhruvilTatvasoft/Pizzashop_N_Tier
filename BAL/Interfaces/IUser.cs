@@ -14,7 +14,7 @@ public interface IUser{
     bool IsUserExist(string email);
 
     // userpagingdetailmodel getSearcheduser(string search);
-    userpagingdetailmodel loadusers(userpagingdetailmodel model,int currentPage,int maxRows,string search);
+    userpagingdetailmodel loadusers(userpagingdetailmodel model,int currentPage,int maxRows,string search,string sortBy,string sortOrder);
     public void updateUser(UserDetailModel model,string email);
     public void updateUser(UserDetailModel model,int id);
     void saveNewUser(UserDetailModel model,string email);

@@ -1,16 +1,18 @@
 @model userpagingdetailmodel
-<table class="table mb-0">
+<table class="table mb-0" id="table">
   <thead>
     <tr>
       <th scope="col">
         <label for="" class="ps-4">Name</label>
-        <a href=""><img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+        <a href="@Url.Action("getUsers", "Dashboard",new{sortBy = "name", sortOrder = Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc" })" class="sort-link">
+          <img src="~/images/icons8-sorting-arrows-50.png"  style="width: 15px;"alt=""></a>
       </th>
       <th scope="col">Email</th>
       <th scope="col">phone</th>
       <th scope="col">
         <label for="">Role</label>
-        <a href="edituser.html"><img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+        <a href="@Url.Action("getUsers", "Dashboard",new{sortBy = "role", sortOrder = Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc" })" class="sort-link"><img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;"
+            alt=""></a>
       </th>
       <th scope="col">status</th>
       <th scope="col">Action</th>
@@ -20,12 +22,16 @@
     @foreach (users user in Model.users)
     {
       <tr>
-        @if(user.profilepic != null){
-        <td class="ps-3" style="width:28%;"><img src="@user.profilepic" class="profile-icon me-3" id="profileicon" alt="" style="object-fit: cover; " />@user.name</td>
+        @if (user.profilepic != null)
+        {
+          <td class="ps-3" style="width:28%;"><img src="@user.profilepic" class="profile-icon me-3" id="profileicon" alt=""
+              style="object-fit: cover; " />@user.name</td>
         }
-        else{
+        else
+        {
 
-        <td class="ps-3"><img src="~/images/manager.png" class="profile-icon me-3" id="profileicon" alt="" style="object-fit: cover; " />@user.name</td>
+          <td class="ps-3"><img src="~/images/manager.png" class="profile-icon me-3" id="profileicon" alt=""
+              style="object-fit: cover; " />@user.name</td>
         }
         <td>@user.Email</td>
         <td>@user.phone</td>
@@ -82,53 +88,23 @@
   </div>
 
   <script>
-    @* var currentpage = $(this).data('page');
-    function loadPage(pageIndex) {
+
+
+    $("#next").click(function () {
+      var currentpage = $(this).data('page');
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
-        type: "GET",
-        data: { currentPage: pageIndex },
-        cache: false,
-        success: function (result) {
-          console.log(@Model.CurrentPageIndex);
-         
+        data: { currentPage: currentpage, search: $("#search-record").val(), maxRows: $('#recordPerPage').val() },
+        method: 'GET',
+        success: function (data) {
+          $("#t-container").html(data);
+          console.log($('#recordPerPage').val());
+        },
+        error: function () {
+          console.error('Error fetching partial view.');
         }
       });
-    } *@  
-
-      @* $("#recordPerPage").on('change',function(){
-      console.log("okkkkk");
-       console.log($('#maxRows').val());
-      $.ajax({
-          url: '@Url.Action("getUsers", "Dashboard")',
-          data: { currentPage: $(this).data('page'), search: $("#search-record").val(),maxRows : $('#maxRows').val()},
-          method: 'GET',
-          success: function (data) {
-            $("#t-container").html(data);
-           
-             console.log(currentpage); 
-          },
-          error: function () {
-            console.error('Error fetching partial view.');
-          }
-        });
-    }) *@
-
-      $("#next").click(function () {
-        var currentpage = $(this).data('page');
-        $.ajax({
-          url: '@Url.Action("getUsers", "Dashboard")',
-          data: { currentPage: currentpage, search: $("#search-record").val(), maxRows: $('#recordPerPage').val() },
-          method: 'GET',
-          success: function (data) {
-            $("#t-container").html(data);
-            console.log($('#recordPerPage').val());
-          },
-          error: function () {
-            console.error('Error fetching partial view.');
-          }
-        });
-      });
+    });
     $("#previous").click(function () {
       var currentpage = $(this).data('page');
       $.ajax({
@@ -147,17 +123,7 @@
       });
     });
 
-    function deleteuser(userid) {
-      $.ajax({
-        url: '@Url.Action("DeleteUser", "Dashboard")',
-        type: 'GET',
-        data: { Id: userid },
-        success: function (response) {
-          @* $.(body).html(response); *@
-            $("table").html(response)
-        },
-      });
-    };
+   
     function edituser(userid) {
       console.log("OK");
       $.ajax({
@@ -166,7 +132,7 @@
         data: { Id: userid },
         success: function (response) {
           console.log($('#recordPerPage').val());
-          @* Window.location.href = '@Url.Action("EditUser", "Dashboard")'+'?Id='+userid; *@
+         
         },
       });
     };
@@ -174,7 +140,7 @@
     function loadRows() {
       console.log("OK");
       var currentpage = $(this).data('page');
-      
+
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
         type: 'GET',
@@ -186,18 +152,24 @@
       });
     };
 
+    function sortTable() {
 
-    @* function deleteUser(){
-        var id = $("#deleteuser").data('Id');
-        console.log(id);
-      $.ajax ({
-        url:@Url.Action("aeleteUser","Dashboard"),
-        type: 'GET',
-        data:{Id :id},
-        success : function(response){
-        console.log(Id);
-        },
-      });
-    });   *@
+    $(document).ready(function () {
+        $(".sort-link").click(function (event) {
+            console.log("ajax worked");
+            event.preventDefault();
+            var url = $(this).attr("href"); 
+            $.ajax({
+                url: url,
+                type: "GET",
+                success: function (data) {
+                    $("#t-container").html(data);                 },
+                error: function () {
+                    console.error("Error loading sorted data.");
+                }
+            });
+        });
+    });
   </script>
 </div>
+

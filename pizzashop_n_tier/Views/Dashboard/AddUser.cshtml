@@ -1,18 +1,13 @@
 @{
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+
+    ViewData["Title"] = "Add User Page";
+
 }
 @model UserDetailModel
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
 <link rel="stylesheet" href="~/css/adduser.css">
 
-<body>
     <div class="container-fluid w-100 h-100 p-0">
 
         <div id="nav-sidebar"></div>
@@ -70,15 +65,16 @@
                                     <div class="row">
                                         <div class="form-floating mb-2 col-6">
                                             <input type="text" class="form-control col-6" asp-for="email"
-                                                id="floatingInput" placeholder="name@example.com" >
+                                                id="floatingInput" placeholder="name@example.com">
                                             <label for="floatingInput">Email</label>
                                             <span asp-validation-for="email" class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                         <div class="form-floating mb-2 col-6">
-                                            <input type="tel" class="form-control col-6" asp-for="password"
+                                            <input type="password" class="form-control col-6" asp-for="password"
                                                 asp-formaction="City" id="floatingInput" placeholder="name@example.com">
                                             <label for="floatingInput">Password</label>
-                                            <span asp-validation-for="password" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="password"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                     </div>
                                     <div class="row fileUploadRow me-1 ms-1 mb-3">
@@ -104,7 +100,8 @@
                                                 }
                                             </select>
                                             <label for="floatingSelect">Country</label>
-                                        <span asp-validation-for="countryid" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="countryid"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                         <div class="form-floating col-4">
                                             <select class="form-select" id="stateid" asp-for="stateid"
@@ -114,7 +111,8 @@
                                             @* <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span> *@
                                             </select>
                                             <label for="floatingSelect">State</label>
-                                        <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="stateid"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                         <div class="form-floating col-4">
                                             <select class="form-select" aria-label="Floating label select example"
@@ -122,7 +120,8 @@
                                                 <option value="">select city</option>
                                             </select>
                                             @* <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span> *@
-                                        <span asp-validation-for="cityid" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="cityid"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                             <label for="floatingSelect">City</label>
                                         </div>
                                     </div>
@@ -132,19 +131,21 @@
                                             <input type="text" class="form-control" asp-for="Zipcode" id="floatingInput"
                                                 placeholder="name@example.com">
                                             <label for="floatingInput">Zipcode</label>
-                                        <span asp-validation-for="Zipcode" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="Zipcode"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                         <div class="form-floating mb-3 col-4">
                                             <input type="text" class="form-control" asp-for="address" id="floatingInput"
                                                 placeholder="name@example.com">
                                             <label for="floatingInput">Address</label>
-                                        <span asp-validation-for="address" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="address"
+                                                class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                         <div class="form-floating mb-3 col-4">
-                                            <input type="number" class="form-control" asp-for="Phone" id="floatingInput"
+                                            <input type="tel" class="form-control" asp-for="Phone" id="floatingInput"
                                                 placeholder="name@example.com">
                                             <label for="floatingInput">Phone</label>
-                                        <span asp-validation-for="Phone" class="mb-4 text-danger invalidmsg"></span>
+                                            <span asp-validation-for="Phone" class="mb-4 text-danger invalidmsg"></span>
                                         </div>
                                     </div>
                                 </div>
@@ -159,65 +160,44 @@
             </div>
         </div>
     </div>
-
     <script>
-
         $(document).ready(function () {
-            // Retrieve preselected values from the model, if any (useful when re-rendering after validation errors)
             var selectedCountry = $('#countryid').val();
             var selectedState = '@Model.stateid';
             var selectedCity = '@Model.cityid';
 
-            // If a country is already selected, load corresponding States and Cities
+
             if (selectedCountry) {
-                // AJAX call to get the list of States for the selected Country
                 $.getJSON('@Url.Action("GetStates")', { countryid: selectedCountry }, function (states) {
 
-                    //Get the State Dropdown which needs to be populated
                     var statesSelect = $('#stateid');
 
-                    // Clear any existing options
                     statesSelect.empty();
 
-                    // Add a default option prompting user selection
                     statesSelect.append('<option value="">Select State</option>');
 
-                    // Populate the dropdown with retrieved states
-                    // The index parameter represents the current iteration number (or position) in the array being iterated over.
                     $.each(states, function (index, state) {
-                        // 'index' holds the current iteration number (0, 1, 2, ...)
-                        // 'state' is the current state object
-                        // In this code, index is not used directly, but it's available if needed.
                         var option = $('<option/>', {
                             value: state.value,
                             text: state.text
                         });
-                        // If the state matches the preselected state, mark it as selected
                         if (state.value == selectedState) {
                             option.prop('selected', true);
                         }
                         statesSelect.append(option);
                     });
-                    // If a state was preselected, load its corresponding Cities
                     if (selectedState) {
-                        // AJAX call to get the list of Cities for the selected State
                         $.getJSON('@Url.Action("GetCities")', { stateid: selectedState }, function (cities) {
 
-                            //Get the City Dropdown which needs to be populated
                             var citiesSelect = $('#cityid');
 
-                            // Clear any existing options
                             citiesSelect.empty();
-                            // Add a default option prompting user selection
                             citiesSelect.append('<option value="">Select City</option>');
-                            // Populate the dropdown with retrieved cities
-                            // The index parameter represents the current iteration number (or position) in the array being iterated over.
                             $.each(cities, function (index, city) {
                                 var option = $('<option/>', {
                                     value: city.value,
                                     text: city.text
                                 });
-                                // If the city matches the preselected city, mark it as selected
                                 if (city.value == selectedCity) {
                                     option.prop('selected', true);
                                 }
@@ -226,75 +206,40 @@
                         });
                     }
                 });
-            }
-            // Event handler: When the Country dropdown changes
-            $('#countryid').change(function () {
-                //Get the Selected Country Dropdown Value
-                var countryid = $(this).val();
-                console.log(countryid);
-                // AJAX call to load States based on the selected Country
-                $.getJSON('@Url.Action("GetStates")', { countryid: countryid }, function (states) {
-                    console.log("hello");
-                    //Get the State Dropdown which needs to be populated
-                    var statesSelect = $('#stateid');
-                    // Clear the States dropdown
-                    statesSelect.empty();
-                    // Add a default option prompting user selection
-                    statesSelect.append('<option value="">Select State</option>');
 
-                    // Populate with new state options
-                    // The index parameter represents the current iteration number (or position) in the array being iterated over.
-                    $.each(states, function (index, state) {
-                        statesSelect.append($('<option/>', {
-                            value: state.value,
-                            text: state.text
-                        }));
+                $('#countryid').change(function () {
+                    var countryid = $(this).val();
+                    console.log(countryid);
+                    $.getJSON('@Url.Action("GetStates")', { countryid: countryid }, function (states) {
+                        console.log("hello");
+                        var statesSelect = $('#stateid');
+                        statesSelect.empty();
+                        statesSelect.append('<option value="">Select State</option>');
+
+                        $.each(states, function (index, state) {
+                            statesSelect.append($('<option/>', {
+                                value: state.value,
+                                text: state.text
+                            }));
+                        });
+                        $('#cityid').empty().append('<option value="">Select City</option>');
                     });
-                    // Clear the Cities dropdown as the State selection has changed
-                    $('#cityid').empty().append('<option value="">Select City</option>');
                 });
-            });
-            // Event handler: When the State dropdown changes
-            $('#stateid').change(function () {
-                //Get the Selected State Dropdown Value
-                var stateid = $(this).val();
-                // AJAX call to load Cities based on the selected State
-                $.getJSON('@Url.Action("GetCities")', { stateid: stateid }, function (cities) {
+                $('#stateid').change(function () {
+                    var stateid = $(this).val();
+                    $.getJSON('@Url.Action("GetCities")', { stateid: stateid }, function (cities) {
 
-                    //Get the City Dropdown which needs to be populated
-                    var citiesSelect = $('#cityid');
-                    // Clear the Cities dropdown
-                    citiesSelect.empty();
-                    // Add a default option prompting user selection
-                    citiesSelect.append('<option value="">Select City</option>');
-                    // Populate with new city options
-                    // The index parameter represents the current iteration number (or position) in the array being iterated over.
-                    $.each(cities, function (index, city) {
-                        citiesSelect.append($('<option/>', {
-                            value: city.value,
-                            text: city.text
-                        }));
+                        var citiesSelect = $('#cityid');
+                        citiesSelect.empty();
+                        citiesSelect.append('<option value="">Select City</option>');
+                        $.each(cities, function (index, city) {
+                            citiesSelect.append($('<option/>', {
+                                value: city.value,
+                                text: city.text
+                            }));
+                        });
                     });
                 });
             });
-        });
-
-
     </script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-</body>
-
-</html>
+    

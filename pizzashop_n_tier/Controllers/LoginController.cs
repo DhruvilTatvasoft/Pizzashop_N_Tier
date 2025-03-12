@@ -1,3 +1,4 @@
+using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -16,12 +17,15 @@ public class LoginController : Controller
 
     private readonly IEmailGenService _emailGenService;
 
-    public LoginController(ILogger<LoginController> logger, ICookieService cookieService, ILogin log, IEmailGenService emailGenService)
+    private readonly IAESService _aesservice;
+
+    public LoginController(ILogger<LoginController> logger, ICookieService cookieService,IAESService AesService, ILogin log, IEmailGenService emailGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
         _log = log;
         _emailGenService = emailGenService;
+        _aesservice = AesService;
     }
     [HttpGet]
     public IActionResult Index()
@@ -84,13 +88,13 @@ public class LoginController : Controller
         if(Email == null){
              ModelState.AddModelError("username", "Enter Your Registered Email Address");
             LoginViewModel model = new LoginViewModel();
-            TempData["ToastrMessage"] = "please enter email address";
+            TempData["ToastrMessage"] = "Please enter email address";
            TempData["ToastrType"] = "error";
              return View(model);
         }
         if(!ModelState.IsValid){
             LoginViewModel model = new LoginViewModel();
-            TempData["ToastrMessage"] = "invalid email address";
+            TempData["ToastrMessage"] = "Invalid email address";
            TempData["ToastrType"] = "error";
             return View(model);
         }
@@ -100,10 +104,10 @@ public class LoginController : Controller
             var req = HttpContext.Request;
             _emailGenService.generateEmail(req, Email);
             TempData["ToastrMessage"] = "Email sended";
-           TempData["ToastrType"] = "success";
+            TempData["ToastrType"] = "success";
         }
         else{
-             ModelState.AddModelError("username", "Email does not exist !! Register First !!");
+             ModelState.AddModelError("Username", "Email does not exist !! Register First !!");
         }
         return View();
     }
@@ -136,9 +140,10 @@ public class LoginController : Controller
     public IActionResult ResetPass()
     {
         string Email = HttpContext.Request.Query["email"];
+        // string eMail = _aesservice.Decrypt(Email); 
         var model = new PasswordModel
         {
-            email = Email
+            email = Email,
         };
         return View(model);
     }

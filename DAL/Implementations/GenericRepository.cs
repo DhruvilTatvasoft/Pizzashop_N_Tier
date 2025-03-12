@@ -100,23 +100,16 @@ public class GenericRepository : IGenericRepository
     {
         List<User> userlist = new List<User>();
         userlist = _context.Users.Where(u => u.Firstname + " " + u.Lastname == search)
-                                 .OrderBy(u => u.Firstname)
-                                .OrderBy(u => u.Firstname)
                                 .Skip((currentPage - 1) * maxRows)
                                 .Take(maxRows).ToList();
         if (userlist.Count() == 0)
         {
             userlist = _context.Users.Where(u => u.Email == search)
-                                     .OrderBy(u => u.Firstname)
-                                .OrderBy(u => u.Firstname)
                                 .Skip((currentPage - 1) * maxRows)
                                 .Take(maxRows).ToList();
         }
-
-
         return userlist;
     }
-
     public List<City> getStateCities(int stateId)
     {
         return _context.Cities.Where(c => c.Stateid == stateId).ToList();
@@ -162,28 +155,65 @@ public class GenericRepository : IGenericRepository
         return role;
     }
 
-    public List<users> getUsersForPage(int currentPage, int maxRows, string search)
-    {
-        var user = (from u in _context.Users
+   public List<users> getUsersForPage(int currentPage, int maxRows, string search, string sortBy, string sortOrder)
+{
+    var userQuery = from u in _context.Users
                     where u.Isdeleted == false
-                    select new users
+                    select new
                     {
-                        userid = u.Userid,
-                        name = u.Firstname + " " + u.Lastname,
-                        Email = u.Email,
+                        u.Userid,
+                        FullName = u.Firstname + " " + u.Lastname,
+                        u.Email,
                         IsActive = u.Isactive ?? false,
-                        phone = u.Phonenumber.ToString(),
-                        role = _context.Roles.FirstOrDefault(r => r.Roleid == u.Roleid).Rolename,
-                        profilepic = u.Profilephoto
-                    });
+                        Phone = u.Phonenumber.ToString(),
+                        Role = _context.Roles.FirstOrDefault(r => r.Roleid == u.Roleid).Rolename,
+                        u.Profilephoto,
+                        u.Firstname,
+                        u.Lastname
+                    };
 
-        user = user.Where(x => search == null || x.name.ToLower().Contains(search.ToLower()));
-
-        var userlist = user.OrderBy(u => u.userid)
-                     .Skip((currentPage - 1) * maxRows)
-                     .Take(maxRows).ToList();
-        return userlist;
+    if (!string.IsNullOrEmpty(search))
+    {
+        userQuery = userQuery.Where(x => x.FullName.ToLower().Contains(search.ToLower()));
     }
+
+    switch (sortBy.ToLower())
+    {
+        case "name":
+            userQuery = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                ? userQuery.OrderBy(u => u.Firstname).ThenBy(u => u.Lastname)
+                : userQuery.OrderByDescending(u => u.Firstname).ThenByDescending(u => u.Lastname);
+            break;
+
+        case "role":
+            userQuery = sortOrder.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                ? userQuery.OrderBy(u => u.Role)
+                : userQuery.OrderByDescending(u => u.Role);
+            break;
+
+        default:
+            // Optional: Define a default sorting column (e.g., by UserId)
+            userQuery = userQuery.OrderBy(u => u.Userid);
+            break;
+    }
+
+    var userList = userQuery.Skip((currentPage - 1) * maxRows)
+                            .Take(maxRows)
+                            .ToList()
+                            .Select(u => new users
+                            {
+                                userid = u.Userid,
+                                name = u.FullName,
+                                Email = u.Email,
+                                IsActive = u.IsActive,
+                                phone = u.Phone,
+                                role = u.Role,
+                                profilepic = u.Profilephoto
+                            })
+                            .ToList();
+
+    return userList;
+}
 
     public void saveNewUserInDb(UserDetailModel model, string email, string pass,string imagePath)
     {

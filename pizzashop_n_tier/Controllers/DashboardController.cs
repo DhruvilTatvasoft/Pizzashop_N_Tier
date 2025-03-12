@@ -1,9 +1,6 @@
-using System.Reflection.Metadata.Ecma335;
-using AspNetCoreGeneratedDocument;
-using DAL.Data;
+using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class DashboardController : Controller
 {
@@ -21,7 +18,11 @@ public class DashboardController : Controller
     private readonly ICookieService _CookieService;
 
     public readonly IItemService _itemService;
-    public DashboardController(ILogin log, IUser user, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+
+    public readonly IPermissionService _permissionService;
+
+    public readonly IModifierService _modifierService;
+    public DashboardController(ILogin log,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -29,6 +30,8 @@ public class DashboardController : Controller
         _emailService = emailService;
         _menuService = menuService;
         _itemService = itemService;
+        _permissionService = permissionService;
+        _modifierService = modifierService;
     }
     public IActionResult ShowDashboard()
     {
@@ -39,9 +42,10 @@ public class DashboardController : Controller
 
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        // Console.WriteLine("email from session" + email);
+       
         var user = _log.getUser(email);
         UserDetailModel m = _log.setUserInModel(user);
+         m.Country = _user.getAllCountries();
         return View(m);
     }
     [HttpPost]
@@ -86,19 +90,24 @@ public class DashboardController : Controller
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         string password = _cookieService.getValueFromCookie("password", req);
-        if (_user.changePass(req, model, email, password))
+        if (ModelState.IsValid)
         {
-            var res = HttpContext.Response;
-            _CookieService.setInCookie(model.newpass, res, "password");
-            TempData["ToastrMessage"] = "Password Changed successfully";
-            TempData["ToastrType"] = "success";
-            return RedirectToAction("index", "LoginController");
+            if (_user.changePass(req, model, email, password))
+            {
+                var res = HttpContext.Response;
+                TempData["ToastrMessage"] = "Password Changed successfully";
+                TempData["ToastrType"] = "success";
+                return RedirectToAction("Index", "LoginController");
+            }
+            else
+            {
+                ModelState.AddModelError("oldpass", "Please enter correct Password");
+                TempData["ToastrMessage"] = "Incorrect current password";
+                TempData["ToastrType"] = "error";
+                return View(model);
+            }
         }
-        else
-        {
-            ModelState.AddModelError("oldpass", "Please enter correct Password");
-            TempData["ToastrMessage"] = "Incorrect current password";
-            TempData["ToastrType"] = "error";
+        else{
             return View(model);
         }
     }
@@ -157,17 +166,17 @@ public class DashboardController : Controller
         }
     }
 
-    public IActionResult getUsers(string search, int maxRows = 5, int currentPage = 1)
+    public IActionResult getUsers(string search, string sortBy = "name", string sortOrder = "asc", int maxRows = 5, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
-        model = _user.loadusers(model, currentPage, maxRows, search);
+        model = _user.loadusers(model, currentPage, maxRows, search, sortBy, sortOrder);
         return PartialView("_TablePartialView", model);
     }
-    public IActionResult getSearchedUser(string search, int maxRows = 5, int currentPage = 1)
+    public IActionResult getSearchedUser(string search, string sortBy, string sortOrder, int maxRows = 5, int currentPage = 1)
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         Console.WriteLine("searching user");
-        model = _user.loadusers(model, currentPage, maxRows, search);
+        model = _user.loadusers(model, currentPage, maxRows, search, sortBy, sortOrder);
         Console.WriteLine("searched");
         return PartialView("_TablePartialView", model);
     }
@@ -198,11 +207,7 @@ public class DashboardController : Controller
     [HttpPost]
     public IActionResult EditUser(UserDetailModel model, int Id)
     {
-        // ModelState.Remove("city");
-        // ModelState.Remove("ProfilePath");
-        // ModelState.Remove("password");
-        // ModelState.Remove("email");
-        // ModelState.Remove("Status");
+        
         if (ModelState.IsValid)
         {
             _user.updateUser(model, Id);
@@ -219,7 +224,6 @@ public class DashboardController : Controller
         }
     }
 
-    // JSON endpoint: Get Cities for a State
     [HttpGet]
     public IActionResult GetCities(int stateId)
     {
@@ -241,24 +245,21 @@ public class DashboardController : Controller
     [HttpGet]
     public IActionResult PermissionsOfRole(int Id)
     {
-        //     PermissionsModel model = new PermissionsModel();
-        //     model = _user.permissionsForRole(Id);
-        //     return View("permissions",model);
+       
         PermissionsModel2 model = new PermissionsModel2();
         model.roleid = Id;
         model = _user.permissionsForRole(Id);
         return View("permissions", model);
     }
 
-    // [HttpGet]
-    //     public IActionResult PermissionOfRole(int Id){
-
-    //     }
+  
     [HttpPost]
-    public IActionResult UpdatePermissions(PermissionsModel model)
+    public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
     {
-        _user.updatePermissions(model);
-        return RedirectToAction("permissionsOfRole", "Dashboard");
+        _permissionService.UpdatePermissions(model);
+        model = _user.permissionsForRole(roleid);
+
+        return View("permissions", model);
     }
 
     public IActionResult Menu()
@@ -308,7 +309,6 @@ public class DashboardController : Controller
         Console.WriteLine(categoryId);
         ItemModel model = new ItemModel();
         _itemService.getItemsForcategory(categoryId, model);
-        // model.searchItemName = "dfdf";
         return PartialView("_menuPartial3", model);
     }
     public IActionResult LoadItemPage(int categoryId)
@@ -337,10 +337,6 @@ public class DashboardController : Controller
         }
 
         return PartialView("_menuPartialView1", model);
-
-
-        // return PartialView("_menuPartial1", model);
-
     }
     public IActionResult DeleteCategory(int categoryId)
     {
@@ -366,23 +362,6 @@ public class DashboardController : Controller
         _menuService.addNewcategory(model, email);
         return RedirectToAction("CategoriesData");
     }
-
-    // [HttpPost]
-    // public IActionResult AddItem(ItemModel model)
-    // {
-    //     _itemService.getItemsForcategory(model.i.Categoryid, model);
-    //     if (ModelState.IsValid)
-    //     {
-    //         var req = HttpContext.Request;
-    //         string email = _cookieService.getValueFromCookie("username", req);
-    //         _itemService.addItem(model.i, email);
-    //         return PartialView("Menu");
-    //     }
-    //     else
-    //     {
-    //         return PartialView("_menuPartial3", model);
-    //     }
-    // }
 
     [HttpPost]
     public IActionResult DeleteItems(List<int> selectedItems, int categoryId)
@@ -419,8 +398,8 @@ public class DashboardController : Controller
     public IActionResult OpenAddItemModel()
     {
         ItemModel model = new ItemModel();
-        _itemService.getItemsForcategory(1,model);
-        return PartialView("_add_edititem",model);
+        _itemService.getItemsForcategory(1, model);
+        return PartialView("_add_edititem", model);
     }
     [HttpPost]
     public IActionResult AddNewItem(ItemModel model)
@@ -428,13 +407,21 @@ public class DashboardController : Controller
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         _itemService.addItem(model.i, email);
-        return RedirectToAction("ItemsData",new {categoryId = model.i.Categoryid});
+        return RedirectToAction("ItemsData", new { categoryId = model.i.Categoryid });
     }
-
-    public IActionResult EditItem(int itemid){
+    public IActionResult EditItem(int itemid)
+    {
         ItemModel model = new ItemModel();
         model.i = _itemService.getItemFromId(itemid);
-         _itemService.getItemsForcategory(1,model);
-         return PartialView("_add_edititem",model);
+        _itemService.getItemsForcategory(1, model);
+        return PartialView("_add_edititem", model);
+    }
+[HttpGet]
+    public IActionResult getModifiers(int modifiergroupId)
+    {
+        ModifierModel model = new ModifierModel();
+        model.mlist = _modifierService.getModifiersForMGroup(modifiergroupId);
+        model.mg = _modifierService.GetModifiergroup(modifiergroupId);
+        return PartialView("_modifiers", model);
     }
 }

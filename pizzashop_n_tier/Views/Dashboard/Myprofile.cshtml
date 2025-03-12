@@ -1,17 +1,13 @@
 @{
   Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+
+  ViewData["Title"] = "Myprofile Page";
+
 }
 @model UserDetailModel
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
 <link rel="stylesheet" href="~/css/myprofile.css">
-<body>
+
   <div class="container-fluid w-100 h-100 p-0">
     <div id="nav-sidebar"></div>
     <div class="row p-0 h-100 d-flex">
@@ -126,7 +122,7 @@
                   Update
                 </button>
                 <button type="submit" class="btn btn-outline-primary">
-                 <a asp-action="ShowDashboard" asp-controller="Dashboard" style="text-decoration: none;">cancel</a>
+                 <a asp-action="ShowDashboard" asp-controller="Dashboard" style="text-decoration: none;">Cancel</a>
                 </button>
               </div>
             </form>
@@ -249,8 +245,7 @@
                 citiesSelect.empty();
                 // Add a default option prompting user selection
                 citiesSelect.append('<option value="">Select City</option>');
-                // Populate with new city options
-                // The index parameter represents the current iteration number (or position) in the array being iterated over.
+                
                 $.each(cities, function (index, city) {
                     citiesSelect.append($('<option/>', {
                         value: city.value,
@@ -263,6 +258,3 @@
 
     
 </script>
-</body>
-
-</html>

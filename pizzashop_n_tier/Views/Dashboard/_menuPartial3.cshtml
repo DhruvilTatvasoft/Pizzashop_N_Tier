@@ -2,7 +2,6 @@
     Layout = "";
 }
 @model ItemModel
-
 <thead>
             <tr>
                 <th scope="col">
@@ -63,9 +62,7 @@
                 </td>
             </tr>
 }
-
 <script>
-
     function EditItemGet(itemid){
         $.ajax({
                 url: '@Url.Action("EditItem", "Dashboard")',
@@ -73,11 +70,9 @@
                 data: { itemid : itemid },
                 success: function (data) {
                     console.log(data);
-                    
                 }
             });
     }
-
 </script>
 </tbody>
 

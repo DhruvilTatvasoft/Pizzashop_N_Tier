@@ -15,6 +15,14 @@ public class userpagingdetailmodel{
         get;
         set;
     }
+    public string sortOrder{
+        get;
+        set;
+    }
+    public string sortBy{
+        get;
+        set;
+    }
     public void loadUsers()
     {
         throw new NotImplementedException();
