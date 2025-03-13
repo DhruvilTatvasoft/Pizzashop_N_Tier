@@ -1,0 +1,144 @@
+html,
+body {
+    height: 100%;
+    width: 100%;
+    overflow-x: hidden;
+    /* overflow-y: hidden; */
+}
+
+
+table {
+    overflow-x: scroll;
+}
+
+
+
+.content {
+    width: 100%;
+    background-color: white;
+    padding-left: 19%;
+    overflow: hidden;
+    overflow-x: hidden;
+}
+
+.bg-img {
+    width: 100%;
+    height: 13%;
+    background-image: url('images/profile_div_bg.jpg');
+    background-size: 100%;
+}
+
+
+h1 {
+    color: #0066A7;
+    font-weight: bold;
+}
+
+
+
+
+.form-floating>.form-control-plaintext~label,
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+    color: rgba(var(--bs-body-color-rgb), .65);
+    transform: scale(.85) translateY(-.5rem) translateX(1.10rem);
+}
+
+.form-floating{
+width: 40%;
+}
+.form-control:focus ~.floatlabel{
+top: -30%;
+left: -2%;
+}
+
+h2 {
+    position: absolute;
+    top: 14%;
+    left: 15%;
+}
+
+.back-form{
+    margin-left: auto;
+    margin-right: 2%;
+}
+
+ button{
+width: 5.3%;
+height: 80%;
+/* height: 96%; */
+}
+
+@media (max-width: 992px) {
+    li {
+        font-size: 70%;
+    }
+
+    h2 {
+        font-size: 1.5rem;
+    }
+
+    .sidebar {
+        display: none;
+    }
+
+
+}
+
+@media (max-width: 767px) {
+
+    .content {
+        padding-left: 7%;
+    }
+
+    .pfp {
+        width: 15%;
+    }
+
+    h2 {
+        left: 20%;
+        font-size: 1.3rem;
+    }
+
+    form {
+        padding-top: 12%;
+    }
+
+    .sidebar h4 {
+        font-size: 0.7rem;
+    }
+
+}
+
+
+@media (max-width: 678px) {
+
+    li a {
+        text-decoration: none;
+        color: #6C757D;
+        font-weight: bold;
+        /* visibility: hidden; */
+        display: none;
+    }
+
+    li {
+        display: flex;
+        /* align-items: center; */
+        justify-content: center;
+        /* padding-bottom: 25%; */
+    }
+
+    li img {
+        width: 25%;
+    }
+
+    .sidebar h4 {
+        display: none;
+    }
+
+    .sidebar-img {
+        width: 96%;
+        padding-left: 32%;
+    }
+}

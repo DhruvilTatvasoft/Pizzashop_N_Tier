@@ -1,0 +1,3 @@
+﻿<Project>
+  <Import Project="..\build\pizzashop_n_tier.props" />
+</Project>

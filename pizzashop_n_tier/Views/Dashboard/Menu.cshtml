@@ -1,0 +1,139 @@
+@{
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+
+    ViewData["Title"] = "Menu Page";
+
+}
+@model MenuModel
+
+<link rel="stylesheet" href="~/css/menu.css">
+
+
+<div class="container-fluid w-100 h-100 p-0">
+    <div id="nav-sidebar"></div>
+    <div class="row p-0 h-100 d-flex">
+        <div class="content pt-3 w-100 h-100">
+            <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
+                <h1>Menu</h1>
+            </div>
+            <div class="form-container shadow">
+                <div>
+                    <div class="navpanel w-100 mb-2">
+                        <button type="submit" class="h-100 item" style="width:7% ; ">Items</button>
+                        <button type="submit" class="h-100 mod" style="width:7% ;" oncli>Modifiers</button>
+                    </div>
+                </div>
+                <div class="d-flex w-100 h-100" id="menu-container">
+
+                    <div class="menusidebar h-100 "></div>
+                    <div class="menubody bg-white h-100"></div>
+                    <div id="deletemodel">
+                    </div>
+                    <div id="AddItemModelDiv">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script>
+        $("document").ready(function () {
+            loadCategories();
+            loadItemData(1);
+
+        });
+
+        function loadCategories() {
+            $.ajax({
+                url: '@Url.Action("CategoriesData", "Dashboard")',
+                type: "GET",
+                cache: false,
+                success: function (data) {
+                    $(".menusidebar").html(data);
+
+                }
+            });
+        };
+        function loadTableData(categoryid) {
+            $.ajax({
+                url: '@Url.Action("ItemsData", "Dashboard")',
+                data: { categoryid: categoryid },
+                method: 'GET',
+                success: function (data) {
+                    $("table").html(data);
+                    @* console.log(data); *@
+                }
+            });
+        }
+        function loadItemData(categoryId) {
+            $.ajax({
+                url: '@Url.Action("LoadItemPage", "Dashboard")',
+                type: "GET",
+                data: { categoryId: categoryId },
+                cache: false,
+                success: function (data) {
+                    $(".menubody").html(data);
+                }
+            });
+        };
+
+        function DeleteMultipleItems() {
+            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
+            @* console.log(typeof (selectedItems)); *@
+            var result = selectedItems.map(function (x) {
+                return parseInt(x);
+            });
+            var categoryId = document.getElementById("categoryid_hidden").value;
+            console.log(result);
+            $.ajax({
+                url: '@Url.Action("DeleteItems", "Dashboard")',
+                data: { selectedItems: selectedItems, categoryId: categoryId },
+                method: 'POST',
+                success: function (data) {
+                    $("table").html(data);
+                }
+
+            });
+        };
+        function deleteItemGet(itemid) {
+            console.log("clicked");
+            console.log(itemid);
+            $.ajax({
+                url: '@Url.Action("deleteItem", "Dashboard")',
+                type: "GET",
+                data: { itemid: itemid },
+                success: function (data) {
+                    $('#deletemodel').html(data);
+                    $('#exampleModalCenter8').modal('show');
+                    $('#itemid_hidden').val(itemid);
+                }
+            });
+        };
+        function deleteItemPost() {
+            console.log("clicked");
+            var itemid = $('#itemid_hidden').val();
+            var categoryId = $('#categoryid_hidden').val();
+            $.ajax({
+                url: '@Url.Action("deleteItem", "Dashboard")',
+                type: "POST",
+                data: { itemid: itemid },
+                success: function (data) {
+                    $('table').html(data);
+                    loadTableData(categoryId)
+                }
+            });
+
+        };
+        function openAddItemModal() {
+            console.log("model opened");
+            $.ajax({
+                url: '@Url.Action("OpenAddItemModel", "Dashboard")',
+                method: 'GET',
+                success: function (data) {
+                    console.log(data);
+                    $("#AddItemModelDiv").html(data);
+                    $("#exampleModalCenter3").modal('show');
+                }
+            });
+        }
+    </script>
