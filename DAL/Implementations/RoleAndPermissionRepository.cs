@@ -17,9 +17,15 @@ namespace DAL.Implementations
 
         public void AddPermission(Rolesandpermission permission)
         {
-            permission.Rolesandpermissionid = _context.Rolesandpermissions.Count()+1;
-            _context.Rolesandpermissions.Add(permission);
-            _context.SaveChanges();
+            var exists = _context.Rolesandpermissions
+                .Any(p => p.Permissionid == permission.Permissionid && p.Roleid == permission.Roleid);
+
+            if (!exists)
+            {
+                // permission.Permissionid = _context.Rolesandpermissions.Count() + 1;
+                _context.Rolesandpermissions.Add(permission);
+                _context.SaveChanges();
+            }
         }
 
         public void UpdatePermission(Rolesandpermission permission)

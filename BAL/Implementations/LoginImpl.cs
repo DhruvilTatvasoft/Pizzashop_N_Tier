@@ -107,6 +107,7 @@ public class LoginImpl : ILogin, IJwtTokenGenService
             stateid = (int)user.Stateid,
             countryid = (int)user.Countryid,
             cityid = (int)user.Cityid,
+            Role = _repository.getAllRoles().Select(r=>r.Rolename).ToList()
         };
         return ud;
     }

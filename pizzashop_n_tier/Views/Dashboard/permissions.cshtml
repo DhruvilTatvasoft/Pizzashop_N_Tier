@@ -80,13 +80,13 @@
                                               Model.plist[i].Permissionid)?.Canview == true)
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_view" id="flexSwitchCheckChecked" checked>
+                            asp-for="@Model.permissionModel[i].can_view" id="can_view" checked>
 
                         }
                         else
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_view" id="flexSwitchCheckChecked">
+                            asp-for="@Model.permissionModel[i].can_view" id="can_view">
                         }
                       </div>
                     </td>
@@ -96,12 +96,12 @@
                                               Model.plist[i].Permissionid)?.Canedit == true)
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_edit" id="flexSwitchCheckChecked" checked>
+                            asp-for="@Model.permissionModel[i].can_edit" id="can_edit" checked>
                         }
                         else
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_edit" id="flexSwitchCheckChecked">
+                            asp-for="@Model.permissionModel[i].can_edit" id="can_edit">
 
                         }
                       </div>
@@ -113,14 +113,13 @@
                                               Model.plist[i].Permissionid)?.Candelete == true)
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_delete" id="flexSwitchCheckChecked" checked>
+                            asp-for="@Model.permissionModel[i].can_delete" id="can_delete" checked>
 
                         }
                         else
                         {
                           <input class="form-check-input toggle" type="checkbox"
-                            asp-for="@Model.permissionModel[i].can_delete" id="flexSwitchCheckChecked">
-
+                            asp-for="@Model.permissionModel[i].can_delete" id="can_delete">
                         }
                       </div>
                     </td>
@@ -140,40 +139,42 @@
 </div>
 <script>
 
-
-  document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", function () {
     var subchecks = document.querySelectorAll(".subcheck");
-    var masterCheck = document.querySelector("#mastercheck")
+    var masterCheck = document.querySelector("#mastercheck");
 
     masterCheck.addEventListener("change", function (event) {
-
-      subchecks.forEach(function (checkbox) {
-        checkbox.checked = event.target.checked;
-        toggleSwitches(checkbox);
-      });
+        subchecks.forEach(function (checkbox) {
+            checkbox.checked = event.target.checked;
+            toggleSwitches(checkbox);
+        });
     });
 
     subchecks.forEach(function (checkbox) {
-      checkbox.addEventListener("change", function () {
+        checkbox.addEventListener("change", function () {
+            toggleSwitches(checkbox);
+        });
         toggleSwitches(checkbox);
-      });
-
-
-      toggleSwitches(checkbox);
     });
 
     function toggleSwitches(checkbox) {
-      var row = checkbox.closest("tr");
-      var toggles = row.querySelectorAll(".toggle");
+        var row = checkbox.closest("tr");
+        var canViewToggle = row.querySelector('[id="can_view"]');
+        var toggles = row.querySelectorAll(".toggle");
 
-      toggles.forEach(function (toggle) {
-        toggle.disabled = !checkbox.checked;
-        if (!checkbox.checked) {
-          toggle.checked = false;
+        toggles.forEach(function (toggle) {
+            toggle.disabled = !checkbox.checked;
+            if (!checkbox.checked) {
+                toggle.checked = false;
+            }
+        });
+
+       
+        if (checkbox.checked && canViewToggle) {
+            canViewToggle.checked = true;
         }
-      });
     }
-  });
+});
 
 
 

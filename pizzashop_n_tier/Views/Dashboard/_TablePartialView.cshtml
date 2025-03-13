@@ -4,14 +4,16 @@
     <tr>
       <th scope="col">
         <label for="" class="ps-4">Name</label>
-        <a href="@Url.Action("getUsers", "Dashboard",new{sortBy = "name", sortOrder = Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc" })" class="sort-link">
-          <img src="~/images/icons8-sorting-arrows-50.png"  style="width: 15px;"alt=""></a>
+        <a href="@Url.Action("getUsers", "Dashboard", new { sortBy = "name", sortOrder = Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc" })"
+          class="sort-link">
+          <img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
       </th>
       <th scope="col">Email</th>
       <th scope="col">phone</th>
       <th scope="col">
         <label for="">Role</label>
-        <a href="@Url.Action("getUsers", "Dashboard",new{sortBy = "role", sortOrder = Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc" })" class="sort-link"><img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;"
+        <a href="@Url.Action("getUsers", "Dashboard", new { sortBy = "role", sortOrder = Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc" })"
+          class="sort-link"><img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;"
             alt=""></a>
       </th>
       <th scope="col">status</th>
@@ -52,9 +54,8 @@
             <a href='@Url.Action("EditUser", "Dashboard", new { Id = @user.userid })'>
               <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
             </a>
-            <a>
-              <img src="~/images/trash-fill.svg" id="deleteuser" onclick="deleteuser(@user.userid)"
-                style="cursor: pointer;" alt="">
+            I<a href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setUserId(@user.userid)">
+              <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="Delete">
             </a>
           </div>
         </td>
@@ -123,7 +124,7 @@
       });
     });
 
-   
+
     function edituser(userid) {
       console.log("OK");
       $.ajax({
@@ -132,7 +133,7 @@
         data: { Id: userid },
         success: function (response) {
           console.log($('#recordPerPage').val());
-         
+
         },
       });
     };
@@ -154,22 +155,39 @@
 
     function sortTable() {
 
-    $(document).ready(function () {
+      $(document).ready(function () {
         $(".sort-link").click(function (event) {
-            console.log("ajax worked");
-            event.preventDefault();
-            var url = $(this).attr("href"); 
-            $.ajax({
-                url: url,
-                type: "GET",
-                success: function (data) {
-                    $("#t-container").html(data);                 },
-                error: function () {
-                    console.error("Error loading sorted data.");
-                }
-            });
+          console.log("ajax worked");
+          event.preventDefault();
+          var url = $(this).attr("href");
+          $.ajax({
+            url: url,
+            type: "GET",
+            success: function (data) {
+              $("#t-container").html(data);
+            },
+            error: function () {
+              console.error("Error loading sorted data.");
+            }
+          });
         });
-    });
+      });
   </script>
 </div>
 
+<div class="modal fade" id="deleteUserModal" tabindex="-1" role="dialog" aria-labelledby="deleteUserModalTitle"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+        <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+        <h5 class="mb-2">Are you sure you want to delete this user?</h5>
+        <input type="hidden" id="userIdToDelete">
+        <div>
+          <button type="button" class="btn btn-primary" onclick="deleteUser()">Yes</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

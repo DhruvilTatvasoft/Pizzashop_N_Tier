@@ -187,7 +187,7 @@ public class DashboardController : Controller
         var states = _user.getStates(countryId);
         return Json(new SelectList(states, "Stateid", "Statename"));
     }
-    [HttpGet]
+    [HttpPost]
     public IActionResult DeleteUser(int Id)
     {
         _user.deleteUser(Id);

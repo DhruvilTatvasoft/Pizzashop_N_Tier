@@ -61,17 +61,26 @@
       }
     });
   };
-  function deleteuser(userid) {
-    console.log("clicked");
+ function setUserId(userId) {
+    document.querySelector("#userIdToDelete").value = userId;
+}
+
+function deleteUser() {
+    var userId = document.querySelector("#userIdToDelete").value;
+
     $.ajax({
-      url: '@Url.Action("DeleteUser", "Dashboard")',
-      type: 'GET',
-      data: { Id: userid },
-      success: function (response) {
-        $("table").html(response)
-      },
+        url: '@Url.Action("DeleteUser", "Dashboard")',
+        type: 'POST',
+        data: { Id: userId },
+        success: function (response) {
+            $("#deleteUserModal").modal("hide");
+            loadPage(1); 
+        },
+        error: function () {
+            console.error("Error deleting user.");
+        }
     });
-  };
+}
 
 
 </script>
