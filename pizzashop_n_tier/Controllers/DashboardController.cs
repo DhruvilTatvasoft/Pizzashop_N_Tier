@@ -258,7 +258,6 @@ public class DashboardController : Controller
     {
         _permissionService.UpdatePermissions(model);
         model = _user.permissionsForRole(roleid);
-
         return View("permissions", model);
     }
 
@@ -419,8 +418,8 @@ public class DashboardController : Controller
 [HttpGet]
     public IActionResult getModifiers(int modifiergroupId)
     {
-        ModifierModel model = new ModifierModel();
-        model.mlist = _modifierService.getModifiersForMGroup(modifiergroupId);
+        ItemModel model = new ItemModel();
+        model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupId);
         model.mg = _modifierService.GetModifiergroup(modifiergroupId);
         return PartialView("_modifiers", model);
     }

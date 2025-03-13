@@ -10,6 +10,8 @@ namespace DAL.Implementations
     {
         private readonly PizzashopCContext _context;
 
+        
+
         public RoleAndPermissionRepository(PizzashopCContext context)
         {
             _context = context;
@@ -17,17 +19,24 @@ namespace DAL.Implementations
 
         public void AddPermission(Rolesandpermission permission)
         {
-            var exists = _context.Rolesandpermissions
-                .Any(p => p.Permissionid == permission.Permissionid && p.Roleid == permission.Roleid);
-
-            if (!exists)
+            try
             {
-                // permission.Permissionid = _context.Rolesandpermissions.Count() + 1;
-                _context.Rolesandpermissions.Add(permission);
-                _context.SaveChanges();
+                var exists = _context.Rolesandpermissions
+                    .Any(p => p.Permissionid == permission.Permissionid && p.Roleid == permission.Roleid);
+                if (!exists)
+                {
+                    permission.Rolesandpermissionid = _context.Rolesandpermissions.Count()+1;
+                    _context.Rolesandpermissions.Add(permission);
+                    _context.SaveChanges();
+                }
+            }
+            catch (Exception ex)
+            {
+               
+                Console.WriteLine($"Error adding permission: {ex.Message}");
+                throw;
             }
         }
-
         public void UpdatePermission(Rolesandpermission permission)
         {
             _context.Rolesandpermissions.Update(permission);

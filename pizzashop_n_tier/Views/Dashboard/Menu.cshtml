@@ -78,7 +78,7 @@
         };
 
         function DeleteMultipleItems() {
-            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
+            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value,10));
             @* console.log(typeof (selectedItems)); *@
             var result = selectedItems.map(function (x) {
                 return parseInt(x);

@@ -8,7 +8,8 @@ using DAL.Data;
 
     public class ModifierModel
     {
-        public List<Modifier> mlist;
-        public Modifiergroup mg;
+        public string max_value;
+        public string min_value;
+        public string ModifiergroupId;
 
     }

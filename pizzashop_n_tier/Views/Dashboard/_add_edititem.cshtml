@@ -47,8 +47,8 @@
                                 </div>
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
-                                        <input type="number" class="form-control" asp-for="@Model.i.Itemquantity"
-                                            id="floatingInput" placeholder="name@example.com">
+                                        <input type="number" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com">
                                         <label for="floatingInput" class="model-label">Quantity</label>
                                     </div>
                                 </div>
@@ -153,18 +153,18 @@
 
     function getModifier() {
         console.log("changed");
-        var temp = "#modifiergroup_"+ $('#modifier-group').val();
+        var temp = "#modifiergroup_" + $('#modifier-group').val();
         console.log(temp);
         var modifiergroup = document.querySelector(temp);
-        if(modifiergroup == null){
-        $.ajax({
-            url: 'getModifiers',
-            type: 'GET',
-            data: { modifiergroupid: $('#modifier-group').val() },
-            success: function (data) {
-                $(".loadModifiers").append(data);
-            }
-        });
+        if (modifiergroup == null) {
+            $.ajax({
+                url: 'getModifiers',
+                type: 'GET',
+                data: { modifiergroupid: $('#modifier-group').val() },
+                success: function (data) {
+                    $(".loadModifiers").append(data);
+                }
+            });
         }
     }
 
@@ -172,16 +172,32 @@
         e.preventDefault();
         console.log("model opened");
         var data = new FormData(this);
+        @* modifiergroupdata = document.querySelectorAll("[id^=modifiergroupdata_]");
+        modifiergroupdata.forEach((e) => {
+            console.log("okk");
+            var childData = new FormData(e);
+            for (var pair of childData.entries()) {
+                data.append(pair[0], pair[1]);
+            }
+        });*@
+@* 
+        var list1=['1','2','3'];
+
+        list1.forEach((x)=>{
+            data.append("ids",x);
+        }) *@
+
+        console.log("------------------------------------------------------------------------------------");
         for (var pair of data.entries()) {
-            console.log(pair[0] + ': ' + pair[1]);
-        }
-        console.log(data);
+            console.log(pair[0] + ':' + pair[1]);
+        } 
+
         $.ajax({
             url: "/Dashboard/AddNewItem",
             method: 'POST',
             data: data,
             processData: false,
-            contentType: false,
+            @* contentType: false, *@
             success: function (data) {
                 $("#exampleModalCenter3").modal("hide");
                 $("table").html(data);
