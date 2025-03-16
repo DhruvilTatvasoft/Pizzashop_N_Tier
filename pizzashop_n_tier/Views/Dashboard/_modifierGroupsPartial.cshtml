@@ -1,0 +1,30 @@
+@model ItemModel
+<partial name="_ValidationScriptsPartial" />
+<div class="d-flex justify-content-between p-2 mb-3">
+    <label class=" c-text">Category</label>
+    <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5"> +
+    </button>
+</div>
+<div class="scrollbar w-100">
+    <div class="scrollbox w-100 h-100">
+        <ul class=" mt-2 w-100 h-100 ">
+           
+            @foreach (var ModifierGroup in Model.modifiergroups)
+            {
+                <li class="w-100">
+
+                    <label for="" class="ms-0" style="font-size: 13px;" >≣ @ModifierGroup.Modifiergroupname</label>
+                    <div class="d-flex" style="margin-left:auto;">
+                        <img src="~/images/edit.png" class="pe-2"  style="width:25px;cursor:pointer;" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" alt="">
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+<script>
+
+</script>
+

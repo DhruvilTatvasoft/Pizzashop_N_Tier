@@ -43,11 +43,11 @@ public partial class Item
 
     public int Modifiedby { get; set; }
 
-    public virtual Category? Category { get; set; } = null!;
+    public virtual Category Category { get; set; } = null!;
 
     public virtual ICollection<Itemsandmodifier> Itemsandmodifiers { get; set; } = new List<Itemsandmodifier>();
 
     public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
 
-    public virtual Unit? Unit { get; set; } = null!;
+    public virtual Unit Unit { get; set; } = null!;
 }

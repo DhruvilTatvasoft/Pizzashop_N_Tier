@@ -10,5 +10,8 @@ namespace BAL.Interfaces
     {
         List<Modifier> getModifiersForMGroup(int modifiergroupId);
         Modifiergroup GetModifiergroup(int modifiergroupId);
+
+        List<Modifiergroup> getAllModifierGroups();
+        List<Modifier> getAllModifiers();
     }
 }

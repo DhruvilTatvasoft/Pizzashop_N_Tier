@@ -10,5 +10,7 @@ namespace DAL.interfaces
     {
         List<Modifier> getModifiersForMG(int ModifierGroupId);
         Modifiergroup GetModifiergroup(int ModifierGroupId);
+        List<Modifiergroup> getAllModifierGroups();
+        List<Modifier> getAllModifiers();
     }
 }

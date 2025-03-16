@@ -160,7 +160,7 @@
             $.ajax({
                 url: 'getModifiers',
                 type: 'GET',
-                data: { modifiergroupid: $('#modifier-group').val() },
+                data: { modifiergroupid: $('#modifier-group').val(),partialViewName : "_modifiers" },
                 success: function (data) {
                     $(".loadModifiers").append(data);
                 }
@@ -187,6 +187,15 @@
             data.append("ids",x);
         }) *@
 
+        $(".modifier-group-item").each(function (index) {
+    let modifierGroupId = $(this).data("modifiergroupid");
+    let minValue = $(this).find(".min_value").val();
+    let maxValue = $(this).find(".max_value").val();
+
+    data.append(`ModifierModels[${index}].ModifiergroupId`, modifierGroupId);
+    data.append(`ModifierModels[${index}].min_value`, minValue);
+    data.append(`ModifierModels[${index}].max_value`, maxValue);
+});
         console.log("------------------------------------------------------------------------------------");
         for (var pair of data.entries()) {
             console.log(pair[0] + ':' + pair[1]);

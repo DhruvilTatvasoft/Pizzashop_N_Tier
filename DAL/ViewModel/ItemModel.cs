@@ -13,6 +13,10 @@ public class ItemModel
         set;
     }
 
+    public int modifierGroupId{
+        get;
+        set;
+    }
     public List<int> ids{get;set;}
 
     public List<ModifierModel> ModifierModels
