@@ -1,9 +1,12 @@
+using System.Text;
 using BAL.Implementations;
 using BAL.Interfaces;
 using DAL.Data;
 using DAL.Implementations;
 using DAL.interfaces;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +20,7 @@ builder.Services.AddScoped<ICookieService,CookieService>();
 builder.Services.AddScoped<IGenericRepository,GenericRepository>();
 builder.Services.AddScoped<ILogin,LoginImpl>();
 builder.Services.AddScoped<IAESService,AESImple>();
+builder.Services.AddScoped<IJwtTokenGenService,JwtTokenImple>();
 builder.Services.AddScoped<IEmailGenService,EmailGenService>();
 builder.Services.AddScoped<IUser,UserImpl>();
 builder.Services.AddScoped<IMenuService,MenuImpl>();
@@ -36,6 +40,54 @@ builder.Services.AddSession(options =>
     options.Cookie.IsEssential = true;
 });
 
+var jwtSettings = builder.Configuration.GetSection("JWT");
+var key = Encoding.UTF8.GetBytes(jwtSettings["SecretKey"]);
+
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+    .AddJwtBearer(options =>
+    {
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                if (context.Request.Cookies.ContainsKey("token"))
+                {
+                    context.Token = context.Request.Cookies["token"];
+                    Console.WriteLine("Token extracted from cookie: " + context.Token);
+                }
+                else
+                {
+                    Console.WriteLine("No token found in cookie!");
+                }
+                return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                Console.WriteLine("Authorization challenge: Access denied.");
+                return Task.CompletedTask;
+            }
+        };
+
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:SecretKey"])),
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidIssuer = builder.Configuration["JWT:Issuer"],
+            ValidAudience = builder.Configuration["JWT:Audience"],
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero
+        };
+    });
+
+builder.Services.AddAuthorization();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -51,8 +103,8 @@ app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
 app.MapControllers();
-app.UseAuthorization();
 app.UseAuthentication();
+app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",

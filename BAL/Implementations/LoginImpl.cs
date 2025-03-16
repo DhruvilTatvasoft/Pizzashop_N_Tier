@@ -11,18 +11,21 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BAL.Implementations;
 
-public class LoginImpl : ILogin, IJwtTokenGenService
+public class LoginImpl : ILogin
 {
   private readonly IGenericRepository _repository;
 
   private readonly IConfiguration _configuration;
 
+  private readonly IJwtTokenGenService _jwtToken;
+
   private readonly IAESService _AesService;
-  public LoginImpl(IGenericRepository repository, IConfiguration configuration,IAESService AesService)
+  public LoginImpl(IGenericRepository repository, IConfiguration configuration,IAESService AesService,IJwtTokenGenService jwtToken)
   {
     _repository = repository;
     _configuration = configuration;
     _AesService = AesService;
+    _jwtToken = jwtToken;
   }
   public bool checkloggerInDb(LoginViewModel lgnmdl)
   {
@@ -35,36 +38,41 @@ public class LoginImpl : ILogin, IJwtTokenGenService
     return _repository.checkEmail(email);
   }
 
-  public string GenerateJwtToken(string userName,string role)
-  {
+  // public string GenerateJwtToken(string userName,string role)
+  // {
 
-    var tokenHandler = new JwtSecurityTokenHandler();
-    var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
+  //   var tokenHandler = new JwtSecurityTokenHandler();
+  //   var key = Encoding.ASCII.GetBytes(_configuration["JWT:SecretKey"]);
 
-    var tokenDescriptor = new SecurityTokenDescriptor
-    {
-      Subject = new ClaimsIdentity(new Claim[]
-        {
-              new(ClaimTypes.Name, userName),
-              new(ClaimTypes.Role, role)
-        }),
-      IssuedAt = DateTime.UtcNow,
-      Issuer = _configuration["JWT:Issuer"],
-      Audience = _configuration["JWT:Audience"],
-      Expires = DateTime.UtcNow.AddMinutes(30), // can change exprires time
-      SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
-    };
+  //   var tokenDescriptor = new SecurityTokenDescriptor
+  //   {
+  //     Subject = new ClaimsIdentity(new Claim[]
+  //       {
+  //             new(ClaimTypes.Name, userName),
+  //             new(ClaimTypes.Role, role)
+  //       }),
+  //     IssuedAt = DateTime.UtcNow,
+  //     Issuer = _configuration["JWT:Issuer"],
+  //     Audience = _configuration["JWT:Audience"],
+  //     Expires = DateTime.UtcNow.AddMinutes(30), // can change exprires time
+  //     SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
+  //   };
 
-    var token = tokenHandler.CreateToken(tokenDescriptor);
-    var userToken = tokenHandler.WriteToken(token);
-    return userToken;
+  //   var token = tokenHandler.CreateToken(tokenDescriptor);
+  //   var userToken = tokenHandler.WriteToken(token);
+  //   return userToken;
+  // }
+
+  public int getLoggerUId(string username){
+    int uid = _repository.getLoggerUId(username);
+    return uid;
   }
 
     public string saveLogger(LoginViewModel lgnmdl)
   {
       var role = _repository.GetLoggerRole(lgnmdl);
       var email = lgnmdl.username;
-      var token = GenerateJwtToken(role,email);
+      var token = _jwtToken.GenerateJwtToken(email,role);
       
       return token;
   }

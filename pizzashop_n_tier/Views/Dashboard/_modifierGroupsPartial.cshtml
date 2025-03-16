@@ -1,7 +1,7 @@
 @model ItemModel
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 mb-3">
-    <label class=" c-text">Category</label>
+    <label class=" c-text" style="font-size:17px;">Modifier Groups</label>
     <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5"> +
     </button>
 </div>
@@ -13,7 +13,7 @@
             {
                 <li class="w-100">
 
-                    <label for="" class="ms-0" style="font-size: 13px;" >≣ @ModifierGroup.Modifiergroupname</label>
+                    <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiers(@ModifierGroup.Modifiergroupid)">≣ @ModifierGroup.Modifiergroupname</label>
                     <div class="d-flex" style="margin-left:auto;">
                         <img src="~/images/edit.png" class="pe-2"  style="width:25px;cursor:pointer;" alt="">
                         <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" alt="">
@@ -24,7 +24,6 @@
     </div>
 </div>
 
-<script>
 
-</script>
+
 

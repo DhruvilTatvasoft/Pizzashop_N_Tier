@@ -42,25 +42,10 @@
         </div>
     </div>
     <script>
-
-        $("document").ready(()=>{
-            loadTableData(1);
+        document.ready(()=>{
+            loadModifiers(1);
         })
-        
-    function searchItem(categoryId) {
-            var SearchedItem = $('#searchedItem').val();
-            if(SearchedItem.length > 4){
-             $.ajax({
-                url: '@Url.Action("SearchItem", "Dashboard")',
-                method: 'POST',
-                data: { searchedItem: SearchedItem,categoryId : categoryId },
-                success: function (data) {
-                    console.log(data);
-                    $("table").html(data);
-                }
-            });
-            }  
-        };
+       
     </script>
 </div>
 

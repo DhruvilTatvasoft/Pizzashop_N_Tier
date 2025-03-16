@@ -1,4 +1,6 @@
+using System.Security.Claims;
 using BAL.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
@@ -33,10 +35,28 @@ public class DashboardController : Controller
         _permissionService = permissionService;
         _modifierService = modifierService;
     }
-    public IActionResult ShowDashboard()
+
+    [Authorize(Roles = "Admin")]
+public IActionResult ShowDashboard()
+{
+    var user = HttpContext.User;
+    if (!user.Identity.IsAuthenticated)
     {
-        return View();
+        return Unauthorized("User is not authenticated!");
     }
+
+    var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+    Console.WriteLine("User Roles: " + string.Join(", ", roles));
+    
+
+    if (!roles.Contains("Admin"))
+    {
+        return Forbid("User does not have Admin role!");
+    }
+    Console.WriteLine("page access granted");
+    return View();
+}
+
     public IActionResult Myprofile()
     {
 
@@ -407,7 +427,12 @@ public class DashboardController : Controller
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         _itemService.addItem(model.i, email);
-        
+        Console.WriteLine(model.ModifierModels.Count);
+            Console.WriteLine("ishq hai to he !!!!");
+        foreach(var x in model.ModifierModels){
+            Console.WriteLine(x.max_value);
+            Console.WriteLine("ishq hai to he !!!!");
+        }
         return RedirectToAction("ItemsData", new { categoryId = model.i.Categoryid });
     }
     public IActionResult EditItem(int itemid)
@@ -433,11 +458,15 @@ public class DashboardController : Controller
         return PartialView(partialViewName, model);
     }
     [HttpGet]
-    public IActionResult getModifiersForModifier(int modifiergroupId)
+    public IActionResult getModifiersForModifierGp(int modifierGroupId)
     {
         ItemModel model = new ItemModel();
-        model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupId);
+        model.modifiers = _modifierService.getModifiersForMGroup(modifierGroupId);
         return PartialView("_modifierListPartial", model);
+    }
+
+    public IActionResult LoadModifiersPage(){
+        return PartialView("_modifierContainerPartial");
     }
 
 }

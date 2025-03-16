@@ -1,3 +1,5 @@
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -41,7 +43,6 @@ public class LoginController : Controller
         }
         return View();
     }
-
     [HttpPost]
     public IActionResult Index(LoginViewModel lgnmdl)
     {
@@ -64,7 +65,9 @@ public class LoginController : Controller
                 _CookieService.setInCookie(token, res, "token");
             }
             _CookieService.setInCookie(lgnmdl.username, res, "username");
+            int userid = _log.getLoggerUId(lgnmdl.username);
             _CookieService.setInCookie(lgnmdl.password, res, "password");
+            _CookieService.setInCookie(userid.ToString(), res, "userid");
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
            TempData["ToastrType"] = "success";

@@ -10,4 +10,6 @@ public interface ILogin{
     void updatePass(PasswordModel model);
     User getUser(string email);
     UserDetailModel setUserInModel(User user);
+
+    int getLoggerUId(string username);
 }
