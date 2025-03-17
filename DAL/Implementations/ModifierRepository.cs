@@ -15,4 +15,14 @@ public class ModifierRepository : IModifierRepository{
         Modifiergroup m = _context.Modifiergroups.FirstOrDefault(mg=>mg.Modifiergroupid == ModifierGroupId);
         return m;
     }
+
+    public List<Modifiergroup> getAllModifierGroups()
+    {
+        return _context.Modifiergroups.ToList();
+    }
+
+    public List<Modifier> getAllModifiers()
+    {
+        return _context.Modifiers.ToList();
+    }
 }

@@ -16,4 +16,13 @@ public class ModifierImple : IModifierService
     public Modifiergroup GetModifiergroup(int modifiergroupId){
         return _modifierRepository.GetModifiergroup(modifiergroupId);
     }
+    public List<Modifiergroup> getAllModifierGroups()
+    {
+        return _modifierRepository.getAllModifierGroups();
+    }
+
+    public List<Modifier> getAllModifiers()
+    {
+        return _modifierRepository.getAllModifiers();
+    }
 }

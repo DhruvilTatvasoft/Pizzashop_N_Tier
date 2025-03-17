@@ -1,0 +1,51 @@
+@model ItemModel
+<h3 class="p-2">Items</h3>
+<div class="d-flex justify-content-end w-100 ">
+
+    <div class="me-3">
+         <input type="email" class="form-control h-100 "  id="searchModifier" placeholder="Search"> 
+    </div>
+    <button class="btn btn-outline-dark me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
+             alt=""></button>
+ 
+    <button class="btn btn-outline-dark me-2" type="button" >+ New Modfifier</button>
+<input type="text" id="categoryid_hidden" value="" hidden>
+</div>
+<div class="tbl m-3 table-responsive">
+    <table class="table">
+    </table>
+    <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
+        <div class="d-flex justify-content-center align-items-center">
+            <label for="" class="me-2">items per page:</label>
+            <div class="dropdown mt-2 me-2">
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
+
+                    <option value="1" selected>1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="3">4</option>
+                    <option value="3">5</option>
+                    <option value="3">6</option>
+                </select>
+            </div>
+        </div>
+        <label for="" class="me-2">Showing 1-5 of 13</label>
+        <div class="d-flex mt-1">
+            <button type="button" class="btn btn-outline-dark btn2" style="
+                                           padding: 6px;
+                                       "><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+                    style="width:25px" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="
+                                           padding: 5.8px;
+                                       "><img src="~/images/left-chevron-svgrepo-com.svg"
+                    style="width:25px;rotate: 180deg;" alt=""></button>
+        </div>
+    </div>
+    <script>
+        document.ready(()=>{
+            loadModifiers(1);
+        })
+       
+    </script>
+</div>
+

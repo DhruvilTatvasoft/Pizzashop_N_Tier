@@ -20,7 +20,8 @@
                 <div>
                     <div class="navpanel w-100 mb-2">
                         <button type="submit" class="h-100 item" style="width:7% ; ">Items</button>
-                        <button type="submit" class="h-100 mod" style="width:7% ;" oncli>Modifiers</button>
+                        <button type="submit" class="h-100 mod" style="width:7% ;"
+                            onclick="loadModifierPage()">Modifiers</button>
                     </div>
                 </div>
                 <div class="d-flex w-100 h-100" id="menu-container">
@@ -42,6 +43,8 @@
             loadItemData(1);
 
         });
+
+       
 
         function loadCategories() {
             $.ajax({
@@ -78,8 +81,7 @@
         };
 
         function DeleteMultipleItems() {
-            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => x.value);
-            @* console.log(typeof (selectedItems)); *@
+            var selectedItems = [...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10));
             var result = selectedItems.map(function (x) {
                 return parseInt(x);
             });
@@ -136,4 +138,56 @@
                 }
             });
         }
+        @* -------------------------------------ModifierPage-------------------------------------------- *@
+
+
+ function loadModifierPage() {
+    loadModifierGroups();
+    loadModifiersData(1);
+}
+
+function loadModifierGroups() {
+    console.log("Loading Modifier Groups...");
+    $.ajax({
+        url: '@Url.Action("getModifierGroups", "Dashboard")',
+        method: 'GET',
+        data: { partialViewName: "_modifierGroupsPartial" },
+        success: function (response) {
+            $(".menusidebar").html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error loading modifier groups:', error);
+        }
+    });
+}
+
+function loadModifiers(modifierGroupId) {
+    $.ajax({
+        url: '/Dashboard/getModifiersForModifierGp',
+        type: 'GET',
+        data: { modifierGroupId: modifierGroupId },
+        success: function (response) {
+            $("table").html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching modifiers:', error);
+        }
+    });
+}
+
+function loadModifiersData(modifierGroupId) {
+    $.ajax({
+        url: '/Dashboard/getModifiersForModifierGp',
+        type: 'GET',
+        data: { modifierGroupId: modifierGroupId },
+        success: function (response) {
+            $("table").html(response);
+        },
+        error: function (xhr, status, error) {
+            console.error('Error fetching modifiers data:', error);
+        }
+    });
+}
+
+
     </script>

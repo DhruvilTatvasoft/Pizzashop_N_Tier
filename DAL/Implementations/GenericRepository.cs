@@ -450,4 +450,10 @@ public class GenericRepository : IGenericRepository
             return false;
         }
     }
+
+    public int getLoggerUId(string username)
+    {
+        int uid = _context.Users.FirstOrDefault(u=>u.Email == username).Userid;
+        return uid;
+    }
 }

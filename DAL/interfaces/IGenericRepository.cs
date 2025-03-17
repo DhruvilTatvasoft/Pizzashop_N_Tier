@@ -41,4 +41,5 @@ public interface IGenericRepository
     List<Category> getAllCategories();
     void addNewCategory(string categoryName, string categoryDescription,string createdBy);
     bool IsUserExist(string email);
+    int getLoggerUId(string username);
 }
