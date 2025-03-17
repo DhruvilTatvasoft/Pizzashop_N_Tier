@@ -12,4 +12,5 @@ public interface ILogin{
     UserDetailModel setUserInModel(User user);
 
     int getLoggerUId(string username);
+   
 }

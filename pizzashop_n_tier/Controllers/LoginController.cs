@@ -21,12 +21,15 @@ public class LoginController : Controller
 
     private readonly IAESService _aesservice;
 
-    public LoginController(ILogger<LoginController> logger, ICookieService cookieService,IAESService AesService, ILogin log, IEmailGenService emailGenService)
+    private readonly IImagePath _imageService;
+
+    public LoginController(ILogger<LoginController> logger,IImagePath imageService, ICookieService cookieService,IAESService AesService, ILogin log, IEmailGenService emailGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
         _log = log;
         _emailGenService = emailGenService;
+        _imageService = imageService;
         _aesservice = AesService;
     }
     [HttpGet]
@@ -68,6 +71,8 @@ public class LoginController : Controller
             int userid = _log.getLoggerUId(lgnmdl.username);
             _CookieService.setInCookie(lgnmdl.password, res, "password");
             _CookieService.setInCookie(userid.ToString(), res, "userid");
+            string imagePath = _imageService.getImagePath(userid);
+            _CookieService.setInCookie(imagePath,res,"userImage");
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
            TempData["ToastrType"] = "success";

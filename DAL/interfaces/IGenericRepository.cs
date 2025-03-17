@@ -42,4 +42,6 @@ public interface IGenericRepository
     void addNewCategory(string categoryName, string categoryDescription,string createdBy);
     bool IsUserExist(string email);
     int getLoggerUId(string username);
+
+    string getUserImagePath(int userid);
 }

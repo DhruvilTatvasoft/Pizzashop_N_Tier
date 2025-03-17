@@ -2,6 +2,12 @@ using Microsoft.AspNetCore.Http;
 
 public class imagePathImpl : IImagePath
 {
+
+    private readonly IGenericRepository _repository;
+    public imagePathImpl(IGenericRepository repository)
+    {
+        _repository = repository;
+    }
     public string getImagePath(IFormFile file)
     {
        string? imagePath = null;
@@ -25,4 +31,10 @@ public class imagePathImpl : IImagePath
         }
         return imagePath;
     }
+
+    public string getImagePath(int userid)
+    {
+        return _repository.getUserImagePath(userid);
+    }
+
 }

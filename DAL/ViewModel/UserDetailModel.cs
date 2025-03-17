@@ -16,6 +16,7 @@ public class UserDetailModel
     public string email { get; set; }
 
     [Required(ErrorMessage = "Phone number is required.")]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
     public string Phone { get; set; }
     [Required(ErrorMessage = "Address is required.")]
     public string address { get; set; }
@@ -57,6 +58,7 @@ public class UserDetailModel
     public string? username { get; set; }
 
     [Required(ErrorMessage = "Password is required.")]
+    
     public string? password { get; set; } = null;
     public IFormFile profilePicPath {get;set;}
     public string ProfilePath {get;set;}

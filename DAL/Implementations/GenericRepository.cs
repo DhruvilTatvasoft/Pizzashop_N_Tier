@@ -456,4 +456,9 @@ public class GenericRepository : IGenericRepository
         int uid = _context.Users.FirstOrDefault(u=>u.Email == username).Userid;
         return uid;
     }
+
+    public string getUserImagePath(int userid)
+    {
+        return _context.Users.FirstOrDefault(u=>u.Userid == userid).Profilephoto;
+    }
 }

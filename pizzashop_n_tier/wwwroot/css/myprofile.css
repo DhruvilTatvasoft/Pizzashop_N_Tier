@@ -17,30 +17,9 @@ html,
       margin-right: 2%;
       border-color: transparent;
     }
-
-    
-
     nav {
       background-color: #0066a7;
     }
-
-    ul {
-      text-decoration: none;
-      list-style: none;
-      padding-left: 0;
-      padding-right: 0;
-      width: 100%;
-      height: 100%;
-    }
-
-    ul li {
-      height: 6%;
-      width: 100%;
-    }
-
-   
-
-    
 
     li a {
       text-decoration: none;
@@ -52,15 +31,6 @@ html,
       width: 10%;
     }
 
-    li {
-      font-size: 90%;
-      padding-left: 0;
-      padding-top: 1rem;
-      padding-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: left;
-    }
 
     .content {
       width: 100%;
@@ -105,7 +75,7 @@ html,
     }
     .form-container {
       width: 97%;
-      height: 80%; /* Use viewport height to maintain consistency */
+      height: 60%; /* Use viewport height to maintain consistency */
       background-color: #e9eaeb;
       position: relative;
       overflow: hidden;

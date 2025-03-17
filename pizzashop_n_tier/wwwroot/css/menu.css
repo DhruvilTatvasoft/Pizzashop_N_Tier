@@ -28,7 +28,7 @@ body{
         background-color: #0066A7;
     }
 
-    ul {
+    .categorylist {
         text-decoration: none;
         list-style: none;
         padding-left: 0;
@@ -82,7 +82,7 @@ body{
         width: 10%;
     }
 
-    li {
+    .categorylist li {
         font-size: 90%;
         padding-left: 0;
         padding-top: 1rem;

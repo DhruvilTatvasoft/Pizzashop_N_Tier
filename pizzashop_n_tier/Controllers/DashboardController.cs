@@ -26,7 +26,9 @@ public class DashboardController : Controller
     public readonly IPermissionService _permissionService;
 
     public readonly IModifierService _modifierService;
-    public DashboardController(ILogin log, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+
+    public readonly IImagePath _imageService;
+    public DashboardController(ILogin log,IImagePath imagePath,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -64,7 +66,6 @@ public IActionResult ShowDashboard()
 
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-
         var user = _log.getUser(email);
         UserDetailModel m = _log.setUserInModel(user);
         m.Country = _user.getAllCountries();
@@ -97,6 +98,10 @@ public IActionResult ShowDashboard()
         {
             TempData["ToastrMessage"] = "Some fields are neccessary to Fill";
             TempData["ToastrType"] = "error";
+              var req = HttpContext.Request;
+        string image = _cookieService.getValueFromCookie("UserImage", req);
+        model.ProfilePath = image;
+            // model.ProfilePath = _imageService.getImagePath(_cookieService.getValueFromCookie("userid", req));
             return View("Myprofile", model);
         }
     }
@@ -230,7 +235,12 @@ public IActionResult ShowDashboard()
     [HttpPost]
     public IActionResult EditUser(UserDetailModel model, int Id)
     {
-
+        ModelState.Remove("city");
+        ModelState.Remove("Status");
+        ModelState.Remove("state");
+        ModelState.Remove("profilePicPath");
+        ModelState.Remove("ProfilePath");
+        ModelState.Remove("password");
         if (ModelState.IsValid)
         {
             _user.updateUser(model, Id);

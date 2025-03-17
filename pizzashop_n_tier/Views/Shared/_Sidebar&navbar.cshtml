@@ -1,7 +1,9 @@
+@{
+    string imagepath = Context.Request.Cookies["UserImage"]?? "/images/Default_pfp.svg.png";
 
+}
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -33,7 +35,7 @@
                 <div class="dropdown me-5" style="margin-left: auto;">
                     <button class="btn btn-secondary dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false">
-                        <a href=""> <img src="~/images/Default_pfp.svg.png" style="width:25px;" alt=""></a>
+                        <a href=""> <img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
                     </button>
                     <ul class="dropdown-menu">
                         <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile">My profile</a>

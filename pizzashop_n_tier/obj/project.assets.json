@@ -709,7 +709,7 @@
           "lib/netstandard2.0/Mono.TextTemplating.dll": {}
         }
       },
-      "Newtonsoft.Json/7.0.1": {
+      "Newtonsoft.Json/8.0.3": {
         "type": "package",
         "compile": {
           "lib/net45/Newtonsoft.Json.dll": {
@@ -2300,10 +2300,10 @@
         "mono.texttemplating.nuspec"
       ]
     },
-    "Newtonsoft.Json/7.0.1": {
-      "sha512": "q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
+    "Newtonsoft.Json/8.0.3": {
+      "sha512": "KGsYQdS2zLH+H8x2cZaSI7e+YZ4SFIbyy1YJQYl6GYBWjf5o4H1A68nxyq+WTyVSOJQ4GqS/DiPE+UseUizgMg==",
       "type": "package",
-      "path": "newtonsoft.json/7.0.1",
+      "path": "newtonsoft.json/8.0.3",
       "hasTools": true,
       "files": [
         ".nupkg.metadata",
@@ -2320,7 +2320,7 @@
         "lib/portable-net40+sl5+wp80+win8+wpa81/Newtonsoft.Json.xml",
         "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.dll",
         "lib/portable-net45+wp80+win8+wpa81+dnxcore50/Newtonsoft.Json.xml",
-        "newtonsoft.json.7.0.1.nupkg.sha512",
+        "newtonsoft.json.8.0.3.nupkg.sha512",
         "newtonsoft.json.nuspec",
         "tools/install.ps1"
       ]
@@ -3747,40 +3747,43 @@
       "BAL >= 1.0.0",
       "DAL >= 1.0.0",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.20",
-      "Newtonsoft.Json >= 7.0.1",
+      "Newtonsoft.Json >= 8.0.3",
       "toastr >= 2.1.1"
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pct78\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectUniqueName": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "projectName": "pizzashop_n_tier",
-      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
-      "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
+      "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
-              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
+            "E:\\Pizzashop\\Pizzashop_N_Tier\\BAL\\BAL.csproj": {
+              "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\BAL\\BAL.csproj"
             },
-            "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"
+            "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj": {
+              "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj"
             }
           }
         }
@@ -3789,6 +3792,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -3801,7 +3809,7 @@
           },
           "Newtonsoft.Json": {
             "target": "Package",
-            "version": "[7.0.1, )"
+            "version": "[8.0.3, )"
           },
           "toastr": {
             "target": "Package",
@@ -3827,16 +3835,26 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.410\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
     {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Newtonsoft.Json' 8.0.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
+    {
       "code": "NU1701",
       "level": "Warning",
       "warningLevel": 1,
-      "message": "Package 'Newtonsoft.Json 7.0.1' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
+      "message": "Package 'Newtonsoft.Json 8.0.3' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net7.0'. This package may not be fully compatible with your project.",
       "libraryId": "Newtonsoft.Json",
       "targetGraphs": [
         "net7.0"

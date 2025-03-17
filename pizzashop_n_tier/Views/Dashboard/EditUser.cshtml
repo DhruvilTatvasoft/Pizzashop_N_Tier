@@ -65,7 +65,7 @@
                                     <div class="row">
                                         <div class="form-floating mb-2 col-6">
                                             <input type="text" class="form-control col-6" asp-for="email"
-                                                id="floatingInput" placeholder="name@example.com" >>
+                                                id="floatingInput" placeholder="name@example.com" >
                                             <label for="floatingInput">Email</label>
                                             @* <span asp-validation-for="email" class="mb-4 text-danger invalidmsg"></span> *@
 
@@ -147,7 +147,7 @@
                                         </div>
                                         <div class="form-floating mb-3 col-4">
                                             <input type="tel" class="form-control" asp-for="Phone" id="floatingInput"
-                                                placeholder="name@example.com">
+                                                placeholder="name@example.com" maxlength="10" size="10">
                                             <label for="floatingInput">Phone</label>
                                             <span asp-validation-for="Phone" class="mb-4 text-danger invalidmsg"></span>
                                         </div>

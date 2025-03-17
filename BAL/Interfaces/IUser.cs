@@ -24,4 +24,5 @@ public interface IUser{
     List<Role> getAllRoles();
     PermissionsModel2 permissionsForRole(int roleid);
     void updatePermissions(PermissionsModel model);
+ 
 }

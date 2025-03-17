@@ -11,7 +11,7 @@
           "BAL": "1.0.0",
           "DAL": "1.0.0",
           "Microsoft.EntityFrameworkCore.Design": "7.0.20",
-          "Newtonsoft.Json": "7.0.1",
+          "Newtonsoft.Json": "8.0.3",
           "toastr": "2.1.1"
         },
         "runtime": {
@@ -416,11 +416,11 @@
           }
         }
       },
-      "Newtonsoft.Json/7.0.1": {
+      "Newtonsoft.Json/8.0.3": {
         "runtime": {
           "lib/net45/Newtonsoft.Json.dll": {
-            "assemblyVersion": "7.0.0.0",
-            "fileVersion": "7.0.1.18622"
+            "assemblyVersion": "8.0.0.0",
+            "fileVersion": "8.0.3.19514"
           }
         }
       },
@@ -1014,12 +1014,12 @@
       "path": "mono.texttemplating/2.2.1",
       "hashPath": "mono.texttemplating.2.2.1.nupkg.sha512"
     },
-    "Newtonsoft.Json/7.0.1": {
+    "Newtonsoft.Json/8.0.3": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-q3V4KLetMLnt1gpAVWgtXnHjKs0UG/RalBc29u2ZKxd5t5Ze4JBL5WiiYIklJyK/5CRiIiNwigVQUo0FgbsuWA==",
-      "path": "newtonsoft.json/7.0.1",
-      "hashPath": "newtonsoft.json.7.0.1.nupkg.sha512"
+      "sha512": "sha512-KGsYQdS2zLH+H8x2cZaSI7e+YZ4SFIbyy1YJQYl6GYBWjf5o4H1A68nxyq+WTyVSOJQ4GqS/DiPE+UseUizgMg==",
+      "path": "newtonsoft.json/8.0.3",
+      "hashPath": "newtonsoft.json.8.0.3.nupkg.sha512"
     },
     "Npgsql/7.0.4": {
       "type": "package",
