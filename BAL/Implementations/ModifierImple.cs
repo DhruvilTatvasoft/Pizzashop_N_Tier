@@ -25,4 +25,11 @@ public class ModifierImple : IModifierService
     {
         return _modifierRepository.getAllModifiers();
     }
+
+    public void addModifiersForItem(List<ModifierModel> modifierModels, int itemid,string email)
+    {
+       foreach (var modifier in modifierModels){
+        _modifierRepository.addModifiersForItem(modifier, itemid,email);
+       }
+    }
 }

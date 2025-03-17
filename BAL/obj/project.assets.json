@@ -3653,11 +3653,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
+      "projectUniqueName": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
       "projectName": "BAL",
-      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
+      "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
       "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\obj\\",
+      "outputPath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"

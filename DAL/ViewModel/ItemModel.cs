@@ -24,6 +24,11 @@ public class ItemModel
         get;
         set;
     }
+
+    public string payload{
+        get;
+        set;
+    }
     public List<string> modifierGroupIds
     {
         set;

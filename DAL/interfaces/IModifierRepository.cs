@@ -12,5 +12,6 @@ namespace DAL.interfaces
         Modifiergroup GetModifiergroup(int ModifierGroupId);
         List<Modifiergroup> getAllModifierGroups();
         List<Modifier> getAllModifiers();
+        void addModifiersForItem(ModifierModel modifier, int itemid,string email);
     }
 }

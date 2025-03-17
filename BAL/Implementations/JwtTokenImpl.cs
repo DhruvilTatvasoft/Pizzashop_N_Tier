@@ -28,7 +28,7 @@ public class JwtTokenImple : IJwtTokenGenService{
         IssuedAt = DateTime.UtcNow,
         Issuer = _configuration["JWT:Issuer"],
         Audience = _configuration["JWT:Audience"],
-        Expires = DateTime.UtcNow.AddMinutes(30),
+        Expires = DateTime.UtcNow.AddMinutes(150),
         SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature),
     };
 
