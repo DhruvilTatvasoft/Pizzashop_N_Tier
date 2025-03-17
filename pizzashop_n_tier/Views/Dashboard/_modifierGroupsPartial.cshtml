@@ -1,8 +1,8 @@
 @model ItemModel
 <partial name="_ValidationScriptsPartial" />
-<div class="d-flex justify-content-between p-2 mb-3">
-    <label class=" c-text" style="font-size:17px;">Modifier Groups</label>
-    <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5"> +
+<div class="d-flex justify-content-between p-2 pb-0 ps-4">
+    <label class=" c-text d-flex align-items-center" style="font-size:15px;">Modifier Groups</label>
+    <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup"  style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:75%;margin-top: 5px;" alt="">
     </button>
 </div>
 <div class="scrollbar w-100">
@@ -23,6 +23,42 @@
         </ul>
     </div>
 </div>
+
+<div class="modal fade" id="addModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header"  style="border:none;">
+        <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+        <button type="button" class="close" data-bs-dismiss="modal" style="
+    margin-left: auto;
+    border: none;
+    background: none;
+" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+
+          <div class="form-group mb-2">
+            <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*" id="recipient-name">
+          </div>
+          <div class="form-group">
+            <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"id="message-text"></textarea>
+          </div>
+          <div class="mt-2">
+        <a href="" data-bs-toggle="modal" data-bs-target="#addExistingModifiers"><label for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
+          </div>
+      </div>
+      <div class="modal-footer" style="border: none;">
+        <button type="button" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 
 
 

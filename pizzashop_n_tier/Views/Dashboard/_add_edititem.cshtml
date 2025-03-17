@@ -136,6 +136,7 @@
                             </div>
                             <div class="loadModifiers p-3">
                             </div>
+                            <input type="hidden" name="modifiername" id="modifierData">
                         </div>
                     </div>
                 </div>
@@ -151,20 +152,32 @@
 
 <script>
 
-    function getModifier() {
-        console.log("changed");
-        var temp = "#modifiergroup_"+ $('#modifier-group').val();
-        console.log(temp);
-        var modifiergroup = document.querySelector(temp);
-        if(modifiergroup == null){
-        $.ajax({
-            url: 'getModifiers',
-            type: 'GET',
-            data: { modifiergroupid: $('#modifier-group').val() },
-            success: function (data) {
-                $(".loadModifiers").append(data);
+    function formDataToJsonString(formData) {
+        let object = {};
+        formData.forEach((value, key) => {
+            if (object[key]) {
+                object[key] = [].concat(object[key], value);
+            } else {
+                object[key] = value;
             }
         });
+        return JSON.stringify(object);
+    }
+
+    function getModifier() {
+        console.log("changed");
+        var temp = "#modifiergroup_" + $('#modifier-group').val();
+        console.log(temp);
+        var modifiergroup = document.querySelector(temp);
+        if (modifiergroup == null) {
+            $.ajax({
+                url: '/Dashboard/getModifiers',
+                type: 'GET',
+                data: { modifiergroupid: $('#modifier-group').val() },
+                success: function (data) {
+                    $(".loadModifiers").append(data);
+                }
+            });
         }
     }
 
@@ -172,22 +185,34 @@
         e.preventDefault();
         console.log("model opened");
         var data = new FormData(this);
-         $(".modifier-group-item").each(function (index) {
-        let modifierGroupId = $(this).data("modifiergroupid");
-        let minValue = $(this).find(".min_value").val();
-        let maxValue = $(this).find(".max_value").val();
 
-        data.append(`ModifierModels[${index}].ModifiergroupId`, modifierGroupId);
-        data.append(`ModifierModels[${index}].min_value`, minValue);
-        data.append(`ModifierModels[${index}].max_value`, maxValue);
-    });
+        var modifierData = [];
+        $(".modifier-group-item").each(function (index) {
+            let modifierGroupId = $(this).find(".modifiergroupID").val();
+            let minValue = $(this).find(".min_value").val();
+            let maxValue = $(this).find(".max_value").val();
+            console.log("--------------------------------------");
+            console.log(modifierGroupId, minValue, maxValue);
+            console.log("--------------------------------------");
+            if (modifierGroupId) {
+                modifierData.push({
+                    ModifiergroupId: modifierGroupId,
+                    min_value: minValue || 0,
+                    max_value: maxValue || 0
+                });
+            }
+        });
+
+        data.append("payload", JSON.stringify(modifierData));
+        console.log(JSON.stringify(modifierData));
+    
 
         $.ajax({
             url: "/Dashboard/AddNewItem",
             method: 'POST',
             data: data,
-            processData: false,
             contentType: false,
+            processData: false,
             success: function (data) {
                 $("#exampleModalCenter3").modal("hide");
                 $("table").html(data);

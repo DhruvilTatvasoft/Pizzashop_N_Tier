@@ -81,3 +81,4 @@ C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Newtonsoft.Json.dll

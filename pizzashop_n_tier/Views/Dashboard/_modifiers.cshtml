@@ -1,26 +1,25 @@
 @model ItemModel
 
-<div id="modifiergroup_@Model.mg.Modifiergroupid">
+<div class="modifier-group-item">
     <div class="d-flex ps-3  pe-3 pt-1 mb-2">
         <label>@Model.mg.Modifiergroupname</label>
         <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
             onclick="deleteModifierGroup(@Model.mg.Modifiergroupid)" alt="">
     </div>
-   <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ModifierModels[@Model.mg.Modifiergroupid].ModifiergroupId" value="@Model.mg.Modifiergroupid" hidden>
+   <input  class="modifiergroupID" value="@Model.mg.Modifiergroupid">
    @* <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ids[@Model.mg.Modifiergroupid]" value="@Model.mg.Modifiergroupid" hidden> *@
     <div class="d-flex">
-        <select class="form-select form-select-lg mb-3 w-25" asp-for="ModifierModels[@Model.mg.Modifiergroupid].min_value" style="font-size:0.75rem"
+        <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"
             aria-label=".form-select-lg example">
             <option selected>0</option>
-            <option value="1">1</option>
+            <option value="101" selected>1</option>
         </select>
-        <select class="form-select form-select-lg mb-3 w-25" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="ModifierModels[@Model.mg.Modifiergroupid].max_value"  style="margin-left:auto;font-size: 0.75rem;"
+        <select class="form-select form-select-lg mb-3 w-25 max_value" id="modifiergroupid_@Model.mg.Modifiergroupid"   style="margin-left:auto;font-size: 0.75rem;"
             aria-label=".form-select-lg example">
             <option value="1">0</option>
-            <option value="2" selected>1</option>
+            <option value="202" selected>1</option>
             <option value="3">2</option>
         </select>
-
     </div>
     <ul class="">
         @foreach (var m in @Model.modifiers)

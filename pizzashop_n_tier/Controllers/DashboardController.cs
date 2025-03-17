@@ -1,8 +1,10 @@
 using System.Security.Claims;
+// using System.Text.Json.Serialization;
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 public class DashboardController : Controller
 {
@@ -355,8 +357,7 @@ public IActionResult ShowDashboard()
             TempData["ToastrMessage"] = "some fields are neccessary to Fill";
             TempData["ToastrType"] = "Error";
         }
-
-        return PartialView("_menuPartialView1", model);
+        return View("menu");
     }
     public IActionResult DeleteCategory(int categoryId)
     {
@@ -366,8 +367,10 @@ public IActionResult ShowDashboard()
             TempData["ToastrMessage"] = "category deleted Successfully";
             TempData["ToastrType"] = "success";
         }
+        else{
         TempData["ToastrMessage"] = "Error occured while deleting category";
         TempData["ToastrType"] = "error";
+        }
         return View("Menu");
     }
 
@@ -422,16 +425,19 @@ public IActionResult ShowDashboard()
         return PartialView("_add_edititem", model);
     }
     [HttpPost]
-    public IActionResult AddNewItem(ItemModel model)
+    public IActionResult AddNewItem( ItemModel model)
     {
+
+        model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
+        
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         _itemService.addItem(model.i, email);
+        _modifierService.addModifiersForItem(model.ModifierModels, model.i.Itemid, email);    
         Console.WriteLine(model.ModifierModels.Count);
-            Console.WriteLine("ishq hai to he !!!!");
+            
         foreach(var x in model.ModifierModels){
-            Console.WriteLine(x.max_value);
-            Console.WriteLine("ishq hai to he !!!!");
+            Console.WriteLine(x.max_value); 
         }
         return RedirectToAction("ItemsData", new { categoryId = model.i.Categoryid });
     }

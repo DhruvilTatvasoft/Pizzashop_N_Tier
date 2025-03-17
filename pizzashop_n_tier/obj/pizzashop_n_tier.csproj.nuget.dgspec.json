@@ -191,6 +191,10 @@
               "target": "Package",
               "version": "[7.0.20, )"
             },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[7.0.1, )"
+            },
             "toastr": {
               "target": "Package",
               "version": "[2.1.1, )"

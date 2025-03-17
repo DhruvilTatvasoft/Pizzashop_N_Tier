@@ -1,8 +1,10 @@
 @model MenuModel
 <partial name="_ValidationScriptsPartial" />
-<div class="d-flex justify-content-between p-2 mb-3">
+<div class="d-flex justify-content-between p-2 ps-4">
     <label class=" c-text">Category</label>
-    <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5"> +
+    @* <button type="submit"  data-bs-toggle="modal" data-bs-target="#exampleModal5" style="width:100%;background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:35%;margin-top: 5px;margin-left: 30%;" alt="">
+    </button> *@
+       <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#exampleModal5" style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:75%;margin-top: 5px;" alt="">
     </button>
 </div>
 <div class="scrollbar w-100">
@@ -11,9 +13,9 @@
            
             @foreach (var category in Model.menuList)
             {
-                <li class="w-100">
+                <li class="w-100" id="selectedCat_@category.categoryId" onclick="loadTableData(@category.categoryId)">
 
-                    <label for="" class="ms-0" style="font-size: 13px;"  onclick="loadTableData(@category.categoryId)">≣ @category.categoryName</label>
+                    <label for="" class="ms-0" style="font-size: 13px;"  >≣ @category.categoryName</label>
                     <div class="d-flex" style="margin-left:auto;">
                         <img src="~/images/edit.png" class="pe-2" onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')" style="width:25px;cursor:pointer;" alt="">
                         <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deletecategory(@category.categoryId)" alt="">

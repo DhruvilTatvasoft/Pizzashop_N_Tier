@@ -15,7 +15,14 @@ body{
         border-color: transparent;
     }
 
-   
+   .active{
+    color : #0066A7;
+    border-bottom: 2px solid;
+   }
+   .active2{
+    color: #0066A7;
+    background-color: #e0edf6;
+   }
 
     nav {
         background-color: #0066A7;
@@ -265,9 +272,9 @@ body{
         border-top: 0;
         border-right: 0;
         border-left: 0;
-        border-bottom: white;
+        border-bottom: 0;
+        /* border-bottom: white; */
         background-color: white;
-        
     }
    input label{
     font-size: 12px;

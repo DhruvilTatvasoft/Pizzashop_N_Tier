@@ -19,7 +19,7 @@
             <div class="form-container shadow">
                 <div>
                     <div class="navpanel w-100 mb-2">
-                        <button type="submit" class="h-100 item" style="width:7% ; ">Items</button>
+                        <button type="submit" class="h-100 item" style="width:7% ; " onclick="loadcategoryItemPage()">Items</button>
                         <button type="submit" class="h-100 mod" style="width:7% ;"
                             onclick="loadModifierPage()">Modifiers</button>
                     </div>
@@ -32,6 +32,7 @@
                     </div>
                     <div id="AddItemModelDiv">
                     </div>
+                    
                 </div>
 
             </div>
@@ -41,8 +42,17 @@
         $("document").ready(function () {
             loadCategories();
             loadItemData(1);
-
+             $('.item').addClass('active');
         });
+
+        function loadcategoryItemPage() {
+            $('.mod').removeClass('active');
+            $('.item').addClass('active');
+            loadCategories();
+            loadItemData(1);
+        };
+
+
 
        
 
@@ -58,13 +68,17 @@
             });
         };
         function loadTableData(categoryid) {
+            @* $(this).css("background-color", "yellow"); *@
+          $('[id^="selectedCat_"]').removeClass("active2");
+          $('#selectedCat_'+categoryid).addClass("active2");
+
             $.ajax({
                 url: '@Url.Action("ItemsData", "Dashboard")',
                 data: { categoryid: categoryid },
                 method: 'GET',
                 success: function (data) {
                     $("table").html(data);
-                    @* console.log(data); *@
+               
                 }
             });
         }
@@ -144,6 +158,8 @@
  function loadModifierPage() {
     loadModifierGroups();
     loadModifiersData(1);
+     $('.item').removeClass('active');
+     $('.mod').addClass('active');
 }
 
 function loadModifierGroups() {
