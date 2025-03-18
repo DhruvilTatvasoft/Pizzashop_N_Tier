@@ -15,5 +15,6 @@ namespace DAL.interfaces
         void addModifiersForItem(ModifierModel modifier, int itemid,string email);
         // List<Modifier> getModifiersForItem(int itemid);
         List<ModifierModel> getModifiersForItem(int itemid);
+        List<Modifier> getSelectedModifiers(List<int> modifierIds);
     }
 }

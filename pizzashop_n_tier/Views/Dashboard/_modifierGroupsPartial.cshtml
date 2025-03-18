@@ -1,33 +1,37 @@
 @model ItemModel
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 ps-4">
-    <label class=" c-text" style="font-size:15px;">Modifier Groups</label>
-    <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup"  style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:75%;margin-top: 5px;" alt="">
-    </button>
+  <label class=" c-text" style="font-size:15px;">Modifier Groups</label>
+  <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup"
+    style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png"
+      style="width:75%;margin-top: 5px;" alt="">
+  </button>
 </div>
 <div class="scrollbar w-100">
-    <div class="scrollbox w-100 h-100">
-        <ul class="categorylist mt-2 w-100 h-100 ">
-           
-            @foreach (var ModifierGroup in Model.modifiergroups)
-            {
-                <li class="w-100">
+  <div class="scrollbox w-100 h-100">
+    <ul class="categorylist mt-2 w-100 h-100 ">
 
-                    <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiers(@ModifierGroup.Modifiergroupid)">≣ @ModifierGroup.Modifiergroupname</label>
-                    <div class="d-flex" style="margin-left:auto;">
-                        <img src="~/images/edit.png" class="pe-2"  style="width:25px;cursor:pointer;" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" alt="">
-                    </div>
-                </li>
-            }
-        </ul>
-    </div>
+      @foreach (var ModifierGroup in Model.modifiergroups)
+      {
+        <li class="w-100">
+
+          <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiers(@ModifierGroup.Modifiergroupid)">≣
+            @ModifierGroup.Modifiergroupname</label>
+          <div class="d-flex" style="margin-left:auto;">
+            <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;" alt="">
+            <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" alt="">
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
 </div>
 
-<div class="modal fade" id="addModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+<div class="modal fade" id="addModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
-      <div class="modal-header"  style="border:none;">
+      <div class="modal-header" style="border:none;">
         <h5 class="modal-title" id="exampleModalLabel">Add New Modifiergroup</h5>
         <button type="button" class="close" data-bs-dismiss="modal" style="
     margin-left: auto;
@@ -39,15 +43,28 @@
       </div>
       <div class="modal-body">
 
-          <div class="form-group mb-2">
-            <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*" id="recipient-name">
+        <div class="form-group mb-2">
+          <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
+            id="recipient-name">
+        </div>
+        <div class="form-group">
+          <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
+            id="message-text"></textarea>
+        </div>
+        <div class="mt-2">
+          <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
+              for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
+
+          <div class="addedModifiers">
+            @if(Model.modifiers != null)
+            {
+              foreach(var modifier in Model.modifiers)
+              {
+               <span class="badge bg-success">@modifier.Modifiername</span>
+              }
+            }
           </div>
-          <div class="form-group">
-            <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"id="message-text"></textarea>
-          </div>
-          <div class="mt-2">
-        <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" ><label for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
-          </div>
+        </div>
       </div>
       <div class="modal-footer" style="border: none;">
         <button type="button" class="btn btn-primary">Save</button>
@@ -58,10 +75,11 @@
 </div>
 
 
-<div class="modal fade" id="#addExistingModifiers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<div class="modal fade" style="--bs-modal-width: 60%;"  id="addExistingModifiers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content">
-      <div class="modal-header"  style="border:none;">
+      <div class="modal-header pb-0" style="border:none;">
         <h5 class="modal-title" id="exampleModalLabel">Select existing Modifiers</h5>
         <button type="button" class="close" data-bs-dismiss="modal" style="
     margin-left: auto;
@@ -72,27 +90,88 @@
         </button>
       </div>
       <div class="modal-body">
-          <div class="form-group mb-2">
-            <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*" id="recipient-name">
+        <div class="form-group mb-2 w-50">
+          <div class="input-group">
+            <span>
+              <img src="~/images/icons8-search-30.png" id="search-icon" alt="">
+            </span>
           </div>
-          <div class="form-group">
-            <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"id="message-text"></textarea>
+          <input type="text" class="form-control h-100" placeholder="search*" id="recipient-name">
+        </div>
+        <div >
+          <table class="table loadmodifiers"></table>
+          <div class="d-flex align-items-center justify-content-end">
+            <label for="" class="me-2">items per page:</label>
+            <div class="dropdown mt-2 me-2">
+              <select class="form-select form-select-lg mb-3 p-3" style="width: 80%;height: 50%;font-size: 0.7rem;"
+                aria-label=".form-select-lg example">
+                <option value="1" selected>1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="3">4</option>
+                <option value="3">5</option>
+                <option value="3">6</option>
+              </select>
+            </div>
+          <div class="d-flex align-items-center">
+            <label for="" class="me-2">Showing 1-5 of 13</label>
+            <div class="d-flex mt-1">
+              <button type="button"
+                class="btn btn-outline-dark btn2 w-100 h-75 d-flex align-items-center justify-content-center" style="
+                                           padding: 6px;
+                                       "><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+                  style="width:15px" alt=""></button>
+              <button type="button"
+                class="btn btn-outline-dark btn2 mb-2 w-100 h-75 d-flex align-items-center justify-content-center"
+                style="
+                                           padding: 5.8px;
+                                       "><img src="~/images/left-chevron-svgrepo-com.svg"
+                  style="width:15px;rotate: 180deg;" alt=""></button>
+            </div>
           </div>
-          <div class="mt-2">
-        <a href="" data-bs-toggle="modal" data-bs-target="#addExistingModifiers"><label for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
           </div>
+        </div>
       </div>
-      <div class="modal-footer" style="border: none;">
-        <button type="button" class="btn btn-primary">Save</button>
+      <div class="modal-footer d-flex" style="border: none;">
+        <div style="margin-right: auto;">
+        <button type="button" class="btn btn-primary" onclick="addModifiersInNewMG()">Save</button>
         <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
 </div>
 
+<script>
+  function loadModifiers() {
+    $.ajax({
+      url: "/Dashboard/LoadAllModifiers",
+      type: "GET",
+      success: function (data) {
+        $(".loadmodifiers").html(data);
+        var target = $('.loadmodifiers').find('td[data-lastcolumn=L]');
+        var index = (target).index();
+        $('.loadmodifiers tr').find('th:eq(' + index + '),td:eq(' + index + ')').remove();
+      }
+    });
+  }
 
-
-
-
-
-
+  function addModifiersInNewMG(){
+    var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
+    $.ajax({
+      url: "/Dashboard/selectedModifiers",
+      data: {modifierIds: modifierIds},
+      type: "POST",
+      success: function (data) {
+       @* $("#addExistingModifiers").modal('toggle'); *@
+       var myModalEl = document.getElementById('addExistingModifiers');
+       var modal = bootstrap.Modal.getInstance(myModalEl)
+       modal.hide();
+       var myModalEl2 = document.getElementById('addModifierGroup');
+       var modal = bootstrap.Modal.getInstance(myModalEl2)
+       modal.show();
+       
+      }
+    });
+  }
+</script>

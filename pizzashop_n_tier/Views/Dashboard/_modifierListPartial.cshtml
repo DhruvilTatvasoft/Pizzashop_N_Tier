@@ -5,12 +5,10 @@
 <thead>
     <tr>
         <th scope="col">
-            <div class="form-check">
-                <input class="form-check-input col1" type="checkbox" value="" id="flexCheckDefault">
+            <input class="form-check-input checkedItems me-1" type="checkbox"  />
                 <label class="form-check-label" for="flexCheckDefault">
-                    Name
+                    <label for="" style="font-size: 14px;">Name</label>
                 </label>
-            </div>
         </th>
         <th scope="col">
             <div class="form-check">
@@ -29,7 +27,7 @@
     {
         <tr>
             <td scope="row">
-                <input class="form-check-input checkedItems" type="checkbox" value="@modifier.Modifierid" />
+                <input class="form-check-input IsModifierChecked" type="checkbox" value="@modifier.Modifierid" />
                 <label class="form-check-label" for="flexCheckDefault">
                     <img src="~/images/dining-menu.png" style="width:20%;" alt="">
                     <label for="" style="font-size: 14px;">@modifier.Modifiername</label>
@@ -39,7 +37,7 @@
             <td>@modifier.Unit</td>
             <td>@modifier.Modifierrate</td>
             <td>@modifier.Modifierquantity</td>
-            <td>
+            <td data-lastcolumn="L">
                 <div class="d-flex justify-content-start w-100 pb-2 h-100">
                     <img src="~/images/pencil-square.svg" class="me-2" alt="">
                     <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="">

@@ -63,4 +63,16 @@ public class ModifierRepository : IModifierRepository{
         return modifiersMdls;
     }
 
+    public List<Modifier> getSelectedModifiers(List<int> modifierIds)
+    {
+        List<Modifier> modifiers = new List<Modifier>();
+        foreach(var id in modifierIds){
+            Modifier m = _context.Modifiers.FirstOrDefault(m=>m.Modifierid == id);
+            if(m!=null){
+                modifiers.Add(m);
+            }
+        }
+
+        return modifiers;
+    }
 }

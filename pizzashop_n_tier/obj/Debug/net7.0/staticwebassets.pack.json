@@ -153,6 +153,10 @@
       "PackagePath": "staticwebassets\\images\\icons8-restaurant-menu-24.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-search-30.png",
+      "PackagePath": "staticwebassets\\images\\icons8-search-30.png"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-search-50.png",
       "PackagePath": "staticwebassets\\images\\icons8-search-50.png"
     },
@@ -507,6 +511,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\29c38696-3110-4239-8216-0088a309f4ad_05e234cbe962b82029914d3104daad11.jpg",
       "PackagePath": "staticwebassets\\uploads\\29c38696-3110-4239-8216-0088a309f4ad_05e234cbe962b82029914d3104daad11.jpg"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\2fb0e875-b877-4da7-be40-b742501ae464_add_8600182.png",
+      "PackagePath": "staticwebassets\\uploads\\2fb0e875-b877-4da7-be40-b742501ae464_add_8600182.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\6162fbc1-b647-4e51-bfa2-96929c75d20f_close.png",

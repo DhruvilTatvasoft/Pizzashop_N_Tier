@@ -106,6 +106,14 @@ body{
         background-size: 100%;
     }
 
+    #search-icon{
+        margin-top: 2%;
+        width: 5%;
+        position: absolute;
+        top: 166%;
+        left: 92%;  
+    }
+
     li:hover {
         background-color: #E9EAEB;
     }

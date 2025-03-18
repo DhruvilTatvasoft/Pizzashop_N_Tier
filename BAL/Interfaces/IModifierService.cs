@@ -15,6 +15,7 @@ namespace BAL.Interfaces
         List<Modifier> getAllModifiers();
         void addModifiersForItem(List<ModifierModel> modifierModels, int itemid,string email);
         List<ModifierModel> getModifiersForItem(int itemid);
-
+        // void getSelectedModifiers(List<int> modifierIds);
+        List<Modifier> getSelectedModifiers(List<int> modifierIds);
     }
 }

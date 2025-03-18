@@ -39,4 +39,9 @@ public class ModifierImple : IModifierService
         List<ModifierModel> modifierModels = _modifierRepository.getModifiersForItem(itemid);
         return modifierModels;
     }
+
+    public List<Modifier> getSelectedModifiers(List<int> modifierIds)
+    {
+        return _modifierRepository.getSelectedModifiers(modifierIds);
+    }
 }

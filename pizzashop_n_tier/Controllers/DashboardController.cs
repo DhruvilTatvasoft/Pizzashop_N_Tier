@@ -1,6 +1,7 @@
 using System.Security.Claims;
 // using System.Text.Json.Serialization;
 using BAL.Interfaces;
+using DAL.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -474,6 +475,12 @@ public IActionResult ShowDashboard()
         return PartialView(partialViewName, model);
     }
     [HttpGet]
+    public IActionResult LoadAllModifiers(){
+        ItemModel model = new ItemModel();
+        model.modifiers = _modifierService.getAllModifiers();
+        return PartialView("_modifierListPartial", model);
+    }
+    [HttpGet]
     public IActionResult getModifiersForModifierGp(int modifierGroupId)
     {
         ItemModel model = new ItemModel();
@@ -483,6 +490,14 @@ public IActionResult ShowDashboard()
 
     public IActionResult LoadModifiersPage(){
         return PartialView("_modifierContainerPartial");
+    }
+[HttpPost]
+    public IActionResult selectedModifiers(List<int> modifierIds){
+            List<Modifier> modifiers = new List<Modifier>();
+            ItemModel model = new ItemModel();
+            model.modifiers = _modifierService.getSelectedModifiers(modifierIds);
+            model.modifiergroups = _modifierService.getAllModifierGroups();
+            return PartialView("_modifierGroupsPartial", model);
     }
 
 }

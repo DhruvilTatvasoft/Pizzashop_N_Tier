@@ -51,13 +51,13 @@
                   <div class="row">
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control pb-1" id="floatingInput" placeholder="name@example.com"
-                        asp-for="firstname"  />
+                        asp-for="firstname" maxlength="50" />
                         <span asp-validation-for="firstname" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">First Name</label>
                     </div>
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control" id="floatingInput" asp-for="lastname" ,
-                        placeholder="name@example.com" />
+                        placeholder="name@example.com" maxlength="50" />
                         <span asp-validation-for="lastname" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">Last name</label>
                     </div>
@@ -65,7 +65,7 @@
                   <div class="row">
                     <div class="form-floating mb-2 col-6">
                       <input type="text" class="form-control col-6" id="floatingInput" asp-for="username" ,
-                        placeholder="name@example.com" />
+                        placeholder="name@example.com" maxlength="50" />
                         <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">User Name</label>
                     </div>
@@ -103,9 +103,7 @@
                                             <label for="floatingSelect">City</label>
                         <span asp-validation-for="cityid" class="mb-4 text-danger invalidmsg"></span>
                     </div>
-                    
                   </div>
-
                   <div class="row">
                     <div class="form-floating mb-3 col-8">
                       <input type="text" class="form-control" asp-for="address" , id="floatingInput"

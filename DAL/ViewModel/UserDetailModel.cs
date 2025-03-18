@@ -8,9 +8,11 @@ public class UserDetailModel
     public int? userid { get; set; }
 
     [Required(ErrorMessage = "First Name is required")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
     public string firstname { get; set; }
 
     [Required(ErrorMessage = "Last name is required.")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "Only letters are allowed.")]
     public string lastname { get; set; }
     [Required(ErrorMessage = "Email is required.")]
     public string email { get; set; }
