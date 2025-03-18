@@ -49,13 +49,11 @@ public class LoginController : Controller
     [HttpPost]
     public IActionResult Index(LoginViewModel lgnmdl)
     {
-
         if (!ModelState.IsValid)
         {
             TempData["ToastrMessage"] = "Some credentials are missing";
            TempData["ToastrType"] = "error";
             return View(lgnmdl);
-
         }
         Console.WriteLine(_log.checkloggerInDb(lgnmdl));
         if (_log.checkloggerInDb(lgnmdl))
@@ -63,16 +61,13 @@ public class LoginController : Controller
 
             var token = _log.saveLogger(lgnmdl);
             var res = HttpContext.Response;
-            if (lgnmdl.IsChecked)
-            {
-                _CookieService.setInCookie(token, res, "token");
-            }
-            _CookieService.setInCookie(lgnmdl.username, res, "username");
+            _CookieService.setInCookie(token, res, "token",lgnmdl.IsChecked);
+            _CookieService.setInCookie(lgnmdl.username, res, "username",true);
             int userid = _log.getLoggerUId(lgnmdl.username);
-            _CookieService.setInCookie(lgnmdl.password, res, "password");
-            _CookieService.setInCookie(userid.ToString(), res, "userid");
-            string imagePath = _imageService.getImagePath(userid);
-            _CookieService.setInCookie(imagePath,res,"userImage");
+            _CookieService.setInCookie(lgnmdl.password, res, "password",true);
+            _CookieService.setInCookie(userid.ToString(), res, "userid",true);
+            // string imagePath = _imageService.getImagePathFromUid(userid);
+            // _CookieService.setInCookie(imagePath,res,"userImage",true);
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
            TempData["ToastrType"] = "success";
@@ -80,7 +75,6 @@ public class LoginController : Controller
         }
         else
         {
-            Console.WriteLine("adderror");
             ModelState.AddModelError("username", "Invalid Email or Password");
             ModelState.AddModelError("password", "Invalid Email or Password");
             TempData["ToastrMessage"] = "invalid username and password";
@@ -97,13 +91,13 @@ public class LoginController : Controller
              ModelState.AddModelError("username", "Enter Your Registered Email Address");
             LoginViewModel model = new LoginViewModel();
             TempData["ToastrMessage"] = "Please enter email address";
-           TempData["ToastrType"] = "error";
+            TempData["ToastrType"] = "error";
              return View(model);
         }
         if(!ModelState.IsValid){
             LoginViewModel model = new LoginViewModel();
             TempData["ToastrMessage"] = "Invalid email address";
-           TempData["ToastrType"] = "error";
+            TempData["ToastrType"] = "error";
             return View(model);
         }
         if (_log.emailExist(Email))

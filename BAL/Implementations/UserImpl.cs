@@ -199,5 +199,19 @@ public class UserImpl : IUser
         throw new NotImplementedException();
     }
 
-   
+    public string getUserImagePath(int userid)
+    {
+        if (userid == null)
+        {
+            return "/images/manager.png";
+        }
+    
+        User u = _repository.getUserDetailFromDb(userid);
+        if (u.Profilephoto == null)
+        {
+            return "/images/manager.png";
+        }
+        return u.Profilephoto;
+    }
+
 }

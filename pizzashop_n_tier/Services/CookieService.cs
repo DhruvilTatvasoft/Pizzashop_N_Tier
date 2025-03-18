@@ -1,7 +1,7 @@
 
 public interface ICookieService{
     public CookieOptions setCookieOption();
-    public void setInCookie(string token,HttpResponse response,string name);
+    public void setInCookie(string token,HttpResponse response,string name,Boolean isChecked);
     bool IsSetCookie(HttpRequest request,string name);
     string getValueFromCookie(string name,HttpRequest request);
 }
@@ -26,9 +26,20 @@ public class CookieService : ICookieService
         }
     }
 
-    public void setInCookie(string token,HttpResponse response,string name)
+    public void setInCookie(string token,HttpResponse response,string name,Boolean isChecked)
     {
+        CookieOptions options = new CookieOptions
+        {
+            HttpOnly = true,
+              Expires = DateTime.Now.AddDays(7),
+            IsEssential = true
+        };
+        if(isChecked){
+       response.Cookies.Append(name, token, options);
+        }
+        else{
        response.Cookies.Append(name, token, setCookieOption());
+        }
     }
 
     public string getValueFromCookie(string name,HttpRequest request)

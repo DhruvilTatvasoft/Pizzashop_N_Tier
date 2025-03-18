@@ -4,6 +4,7 @@ using BAL.Interfaces;
 using DAL.Data;
 using DAL.Implementations;
 using DAL.interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -13,24 +14,24 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
-builder.Services.AddDbContext<PizzashopCContext>(option=>
+builder.Services.AddDbContext<PizzashopCContext>(option =>
 option.UseNpgsql(builder.Configuration.GetConnectionString("MyConnectionString")));
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<ICookieService,CookieService>();
-builder.Services.AddScoped<IGenericRepository,GenericRepository>();
-builder.Services.AddScoped<ILogin,LoginImpl>();
-builder.Services.AddScoped<IAESService,AESImple>();
-builder.Services.AddScoped<IJwtTokenGenService,JwtTokenImple>();
-builder.Services.AddScoped<IEmailGenService,EmailGenService>();
-builder.Services.AddScoped<IUser,UserImpl>();
-builder.Services.AddScoped<IMenuService,MenuImpl>();
-builder.Services.AddScoped<IItemService,ItemsImple>();
-builder.Services.AddScoped<IItemRepository,ItemRepository>();
-builder.Services.AddScoped<IImagePath,imagePathImpl>();
-builder.Services.AddScoped<IPermissionService,PermissionImple>();
-builder.Services.AddScoped<IRoleAndPermissionRepository,RoleAndPermissionRepository>();
-builder.Services.AddScoped<IModifierService,ModifierImple>();
-builder.Services.AddScoped<IModifierRepository,ModifierRepository>();
+builder.Services.AddScoped<ICookieService, CookieService>();
+builder.Services.AddScoped<IGenericRepository, GenericRepository>();
+builder.Services.AddScoped<ILogin, LoginImpl>();
+builder.Services.AddScoped<IAESService, AESImple>();
+builder.Services.AddScoped<IJwtTokenGenService, JwtTokenImple>();
+builder.Services.AddScoped<IEmailGenService, EmailGenService>();
+builder.Services.AddScoped<IUser, UserImpl>();
+builder.Services.AddScoped<IMenuService, MenuImpl>();
+builder.Services.AddScoped<IItemService, ItemsImple>();
+builder.Services.AddScoped<IItemRepository, ItemRepository>();
+builder.Services.AddScoped<IImagePath, imagePathImpl>();
+builder.Services.AddScoped<IPermissionService, PermissionImple>();
+builder.Services.AddScoped<IRoleAndPermissionRepository, RoleAndPermissionRepository>();
+builder.Services.AddScoped<IModifierService, ModifierImple>();
+builder.Services.AddScoped<IModifierRepository, ModifierRepository>();
 
 builder.Services.AddSession(options =>
 {
@@ -72,7 +73,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 return Task.CompletedTask;
             }
         };
-
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
@@ -85,6 +85,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
+
+    // builder.Services.ConfigureApplicationCookie(options =>
+    // {
+    // options.AccessDeniedPath = "/Login/Index";
+    // options.Cookie.Name = "YourAppCookieName";
+    // options.Cookie.HttpOnly = true;
+    // // options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    // options.LoginPath = "/Login/Index";
+    // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
+    // options.SlidingExpiration = true;
+    // });
 
 builder.Services.AddAuthorization();
 

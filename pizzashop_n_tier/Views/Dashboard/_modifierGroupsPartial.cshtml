@@ -2,7 +2,7 @@
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 ps-4">
   <label class=" c-text" style="font-size:15px;">Modifier Groups</label>
-  <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup"
+  <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup1"
     style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png"
       style="width:75%;margin-top: 5px;" alt="">
   </button>
@@ -27,7 +27,7 @@
   </div>
 </div>
 
-<div class="modal fade" id="addModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+<div class="modal fade" id="addModifierGroup1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
   aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -56,13 +56,7 @@
               for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
 
           <div class="addedModifiers">
-            @if(Model.modifiers != null)
-            {
-              foreach(var modifier in Model.modifiers)
-              {
-               <span class="badge bg-success">@modifier.Modifiername</span>
-              }
-            }
+            
           </div>
         </div>
       </div>
@@ -167,9 +161,14 @@
        var myModalEl = document.getElementById('addExistingModifiers');
        var modal = bootstrap.Modal.getInstance(myModalEl)
        modal.hide();
-       var myModalEl2 = document.getElementById('addModifierGroup');
-       var modal = bootstrap.Modal.getInstance(myModalEl2)
+       var myModalEl2 = document.getElementById('addModifierGroup1');
+       var modal = new bootstrap.Modal(myModalEl2)
        modal.show();
+      console.log(data);
+       data.modifiers.forEach((modifier)=>{
+          $(".addedModifiers").append(`<span class="badge bg-success">${modifier.modifiername}</span>`);
+          $(".addedModifiers").append(`<input type="hidden" class="modifierId">${modifier.Modifierid}</input>`);
+       })
        
       }
     });

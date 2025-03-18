@@ -196,6 +196,14 @@
         });
     }
 });
+
+function changeprofilepic(){
+  var file = document.getElementById("fileUpload1").files[0];
+  console.log(file);
+  @* $(".profile-icon").attr("src", + file.name); *@
+  var imageUrl = URL.createObjectURL(file);
+  $("#profileicon").attr("src", imageUrl);
+}
 </script>
 
 </body>

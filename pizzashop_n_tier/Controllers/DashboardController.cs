@@ -89,20 +89,21 @@ public IActionResult ShowDashboard()
         {
             var req = HttpContext.Request;
             string email = _cookieService.getValueFromCookie("username", req);
+            string userid = _cookieService.getValueFromCookie("userid", req);
             Console.WriteLine("in update profile");
             _user.updateUser(model, email);
+            var res = HttpContext.Response;
+            string temp = _user.getUserImagePath(int.Parse(userid));
+            _CookieService.setInCookie(temp,res,"userImage",true);
             TempData["ToastrMessage"] = "profile updated successfully";
             TempData["ToastrType"] = "success";
             return RedirectToAction("Myprofile");
         }
         else
         {
+            var res = HttpContext.Response;
             TempData["ToastrMessage"] = "Some fields are neccessary to Fill";
             TempData["ToastrType"] = "error";
-              var req = HttpContext.Request;
-        string image = _cookieService.getValueFromCookie("UserImage", req);
-        model.ProfilePath = image;
-            // model.ProfilePath = _imageService.getImagePath(_cookieService.getValueFromCookie("userid", req));
             return View("Myprofile", model);
         }
     }
@@ -283,6 +284,8 @@ public IActionResult ShowDashboard()
         PermissionsModel2 model = new PermissionsModel2();
         model.roleid = Id;
         model = _user.permissionsForRole(Id);
+         TempData["ToastrMessage"] = "Permissions updated successfully";
+            TempData["ToastrType"] = "success";
         return View("permissions", model);
     }
 
@@ -494,10 +497,8 @@ public IActionResult ShowDashboard()
 [HttpPost]
     public IActionResult selectedModifiers(List<int> modifierIds){
             List<Modifier> modifiers = new List<Modifier>();
-            ItemModel model = new ItemModel();
-            model.modifiers = _modifierService.getSelectedModifiers(modifierIds);
-            model.modifiergroups = _modifierService.getAllModifierGroups();
-            return PartialView("_modifierGroupsPartial", model);
+                modifiers = _modifierService.getSelectedModifiers(modifierIds);
+            return Json(new {modifiers = modifiers});
     }
 
 }

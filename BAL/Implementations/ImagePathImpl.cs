@@ -32,7 +32,7 @@ public class imagePathImpl : IImagePath
         return imagePath;
     }
 
-    public string getImagePath(int userid)
+    public string getImagePathFromUid(int userid)
     {
         return _repository.getUserImagePath(userid);
     }

@@ -28,7 +28,7 @@ public class EmailGenService : IEmailGenService{
         Console.WriteLine("sended successfully on : "+rstlink);
     }
 
-    public void emailForForgetPass(HttpRequest req,string email,string password){
+    public void emailForForgetPass(HttpRequest req, string email, string password){
         string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/emailbody.cshtml");
         emailBody = emailBody.Replace("{{useremail}}",email);
         emailBody = emailBody.Replace("{{userpassword}}",password);
