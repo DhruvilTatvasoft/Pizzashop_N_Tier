@@ -455,7 +455,7 @@ public IActionResult ShowDashboard()
     {
         ItemModel model = new ItemModel();
         model.i = _itemService.getItemFromId(itemid);
-        _itemService.getItemsForcategory(1, model);
+        model.ModifierModels = _modifierService.getModifiersForItem(itemid);
         return PartialView("_add_edititem", model);
     }
     [HttpGet]

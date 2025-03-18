@@ -1,6 +1,7 @@
 using BAL.Interfaces;
 using DAL.Data;
 using DAL.interfaces;
+using Microsoft.AspNetCore.Routing.Template;
 
 public class ModifierImple : IModifierService
 {
@@ -31,5 +32,11 @@ public class ModifierImple : IModifierService
        foreach (var modifier in modifierModels){
         _modifierRepository.addModifiersForItem(modifier, itemid,email);
        }
+    }
+
+    public List<ModifierModel> getModifiersForItem(int itemid)
+    {
+        List<ModifierModel> modifierModels = _modifierRepository.getModifiersForItem(itemid);
+        return modifierModels;
     }
 }

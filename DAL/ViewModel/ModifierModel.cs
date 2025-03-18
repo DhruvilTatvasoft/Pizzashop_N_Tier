@@ -11,5 +11,9 @@ using DAL.Data;
         public int max_value;
         public int min_value;
         public int ModifiergroupId;
-
+        public List<Modifier> modifiers
+        {
+            get;
+            set;
+        }
     }

@@ -47,4 +47,20 @@ public class ModifierRepository : IModifierRepository{
             throw e;
         }
     }
+
+    public List<ModifierModel> getModifiersForItem(int itemid)
+    {
+        List<ModifierModel> modifiersMdls = new List<ModifierModel>();
+        List<Itemsandmodifier> itemmodifiers = _context.Itemsandmodifiers.Where(im=>im.Itemid == itemid).ToList();
+        ModifierModel modifierModel = new ModifierModel();
+        foreach(var im in itemmodifiers){
+            modifierModel.ModifiergroupId = im.Modifiergroupid;
+            modifierModel.max_value = im.Allowedmaxselection;
+            modifierModel.min_value = im.Requiredminselection;
+            modifierModel.modifiers = _context.Modifiers.Where(m=>m.Modifiergroupid == im.Modifiergroupid).ToList();
+            modifiersMdls.Add(modifierModel);
+        }
+        return modifiersMdls;
+    }
+
 }
