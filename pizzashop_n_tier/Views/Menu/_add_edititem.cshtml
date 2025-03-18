@@ -176,7 +176,7 @@
         var modifiergroup = document.querySelector(temp);
         if (modifiergroup == null) {
             $.ajax({
-                url: '/Dashboard/getModifiers',
+                url: '/Menu/getModifiers',
                 type: 'GET',
                 data: { modifiergroupid: $('#modifier-group').val() },
                 success: function (data) {
@@ -213,7 +213,7 @@
     
 
         $.ajax({
-            url: "/Dashboard/AddNewItem",
+            url: "/Menu/AddNewItem",
             method: 'POST',
             data: data,
             contentType: false,

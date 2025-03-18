@@ -32,9 +32,7 @@
                     </div>
                     <div id="AddItemModelDiv">
                     </div>
-                    
                 </div>
-
             </div>
         </div>
     </div>
@@ -44,21 +42,15 @@
             loadItemData(1);
              $('.item').addClass('active');
         });
-
         function loadcategoryItemPage() {
             $('.mod').removeClass('active');
             $('.item').addClass('active');
             loadCategories();
             loadItemData(1);
         };
-
-
-
-       
-
         function loadCategories() {
             $.ajax({
-                url: '@Url.Action("CategoriesData", "Dashboard")',
+                url: '@Url.Action("CategoriesData", "Menu")',
                 type: "GET",
                 cache: false,
                 success: function (data) {
@@ -68,12 +60,11 @@
             });
         };
         function loadTableData(categoryid) {
-            @* $(this).css("background-color", "yellow"); *@
           $('[id^="selectedCat_"]').removeClass("active2");
           $('#selectedCat_'+categoryid).addClass("active2");
 
             $.ajax({
-                url: '@Url.Action("ItemsData", "Dashboard")',
+                url: '@Url.Action("ItemsData", "Menu")',
                 data: { categoryid: categoryid },
                 method: 'GET',
                 success: function (data) {
@@ -84,7 +75,7 @@
         }
         function loadItemData(categoryId) {
             $.ajax({
-                url: '@Url.Action("LoadItemPage", "Dashboard")',
+                url: '@Url.Action("LoadItemPage", "Menu")',
                 type: "GET",
                 data: { categoryId: categoryId },
                 cache: false,
@@ -102,7 +93,7 @@
             var categoryId = document.getElementById("categoryid_hidden").value;
             console.log(result);
             $.ajax({
-                url: '@Url.Action("DeleteItems", "Dashboard")',
+                url: '@Url.Action("DeleteItems", "Menu")',
                 data: { selectedItems: selectedItems, categoryId: categoryId },
                 method: 'POST',
                 success: function (data) {
@@ -115,7 +106,7 @@
             console.log("clicked");
             console.log(itemid);
             $.ajax({
-                url: '@Url.Action("deleteItem", "Dashboard")',
+                url: '@Url.Action("deleteItem", "Menu")',
                 type: "GET",
                 data: { itemid: itemid },
                 success: function (data) {
@@ -130,7 +121,7 @@
             var itemid = $('#itemid_hidden').val();
             var categoryId = $('#categoryid_hidden').val();
             $.ajax({
-                url: '@Url.Action("deleteItem", "Dashboard")',
+                url: '@Url.Action("deleteItem", "Menu")',
                 type: "POST",
                 data: { itemid: itemid },
                 success: function (data) {
@@ -143,7 +134,7 @@
         function openAddItemModal() {
             console.log("model opened");
             $.ajax({
-                url: '@Url.Action("OpenAddItemModel", "Dashboard")',
+                url: '@Url.Action("OpenAddItemModel", "Menu")',
                 method: 'GET',
                 success: function (data) {
                     console.log(data);
@@ -166,7 +157,7 @@
 function loadModifierGroups() {
     console.log("Loading Modifier Groups...");
     $.ajax({
-        url: '@Url.Action("getModifierGroups", "Dashboard")',
+        url: '@Url.Action("getModifierGroups", "Menu")',
         method: 'GET',
         data: { partialViewName: "_modifierGroupsPartial" },
         success: function (response) {
@@ -180,7 +171,7 @@ function loadModifierGroups() {
 
 function loadModifiers(modifierGroupId) {
     $.ajax({
-        url: '/Dashboard/getModifiersForModifierGp',
+        url: '/Menu/getModifiersForModifierGp',
         type: 'GET',
         data: { modifierGroupId: modifierGroupId },
         success: function (response) {
@@ -194,7 +185,7 @@ function loadModifiers(modifierGroupId) {
 
 function loadModifiersData(modifierGroupId) {
     $.ajax({
-        url: '/Dashboard/getModifiersForModifierGp',
+        url: '/Menu/getModifiersForModifierGp',
         type: 'GET',
         data: { modifierGroupId: modifierGroupId },
         success: function (response) {

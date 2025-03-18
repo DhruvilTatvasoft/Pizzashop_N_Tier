@@ -139,7 +139,7 @@
 <script>
   function loadModifiers() {
     $.ajax({
-      url: "/Dashboard/LoadAllModifiers",
+      url: "/Menu/LoadAllModifiers",
       type: "GET",
       success: function (data) {
         $(".loadmodifiers").html(data);
@@ -150,27 +150,33 @@
     });
   }
 
-  function addModifiersInNewMG(){
-    var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
-    $.ajax({
-      url: "/Dashboard/selectedModifiers",
-      data: {modifierIds: modifierIds},
-      type: "POST",
-      success: function (data) {
-       @* $("#addExistingModifiers").modal('toggle'); *@
-       var myModalEl = document.getElementById('addExistingModifiers');
-       var modal = bootstrap.Modal.getInstance(myModalEl)
-       modal.hide();
-       var myModalEl2 = document.getElementById('addModifierGroup1');
-       var modal = new bootstrap.Modal(myModalEl2)
-       modal.show();
+  function addModifiersInNewMG() {
+  var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
+  
+  $.ajax({
+    url: "/Menu/selectedModifiers",
+    data: { modifierIds: modifierIds },
+    type: "POST",
+    success: function (data) {
+      var myModalEl = document.getElementById('addExistingModifiers');
+      var modal = bootstrap.Modal.getInstance(myModalEl);
+      modal.hide();
+
+      // Ensure backdrops are cleared
+      document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+      document.body.classList.remove('modal-open');
+      
+      var myModalEl2 = document.getElementById('addModifierGroup1');
+      var modal2 = new bootstrap.Modal(myModalEl2);
+      modal2.show();
+
       console.log(data);
-       data.modifiers.forEach((modifier)=>{
-          $(".addedModifiers").append(`<span class="badge bg-success">${modifier.modifiername}</span>`);
-          $(".addedModifiers").append(`<input type="hidden" class="modifierId">${modifier.Modifierid}</input>`);
-       })
-       
-      }
-    });
-  }
+      data.modifiers.forEach((modifier) => {
+        $(".addedModifiers").append(`<span class="badge bg-secondary me-2 mb-2">${modifier.modifiername}</span>`);
+        $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.Modifierid}" />`);
+      });
+    }
+  });
+}
+
 </script>

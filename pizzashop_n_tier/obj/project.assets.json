@@ -3752,35 +3752,38 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\pct78\\.nuget\\packages\\": {}
+    "C:\\Users\\Admin\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectUniqueName": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "projectName": "pizzashop_n_tier",
-      "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
-      "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
+      "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
+      "outputPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\pizzashop_n_tier\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
-              "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
+            "E:\\Pizzashop\\Pizzashop_N_Tier\\BAL\\BAL.csproj": {
+              "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\BAL\\BAL.csproj"
             },
-            "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"
+            "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj": {
+              "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj"
             }
           }
         }
@@ -3789,6 +3792,11 @@
         "warnAsError": [
           "NU1605"
         ]
+      },
+      "restoreAuditProperties": {
+        "enableAudit": "true",
+        "auditLevel": "low",
+        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -3827,11 +3835,21 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.410\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
       }
     }
   },
   "logs": [
+    {
+      "code": "NU1903",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'Newtonsoft.Json' 8.0.3 has a known high severity vulnerability, https://github.com/advisories/GHSA-5crp-9r3c-p9vr",
+      "libraryId": "Newtonsoft.Json",
+      "targetGraphs": [
+        "net7.0"
+      ]
+    },
     {
       "code": "NU1701",
       "level": "Warning",

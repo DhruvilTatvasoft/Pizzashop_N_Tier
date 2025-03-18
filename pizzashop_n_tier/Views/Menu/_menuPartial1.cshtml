@@ -25,7 +25,7 @@
         </ul>
     </div>
 </div>
-<form method="Post" asp-controller="Dashboard" asp-action="EditCategory">
+<form method="Post" asp-controller="Menu" asp-action="EditCategory">
     <div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
@@ -55,7 +55,7 @@
         </div>
     </div>
 </form>
- <form method="Post" asp-controller="Dashboard" asp-action="AddCategory">
+ <form method="Post" asp-controller="Menu" asp-action="AddCategory">
             <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -95,7 +95,7 @@ function openEditModal(categoryId,categoryname,description){
    };
    function deletecategory(categoryId) {
         $.ajax({
-            url: '@Url.Action("DeleteCategory", "Dashboard")',
+            url: '@Url.Action("DeleteCategory", "Menu")',
             type: "GET",
             data: { categoryId: categoryId },
             cache: false,

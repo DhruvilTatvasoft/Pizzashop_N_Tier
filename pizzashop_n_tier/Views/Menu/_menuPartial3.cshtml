@@ -65,7 +65,7 @@
 <script>
     function EditItemGet(itemid){
         $.ajax({
-                url: '@Url.Action("EditItem", "Dashboard")',
+                url: '@Url.Action("EditItem", "Menu")',
                 method: 'GET',
                 data: { itemid : itemid },
                 success: function (data) {

@@ -51,7 +51,7 @@
             var SearchedItem = $('#searchedItem').val();
             if(SearchedItem.length > 4){
              $.ajax({
-                url: '@Url.Action("SearchItem", "Dashboard")',
+                url: '@Url.Action("SearchItem", "Menu")',
                 method: 'POST',
                 data: { searchedItem: SearchedItem,categoryId : categoryId },
                 success: function (data) {
