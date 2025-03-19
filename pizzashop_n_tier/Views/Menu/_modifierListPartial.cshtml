@@ -5,7 +5,7 @@
 <thead>
     <tr>
         <th scope="col">
-            <input class="form-check-input checkedItems me-1" type="checkbox"  />
+            <input class="form-check-input checkedItems me-1" id="masterCheck" type="checkbox"  />
                 <label class="form-check-label" for="flexCheckDefault">
                     <label for="" style="font-size: 14px;">Name</label>
                 </label>
@@ -27,7 +27,7 @@
     {
         <tr>
             <td scope="row">
-                <input class="form-check-input IsModifierChecked" type="checkbox" value="@modifier.Modifierid" />
+                <input class="form-check-input IsModifierChecked" type="checkbox"  value="@modifier.Modifierid" />
                 <label class="form-check-label" for="flexCheckDefault">
                     <img src="~/images/dining-menu.png" style="width:20%;" alt="">
                     <label for="" style="font-size: 14px;">@modifier.Modifiername</label>
@@ -46,5 +46,11 @@
         </tr>
     }
     <script>
+        var subchecks = document.querySelectorAll(".IsModifierChecked");
+        document.getElementById("masterCheck").addEventListener("change",()=>{
+            subchecks.forEach((checkbox)=>{
+                checkbox.checked = document.getElementById("masterCheck").checked;
+            })
+        })
     </script>
 </tbody>

@@ -46,23 +46,24 @@
         <div class="form-group mb-2">
           <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
             id="recipient-name">
+          @* <!-- #region >--> *@
+          <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
         </div>
         <div class="form-group">
           <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
             id="message-text"></textarea>
+          <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
         </div>
         <div class="mt-2">
           <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
               for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
-
-          <div class="addedModifiers">
-            
+          <div class="addedModifiers d-flex">
           </div>
         </div>
       </div>
       <div class="modal-footer" style="border: none;">
         <button type="button" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="cancelfromAddModifiers()" >Cancel</button>
       </div>
     </div>
   </div>
@@ -129,7 +130,7 @@
       <div class="modal-footer d-flex" style="border: none;">
         <div style="margin-right: auto;">
         <button type="button" class="btn btn-primary" onclick="addModifiersInNewMG()">Save</button>
-        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="cancelfromExistingModifiers()">Cancel</button>
         </div>
       </div>
     </div>
@@ -162,7 +163,6 @@
       var modal = bootstrap.Modal.getInstance(myModalEl);
       modal.hide();
 
-      // Ensure backdrops are cleared
       document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
       document.body.classList.remove('modal-open');
       
@@ -172,11 +172,24 @@
 
       console.log(data);
       data.modifiers.forEach((modifier) => {
-        $(".addedModifiers").append(`<span class="badge bg-secondary me-2 mb-2">${modifier.modifiername}</span>`);
-        $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.Modifierid}" />`);
+        
+        $(".addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
+        $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
       });
     }
   });
 }
+function discardModifier(modifierid){
+    $(`#modifier_${modifierid}`).remove();
+}
 
+function cancelfromExistingModifiers(){
+  var myModalEl2 = document.getElementById('addModifierGroup1');
+      var modal2 = new bootstrap.Modal(myModalEl2);
+      modal2.show();
+}
+function cancelfromAddModifiers(){
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+      document.body.classList.remove('modal-open');
+}
 </script>

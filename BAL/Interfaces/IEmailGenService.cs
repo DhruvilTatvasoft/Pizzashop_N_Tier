@@ -2,7 +2,7 @@ using System.Net;
 using System.Net.Mail;
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Http;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
+
 
 public interface IEmailGenService{
     void generateEmail(HttpRequest req,string email);

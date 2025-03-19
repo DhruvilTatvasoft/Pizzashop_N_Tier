@@ -3595,27 +3595,24 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\pct78\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj",
+      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj",
       "projectName": "DAL",
-      "projectPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\DAL.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "E:\\Pizzashop\\Pizzashop_N_Tier\\DAL\\obj\\",
+      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj",
+      "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
@@ -3628,11 +3625,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -3680,7 +3672,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.410\\RuntimeIdentifierGraph.json"
       }
     }
   }

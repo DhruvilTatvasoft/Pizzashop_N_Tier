@@ -1,9 +1,5 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using BAL.Interfaces;
-using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace pizzashop_n_tier.Controllers;
 

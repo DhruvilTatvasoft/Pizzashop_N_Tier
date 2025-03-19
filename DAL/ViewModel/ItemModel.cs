@@ -7,7 +7,7 @@ public class ItemModel
         get;
         set;
     }
-    public Item? i
+    public Item i
     {
         get;
         set;
@@ -17,19 +17,19 @@ public class ItemModel
         get;
         set;
     }
-    public List<int> ids{get;set;}
+    public List<int>? ids{get;set;}
 
-    public List<ModifierModel> ModifierModels
+    public List<ModifierModel>? ModifierModels
     {
         get;
         set;
     }
 
-    public string payload{
+    public string? payload{
         get;
         set;
     }
-    public List<string> modifierGroupIds
+    public List<string>? modifierGroupIds
     {
         set;
         get;
@@ -68,12 +68,12 @@ public class ItemModel
         get;
         set;
     }
-    public string? searchItemName
+    public string searchItemName
     {
         get;
         set;
     }
-    public int? itemId
+    public int itemId
     {
         get;
         set;
