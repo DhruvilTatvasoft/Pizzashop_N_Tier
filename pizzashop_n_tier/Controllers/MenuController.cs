@@ -255,7 +255,8 @@ public class MenuController : Controller{
     public IActionResult AddNewModifierGroup(ItemModel model){
        model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
        _modifierService.AddNewModifierGroup(model.mg,model.ModifierIds);
-       return View("Menu");
+       model.modifiergroups = _modifierService.getAllModifierGroups();
+        return PartialView("_modifierGroupsPartial", model);
     }
 
     public IActionResult DeleteModifier(int modifierid,int modifiergroupid){
@@ -268,6 +269,7 @@ public class MenuController : Controller{
     public IActionResult EditModifierGroupGet(int modifiergroupid){
         ItemModel model = new ItemModel();
         model.mg = _modifierService.GetModifiergroup(modifiergroupid);
-        return PartialView("_add_edit_modifierGroup",model);
+        model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupid);
+        return PartialView("_edit_modifierGroup",model);
     }
 }

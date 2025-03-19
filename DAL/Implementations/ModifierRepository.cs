@@ -12,7 +12,7 @@ public class ModifierRepository : IModifierRepository
     public List<Modifier> getModifiersForMG(int ModifierGroupId)
     {
         List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == ModifierGroupId && m.Isdeleted == false).ToList();
-        
+
         modifiers.ForEach(m =>
         {
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
@@ -32,11 +32,14 @@ public class ModifierRepository : IModifierRepository
 
     public List<Modifier> getAllModifiers()
     {
-        List<Modifier> modifiers = _context.Modifiers.Where(modifier=>modifier.Isdeleted == false).ToList();
-        modifiers.ForEach(m =>
-        {
-            m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
-        });
+        List<Modifier> modifiers = _context.Modifiers
+                    .Where(modifier => modifier.Isdeleted == false)
+                    .GroupBy(m => new { m.Modifiername, m.Modifiergroupid })
+                    .Select(g => g.First())
+                    .ToList(); 
+                    modifiers.ForEach(m =>{
+                         m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
+                    });
         return modifiers;
     }
 
@@ -123,7 +126,7 @@ public class ModifierRepository : IModifierRepository
         _context.Modifiergroups.Add(newModifierGroup);
         _context.SaveChanges();
 
-int NewModifierGroupId = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupname == mg.Modifiergroupname)?.Modifiergroupid ?? 1;
+        int NewModifierGroupId = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupname == mg.Modifiergroupname)?.Modifiergroupid ?? 1;
         if (modifierIds.Count > 0)
         {
 
@@ -149,11 +152,16 @@ int NewModifierGroupId = _context.Modifiergroups.FirstOrDefault(modifierGroup =>
         }
     }
 
+
     public void deleteModifier(int modifierid, int modifiergroupid)
     {
         Modifier modifier = _context.Modifiers.FirstOrDefault(m => m.Modifierid == modifierid && m.Modifiergroupid == modifiergroupid) ?? new Modifier();
-        modifier.Isdeleted = true;
-        _context.Update(modifier);
-        _context.SaveChanges();
+        if (modifier != null)
+        {
+            modifier.Isdeleted = true;
+            _context.Update(modifier);
+            _context.SaveChanges();
+        }
     }
+
 }

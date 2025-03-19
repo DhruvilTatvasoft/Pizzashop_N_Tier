@@ -170,3 +170,6 @@ c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
+E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.ObjectPool.dll
+E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.Options.dll

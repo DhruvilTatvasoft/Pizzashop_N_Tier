@@ -250,26 +250,31 @@
       contentType: false,
       processData: false,
       success: function (data) {
-        @* console.log(data); *@
-          loadModifierGroups();
+      @* console.log(data); *@
+        $('.modal-backdrop').remove(); 
+        $('body').removeClass('modal-open');
+        loadModifierGroups();
       }
     });
   });
 
-  function EditModifierGroupGet(modifierGroupId){
-    $.ajax({
-      url: '/Menu/EditModifierGroupGet',
-      type: 'GET',
-      data: { modifierGroupId: modifierGroupId },
-      success: function (data) {
-        $("#addModifierGroup1").html(data);
-        var myModalEl2 = document.getElementById('addModifierGroup1');
-        var modal2 = new bootstrap.Modal(myModalEl2);
-        modal2.show();
-      }
-      
-    })
-  }
+ function EditModifierGroupGet(modifierGroupId){
+  $.ajax({
+    url: '/Menu/EditModifierGroupGet',
+    type: 'GET',
+    data: { modifierGroupId: modifierGroupId },
+    success: function (data) {
+      $('#LoadPartialOfmodifiergroup').html(data);
+      var myModalEl2 = document.getElementById('EditModifierGroup');
+      var modal2 = new bootstrap.Modal(myModalEl2);
+      modal2.show();
+    },
+    error: function () {
+      alert("Failed to load the edit view.");
+    }
+  });
+}
+
 
 
 

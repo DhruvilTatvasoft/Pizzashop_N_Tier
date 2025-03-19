@@ -1,11 +1,12 @@
 @model ItemModel
 <form id="newModifierGroup">
-  <div class="modal fade" id="addModifierGroup1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+  <div class="modal fade" id="EditModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header" style="border:none;">
-          <h5 class="modal-title" id="exampleModalLabel">Add New Modifiergroup</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup   @Model.mg.Modifiergroupname
+          @Model.mg.Description</h5>
           <button type="button" class="close" data-bs-dismiss="modal" style="
     margin-left: auto;
     border: none;
@@ -15,15 +16,15 @@
           </button>
         </div>
         <div class="modal-body">
-
+        
           <div class="form-group mb-2">
-            <input type="text"  class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
+            <input type="text"  class="form-control h-100" asp-for="@Model.mg.Modifiergroupname" placeholder="Name*"
               id="modifierGroup-Name">
             @* <!-- #region >--> *@
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="form-group">
-            <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
+            <textarea class="form-control h-100" placeholder="Description" asp-for="@Model.mg.Description"
               id="Modifier-description" ></textarea>
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
@@ -31,6 +32,9 @@
             <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
                 for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
+              @foreach(var modifier in @Model.modifiers){
+                <div  id="modifier_@modifier.Modifierid"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">@modifier.Modifiername<img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(@modifier.Modifierid)" style="width:10px;cursor:pointer;"></span></div>
+              }
             </div>
           </div>
         </div>
