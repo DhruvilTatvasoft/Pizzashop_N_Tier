@@ -15,63 +15,68 @@
       {
         <li class="w-100">
 
-          <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiers(@ModifierGroup.Modifiergroupid)">≣
+          <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid)">≣
             @ModifierGroup.Modifiergroupname</label>
-          <div class="d-flex" style="margin-left:auto;">
-            <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;" alt="">
-            <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" alt="">
-          </div>
+
+            <div class="d-flex" style="margin-left:auto;">
+                        <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;" onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="DeleteModifierGroup(@ModifierGroup.Modifiergroupid)"  alt="">
+                    </div>
         </li>
       }
     </ul>
   </div>
 </div>
 
-<div class="modal fade" id="addModifierGroup1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header" style="border:none;">
-        <h5 class="modal-title" id="exampleModalLabel">Add New Modifiergroup</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" style="
+<form id="newModifierGroup">
+  <div class="modal fade" id="addModifierGroup1" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="border:none;">
+          <h5 class="modal-title" id="exampleModalLabel">Add New Modifiergroup</h5>
+          <button type="button" class="close" data-bs-dismiss="modal" style="
     margin-left: auto;
     border: none;
     background: none;
 " aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
 
-        <div class="form-group mb-2">
-          <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
-            id="recipient-name">
-          @* <!-- #region >--> *@
-          <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
-        </div>
-        <div class="form-group">
-          <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
-            id="message-text"></textarea>
-          <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
-        </div>
-        <div class="mt-2">
-          <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
-              for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
-          <div class="addedModifiers d-flex">
+          <div class="form-group mb-2">
+            <input type="text"  class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
+              id="modifierGroup-Name">
+            @* <!-- #region >--> *@
+            <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
+          </div>
+          <div class="form-group">
+            <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
+              id="Modifier-description" ></textarea>
+            <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
+          </div>
+          <div class="mt-2">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
+                for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
+            <div class="addedModifiers d-flex">
+            </div>
           </div>
         </div>
-      </div>
-      <div class="modal-footer" style="border: none;">
-        <button type="button" class="btn btn-primary">Save</button>
-        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="cancelfromAddModifiers()" >Cancel</button>
+        <div class="modal-footer" style="border: none;">
+          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+            onclick="cancelfromAddModifiers()">Cancel</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
+</form>
 
+<div id="LoadPartialOfmodifiergroup"></div>
 
-<div class="modal fade" style="--bs-modal-width: 60%;"  id="addExistingModifiers" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
+<div class="modal fade" style="--bs-modal-width: 60%;" id="addExistingModifiers" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered " role="document">
     <div class="modal-content">
       <div class="modal-header pb-0" style="border:none;">
@@ -91,9 +96,10 @@
               <img src="~/images/icons8-search-30.png" id="search-icon" alt="">
             </span>
           </div>
-          <input type="text" class="form-control h-100" placeholder="search*" id="recipient-name">
+          <input type="text" class="form-control h-100" onkeyup="searchModifier()" id="searchModifier"
+            placeholder="search*">
         </div>
-        <div >
+        <div>
           <table class="table loadmodifiers"></table>
           <div class="d-flex align-items-center justify-content-end">
             <label for="" class="me-2">items per page:</label>
@@ -108,29 +114,30 @@
                 <option value="3">6</option>
               </select>
             </div>
-          <div class="d-flex align-items-center">
-            <label for="" class="me-2">Showing 1-5 of 13</label>
-            <div class="d-flex mt-1">
-              <button type="button"
-                class="btn btn-outline-dark btn2 w-100 h-75 d-flex align-items-center justify-content-center" style="
+            <div class="d-flex align-items-center">
+              <label for="" class="me-2">Showing 1-5 of 13</label>
+              <div class="d-flex mt-1">
+                <button type="button"
+                  class="btn btn-outline-dark btn2 w-100 h-75 d-flex align-items-center justify-content-center" style="
                                            padding: 6px;
                                        "><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-                  style="width:15px" alt=""></button>
-              <button type="button"
-                class="btn btn-outline-dark btn2 mb-2 w-100 h-75 d-flex align-items-center justify-content-center"
-                style="
+                    style="width:15px" alt=""></button>
+                <button type="button"
+                  class="btn btn-outline-dark btn2 mb-2 w-100 h-75 d-flex align-items-center justify-content-center"
+                  style="
                                            padding: 5.8px;
                                        "><img src="~/images/left-chevron-svgrepo-com.svg"
-                  style="width:15px;rotate: 180deg;" alt=""></button>
+                    style="width:15px;rotate: 180deg;" alt=""></button>
+              </div>
             </div>
-          </div>
           </div>
         </div>
       </div>
       <div class="modal-footer d-flex" style="border: none;">
         <div style="margin-right: auto;">
-        <button type="button" class="btn btn-primary" onclick="addModifiersInNewMG()">Save</button>
-        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="cancelfromExistingModifiers()">Cancel</button>
+          <button type="submit" class="btn btn-primary" onclick="addModifiersInNewMG()">Save</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
+            onclick="cancelfromExistingModifiers()">Cancel</button>
         </div>
       </div>
     </div>
@@ -138,58 +145,133 @@
 </div>
 
 <script>
+  var selectedModifiers = [];
   function loadModifiers() {
     $.ajax({
       url: "/Menu/LoadAllModifiers",
       type: "GET",
       success: function (data) {
         $(".loadmodifiers").html(data);
+        $(".modifier-img").each(function () {
+          $(this).css("display", 'none');
+        });
+        var modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
+        modal.show();
+
+        document.querySelectorAll(".loadmodifiers .IsModifierChecked").forEach((checkbox) => {
+          if (selectedModifiers.includes(parseInt(checkbox.value, 10))) {
+            checkbox.checked = true;
+          }
+        });
+
+
         var target = $('.loadmodifiers').find('td[data-lastcolumn=L]');
-        var index = (target).index();
+        var index = target.index();
         $('.loadmodifiers tr').find('th:eq(' + index + '),td:eq(' + index + ')').remove();
       }
     });
   }
 
+
   function addModifiersInNewMG() {
-  var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
-  
-  $.ajax({
-    url: "/Menu/selectedModifiers",
-    data: { modifierIds: modifierIds },
-    type: "POST",
-    success: function (data) {
-      var myModalEl = document.getElementById('addExistingModifiers');
-      var modal = bootstrap.Modal.getInstance(myModalEl);
-      modal.hide();
 
-      document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-      document.body.classList.remove('modal-open');
-      
-      var myModalEl2 = document.getElementById('addModifierGroup1');
-      var modal2 = new bootstrap.Modal(myModalEl2);
-      modal2.show();
+    var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
+    $.ajax({
+      url: "/Menu/selectedModifiers",
+      data: { modifierIds: modifierIds },
+      type: "POST",
+      success: function (data) {
+        var myModalEl = document.getElementById('addExistingModifiers');
+        var modal = bootstrap.Modal.getInstance(myModalEl);
+        modal.hide();
 
-      console.log(data);
-      data.modifiers.forEach((modifier) => {
-        
-        $(".addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
-        $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
-      });
-    }
-  });
-}
-function discardModifier(modifierid){
+        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+        document.body.classList.remove('modal-open');
+
+        var myModalEl2 = document.getElementById('addModifierGroup1');
+        var modal2 = new bootstrap.Modal(myModalEl2);
+        modal2.show();
+
+        console.log(data);
+        data.modifiers.forEach((modifier) => {
+          if ($(`#modifier_${modifier.modifierid}`).length) {
+            return;
+          }
+          else {
+            $(".addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
+            $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
+            selectedModifiers.push(modifier.modifierid);
+          }
+        });
+      }
+    });
+  }
+  function discardModifier(modifierid) {
     $(`#modifier_${modifierid}`).remove();
-}
+    selectedModifiers.pop(modifierid);
+  }
 
-function cancelfromExistingModifiers(){
-  var myModalEl2 = document.getElementById('addModifierGroup1');
-      var modal2 = new bootstrap.Modal(myModalEl2);
-      modal2.show();
-}
-function cancelfromAddModifiers(){
-  document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-      document.body.classList.remove('modal-open');
-}
+  function cancelfromExistingModifiers() {
+    var myModalEl2 = document.getElementById('addModifierGroup1');
+    var modal2 = new bootstrap.Modal(myModalEl2);
+    modal2.show();
+  }
+  function cancelfromAddModifiers() {
+    document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+    document.body.classList.remove('modal-open');
+  }
+
+  function searchModifier() {
+    if ($('#searchModifier').val() == "") {
+      loadModifiers();
+    }
+    $.ajax({
+      url: '@Url.Action("SearchModifier", "Menu")',
+      method: 'GET',
+      data: { searchedModifier: $('#searchModifier').val() },
+      success: function (data) {
+        $('.loadmodifiers').html(data);
+      }
+    });
+  }
+
+  $("#newModifierGroup").on('submit', function (e) {
+    e.preventDefault();
+    var data = new FormData(this);
+    console.log(data);
+    var payload = JSON.stringify(selectedModifiers);
+    data.append("payload", payload);
+
+
+    $.ajax({
+      url: "/Menu/AddNewModifierGroup",
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        @* console.log(data); *@
+          loadModifierGroups();
+      }
+    });
+  });
+
+  function EditModifierGroupGet(modifierGroupId){
+    $.ajax({
+      url: '/Menu/EditModifierGroupGet',
+      type: 'GET',
+      data: { modifierGroupId: modifierGroupId },
+      success: function (data) {
+        $("#addModifierGroup1").html(data);
+        var myModalEl2 = document.getElementById('addModifierGroup1');
+        var modal2 = new bootstrap.Modal(myModalEl2);
+        modal2.show();
+      }
+      
+    })
+  }
+
+
+
+
 </script>

@@ -44,4 +44,20 @@ public class ModifierImple : IModifierService
     {
         return _modifierRepository.getSelectedModifiers(modifierIds);
     }
+
+    public List<Modifier> getSearchedModifier(string searchedModifier)
+    {
+       List<Modifier> modifiers = _modifierRepository.getSearchedModifier(searchedModifier);
+        return modifiers;
+    }
+
+    public void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    {
+        _modifierRepository.AddNewModifierGroup(mg,modifierIds);
+    }
+
+    public void deleteModifier(int modifierid, int modifiergroupid)
+    {
+        _modifierRepository.deleteModifier(modifierid,modifiergroupid);
+    }
 }

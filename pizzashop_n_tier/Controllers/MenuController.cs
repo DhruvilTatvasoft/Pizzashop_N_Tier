@@ -1,6 +1,7 @@
 using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 
 public class MenuController : Controller{
@@ -13,24 +14,21 @@ public class MenuController : Controller{
 
     public readonly IMenuService _menuService;
 
-    private readonly ICookieService _CookieService;
 
     public readonly IItemService _itemService;
-
-    public readonly IPermissionService _permissionService;
 
     public readonly IModifierService _modifierService;
 
     public readonly IImagePath _imageService;
 
-    public MenuController(ILogin log,IImagePath imagePath,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+    public MenuController(IImagePath imagePath,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _user = user;
         _cookieService = cookieService;
         _emailService = emailService;
         _menuService = menuService;
         _itemService = itemService;
-        _permissionService = permissionService;
+
         _modifierService = modifierService;
     }
 
@@ -183,7 +181,6 @@ public class MenuController : Controller{
     [HttpPost]
     public IActionResult AddNewItem( ItemModel model)
     {
-
         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
         
         var req = HttpContext.Request;
@@ -246,5 +243,31 @@ public class MenuController : Controller{
             List<Modifier> modifiers = new List<Modifier>();
                 modifiers = _modifierService.getSelectedModifiers(modifierIds);
             return Json(new {modifiers = modifiers});
+    }
+
+[HttpGet]
+    public IActionResult SearchModifier(string searchedModifier){
+        ItemModel model = new ItemModel();
+        model.modifiers = _modifierService.getSearchedModifier(searchedModifier);
+        return PartialView("_modifierListPartial",model);
+    }
+
+    public IActionResult AddNewModifierGroup(ItemModel model){
+       model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
+       _modifierService.AddNewModifierGroup(model.mg,model.ModifierIds);
+       return View("Menu");
+    }
+
+    public IActionResult DeleteModifier(int modifierid,int modifiergroupid){
+        _modifierService.deleteModifier(modifierid,modifiergroupid);
+        List<Modifier> modifiers = _modifierService.getModifiersForMGroup(modifiergroupid);
+        ItemModel model = new ItemModel();
+        model.modifiers = modifiers;
+        return View("_modifierListPartial",model);
+    }
+    public IActionResult EditModifierGroupGet(int modifiergroupid){
+        ItemModel model = new ItemModel();
+        model.mg = _modifierService.GetModifiergroup(modifiergroupid);
+        return PartialView("_add_edit_modifierGroup",model);
     }
 }

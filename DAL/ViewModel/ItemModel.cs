@@ -78,4 +78,9 @@ public class ItemModel
         get;
         set;
     }
+    public List<int> ModifierIds
+    {
+        get;
+        set;
+    }
 }

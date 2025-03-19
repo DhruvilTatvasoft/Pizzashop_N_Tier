@@ -1,10 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DAL.Data;
 
 public partial class Modifiergroup
 {
+
+[Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public int Modifiergroupid { get; set; }
 
     public string Modifiergroupname { get; set; } = null!;

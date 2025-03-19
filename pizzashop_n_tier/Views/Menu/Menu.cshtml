@@ -169,7 +169,7 @@ function loadModifierGroups() {
     });
 }
 
-function loadModifiers(modifierGroupId) {
+function loadModifiersForModifierGroup(modifierGroupId) {
     $.ajax({
         url: '/Menu/getModifiersForModifierGp',
         type: 'GET',

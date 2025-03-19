@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json.Serialization;
 using BAL.Implementations;
 using BAL.Interfaces;
 using DAL.Data;
@@ -98,6 +99,8 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     // });
 
 builder.Services.AddAuthorization();
+builder.Services.AddControllers().AddJsonOptions(x =>
+   x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 var app = builder.Build();
 
