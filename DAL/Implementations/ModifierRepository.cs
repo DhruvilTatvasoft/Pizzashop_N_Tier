@@ -34,7 +34,7 @@ public class ModifierRepository : IModifierRepository
     {
         List<Modifier> modifiers = _context.Modifiers
                     .Where(modifier => modifier.Isdeleted == false)
-                    .GroupBy(m => new { m.Modifiername, m.Modifiergroupid })
+                    .GroupBy(m => new { ModifierName = m.Modifiername.Trim()})
                     .Select(g => g.First())
                     .ToList(); 
                     modifiers.ForEach(m =>{
@@ -105,7 +105,8 @@ public class ModifierRepository : IModifierRepository
 
     public List<Modifier> getSearchedModifier(string searchedModifier)
     {
-        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim())).Distinct().ToList();
+        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim())).GroupBy(m => new { ModifierName = m.Modifiername.Trim()})
+                    .Select(g => g.First()).ToList();
         modifiers.ForEach(m =>
         {
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();

@@ -272,4 +272,8 @@ public class MenuController : Controller{
         model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupid);
         return PartialView("_edit_modifierGroup",model);
     }
+
+    public IActionResult updateModifierGroup(ItemModel model){
+        return View("Menu");
+    }
 }

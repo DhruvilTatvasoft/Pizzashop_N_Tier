@@ -1,4 +1,5 @@
 @model ItemModel
+<div class="update_Modifiergroup"></div>
 <form id="newModifierGroup">
   <div class="modal fade" id="EditModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
@@ -7,11 +8,11 @@
         <div class="modal-header" style="border:none;">
           <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup   @Model.mg.Modifiergroupname
           @Model.mg.Description</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" style="
+          <button type="button" class="close"  style="
     margin-left: auto;
     border: none;
     background: none;
-" aria-label="Close">
+" aria-label="Close" data-bs-dismiss="modal">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -29,11 +30,13 @@
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="mt-2">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
+            <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers(1)"><label
                 for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
               @foreach(var modifier in @Model.modifiers){
-                <div  id="modifier_@modifier.Modifierid"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">@modifier.Modifiername<img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(@modifier.Modifierid)" style="width:10px;cursor:pointer;"></span></div>
+                <div  id="modifier_@modifier.Modifierid">
+                  <span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">@modifier.Modifiername
+                  <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(@modifier.Modifierid)" style="width:10px;cursor:pointer;"><input type="hidden" class="modifierIdFromEdit" value="@modifier.Modifierid"/></span></div>
               }
             </div>
           </div>
@@ -47,3 +50,28 @@
     </div>
   </div>
 </form>
+
+
+
+<script>
+
+  $(".update_Modifiergroup newModifierGroup").on('submit',function(e){  
+    e.preventDefault();
+    var data = new Formdata(this);
+    var payload = JSON.stringify(selectedModifiers);
+    data.append("payload",payload);
+    $.ajax({
+      url:"/Menu/updateModifierGroup",
+      type:"POST",
+      data:data,
+      contentType:false,
+      processData : false,
+      success: function (data){
+         $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+        loadModifierGroups();
+      }
+    })
+  })
+
+</script>

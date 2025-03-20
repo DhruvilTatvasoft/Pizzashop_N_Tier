@@ -173,3 +173,5 @@ C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_
 E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.DependencyInjection.Abstractions.dll
 E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.ObjectPool.dll
 E:\Pizzashop\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Extensions.Options.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.Memory.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll

@@ -15,13 +15,16 @@
       {
         <li class="w-100">
 
-          <label for="" class="ms-0" style="font-size: 13px;" onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid)">≣
+          <label for="" class="ms-0" style="font-size: 13px;"
+            onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid)">≣
             @ModifierGroup.Modifiergroupname</label>
 
-            <div class="d-flex" style="margin-left:auto;">
-                        <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;" onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="DeleteModifierGroup(@ModifierGroup.Modifiergroupid)"  alt="">
-                    </div>
+          <div class="d-flex" style="margin-left:auto;">
+            <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;"
+              onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
+            <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;"
+              onclick="DeleteModifierGroup(@ModifierGroup.Modifiergroupid)" alt="">
+          </div>
         </li>
       }
     </ul>
@@ -46,14 +49,14 @@
         <div class="modal-body">
 
           <div class="form-group mb-2">
-            <input type="text"  class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
+            <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
               id="modifierGroup-Name">
             @* <!-- #region >--> *@
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="form-group">
             <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
-              id="Modifier-description" ></textarea>
+              id="Modifier-description"></textarea>
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="mt-2">
@@ -64,7 +67,7 @@
           </div>
         </div>
         <div class="modal-footer" style="border: none;">
-          <button type="submit" class="btn btn-primary">Save</button>
+          <button type="submit" class="btn btn-primary">Add</button>
           <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
             onclick="cancelfromAddModifiers()">Cancel</button>
         </div>
@@ -135,7 +138,10 @@
       </div>
       <div class="modal-footer d-flex" style="border: none;">
         <div style="margin-right: auto;">
-          <button type="submit" class="btn btn-primary" onclick="addModifiersInNewMG()">Save</button>
+          <button type="submit" class="btn btn-primary" id="saveForAdd"
+            onclick="addModifiersInNewMG(null)">Save</button>
+          <button type="submit" class="btn btn-primary" id="saveForUpdate" onclick="addModifiersInNewMG(1)"
+            style="display:none;">Save2</button>
           <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
             onclick="cancelfromExistingModifiers()">Cancel</button>
         </div>
@@ -146,7 +152,9 @@
 
 <script>
   var selectedModifiers = [];
-  function loadModifiers() {
+
+  function loadModifiers(id) {
+    console.log(id)
     $.ajax({
       url: "/Menu/LoadAllModifiers",
       type: "GET",
@@ -157,14 +165,18 @@
         });
         var modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
         modal.show();
+        if (id != null) {
+          console.log("hjxdzskjxdhzs");
+          document.querySelector("h5").innerHTML = "select modifiers for Edit modifier Group"
+          $("#saveForUpdate").show();
+          $("#saveForAdd").hide();
+        }
 
         document.querySelectorAll(".loadmodifiers .IsModifierChecked").forEach((checkbox) => {
           if (selectedModifiers.includes(parseInt(checkbox.value, 10))) {
             checkbox.checked = true;
           }
         });
-
-
         var target = $('.loadmodifiers').find('td[data-lastcolumn=L]');
         var index = target.index();
         $('.loadmodifiers tr').find('th:eq(' + index + '),td:eq(' + index + ')').remove();
@@ -173,12 +185,14 @@
   }
 
 
-  function addModifiersInNewMG() {
+  function addModifiersInNewMG(id) {
 
     var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
     $.ajax({
       url: "/Menu/selectedModifiers",
-      data: { modifierIds: modifierIds },
+      data: {
+        modifierIds: modifierIds
+      },
       type: "POST",
       success: function (data) {
         var myModalEl = document.getElementById('addExistingModifiers');
@@ -188,34 +202,66 @@
         document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
         document.body.classList.remove('modal-open');
 
-        var myModalEl2 = document.getElementById('addModifierGroup1');
-        var modal2 = new bootstrap.Modal(myModalEl2);
-        modal2.show();
+        if (id == null) {
+          var myModalEl2 = document.getElementById('addModifierGroup1');
+          var modal2 = new bootstrap.Modal(myModalEl2);
+          modal2.show();
+          console.log(data);
+          data.modifiers.forEach((modifier) => {
+            if ($(`#modifier_${modifier.modifierid}`).length) {
+              return;
+            } else {
+              $("#addModifierGroup1 .addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
+              $("#addModifierGroup1 .addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
+              selectedModifiers.push(modifier.modifierid);
 
-        console.log(data);
-        data.modifiers.forEach((modifier) => {
-          if ($(`#modifier_${modifier.modifierid}`).length) {
-            return;
-          }
-          else {
-            $(".addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
-            $(".addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
-            selectedModifiers.push(modifier.modifierid);
-          }
-        });
+            }
+            
+            selectedModifiers = []
+            selectedModifiers = [...document.querySelectorAll("#addModifierGroup1 .modifierId")].map(x=>parseInt(x.value));
+          });
+          console.log("hello2");
+        }
+        else {
+          var myModalEl2 = document.getElementById('EditModifierGroup');
+          var modal2 = new bootstrap.Modal(myModalEl2);
+          modal2.show();
+          data.modifiers.forEach((modifier) => {
+            if ($(`#modifier_${modifier.modifierid}`).length) {
+              return;
+            } else {
+              $("#EditModifierGroup .addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
+              $("#EditModifierGroup .addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
+              selectedModifiers.push(modifier.modifierid);
+            }
+@* 
+            selectedModifiers = []
+            selectedModifiers = [...document.querySelectorAll("#EditModifierGroup .modifierId")].map(x=>parseInt(x.value)); *@
+          });
+        }
       }
     });
   }
+
   function discardModifier(modifierid) {
     $(`#modifier_${modifierid}`).remove();
     selectedModifiers.pop(modifierid);
   }
 
   function cancelfromExistingModifiers() {
-    var myModalEl2 = document.getElementById('addModifierGroup1');
-    var modal2 = new bootstrap.Modal(myModalEl2);
-    modal2.show();
+    if ($("#EditModifierGroup")) {
+      var myModalEl2 = document.getElementById('EditModifierGroup');
+      var modal2 = new bootstrap.Modal(myModalEl2);
+      console.log("edit opened");
+      modal2.show();
+    } else {
+      var myModalEl2 = document.getElementById('addModifierGroup1');
+      var modal2 = new bootstrap.Modal(myModalEl2);
+      console.log("add opened");
+      modal2.show();
+    }
   }
+
   function cancelfromAddModifiers() {
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     document.body.classList.remove('modal-open');
@@ -228,7 +274,9 @@
     $.ajax({
       url: '@Url.Action("SearchModifier", "Menu")',
       method: 'GET',
-      data: { searchedModifier: $('#searchModifier').val() },
+      data: {
+        searchedModifier: $('#searchModifier').val()
+      },
       success: function (data) {
         $('.loadmodifiers').html(data);
       }
@@ -250,33 +298,54 @@
       contentType: false,
       processData: false,
       success: function (data) {
-      @* console.log(data); *@
-        $('.modal-backdrop').remove(); 
+        @* console.log(data);  *@
+          $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
         loadModifierGroups();
       }
     });
   });
 
- function EditModifierGroupGet(modifierGroupId){
-  $.ajax({
-    url: '/Menu/EditModifierGroupGet',
-    type: 'GET',
-    data: { modifierGroupId: modifierGroupId },
-    success: function (data) {
-      $('#LoadPartialOfmodifiergroup').html(data);
-      var myModalEl2 = document.getElementById('EditModifierGroup');
-      var modal2 = new bootstrap.Modal(myModalEl2);
-      modal2.show();
-    },
-    error: function () {
-      alert("Failed to load the edit view.");
-    }
-  });
-}
+  function EditModifierGroupGet(modifierGroupId) {
+    $.ajax({
+      url: '/Menu/EditModifierGroupGet',
+      type: 'GET',
+      data: {
+        modifierGroupId: modifierGroupId
+      },
+      success: function (data) {
+        $('#LoadPartialOfmodifiergroup').html(data);
+        var myModalEl2 = document.getElementById('EditModifierGroup');
+        var modal2 = new bootstrap.Modal(myModalEl2);
+        modal2.show();
+        selectedModifiers = [...document.querySelectorAll(".modifierIdFromEdit")].map(x => parseInt(x.value, 10));
+      },
+      error: function () {
+        alert("Failed to load the edit view.");
+      }
+    });
+  }
 
+  
+  $(".update_Modifiergroup newModifierGroup").on('submit',function(e){  
+    e.preventDefault();
+    var data = new Formdata(this);
+    var payload = JSON.stringify(selectedModifiers);
+    data.append("payload",payload);
 
-
+    $.ajax({
+      url:"/Menu/updateModifierGroup",
+      type:"POST",
+      data:data,
+      contentType:false,
+      processData : false,
+      success: function (data){
+         $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
+        loadModifierGroups();
+      }
+    })
+  })
 
 
 </script>
