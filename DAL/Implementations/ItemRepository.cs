@@ -8,7 +8,7 @@ public class ItemRepository : IItemRepository
     public ItemRepository(PizzashopCContext context){
         _context = context;
     }
-
+// hello
     public List<Item> getItemsForCategory(int categoryId)
     {
        List<Item> itemList = _context.Items.Where(i=>i.Categoryid == categoryId && i.Isdeleted == false).ToList();
