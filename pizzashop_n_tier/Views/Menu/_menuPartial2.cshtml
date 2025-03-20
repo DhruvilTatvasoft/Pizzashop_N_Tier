@@ -1,14 +1,14 @@
 @model ItemModel
-<h3 class="p-2">Items</h3>
+<h3 class="p-3 header-text">Items</h3>
 <div class="d-flex justify-content-end w-100 ">
 
     <div class="me-3">
          <input type="email" class="form-control h-100 " onkeyup="searchItem(@Model.categoryId)" asp-for="searchItemName" id="searchedItem" placeholder="Search"> 
     </div>
-    <button class="btn btn-outline-dark me-2" onclick='DeleteMultipleItems()'><img src="~/images/trash-fill.svg" style="cursor: pointer;"
+    <button class="btn btn-outline-secondary me-2" onclick='DeleteMultipleItems()'><img src="~/images/trash-fill.svg" style="cursor: pointer;"
              alt=""></button>
  
-    <button class="btn btn-outline-dark me-2" type="button" onclick="openAddItemModal()">+ New Item</button>
+    <button class="btn btn-primary me-2 add-item-modifier" type="button" onclick="openAddItemModal()">+ New Item</button>
 <input type="text" id="categoryid_hidden" value="@Model.categoryId" hidden>
 </div>
 <div class="tbl m-3 table-responsive">
@@ -19,7 +19,6 @@
             <label for="" class="me-2">items per page:</label>
             <div class="dropdown mt-2 me-2">
                 <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
-
                     <option value="1" selected>1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>

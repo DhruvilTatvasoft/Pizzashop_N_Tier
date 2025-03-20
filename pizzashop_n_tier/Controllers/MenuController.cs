@@ -236,7 +236,7 @@ public class MenuController : Controller{
     }
 
      public IActionResult LoadModifiersPage(){
-        return PartialView("_modifierContainerPartial");
+        return PartialView("_modifersContainerPartial");
     }
 [HttpPost]
     public IActionResult selectedModifiers(List<int> modifierIds){
@@ -274,6 +274,16 @@ public class MenuController : Controller{
     }
 
     public IActionResult updateModifierGroup(ItemModel model){
+
+        model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
+        _modifierService.updateModifierGroup(model.mg, model.ModifierIds);
         return View("Menu");
+    }
+
+    public IActionResult deleteModifierGroup(int modifierGroupId){
+        _modifierService.deleteModifierGroup(modifierGroupId);
+        ItemModel model = new ItemModel();
+         model.modifiergroups = _modifierService.getAllModifierGroups();
+        return View("_modifierGroupsPartial",model);
     }
 }

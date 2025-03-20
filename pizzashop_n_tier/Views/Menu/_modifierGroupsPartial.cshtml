@@ -14,7 +14,6 @@
       @foreach (var ModifierGroup in Model.modifiergroups)
       {
         <li class="w-100">
-
           <label for="" class="ms-0" style="font-size: 13px;"
             onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid)">≣
             @ModifierGroup.Modifiergroupname</label>
@@ -23,7 +22,7 @@
             <img src="~/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;"
               onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
             <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;"
-              onclick="DeleteModifierGroup(@ModifierGroup.Modifiergroupid)" alt="">
+              onclick="openDeleteModifierModel(@ModifierGroup.Modifiergroupid)" alt="">
           </div>
         </li>
       }
@@ -149,6 +148,30 @@
     </div>
   </div>
 </div>
+
+<form id="deleteModifierGroupModal">
+<div class="modal fade" id="deleteModifiergroupModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header" style="border:none;">
+        <h5 class="modal-title" id="exampleModalLongTitle">Delete Confirmation</h5>
+        <button type="button" class="close" style="margin-left: auto;border: none;background: none;" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <input  id="modifierGroupIdTodelete" type="hidden">
+      <div class="modal-body d-flex flex-column align-items-center justify-content-center pb-0">
+        <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+        Are you sure you want to delete this modifiergroup? 
+      </div>
+      <div class="modal-footer d-flex align-items-center justify-content-center" style="border: none;">
+        <button type="submit" class="btn btn-primary">Yes</button>
+        <button type="button" class="btn btn-outline-primary" data-dismiss="modal">No</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
 
 <script>
   var selectedModifiers = [];
@@ -343,6 +366,39 @@
          $('.modal-backdrop').remove();
         $('body').removeClass('modal-open');
         loadModifierGroups();
+      }
+    })
+  })
+
+  function DeleteModifierGroup(id){
+    $.ajax({
+      url: '/Menu/DeleteModifierGroup',
+      type: 'POST',
+      data: {modifierGroupId : id},
+      success : function(data){
+        loadModifierGroups();
+      }
+    });
+  }
+
+  function openDeleteModifierModel(id){
+    $('#deleteModifiergroupModal').modal('show');
+    document.querySelector("#modifierGroupIdTodelete").value = id;
+    console.log(id);
+    console.log($('#modifierGroupIdTodelete').val());
+  }
+
+  $("#deleteModifierGroupModal").on('submit',function(e){
+    e.preventDefault();
+    const modifierGroupId = $("#modifierGroupIdTodelete").val();
+    $.ajax({
+      url: '/Menu/DeleteModifierGroup',
+      type: 'POST',
+      data: {modifierGroupId : modifierGroupId},
+      success: function(data){
+        loadModifierGroups();
+           $('.modal-backdrop').remove();
+        $('body').removeClass('modal-open');
       }
     })
   })

@@ -19,5 +19,7 @@ namespace DAL.interfaces
         List<Modifier> getSearchedModifier(string searchedModifier);
         void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifier(int modifierid, int modifiergroupid);
+        void updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
+        void deleteModifierGroup(int modifierGroupId);
     }
 }

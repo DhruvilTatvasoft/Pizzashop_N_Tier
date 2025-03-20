@@ -81,6 +81,13 @@ body{
     li img {
         width: 10%;
     }
+    .add-item-modifier{
+        background-color: #0066A7;
+    }
+
+    .header-text{
+        color: #0066A7;
+    }
 
     .categorylist li {
         font-size: 90%;

@@ -332,7 +332,10 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("modifiers");
 
-            entity.Property(e => e.Modifierid).HasColumnName("modifierid");
+            entity.Property(e => e.Modifierid)
+                .UseIdentityAlwaysColumn()
+                .HasIdentityOptions(15L, null, null, null, null, null)
+                .HasColumnName("modifierid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -376,7 +379,10 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("modifiergroups");
 
-            entity.Property(e => e.Modifiergroupid).HasColumnName("modifiergroupid");
+            entity.Property(e => e.Modifiergroupid)
+                .UseIdentityAlwaysColumn()
+                .HasIdentityOptions(10L, null, null, null, null, null)
+                .HasColumnName("modifiergroupid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")

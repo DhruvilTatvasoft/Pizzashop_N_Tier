@@ -1,13 +1,12 @@
 @model ItemModel
 <div class="update_Modifiergroup"></div>
-<form id="newModifierGroup">
+<form id="newModifierGroup1">
   <div class="modal fade" id="EditModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header" style="border:none;">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup   @Model.mg.Modifiergroupname
-          @Model.mg.Description</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup</h5>
           <button type="button" class="close"  style="
     margin-left: auto;
     border: none;
@@ -21,7 +20,7 @@
           <div class="form-group mb-2">
             <input type="text"  class="form-control h-100" asp-for="@Model.mg.Modifiergroupname" placeholder="Name*"
               id="modifierGroup-Name">
-            @* <!-- #region >--> *@
+        <input type="hidden" asp-for="mg.Modifiergroupid">
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="form-group">
@@ -55,9 +54,19 @@
 
 <script>
 
-  $(".update_Modifiergroup newModifierGroup").on('submit',function(e){  
+  $("#newModifierGroup1").on('submit',function(e){  
+    console.log("kjds");
+
+    selectedModifierIds = [...document.querySelectorAll(".modifierId")].map(x=>parseInt(x.value,10));
+    let s = new Set(selectedModifierIds);
+    selectedModifierIds = [...s]
+
+    console.log(selectedModifierIds);
     e.preventDefault();
-    var data = new Formdata(this);
+    var data = new FormData(this);
+    for (var pair of data.entries()) {
+console.log(pair[0]+ ', ' + pair[1]);
+}
     var payload = JSON.stringify(selectedModifiers);
     data.append("payload",payload);
     $.ajax({

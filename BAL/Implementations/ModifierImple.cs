@@ -60,4 +60,14 @@ public class ModifierImple : IModifierService
     {
         _modifierRepository.deleteModifier(modifierid,modifiergroupid);
     }
+
+    public void updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    {
+       _modifierRepository.updateModifierGroup(mg,modifierIds);
+    }
+
+    public void deleteModifierGroup(int modifierGroupId)
+    {
+        _modifierRepository.deleteModifierGroup(modifierGroupId);
+    }
 }

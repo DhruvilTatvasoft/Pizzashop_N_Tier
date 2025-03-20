@@ -185,11 +185,12 @@ function loadModifiersForModifierGroup(modifierGroupId) {
 
 function loadModifiersData(modifierGroupId) {
     $.ajax({
-        url: '/Menu/getModifiersForModifierGp',
+        url: '/Menu/LoadModifiersPage',
         type: 'GET',
         data: { modifierGroupId: modifierGroupId },
         success: function (response) {
-            $("table").html(response);
+            $(".menubody").html(response);
+            console.log("modifier page loaded");
         },
         error: function (xhr, status, error) {
             console.error('Error fetching modifiers data:', error);
