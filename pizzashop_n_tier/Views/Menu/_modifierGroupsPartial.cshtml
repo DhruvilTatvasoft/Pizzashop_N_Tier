@@ -176,232 +176,177 @@
 <script>
   var selectedModifiers = [];
 
-  function loadModifiers(id) {
-    console.log(id)
-    $.ajax({
-      url: "/Menu/LoadAllModifiers",
-      type: "GET",
-      success: function (data) {
-        $(".loadmodifiers").html(data);
-        $(".modifier-img").each(function () {
-          $(this).css("display", 'none');
-        });
-        var modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
-        modal.show();
-        if (id != null) {
-          console.log("hjxdzskjxdhzs");
-          document.querySelector("h5").innerHTML = "select modifiers for Edit modifier Group"
-          $("#saveForUpdate").show();
-          $("#saveForAdd").hide();
-        }
+// Load all modifiers and open the modal
+function loadModifiers(id) {
+  console.log(id);
+  $.ajax({
+    url: "/Menu/LoadAllModifiers",
+    type: "GET",
+    success: function (data) {
+      $(".loadmodifiers").html(data);
+      $(".modifier-img").hide();
+      const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
+      modal.show();
 
-        document.querySelectorAll(".loadmodifiers .IsModifierChecked").forEach((checkbox) => {
-          if (selectedModifiers.includes(parseInt(checkbox.value, 10))) {
-            checkbox.checked = true;
-          }
-        });
-        var target = $('.loadmodifiers').find('td[data-lastcolumn=L]');
-        var index = target.index();
-        $('.loadmodifiers tr').find('th:eq(' + index + '),td:eq(' + index + ')').remove();
+      if (id != null) {
+        document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+        $("#saveForUpdate").show();
+        $("#saveForAdd").hide();
       }
-    });
-  }
 
-
-  function addModifiersInNewMG(id) {
-
-    var modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
-    $.ajax({
-      url: "/Menu/selectedModifiers",
-      data: {
-        modifierIds: modifierIds
-      },
-      type: "POST",
-      success: function (data) {
-        var myModalEl = document.getElementById('addExistingModifiers');
-        var modal = bootstrap.Modal.getInstance(myModalEl);
-        modal.hide();
-
-        document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-        document.body.classList.remove('modal-open');
-
-        if (id == null) {
-          var myModalEl2 = document.getElementById('addModifierGroup1');
-          var modal2 = new bootstrap.Modal(myModalEl2);
-          modal2.show();
-          console.log(data);
-          data.modifiers.forEach((modifier) => {
-            if ($(`#modifier_${modifier.modifierid}`).length) {
-              return;
-            } else {
-              $("#addModifierGroup1 .addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
-              $("#addModifierGroup1 .addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
-              selectedModifiers.push(modifier.modifierid);
-
-            }
-            
-            selectedModifiers = []
-            selectedModifiers = [...document.querySelectorAll("#addModifierGroup1 .modifierId")].map(x=>parseInt(x.value));
-          });
-          console.log("hello2");
+      // Ensure previously selected modifiers are checked
+      document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
+        const modifierId = parseInt(checkbox.value, 10);
+        if (selectedModifiers.includes(modifierId)) {
+          checkbox.checked = true;
         }
-        else {
-          var myModalEl2 = document.getElementById('EditModifierGroup');
-          var modal2 = new bootstrap.Modal(myModalEl2);
-          modal2.show();
-          data.modifiers.forEach((modifier) => {
-            if ($(`#modifier_${modifier.modifierid}`).length) {
-              return;
-            } else {
-              $("#EditModifierGroup .addedModifiers").append(`<div  id="modifier_${modifier.modifierid}"><span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">${modifier.modifiername} <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;"></span>`);
-              $("#EditModifierGroup .addedModifiers").append(`<input type="hidden" class="modifierId" value="${modifier.modifierid}" /></div>`);
-              selectedModifiers.push(modifier.modifierid);
-            }
-@* 
-            selectedModifiers = []
-            selectedModifiers = [...document.querySelectorAll("#EditModifierGroup .modifierId")].map(x=>parseInt(x.value)); *@
-          });
+      });
+
+      // Remove the last column if needed
+      $('.loadmodifiers').find('td[data-lastcolumn=L]').remove();
+    }
+  });
+}
+
+// Handle adding modifiers to the group
+function addModifiersInNewMG(id) {
+  // Get selected modifiers
+  const modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")]
+    .map(x => parseInt(x.value, 10));
+
+  $.ajax({
+    url: "/Menu/selectedModifiers",
+    data: { modifierIds: modifierIds },
+    type: "POST",
+    success: function (data) {
+      const modalEl = document.getElementById('addExistingModifiers');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      modal.hide();
+      removeModalBackdrops();
+
+      const targetModalId = id === null ? 'addModifierGroup1' : 'EditModifierGroup';
+      const targetModal = new bootstrap.Modal(document.getElementById(targetModalId));
+      targetModal.show();
+
+      // Clear previous selections and display new ones
+      $(`#${targetModalId} .addedModifiers`).empty();
+      selectedModifiers = modifierIds;
+
+      data.modifiers.forEach((modifier) => {
+        if (!$(`#modifier_${modifier.modifierid}`).length) {
+          $(`#${targetModalId} .addedModifiers`).append(`
+            <div id="modifier_${modifier.modifierid}">
+              <span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">
+                ${modifier.modifiername}
+                <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;">
+              </span>
+              <input type="hidden" class="modifierId" value="${modifier.modifierid}" />
+            </div>
+          `);
         }
-      }
-    });
-  }
-
-  function discardModifier(modifierid) {
-    $(`#modifier_${modifierid}`).remove();
-    selectedModifiers.pop(modifierid);
-  }
-
-  function cancelfromExistingModifiers() {
-    if ($("#EditModifierGroup")) {
-      var myModalEl2 = document.getElementById('EditModifierGroup');
-      var modal2 = new bootstrap.Modal(myModalEl2);
-      console.log("edit opened");
-      modal2.show();
-    } else {
-      var myModalEl2 = document.getElementById('addModifierGroup1');
-      var modal2 = new bootstrap.Modal(myModalEl2);
-      console.log("add opened");
-      modal2.show();
+      });
     }
-  }
+  });
+}
 
-  function cancelfromAddModifiers() {
-    document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-    document.body.classList.remove('modal-open');
-  }
+// Remove a modifier
+function discardModifier(modifierId) {
+  $(`#modifier_${modifierId}`).remove();
+  selectedModifiers = selectedModifiers.filter(id => id !== modifierId);
+}
 
-  function searchModifier() {
-    if ($('#searchModifier').val() == "") {
-      loadModifiers();
-    }
+// Remove modal backdrops
+function removeModalBackdrops() {
+  document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+  document.body.classList.remove('modal-open');
+}
+
+// Cancel from existing modifiers
+function cancelfromExistingModifiers() {
+  const editModalEl = document.getElementById('EditModifierGroup');
+  const addModalEl = document.getElementById('addModifierGroup1');
+  const targetModal = editModalEl ? new bootstrap.Modal(editModalEl) : new bootstrap.Modal(addModalEl);
+  targetModal.show();
+}
+
+// Cancel from adding new modifiers
+function cancelfromAddModifiers() {
+  removeModalBackdrops();
+}
+
+// Search for modifiers
+function searchModifier() {
+  const searchValue = $('#searchModifier').val();
+  if (searchValue === "") {
+    loadModifiers();
+  } else {
     $.ajax({
       url: '@Url.Action("SearchModifier", "Menu")',
       method: 'GET',
-      data: {
-        searchedModifier: $('#searchModifier').val()
-      },
+      data: { searchedModifier: searchValue },
       success: function (data) {
         $('.loadmodifiers').html(data);
       }
     });
   }
+}
 
-  $("#newModifierGroup").on('submit', function (e) {
-    e.preventDefault();
-    var data = new FormData(this);
-    console.log(data);
-    var payload = JSON.stringify(selectedModifiers);
-    data.append("payload", payload);
+// Submit the form to add a new modifier group
+$("#newModifierGroup").on('submit', function (e) {
+  e.preventDefault();
+  const data = new FormData(this);
+  const payload = JSON.stringify(selectedModifiers);
+  data.append("payload", payload);
 
-
-    $.ajax({
-      url: "/Menu/AddNewModifierGroup",
-      type: "POST",
-      data: data,
-      contentType: false,
-      processData: false,
-      success: function (data) {
-        @* console.log(data);  *@
-          $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
-        loadModifierGroups();
-      }
-    });
+  $.ajax({
+    url: "/Menu/AddNewModifierGroup",
+    type: "POST",
+    data: data,
+    contentType: false,
+    processData: false,
+    success: function () {
+      removeModalBackdrops();
+      loadModifierGroups();
+    }
   });
+});
 
-  function EditModifierGroupGet(modifierGroupId) {
-    $.ajax({
-      url: '/Menu/EditModifierGroupGet',
-      type: 'GET',
-      data: {
-        modifierGroupId: modifierGroupId
-      },
-      success: function (data) {
-        $('#LoadPartialOfmodifiergroup').html(data);
-        var myModalEl2 = document.getElementById('EditModifierGroup');
-        var modal2 = new bootstrap.Modal(myModalEl2);
-        modal2.show();
-        selectedModifiers = [...document.querySelectorAll(".modifierIdFromEdit")].map(x => parseInt(x.value, 10));
-      },
-      error: function () {
-        alert("Failed to load the edit view.");
-      }
-    });
-  }
+// Edit Modifier Group
+function EditModifierGroupGet(modifierGroupId) {
+  $.ajax({
+    url: '/Menu/EditModifierGroupGet',
+    type: 'GET',
+    data: { modifierGroupId: modifierGroupId },
+    success: function (data) {
+      $('#LoadPartialOfmodifiergroup').html(data);
+      const modal = new bootstrap.Modal(document.getElementById('EditModifierGroup'));
+      modal.show();
+      selectedModifiers = [...document.querySelectorAll(".modifierIdFromEdit")].map(x => parseInt(x.value, 10));
+    },
+    error: function () {
+      alert("Failed to load the edit view.");
+    }
+  });
+}
 
-  
-  $(".update_Modifiergroup newModifierGroup").on('submit',function(e){  
-    e.preventDefault();
-    var data = new Formdata(this);
-    var payload = JSON.stringify(selectedModifiers);
-    data.append("payload",payload);
+// Delete Modifier Group
+function openDeleteModifierModel(id) {
+  $('#deleteModifiergroupModal').modal('show');
+  $("#modifierGroupIdTodelete").val(id);
+}
 
-    $.ajax({
-      url:"/Menu/updateModifierGroup",
-      type:"POST",
-      data:data,
-      contentType:false,
-      processData : false,
-      success: function (data){
-         $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
-        loadModifierGroups();
-      }
-    })
-  })
+$("#deleteModifierGroupModal").on('submit', function (e) {
+  e.preventDefault();
+  const modifierGroupId = $("#modifierGroupIdTodelete").val();
 
-  function DeleteModifierGroup(id){
-    $.ajax({
-      url: '/Menu/DeleteModifierGroup',
-      type: 'POST',
-      data: {modifierGroupId : id},
-      success : function(data){
-        loadModifierGroups();
-      }
-    });
-  }
-
-  function openDeleteModifierModel(id){
-    $('#deleteModifiergroupModal').modal('show');
-    document.querySelector("#modifierGroupIdTodelete").value = id;
-    console.log(id);
-    console.log($('#modifierGroupIdTodelete').val());
-  }
-
-  $("#deleteModifierGroupModal").on('submit',function(e){
-    e.preventDefault();
-    const modifierGroupId = $("#modifierGroupIdTodelete").val();
-    $.ajax({
-      url: '/Menu/DeleteModifierGroup',
-      type: 'POST',
-      data: {modifierGroupId : modifierGroupId},
-      success: function(data){
-        loadModifierGroups();
-           $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
-      }
-    })
-  })
-
-
+  $.ajax({
+    url: '/Menu/DeleteModifierGroup',
+    type: 'POST',
+    data: { modifierGroupId: modifierGroupId },
+    success: function () {
+      loadModifierGroups();
+      removeModalBackdrops();
+    }
+  });
+});
 </script>
