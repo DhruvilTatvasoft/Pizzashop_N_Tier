@@ -33,6 +33,11 @@ builder.Services.AddScoped<IPermissionService, PermissionImple>();
 builder.Services.AddScoped<IRoleAndPermissionRepository, RoleAndPermissionRepository>();
 builder.Services.AddScoped<IModifierService, ModifierImple>();
 builder.Services.AddScoped<IModifierRepository, ModifierRepository>();
+builder.Services.AddScoped<ITableService,TableImpl>();
+builder.Services.AddScoped<ISectionService,SectionImpl>();
+builder.Services.AddScoped<ISectionRepository,SectionRepository>();
+builder.Services.AddScoped<ITableRepository, TableRepository>();
+
 
 builder.Services.AddSession(options =>
 {
@@ -62,7 +67,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     Console.WriteLine("No token found in cookie!");
                 }
                 return Task.CompletedTask;
-            },
+            }
             OnAuthenticationFailed = context =>
             {
                 Console.WriteLine("Authentication failed: " + context.Exception.Message);

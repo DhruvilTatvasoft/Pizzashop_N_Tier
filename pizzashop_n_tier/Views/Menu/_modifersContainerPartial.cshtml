@@ -8,7 +8,7 @@
     <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
             alt=""></button>
 
-    <button class="btn btn-primary me-2 add-item-modifier" type="button" onclick="openAddModifierModal()">+ New
+    <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="openAddModifierModal()">+ New
         Modfifier</button>
     <input type="text" value="" hidden>
 </div>
@@ -19,8 +19,8 @@
         <div class="d-flex justify-content-center align-items-center">
             <label for="" class="me-2">items per page:</label>
             <div class="dropdown mt-2 me-2">
-                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
 
+                <select class="form-select form-select-lg mb-3" aria-label=".form-select-lg example">
                     <option value="1" selected>1</option>
                     <option value="2">2</option>
                     <option value="3">3</option>
@@ -44,76 +44,134 @@
     </div>
 
     <form id="AddNewModifier">
-  <div class="modal fade" id="addNewModifier" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-      <div class="modal-content">
-        <div class="modal-header" style="border:none;">
-          <h5 class="modal-title" id="exampleModalLabel">Add New Modifier</h5>
-          <button type="button" class="close" style="margin-left: auto; border: none; background: none;" aria-label="Close" data-bs-dismiss="modal">
-            <span aria-hidden="true">&times;</span>
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="row">
-            <!-- Select Modifier Group(s) -->
-            <div class="col-md-6 mb-3">
-        
-              <select class="form-control" id="modifierGroups">
-                <option selected>Select Modifier Group(s)</option>
-                <option>Group 1</option>
-                <option>Group 2</option>
-                <option>Group 3</option>
-              </select>
+        <div class="modal fade" id="addNewModifier" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header" style="border:none;">
+                        <h5 class="modal-title" id="exampleModalLabel">Add New Modifier</h5>
+                        <button type="button" class="close" style="margin-left: auto; border: none; background: none;"
+                            aria-label="Close" data-bs-dismiss="modal">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="row">
+
+                            <div class="col-md-6 mb-3">
+
+                                <select class="form-select" id="modifierGroup" asp-for="modifier.Modifiergroupid">
+                                    <option value="0">Select Modifier Group(s)</option>
+                                    @foreach (var modifiergroup in @Model.modifiergroups)
+                                    {
+                                    @if(@Model.modifier != null && modifiergroup.Modifiergroupid == @Model.modifier.Modifiergroupid){
+                                        <option value="@modifiergroup.Modifiergroupid" selected>@modifiergroup.Modifiergroupname
+                                        </option>
+                                    }
+                                    else{
+                                        <option value="@modifiergroup.Modifiergroupid">@modifiergroup.Modifiergroupname
+                                        </option>
+                                    }
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <input type="text" class="form-control" asp-for="modifier.Modifiername"
+                                    id="modifierName" placeholder="Name*">
+
+                                <input type="number" id="modifierIdForUpdate" hidden>
+                            </div>
+                        </div>
+
+                        <div class="row">
+
+                            <div class="col-md-4 mb-3">
+                                <input type="number" class="form-control" id="modifierRate"
+                                    asp-for="@Model.modifier.Modifierquantity" placeholder="Rate*">
+                            </div>
+
+                            @* @Model.modifier.Modifiergroupid *@
+
+                            <div class="col-md-4 mb-3">
+
+                                <input type="number" class="form-control" id="modifierQuantity"
+                                    asp-for="@Model.modifier.Modifierrate" placeholder="Quantity*">
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <select class="form-control" id="modifierUnit" asp-for="@Model.modifier.Unitid">
+                                    <option>Select a unit</option>
+                                    @foreach (var unit in @Model.units)
+                                    {
+                                     @if(@Model.modifier != null && unit.Unitid == @Model.modifier.Unitid){
+                                        <option value="@unit.Unitid" selected>@unit.Unitname</option>
+                                     }
+                                     else{
+                                        <option value="@unit.Unitid">@unit.Unitname</option>
+                                     }
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <textarea type="" class="form-control pb-2 pt-3" id="modifierName" placeholder="Description"
+                                style="line-height: 1;" asp-for="@Model.modifier.Description"></textarea>
+                        </div>
+
+                        <div class="modal-footer" style="border: none;">
+                            <button type="submit" class="btn btn-primary" data-action="Add" id="saveNewModifier">Save</button>
+                            <button type="submit" class="btn btn-primary" data-action="Update" id="updateModifier" >update</button>
+                            <button type="button" class="btn btn-outline-primary"
+                                data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <!-- Name -->
-            <div class="col-md-6 mb-3">
-            
-              <input type="text" class="form-control" id="modifierName" placeholder="Name*">
-            </div>
-          </div>
-          
-          <div class="row">
-            <!-- Rate -->
-            <div class="col-md-4 mb-3">
-              
-              <input type="number" class="form-control" id="modifierRate" placeholder="Rate*" value="0">
-            </div>
-            <!-- Quantity -->
-            <div class="col-md-4 mb-3">
-              
-              <input type="number" class="form-control" id="modifierQuantity" placeholder="Quantity*" value="0">
-            </div>
-            <!-- Unit -->
-            <div class="col-md-4 mb-3">
-              <select class="form-control" id="modifierUnit">
-                <option selected>Select a unit</option>
-                <option>Kg</option>
-                <option>Litre</option>
-                <option>Piece</option>
-              </select>
-            </div>
-          </div>
-          
-          <!-- Description -->
-          <div class="mb-3">
-            <textarea class="form-control" placeholder="Description" id="modifierDescription" rows="3" placeholder="Enter description (optional)"></textarea>
-          </div>
-        </div>
-        
-        <div class="modal-footer" style="border: none;">
-          <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</form>
+    </form>
 </div>
 
 <script>
     function openAddModifierModal() {
-        console.log("hgdugxi");
         $('#addNewModifier').modal('show');
-    } 
+        $("#saveNewModifier").attr("style", "display:block");
+        $("#updateModifier").attr("style", "display:none");
+    }
+    $("#AddNewModifier").on("submit", function (e) {
+        e.preventDefault();
+        var data = new FormData(this);
+        var Action = $(document.activeElement).data('action');
+        var selectedModifierGroup = $('#modifierGroup').val();
+        let = "";
+        if(Action === "Add"){
+            url = '@Url.Action("AddNewModifier", "Menu")';
+            data.append("modifier.Modifiergroupid",selectedModifierGroup)
+        }
+        else{
+            url = '@Url.Action("EditmodifierPost","Menu")';
+            data.append("modifier.Modifiergroupid",selectedModifierGroup)
+            data.append("modifier.Modifierid",$("#modifierIdForUpdate").val())
+        }
+        for (const pair of data.entries()) {
+            console.log(pair[0], pair[1]);
+        }
+        console.log("url: "+url);
+
+        console.log("value of selected modifier group is "+selectedModifierGroup);
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: data,
+            processData:false,
+            contentType: false,
+            success: function (result) {
+                if(document.querySelector("#addNewModifier")){
+                    $("#addNewModifier").hide()
+                }
+                console.log("data should load for modifiergroup : "+selectedModifierGroup);
+                loadModifiersForModifierGroup(selectedModifierGroup);
+                removeModalBackdrops();
+            }
+        });
+    });
 </script>
 </div>

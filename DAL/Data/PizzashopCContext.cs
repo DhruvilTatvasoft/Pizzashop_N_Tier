@@ -73,7 +73,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;Password=Dhruvil@23;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -761,7 +761,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("sections");
 
-            entity.Property(e => e.Sectionid).HasColumnName("sectionid");
+            entity.Property(e => e.Sectionid)
+                .HasIdentityOptions(2L, null, null, null, null, null)
+                .HasColumnName("sectionid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")

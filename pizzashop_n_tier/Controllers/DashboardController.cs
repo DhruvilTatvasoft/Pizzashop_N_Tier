@@ -286,7 +286,7 @@ public IActionResult ShowDashboard()
         model.roleid = Id;
         model = _user.permissionsForRole(Id);
          TempData["ToastrMessage"] = "Permissions updated successfully";
-            TempData["ToastrType"] = "success";
+         TempData["ToastrType"] = "success";
         return View("permissions", model);
     }
 

@@ -1,0 +1,29 @@
+@model TableAndSectionViewModel
+<partial name="_ValidationScriptsPartial" />
+<div class="d-flex justify-content-between p-2 ps-4">
+    <label class=" c-text">Section</label>
+       <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="" style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:75%;margin-top: 5px;" alt="">
+    </button>
+</div>
+
+<div class="scrollbar w-100">
+    <div class="scrollbox w-100 h-100">
+        <ul class="sectionList mt-2 w-100 h-100 ">
+           
+            @foreach (var sec in Model.sections)
+            {
+                <li class="w-100" id="selectedSection_@sec.Sectionid">
+
+                    <label for="" class="ms-0" style="font-size: 13px;">≣ @sec.Sectionname</label>
+                    <div class="d-flex" style="margin-left:auto;">
+                        <img src="~/images/edit.png" class="pe-2"  style="width:25px;cursor:pointer;" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;"alt="">
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+
+
+

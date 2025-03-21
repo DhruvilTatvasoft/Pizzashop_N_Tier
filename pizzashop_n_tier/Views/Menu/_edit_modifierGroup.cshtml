@@ -56,11 +56,9 @@
 
   $("#newModifierGroup1").on('submit',function(e){  
     console.log("kjds");
-
     selectedModifierIds = [...document.querySelectorAll(".modifierId")].map(x=>parseInt(x.value,10));
     let s = new Set(selectedModifierIds);
     selectedModifierIds = [...s]
-
     console.log(selectedModifierIds);
     e.preventDefault();
     var data = new FormData(this);

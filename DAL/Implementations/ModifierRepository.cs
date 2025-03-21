@@ -232,4 +232,56 @@ public class ModifierRepository : IModifierRepository
         });
         _context.SaveChanges();
     }
+       public List<Unit> GetAllUnits()
+    {
+       List<Unit> units = _context.Units.Where(u=>u.Isdeleted == false).ToList();
+       return units;
+    }
+
+    public void AddNewModifierGroup(Modifier modifier)
+    {
+        try{
+            Modifier newModifier = new Modifier();
+            newModifier.Modifiername = modifier.Modifiername;
+            newModifier.Createdat = DateTime.Now;
+            newModifier.Modifiedby = 1;
+            newModifier.Isdeleted = false;
+            newModifier.Modifierquantity = modifier.Modifierquantity;
+            newModifier.Unitid = modifier.Unitid;
+            newModifier.Modifiergroupid = modifier.Modifiergroupid;
+            newModifier.Modifierrate = modifier.Modifierrate;
+            newModifier.Description = modifier.Description;
+            newModifier.Modifiedat = DateTime.Now;
+            _context.Modifiers.Add(newModifier);
+            _context.SaveChanges();
+        }
+        catch (Exception)
+        {
+            throw;
+        }
+    }
+
+    public Modifier getModifierFromDb(int modifierid)
+    {
+
+        Modifier modifier = _context.Modifiers.FirstOrDefault(modifier=>modifier.Modifierid==modifierid && modifier.Isdeleted == false)!;
+        modifier.Modifiergroup = _context.Modifiergroups.FirstOrDefault(modifierGroup=>modifierGroup.Modifiergroupid == modifier.Modifierid)!; 
+        return modifier;
+    }
+
+    public void updateModifier(Modifier modifier, int modifierGroupId)
+    {
+       Modifier m = _context.Modifiers.FirstOrDefault(oldModifier=>oldModifier.Modifierid == modifier.Modifierid);
+       m.Modifiername = modifier.Modifiername;
+       m.Description = modifier.Description;
+       m.Modifierquantity = modifier.Modifierquantity;
+       m.Modifierrate = modifier.Modifierrate;
+       m.Modifiergroupid = modifier.Modifiergroupid;
+       m.Description = modifier.Description;
+       m.Modifiername = modifier.Modifiername;
+       m.Modifiername = modifier.Modifiername;
+       m.Unitid = modifier.Unitid;
+       _context.Modifiers.Update(m);
+       _context.SaveChanges();
+    }
 }

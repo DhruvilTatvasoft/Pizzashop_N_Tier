@@ -70,4 +70,23 @@ public class ModifierImple : IModifierService
     {
         _modifierRepository.deleteModifierGroup(modifierGroupId);
     }
+
+    public List<Unit> GetAllUnits()
+    {
+        return _modifierRepository.GetAllUnits();
+    }
+
+    public void AddNewModifier(Modifier modifier)
+    {
+        _modifierRepository.AddNewModifierGroup(modifier);
+    }
+
+    public Modifier getModifier(int modifierid, int modifierGroupId)
+    {
+        return _modifierRepository.getModifierFromDb(modifierid);
+    }
+
+    public void updateModifier(Modifier modifier, int modifierGroupId){
+         _modifierRepository.updateModifier(modifier,modifierGroupId);
+    }
 }

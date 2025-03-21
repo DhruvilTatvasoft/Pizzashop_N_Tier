@@ -83,4 +83,9 @@ public class ItemModel
         get;
         set;
     }
+
+    public Modifier modifier{
+        get;
+        set;
+    }
 }

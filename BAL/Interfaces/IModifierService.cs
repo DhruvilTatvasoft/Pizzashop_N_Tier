@@ -21,5 +21,9 @@ namespace BAL.Interfaces
         void deleteModifier(int modifierid, int modifiergroupid);
         void updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifierGroup(int modifierGroupId);
+        List<Unit> GetAllUnits();
+        void AddNewModifier(Modifier modifier);
+        Modifier getModifier(int modifierid, int modifierGroupId);
+        void updateModifier(Modifier modifier, int modifierGroupId);
     }
 }

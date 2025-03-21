@@ -39,12 +39,15 @@
             <td>@modifier.Modifierquantity</td>
             <td data-lastcolumn="L">
                 <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                    <img src="~/images/pencil-square.svg" class="me-2" alt="">
-                    <img src="~/images/trash-fill.svg" onclick="deleteSingleModifier(@modifier.Modifierid,@modifier.Modifiergroupid)" style="cursor: pointer;" alt="">
+                    <img src="~/images/pencil-square.svg" class="me-2" alt="" onclick="OpenEditModifierModel(@modifier.Modifierid,@modifier.Modifiergroupid)">
+                    <img src="~/images/trash-fill.svg" onclick="OpenDeleteModifierModal(@modifier.Modifierid,@modifier.Modifiergroupid)" style="cursor: pointer;" alt="">
                 </div>
             </td>
         </tr>
     }
+    
+</tbody>
+
     <script>
         var subchecks = document.querySelectorAll(".IsModifierChecked");
         document.getElementById("masterCheck").addEventListener("change",()=>{
@@ -52,18 +55,4 @@
                 checkbox.checked = document.getElementById("masterCheck").checked;
             })
         })
-
-
-        function deleteSingleModifier(modifierid,modifiergroupid) {
-            console.log("xxxxxxxxxx");
-            $.ajax({
-                url: '@Url.Action("DeleteModifier", "Menu")',
-                method: 'POST',
-                data: { modifierid: modifierid,modifiergroupid,modifiergroupid : modifiergroupid },
-                success: function (data) {
-                    loadModifiersForModifierGroup(modifiergroupid);
-                }
-            });
-        }
     </script>
-</tbody>

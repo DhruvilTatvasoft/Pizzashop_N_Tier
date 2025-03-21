@@ -21,5 +21,9 @@ namespace DAL.interfaces
         void deleteModifier(int modifierid, int modifiergroupid);
         void updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifierGroup(int modifierGroupId);
+ List<Unit> GetAllUnits();
+        void AddNewModifierGroup(Modifier modifier);
+        Modifier getModifierFromDb(int modifierid);
+        void updateModifier(Modifier modifier, int modifierGroupId);
     }
 }

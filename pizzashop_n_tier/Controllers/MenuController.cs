@@ -4,7 +4,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Newtonsoft.Json;
 
-public class MenuController : Controller{
+public class MenuController : Controller
+{
 
     public readonly IUser _user;
 
@@ -21,7 +22,7 @@ public class MenuController : Controller{
 
     public readonly IImagePath _imageService;
 
-    public MenuController(IImagePath imagePath,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+    public MenuController(IImagePath imagePath, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _user = user;
         _cookieService = cookieService;
@@ -32,7 +33,7 @@ public class MenuController : Controller{
         _modifierService = modifierService;
     }
 
-     public IActionResult Menu()
+    public IActionResult Menu()
     {
         return View();
     }
@@ -50,7 +51,7 @@ public class MenuController : Controller{
         return PartialView("_menuPartial1", model);
     }
 
-[HttpPost]
+    [HttpPost]
     public IActionResult AddCategory(MenuModel model)
     {
         if (ModelState.IsValid)
@@ -118,9 +119,10 @@ public class MenuController : Controller{
             TempData["ToastrMessage"] = "category deleted Successfully";
             TempData["ToastrType"] = "success";
         }
-        else{
-        TempData["ToastrMessage"] = "Error occured while deleting category";
-        TempData["ToastrType"] = "error";
+        else
+        {
+            TempData["ToastrMessage"] = "Error occured while deleting category";
+            TempData["ToastrType"] = "error";
         }
         return View("Menu");
     }
@@ -179,18 +181,19 @@ public class MenuController : Controller{
     }
 
     [HttpPost]
-    public IActionResult AddNewItem( ItemModel model)
+    public IActionResult AddNewItem(ItemModel model)
     {
         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
-        
+
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         _itemService.addItem(model.i, email);
-        _modifierService.addModifiersForItem(model.ModifierModels, model.i.Itemid, email);    
+        _modifierService.addModifiersForItem(model.ModifierModels, model.i.Itemid, email);
         Console.WriteLine(model.ModifierModels.Count);
-            
-        foreach(var x in model.ModifierModels){
-            Console.WriteLine(x.max_value); 
+
+        foreach (var x in model.ModifierModels)
+        {
+            Console.WriteLine(x.max_value);
         }
         return RedirectToAction("ItemsData", new { categoryId = model.i.Categoryid });
     }
@@ -220,8 +223,9 @@ public class MenuController : Controller{
         return PartialView(partialViewName, model);
     }
 
-     [HttpGet]
-    public IActionResult LoadAllModifiers(){
+    [HttpGet]
+    public IActionResult LoadAllModifiers()
+    {
         ItemModel model = new ItemModel();
         model.modifiers = _modifierService.getAllModifiers();
         return PartialView("_modifierListPartial", model);
@@ -235,55 +239,89 @@ public class MenuController : Controller{
         return PartialView("_modifierListPartial", model);
     }
 
-     public IActionResult LoadModifiersPage(){
-        return PartialView("_modifersContainerPartial");
+    public IActionResult LoadModifiersPage()
+    {
+        ItemModel model = new ItemModel();
+        model.modifiergroups = _modifierService.getAllModifierGroups();
+        model.units = _modifierService.GetAllUnits();
+        return PartialView("_modifersContainerPartial", model);
     }
-[HttpPost]
-    public IActionResult selectedModifiers(List<int> modifierIds){
-            List<Modifier> modifiers = new List<Modifier>();
-                modifiers = _modifierService.getSelectedModifiers(modifierIds);
-            return Json(new {modifiers = modifiers});
+    [HttpPost]
+    public IActionResult selectedModifiers(List<int> modifierIds)
+    {
+        List<Modifier> modifiers = new List<Modifier>();
+        modifiers = _modifierService.getSelectedModifiers(modifierIds);
+        return Json(new { modifiers = modifiers });
     }
 
-[HttpGet]
-    public IActionResult SearchModifier(string searchedModifier){
+    [HttpGet]
+    public IActionResult SearchModifier(string searchedModifier)
+    {
         ItemModel model = new ItemModel();
         model.modifiers = _modifierService.getSearchedModifier(searchedModifier);
-        return PartialView("_modifierListPartial",model);
+        return PartialView("_modifierListPartial", model);
     }
 
-    public IActionResult AddNewModifierGroup(ItemModel model){
-       model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
-       _modifierService.AddNewModifierGroup(model.mg,model.ModifierIds);
-       model.modifiergroups = _modifierService.getAllModifierGroups();
+    public IActionResult AddNewModifierGroup(ItemModel model)
+    {
+        model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
+        _modifierService.AddNewModifierGroup(model.mg, model.ModifierIds);
+        model.modifiergroups = _modifierService.getAllModifierGroups();
         return PartialView("_modifierGroupsPartial", model);
     }
 
-    public IActionResult DeleteModifier(int modifierid,int modifiergroupid){
-        _modifierService.deleteModifier(modifierid,modifiergroupid);
+    public IActionResult DeleteModifier(int modifierid, int modifiergroupid)
+    {
+        _modifierService.deleteModifier(modifierid, modifiergroupid);
         List<Modifier> modifiers = _modifierService.getModifiersForMGroup(modifiergroupid);
         ItemModel model = new ItemModel();
         model.modifiers = modifiers;
-        return View("_modifierListPartial",model);
+        return View("_modifierListPartial", model);
     }
-    public IActionResult EditModifierGroupGet(int modifiergroupid){
+    
+    public IActionResult EditModifierGroupGet(int modifiergroupid)
+    {
         ItemModel model = new ItemModel();
         model.mg = _modifierService.GetModifiergroup(modifiergroupid);
         model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupid);
-        return PartialView("_edit_modifierGroup",model);
+        return PartialView("_edit_modifierGroup", model);
     }
 
-    public IActionResult updateModifierGroup(ItemModel model){
+    public IActionResult updateModifierGroup(ItemModel model)
+    {
 
         model.ModifierIds = JsonConvert.DeserializeObject<List<int>>(model.payload);
         _modifierService.updateModifierGroup(model.mg, model.ModifierIds);
         return View("Menu");
     }
 
-    public IActionResult deleteModifierGroup(int modifierGroupId){
+    public IActionResult deleteModifierGroup(int modifierGroupId)
+    {
         _modifierService.deleteModifierGroup(modifierGroupId);
         ItemModel model = new ItemModel();
-         model.modifiergroups = _modifierService.getAllModifierGroups();
-        return View("_modifierGroupsPartial",model);
+        model.modifiergroups = _modifierService.getAllModifierGroups();
+        return View("_modifierGroupsPartial", model);
+    }
+
+    [HttpPost]
+    public IActionResult AddNewModifier(ItemModel model)
+    {
+        _modifierService.AddNewModifier(model.modifier);
+         TempData["ToastrMessage"] = "Modifier Added Successfully";
+         TempData["ToastrType"] = "success";
+        return View("Menu");
+    }
+
+    public IActionResult EditmodifierGet(int modifierid,int modifierGroupId){
+        ItemModel model = new ItemModel();
+        model.modifiergroups = _modifierService.getAllModifierGroups();
+        model.modifier = _modifierService.getModifier(modifierid,modifierGroupId);
+        model.units = _modifierService.GetAllUnits();
+        return PartialView("_modifersContainerPartial", model);
+    }
+
+    public IActionResult EditmodifierPost(ItemModel model,int modifierGroupId){
+        _modifierService.updateModifier(model.modifier,modifierGroupId);
+        return View("Menu");
     }
 }

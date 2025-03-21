@@ -79,7 +79,7 @@
                         <img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" style="width:20px;"alt=""><label for="">Menu</label>
                     </li>
                     </a>
-                    <a href="">
+                    <a asp-controller="TableAndSection" asp-action="TableSection">
                     <li class="ps-2">
                         <img src="~/images/icons8-stop-30.png" class="me-2 side-img" alt="">
                         <label for="">Table And Section</label>
@@ -99,12 +99,10 @@
                     </li>
                 </ul>
             </div>
-
             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
-
                         <div class="modal-body d-flex flex-column align-items-center justify-content-center">
                             <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
                             <h5 class="mb-2">Are you sure you want to Logout?</h5>
