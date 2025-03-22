@@ -12,14 +12,13 @@
            
             @foreach (var sec in Model.sections)
             {
-                <li class="w-100" id="selectedSection_@sec.Sectionid">
-
-                    <label for="" class="ms-0" style="font-size: 13px;">≣ @sec.Sectionname</label>
-                    <div class="d-flex" style="margin-left:auto;">
-                        <img src="~/images/edit.png" class="pe-2"  style="width:25px;cursor:pointer;" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;"alt="">
-                    </div>
-                </li>
+                <li class="w-100" id="selectedSection_@sec.Sectionid" style="display: flex; align-items: center;" onclick="loadTableData(@sec.Sectionid)">
+    <label for="" class="ms-0" style="font-size: 13px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">≣ @sec.Sectionname</label>
+    <div class="d-flex">
+        <img src="~/images/edit.png" class="pe-2" style="width:25px; cursor:pointer;" alt="">
+        <img src="~/images/trash-fill.svg" style="width:15px; cursor:pointer;" alt="">
+    </div>
+</li>
             }
         </ul>
     </div>

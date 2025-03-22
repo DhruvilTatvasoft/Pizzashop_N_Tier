@@ -10,14 +10,29 @@ using Microsoft.Extensions.Logging;
     public class TableAndSection : Controller
     {
         private readonly ISectionService _sectionService;
+        private readonly ITableService _tableService;
 
-        public TableAndSection(ISectionService sectionService){
+        public TableAndSection(ISectionService sectionService,ITableService tableService){
             _sectionService = sectionService;
+            _tableService = tableService;
         }
         public IActionResult TableSection(){
+            return View("TableAndsection");
+        }
+        public IActionResult SectionData(){
+            TableAndSectionViewModel model=new TableAndSectionViewModel();
+            model.sections = _sectionService.getAllSections();
+            return PartialView("_section",model);
+        }
+        public IActionResult LoadTableDataForSection(int sectionId){
             TableAndSectionViewModel model = new TableAndSectionViewModel();
-            model.sections = _sectionService.getAllSections() ;
-
-            return View("TableAndsection",model);
+            model.tables = _tableService.getTablesForsection(sectionId);
+            model.sectionId = sectionId;
+            return PartialView("_tables",model);
+        }
+        public IActionResult loadTablePage(int sectionId){
+            TableAndSectionViewModel model = new TableAndSectionViewModel();
+            model.sectionId = sectionId;
+            return PartialView("_TableContainer",model);
         }
     }

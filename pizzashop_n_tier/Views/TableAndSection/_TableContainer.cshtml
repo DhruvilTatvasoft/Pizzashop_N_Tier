@@ -1,15 +1,18 @@
-@model TableAndSection
-<h3 class="p-3 header-text">Items</h3>
-<div class="d-flex justify-content-end w-100 ">
+@model TableAndSectionViewModel
+<div class="d-flex">
+<h3 class="p-3 c-text">Tables</h3>
+<div class="d-flex justify-content-end w-100 m-3 ">
 
     <div class="me-3">
-         <input type="email" class="form-control h-100 " id="searchedItem" placeholder="Search"> 
+         <input type="email" class="form-control h-100 " id="searchedTable" placeholder="Search"> 
+         <input type="hidden" class="form-control h-100 " id="HiddenSectionId" asp-for="sectionId"> 
     </div>
     <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
              alt=""></button>
 
-    <button class="btn btn-primary me-3 add-item-modifier" type="button">+ New Item</button>
+    <button class="btn btn-primary me-3 add-item-modifier" type="button">+ New Table</button>
 <input type="text" hidden>
+</div>
 </div>
 <div class="tbl m-3 table-responsive">
     <table class="table">
@@ -41,8 +44,9 @@
         </div>
     </div>
     <script>
-
-        
+        $("document").ready(function(){
+            loadTableData(1);
+        })
     </script>
 </div>
 
