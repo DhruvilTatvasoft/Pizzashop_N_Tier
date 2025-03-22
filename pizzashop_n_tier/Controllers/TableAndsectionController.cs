@@ -35,4 +35,13 @@ using Microsoft.Extensions.Logging;
             model.sectionId = sectionId;
             return PartialView("_TableContainer",model);
         }
+
+        public IActionResult AddNewSection(TableAndSectionViewModel model){
+            if(_sectionService.addNewSection(model)){
+
+            }
+            else{
+
+            }
+        }
     }

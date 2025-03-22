@@ -14,12 +14,12 @@ Layout = null;
       </th>
       <th scope="col">
          <div class="form-check">
-            <label class="form-check-label" for="flexCheckDefault">
+            <label class="form-check-label d-flex align-items-center justify-content-center" for="flexCheckDefault" >
             Capacity
             </label>
          </div>
       </th>
-      <th scope="col">Status</th>
+      <th scope="col"><label for="" class="d-flex align-items-center justify-content-center">Status</label></th>
       <th scope="col">Action</th>
    </tr>
 </thead>
@@ -27,19 +27,20 @@ Layout = null;
    @foreach (var table in Model.tables)
    {
    <tr>
-      <th scope="row">
+      <th scope="row" class="w-50">
          <input class="form-check-input checkedItems" type="checkbox" value="@table.Tableid" />
          <label class="form-check-label" for="flexCheckDefault">
          <label for="" style="font-size: 14px;">@table.Tablename</label>
          </label>
       </th>
-      <td>@table.Capacity</td>
-      <td>@if(table.Status){
-         <label>occupied</label>
+      <td ><label for="" class="d-flex align-items-center justify-content-center">@table.Capacity</label></td>
+      <td > <div class="d-flex align-items-center justify-content-center">@if(table.Status){
+          <span class="badge bg-success"><label for="" class="d-flex align-items-center justify-content-center">unoccupied</label></span>
          }else
          {
-         <label>unoccupied</label>
+          <span class="badge bg-secondary"><label for=""  >Occupied</label></span>
          }
+         </div>
       </td>
       <td>
          <div class="d-flex justify-content-start w-100 pb-2 h-100">
