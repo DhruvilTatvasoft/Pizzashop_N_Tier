@@ -95,7 +95,6 @@ public IActionResult ShowDashboard()
             var res = HttpContext.Response;
             string userImagePath = _user.getUserImagePath(int.Parse(userid));
              HttpContext.Response.Cookies.Delete("userImage");
-            _CookieService.setInCookie(userImagePath,res,"userImage",true);
             TempData["ToastrMessage"] = "profile updated successfully";
             TempData["ToastrType"] = "success";
             return RedirectToAction("Myprofile");

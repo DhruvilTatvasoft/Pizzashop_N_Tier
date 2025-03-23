@@ -1,33 +1,34 @@
 @model TableAndSectionViewModel
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 ps-4">
-    <label class=" c-text">Section</label>
-    <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target=""
-        style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png"
-            style="width:75%;margin-top: 5px;" onclick="OpenAddSectionModel()" alt="">
-    </button>
+  <label class=" c-text">Section</label>
+  <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target=""
+    style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png"
+      style="width:75%;margin-top: 5px;" onclick="OpenAddSectionModel()" alt="">
+  </button>
 </div>
 
 <div class="scrollbar w-100">
-    <div class="scrollbox w-100 h-100">
-        <ul class="sectionList mt-2 w-100 h-100 ">
+  <div class="scrollbox w-100 h-100">
+    <ul class="sectionList mt-2 w-100 h-100 ">
 
-            @foreach (var sec in Model.sections)
-            {
-                <li class="w-100" id="selectedSection_@sec.Sectionid" style="display: flex; align-items: center;"
-                    onclick="loadTableData(@sec.Sectionid)">
-                    <label for="" class="ms-0"
-                        style="font-size: 13px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">≣
-                        @sec.Sectionname</label>
-                    <div class="d-flex">
-                        <img src="~/images/edit.png" class="pe-2" style="width:25px; cursor:pointer;" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px; cursor:pointer;" alt="">
-                    </div>
-                </li>
-            }
-        </ul>
-    </div>
+      @foreach (var sec in Model.sections)
+      {
+        <li class="w-100" id="selectedSection_@sec.Sectionid" style="display: flex; align-items: center;"
+          onclick="loadTableData(@sec.Sectionid)">
+          <label for="" class="ms-0" style="font-size: 13px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">≣
+            @sec.Sectionname</label>
+          <div class="d-flex">
+            <img src="~/images/edit.png" class="pe-2" onclick="OpenModalForEdit(@sec.Sectionid)"
+              style="width:25px; cursor:pointer;" alt="">
+            <img src="~/images/trash-fill.svg" style="width:15px; cursor:pointer;" alt="">
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
 </div>
+
 
 
 
@@ -38,28 +39,31 @@
       <div class="modal-content">
         <div class="modal-header pb-0" style="border:none;">
           <h5 class="modal-title" id="exampleModalLabel">Add New Section</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" style="margin-left: auto;border: none;background: none;" aria-label="Close">
+          <button type="button" class="close" data-bs-dismiss="modal"
+            style="margin-left: auto;border: none;background: none;" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        <input type="hidden" >
           <div class="form-group mb-4">
-            <input type="text" class="form-control" style="padding: 3% 4% 3% 2%;" placeholder="Name*" asp-for="section.Sectionname">
-            @* <!-- #region >--> *@
-            <span  class="text-danger"></span>
+            <input type="text" class="form-control" id="sectionname"  style="padding: 3% 4% 3% 2%;" placeholder="Name*"
+              asp-for="section.Sectionname">
+              <span asp-validation-for="section.Sectionname" class="text-danger"></span>
+          <input type="hidden" id="sectionId" asp-for="sectionId">
+           
+            <span class="text-danger"></span>
           </div>
           <div class="form-group">
-            <textarea class="form-control h-100" placeholder="Description" 
-              id="Section-description"style="padding: 3% 4% 7% 2%;" asp-for="section.Description"></textarea>
-            <span  class="text-danger"></span>
+            <textarea class="form-control h-100" placeholder="Description" id="Section-description"
+              style="padding: 3% 4% 7% 2%;" asp-for="section.Description"></textarea>
+            <span class="text-danger"></span>
           </div>
-          
+
         </div>
         <div class="modal-footer" style="border: none;">
-          <button type="submit" class="btn btn-primary" >Save</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
-            onclick="">Cancel</button>
+          <button type="submit" class="btn btn-primary saveNewSection">Save</button>
+          <button type="submit" class="btn btn-primary updateSection">Update</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="">Cancel</button>
         </div>
       </div>
     </div>
@@ -67,24 +71,65 @@
 </form>
 
 <script>
+  function OpenAddSectionModel() {
+    $('#addNewSectionModal').modal('show');
+    document.querySelector('.modal-title').innerHTML = "Add New Section";
+    document.querySelector('.saveNewSection').style.display = 'block';
+    document.querySelector('.updateSection').style.display = 'none';
+    document.getElementById('addNewSectionForm').action = '@Url.Action("AddNewSection", "TableAndSection")';
+  }
 
-    function OpenAddSectionModel(){
-        $('#addNewSectionModal').modal('show');
+  function OpenModalForEdit(sectionId) {
+ 
+  $('#addNewSectionForm')[0].reset();
+  $('#addNewSectionModal').modal('show');
+
+  $.ajax({
+    url: '@Url.Action("updateSectionGet", "TableAndSection")',
+    type: "GET",
+    data: { sectionId: sectionId},
+    success: function (data) {
+      document.querySelector('.modal-title').innerHTML = "Edit Section";
+      document.querySelector('.saveNewSection').style.display = 'none';
+      document.querySelector('.updateSection').style.display = 'block';
+      console.log(data);
+
+      $('#sectionname').val(data.section.sectionname);
+      $('#Section-description').val(data.section.description);
+      $('#sectionId').val(data.section.sectionid);
+   
+      document.getElementById('addNewSectionForm').action = '@Url.Action("UpdateSection", "TableAndSection")';
+    },
+    error: function () {
+      alert("Failed to load section data. Please try again.");
     }
+  });
+}
 
-    $("#addNewSectionForm").on('submit',function(e){
-        e.preventDefault();
-        var data = new FormData(this);
-        $.ajax({
-            url:@Url.Action("AddNewSection","TableAndSection"),
-            type:"POST",
-            data:data,
-            contentType:false,
-            processData:false,
-            success:function(data){
-                loadSections();
-            }
-        })
 
-    })
+  $("#addNewSectionForm").on('submit', function (e) {
+    e.preventDefault();
+    var data = new FormData(this);
+    $(".saveNewSection, .updateSection").attr("disabled", true);
+
+    var formAction = $(this).attr('action');
+
+
+    $.ajax({
+      url: formAction,
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData: false,
+      success: function (data) {
+        $('#addNewSectionModal').modal('hide');
+        location.reload();
+      },
+      complete: function () {
+        $(".saveNewSection, .updateSection").attr("disabled", false);
+      }
+    });
+  });
+
+
 </script>

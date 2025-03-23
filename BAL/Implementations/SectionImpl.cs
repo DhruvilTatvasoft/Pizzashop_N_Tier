@@ -13,9 +13,18 @@ public class SectionImpl : ISectionService
         return _sectionRepository.addNewSection(model.section);
     }
 
+    public Section getSection(int sectionId)
+    {
+        return _sectionRepository.getAllSections(sectionId);
+    }
+
     public List<Section> getAllSections()
     {
         return _sectionRepository.getAllSections();
     }
-    
+
+    public bool updateSection(TableAndSectionViewModel model)
+    {
+        return  _sectionRepository.updateSection(model.section);
+    }
 }
