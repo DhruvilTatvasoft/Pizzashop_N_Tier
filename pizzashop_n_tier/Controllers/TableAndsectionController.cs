@@ -38,10 +38,13 @@ using Microsoft.Extensions.Logging;
 
         public IActionResult AddNewSection(TableAndSectionViewModel model){
             if(_sectionService.addNewSection(model)){
-
+                TempData["ToastrMessage"] = "Table added successfully";
+            TempData["ToastrType"] = "success";
             }
             else{
-
+                TempData["ToastrMessage"] = "Error occured";
+            TempData["ToastrType"] = "error";
             }
+            return RedirectToAction("SectionData");
         }
     }
