@@ -21,7 +21,7 @@
           <div class="d-flex">
             <img src="~/images/edit.png" class="pe-2" onclick="OpenModalForEdit(@sec.Sectionid)"
               style="width:25px; cursor:pointer;" alt="">
-            <img src="~/images/trash-fill.svg" style="width:15px; cursor:pointer;" alt="">
+            <img src="~/images/trash-fill.svg" onclick="" style="width:15px; cursor:pointer;" alt="">
           </div>
         </li>
       }
@@ -69,6 +69,8 @@
     </div>
   </div>
 </form>
+
+
 
 <script>
   function OpenAddSectionModel() {
@@ -131,5 +133,9 @@
     });
   });
 
+function deleteModal(sectionId){
+  $("#deleteModel").modal('show');
+  $("#deleteText").innerHTML = "Are you sure you want to delete this section ?"
+}
 
 </script>
