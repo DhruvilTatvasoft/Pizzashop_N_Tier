@@ -31,7 +31,7 @@ public class SectionRepository : ISectionRepository
 
     public List<Section> getAllSections()
     {
-        return _context.Sections.ToList();
+        return _context.Sections.Where(section=>section.Isdeleted == false).ToList();
     }
 
     public Section getAllSections(int sectionId)
