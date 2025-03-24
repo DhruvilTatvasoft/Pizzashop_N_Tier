@@ -67,4 +67,11 @@ public class SectionRepository : ISectionRepository
         }
 
     }
-}
+    public bool deleteSection(int sectionId){
+        Section section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionId && section.Isdeleted == false);
+        section.Isdeleted = true;
+        _context.Sections.Update(section);
+        _context.SaveChanges();
+        return true;
+    }
+} 

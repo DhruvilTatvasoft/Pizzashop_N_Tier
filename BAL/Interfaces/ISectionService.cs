@@ -5,4 +5,5 @@ public interface ISectionService{
     Section getSection(int sectionId);
     List<Section> getAllSections();
     bool updateSection(TableAndSectionViewModel model);
+    bool deleteSection(int sectionId);
 }

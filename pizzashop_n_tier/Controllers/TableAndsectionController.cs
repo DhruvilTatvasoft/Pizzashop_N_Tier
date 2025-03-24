@@ -67,23 +67,38 @@ public class TableAndSection : Controller
     }
 
     [HttpPost]
-public IActionResult UpdateSection(TableAndSectionViewModel model)
-{
-    model.section.Sectionid = model.sectionId;
-    if (!_sectionService.updateSection(model))
+    public IActionResult UpdateSection(TableAndSectionViewModel model)
     {
-        ModelState.AddModelError("section.Sectionname", "Section already exists");
-    }
+        model.section.Sectionid = model.sectionId;
+        if (!_sectionService.updateSection(model))
+        {
+            ModelState.AddModelError("section.Sectionname", "Section already exists");
+        }
 
         model.sections = _sectionService.getAllSections();
         ModelState.Remove("tables");
         ModelState.Remove("sectionId");
-    if (!ModelState.IsValid)
+        if (!ModelState.IsValid)
+        {
+            return PartialView("_section", model);
+        }
+
+        return Json(new { success = true });
+    }
+    [HttpPost]
+    public IActionResult deleteSection(int sectionId)
     {
-        return PartialView("_section", model);
+        if (_sectionService.deleteSection(sectionId))
+        {
+            return RedirectToAction("SectionData");
+        }
+        else
+        {
+            return RedirectToAction("SectionData");
+        }
     }
 
-    return Json(new { success = true });
-}
-
+    public IActionResult deleteSectionGet(){
+        return PartialView("_deleteModal");
+    }
 }

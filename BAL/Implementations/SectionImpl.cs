@@ -27,4 +27,7 @@ public class SectionImpl : ISectionService
     {
         return  _sectionRepository.updateSection(model.section);
     }
+    public bool deleteSection(int sectionId){
+        return _sectionRepository.deleteSection(sectionId);
+    }
 }
