@@ -10,7 +10,7 @@
     <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
              alt=""></button>
 
-    <button class="btn btn-primary me-3 add-item-modifier" type="button">+ New Table</button>
+    <button class="btn btn-primary me-3 add-item-modifier" data-bs-toggle="modal" data-bs-target="#addTableModal"  type="button">+ New Table</button>
 <input type="text" hidden>
 </div>
 </div>
@@ -43,12 +43,67 @@
                     style="width:25px;rotate: 180deg;" alt=""></button>
         </div>
     </div>
-    jj
+    <!-- Add Table Modal -->
+
+    <form action="addNewTableForm">
+<div class="modal fade" id="addTableModal" tabindex="-1" style="--bs-modal-width: 367px;" aria-labelledby="addTableModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header" style="border: none;">
+        <h5 class="modal-title" id="addTableModalLabel">Add Table</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+          <div class="row">
+          <div class="mb-3 col-md-6">
+            <input type="text" class="form-control"  style="padding: 6%;" id="tableName" placeholder="Name*">
+          </div>
+          <div class="mb-3 col-md-6">
+            <label for="" class="form-label" style="position: absolute;left: 55%;top: 13%;font-size: 70%;">section*</label>
+            <select class="form-select" style="padding: 6%;" id="tableSection">
+           @foreach(var sec in @Model.sections){
+                <option value="@sec.Sectionid">@sec.Sectionname</option>
+           }
+            </select>
+          </div>
+          </div>
+          <div class="row">
+            <label for="" class="form-label" style="position: absolute;left: 4%;top: 52%;font-size: 70%;">capacity*</label>
+            <div class="col-md-6 mb-3">
+              <input type="number" class="form-control" style="padding: 6%;" id="tableCapacity" placeholder="capacity" value="0" min="0">
+            </div>
+            <div class="col-md-6 mb-3">
+            <label for="" class="form-label" style="position: absolute;left: 55%;top: 52%;font-size: 70%;">Status*</label>
+              <select class="form-select" style="padding: 6%;" placeholder="status" id="tableStatus">
+                <option>Available</option>
+                <option>Occupied</option>
+              </select>
+            </div>
+          </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary">Save</button>
+        <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </div>
+  </div>
+</div>
+</form>
+
+<!-- Button to trigger modal -->
+
+
     <script>
         $("document").ready(function(){
             console.log("loaded");
             loadTableData(1);
         })
+
+      $("#addNewTableForm").on("submit",function(){
+        
+      })
+
+
     </script>
 </div>
 

@@ -38,6 +38,7 @@ public class TableAndSection : Controller
     {
         TableAndSectionViewModel model = new TableAndSectionViewModel();
         model.sectionId = sectionId;
+        model.sections = _sectionService.getAllSections();
         return PartialView("_TableContainer", model);
     }
 
