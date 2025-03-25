@@ -45,9 +45,9 @@ public partial class Item
 
     public virtual Category Category { get; set; } = null!;
 
-    public virtual ICollection<Itemsandmodifier> Itemsandmodifiers { get; set; } = new List<Itemsandmodifier>();
+    public virtual ICollection<Itemsandmodifier> Itemsandmodifiers { get; } = new List<Itemsandmodifier>();
 
-    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
+    public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
     public virtual Unit Unit { get; set; } = null!;
 }

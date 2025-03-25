@@ -23,12 +23,14 @@ Layout = null;
       <th scope="col">Action</th>
    </tr>
 </thead>
+<input type="hidden" id="sectionIdFortables" asp-for="@Model.sectionId">
+
 <tbody>
    @foreach (var table in Model.tables)
    {
    <tr>
       <th scope="row" class="w-50">
-         <input class="form-check-input checkedItems" type="checkbox" value="@table.Tableid" />
+         <input class="form-check-input checkedTable" type="checkbox" value="@table.Tableid" />
          <label class="form-check-label" for="flexCheckDefault">
          <label for="" style="font-size: 14px;">@table.Tablename</label>
          </label>
@@ -38,16 +40,37 @@ Layout = null;
           <span class="badge bg-success"><label for="" class="d-flex align-items-center justify-content-center">unoccupied</label></span>
          }else
          {
-          <span class="badge bg-secondary"><label for=""  >Occupied</label></span>
+          <span class="badge bg-secondary"><label for="">Occupied</label></span>
          }
          </div>
       </td>
       <td>
          <div class="d-flex justify-content-start w-100 pb-2 h-100">
-            <img src="~/images/pencil-square.svg" class="me-2"  alt="">
-            <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="">
+            <img src="~/images/pencil-square.svg" style="cursor: pointer;" onclick="openEditModal(@table.Tableid)" class="me-2"  alt="">
+            <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="openSingleDeleteModal(@table.Tableid)" alt="" >
          </div>
       </td>
    </tr>
    }
+
+
+   
+
+  @* <script>
+   function openEditModal(tableid){
+            $("#EditTableModal").modal('show');
+      $.ajax({
+         url:'@Url.Action("updatetableGet","TableAndSection")',
+         type:'GET',
+         data:{tableid:tableid},
+         success:function(data){
+            $("#EditTableModal").find('#tableName').val(data.table.TableName);
+            $("#EditTableModal").find('#tableSection').val(data.table.Sectionid);
+            $("#EditTableModal").find('#tableCapacity').val(data.table.Capacity);
+            $("#EditTableModal").find('#tableStatus').val(data.table.Status);
+         }
+      })
+   }
+
+  </script> *@
   

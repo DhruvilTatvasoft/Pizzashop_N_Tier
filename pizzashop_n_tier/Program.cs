@@ -12,7 +12,6 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddDbContext<PizzashopCContext>(option =>
@@ -37,6 +36,8 @@ builder.Services.AddScoped<ITableService,TableImpl>();
 builder.Services.AddScoped<ISectionService,SectionImpl>();
 builder.Services.AddScoped<ISectionRepository,SectionRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
+builder.Services.AddScoped<ITaxesRepository,TaxesRepository >();
+builder.Services.AddScoped<ITaxService,TaxesImpl>();
 
 
 builder.Services.AddSession(options =>

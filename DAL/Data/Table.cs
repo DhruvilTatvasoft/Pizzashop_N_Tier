@@ -25,9 +25,9 @@ public partial class Table
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Ordertable> Ordertables { get; set; } = new List<Ordertable>();
+    public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
 
     public virtual Section Section { get; set; } = null!;
 
-    public virtual ICollection<Waitingtoken> Waitingtokens { get; set; } = new List<Waitingtoken>();
+    public virtual ICollection<Waitingtoken> Waitingtokens { get; } = new List<Waitingtoken>();
 }

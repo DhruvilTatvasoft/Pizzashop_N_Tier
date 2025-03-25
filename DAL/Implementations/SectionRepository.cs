@@ -11,7 +11,8 @@ public class SectionRepository : ISectionRepository
 
     public bool addNewSection(Section section)
     {
-        if (_context.Sections.FirstOrDefault(SectionInDb => SectionInDb.Sectionname.ToLower().Trim() == section.Sectionname.ToLower().Trim()) != null)
+        var existingSection = _context.Sections.FirstOrDefault(SectionInDb => SectionInDb.Sectionname.ToLower().Trim() == section.Sectionname.ToLower().Trim() && SectionInDb.Isdeleted == false);
+        if (existingSection != null)
         {
             return false;
         }
@@ -73,5 +74,10 @@ public class SectionRepository : ISectionRepository
         _context.Sections.Update(section);
         _context.SaveChanges();
         return true;
+    }
+
+    public Section getSectionById(int sectionId)
+    {
+       return _context.Sections.FirstOrDefault(section => section.Sectionid == sectionId && section.Isdeleted == false)!;
     }
 } 

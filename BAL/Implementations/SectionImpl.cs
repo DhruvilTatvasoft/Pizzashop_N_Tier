@@ -30,4 +30,9 @@ public class SectionImpl : ISectionService
     public bool deleteSection(int sectionId){
         return _sectionRepository.deleteSection(sectionId);
     }
+
+    public Section getSectionbyId(int sectionId)
+    {
+        return _sectionRepository.getSectionById(sectionId);
+    }
 }

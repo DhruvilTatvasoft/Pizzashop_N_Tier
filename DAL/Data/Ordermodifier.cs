@@ -29,7 +29,7 @@ public partial class Ordermodifier
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual Modifier Modifier { get; set; } = null!;
 

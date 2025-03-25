@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -34,6 +35,7 @@ public class TableAndSection : Controller
         model.sectionId = sectionId;
         return PartialView("_tables", model);
     }
+   
     public IActionResult loadTablePage(int sectionId)
     {
         TableAndSectionViewModel model = new TableAndSectionViewModel();
@@ -99,7 +101,51 @@ public class TableAndSection : Controller
         }
     }
 
-    public IActionResult deleteSectionGet(){
+    public IActionResult deleteModalGet()
+    {
         return PartialView("_deleteModal");
+    }
+
+    public IActionResult AddNewTable(TableAndSectionViewModel model)
+    {
+        if (_tableService.addNewTable(model.table))
+        {
+            TempData["ToastrMessage"] = "New Table added succesfully";
+            TempData["ToastrType"] = "success";
+        }
+        else
+        {
+            TempData["ToastrMessage"] = "Error occured";
+            TempData["ToastrType"] = "error";
+        }
+        return Json(new { model.table });
+    }
+
+    [HttpPost]
+    public IActionResult deleteTable(List<int>? selectedTables,int? sectionid,int? tableid){
+        if(selectedTables != null){
+            _tableService.deleteTables(selectedTables);
+        }
+        if(tableid != null){
+            selectedTables.Add(tableid.Value);
+            _tableService.deleteTables(selectedTables);
+        }
+        return Json(new { sectionid });
+    }
+
+    [HttpGet]
+    public IActionResult updatetableGet(int tableid){
+        Table table = _tableService.gettablebyid(tableid);
+        Section section = _sectionService.getSectionbyId(table.Sectionid);
+        TableAndSectionViewModel model = new TableAndSectionViewModel();
+        model.table = table;
+        model.section = section;
+        model.sections = _sectionService.getAllSections();
+        return PartialView("_editTable",model);
+    }
+
+    public IActionResult updatetablePost(TableAndSectionViewModel model){
+        _tableService.updateTable(model.table);
+            return Json(new {model.table.Sectionid});
     }
 }

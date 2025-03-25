@@ -8,4 +8,5 @@ public class TableAndSectionViewModel{
     public Section? section{get;set;}
 
     public int sectionId {get;set;}
+    public Table table {get;set;}
 }

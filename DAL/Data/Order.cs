@@ -39,11 +39,11 @@ public partial class Order
 
     public virtual Customer Customer { get; set; } = null!;
 
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
-    public virtual ICollection<Orderitem> Orderitems { get; set; } = new List<Orderitem>();
+    public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
-    public virtual ICollection<Orderreview> Orderreviews { get; set; } = new List<Orderreview>();
+    public virtual ICollection<Orderreview> Orderreviews { get; } = new List<Orderreview>();
 
-    public virtual ICollection<Ordertable> Ordertables { get; set; } = new List<Ordertable>();
+    public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
 }

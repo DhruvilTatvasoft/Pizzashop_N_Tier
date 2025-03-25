@@ -1,0 +1,75 @@
+@model TaxesViewModel
+<form id="AddEditTaxForm">
+    <div class="modal fade" id="addEditTaxModal" tabindex="-1" style="--bs-modal-width: 367px;"
+        aria-labelledby="addTableModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTableModalLabel">Add new tax</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="mb-3 col-md-12">
+                            <input type="text" class="form-control" asp-for="@Model.tax.Taxname" id="tableName"
+                                placeholder="Name*">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="mb-3 col-md-6">
+                            <label for="" class="form-label"
+                                style="position: absolute;left: 7%;top: 41%;font-size: 52%;">Type*</label>
+
+                            <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.tax.Taxtype">
+                                @foreach (var tax in @Model.taxes)
+                                {
+                                    <option value="@tax.Taxtype">@tax.Taxtype</option>
+                                }
+                            </select>
+                        </div>
+                        <div class="mb-3 col-md-6">
+                            <label for="" class="form-label"
+                                style="position: absolute;left: 56%;top: 41%;font-size: 52%;">Tax Amount</label>
+                            <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;"
+                                placeholder="capacity" value="0" min="0" asp-for="@Model.tax.Taxpercentage">
+                        </div>
+                        <div class="row d-flex" style="padding-left: 17%;">
+                            <div class="col-md-6 form-check form-switch d-flex align-items-center">
+                                <input class="form-check-input" type="checkbox" style="width:47px;" asp-for="@Model.tax.Isenabled"
+                                    id="flexSwitchCheckChecked" >
+                                <label for="" class="ps-2">IsEnabled</label>
+                            </div>
+                            <div class="col-md-6  form-check form-switch d-flex align-items-center">
+                                <input class="form-check-input" type="checkbox" style="width:47px;" asp-for="@Model.tax.Isdefault"
+                                    id="flexSwitchCheckChecked" >
+                                <label for="" class="ps-2">Default</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+            $("#AddEditTaxForm").on('submit',function(e){
+                e.preventDefault();
+                var data = new FormData(this);
+                $.ajax({
+                    url:'@Url.Action("AddNewTax","Taxes")',
+                    type: 'POST',
+                    data: data,
+                    contentType:false,
+                    processData:false,
+                    success:function(){
+                        loadTaxes();
+                        $('#AddEditTaxModal').modal('hide');
+                    }
+                });
+            })
+</script>

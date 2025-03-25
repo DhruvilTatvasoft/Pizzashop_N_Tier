@@ -27,5 +27,5 @@ public partial class Invoice
 
     public virtual Ordermodifier? Ordermodifier { get; set; }
 
-    public virtual ICollection<Payment> Payments { get; set; } = new List<Payment>();
+    public virtual ICollection<Payment> Payments { get; } = new List<Payment>();
 }

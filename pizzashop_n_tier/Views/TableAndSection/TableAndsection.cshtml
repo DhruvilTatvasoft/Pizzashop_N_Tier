@@ -49,6 +49,7 @@
                 data:{sectionId: sectionId},
                 success:function(data){
                     $("table").html(data);
+                    $("#sectionIdFortables").val(sectionId)
                 }
             })
         }

@@ -21,5 +21,5 @@ public partial class Customer
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Order> Orders { get; set; } = new List<Order>();
+    public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }

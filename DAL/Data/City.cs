@@ -21,5 +21,5 @@ public partial class City
 
     public virtual State State { get; set; } = null!;
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; } = new List<User>();
 }

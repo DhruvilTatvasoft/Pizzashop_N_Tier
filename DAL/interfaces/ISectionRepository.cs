@@ -6,4 +6,5 @@ public interface ISectionRepository{
     Section getAllSections(int sectionId);
     bool updateSection(Section section);
     bool deleteSection(int sectionId);
+    Section getSectionById(int sectionId);
 } 

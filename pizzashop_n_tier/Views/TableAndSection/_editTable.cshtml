@@ -1,0 +1,82 @@
+@model TableAndSectionViewModel
+<form id="EditTableForm">
+    <div class="modal fade" id="EditTableModal" tabindex="-1" style="--bs-modal-width: 367px;"
+      aria-labelledby="addTableModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header" style="border: none;">
+            <h5 class="modal-title" id="addTableModalLabel">Edit Table</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <div class="row">
+              <div class="mb-3 col-md-6">
+                <input type="text" class="form-control" asp-for="@Model.table.Tablename"
+                  style="padding: 6%;padding-top: 8%;" id="tableName" placeholder="Name*">
+              </div>
+              <div class="mb-3 col-md-6">
+                <label for="" class="form-label"
+                  style="position: absolute;left: 56%;top: 12%;font-size: 54%;">section*</label>
+                <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.table.Sectionid"
+                  id="tableSection">
+                  @foreach (var sec in @Model.sections)
+                  {
+                    <option value="@sec.Sectionid">@sec.Sectionname</option>
+                  }
+                </select>
+              </div>
+            </div>
+            <div class="row">
+              <label for="" class="form-label"
+                style="position: absolute;left: 3%;top: 52%;font-size: 54%;">capacity*</label>
+              <div class="col-md-6 mb-3">
+                <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;" id="tableCapacity"
+                  asp-for="@Model.table.Capacity" placeholder="capacity" value="0" min="0">
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="" class="form-label"
+                  style="position: absolute;left: 56%;top: 52%;font-size: 54%;">Status*</label>
+                <select class="form-select" style="padding: 6%;padding-top: 8%;" placeholder="status" id="tableStatus">
+                 @if(Model.table.Status){
+                  <option value="true" selected>Available</option>
+                  <option value="false" >Occupied</option>
+                 }
+                 else{
+                  <option value="true" >Available</option>
+                  <option value="false" selected>Occupied</option>
+                 }
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+<script>
+      $("#EditTableForm").on('submit',function(e){
+    e.preventDefault();
+    var data = new FormData(this);
+     for (var pair of data.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
+      }
+    $.ajax({
+      url:'@Url.Action("updatetablePost","TableAndsection")',
+      type:'POST',
+      data:data,
+      contentType:false,
+      processData: false,
+      success:function(data){
+        console.log("edited");
+        console.log(data);
+         loadTableData(data.sectionid);
+         $("#EditTableModal").modal('hide');
+      }
+    });
+   });
+</script>

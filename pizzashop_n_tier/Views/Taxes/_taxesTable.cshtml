@@ -1,0 +1,110 @@
+@model TaxesViewModel
+<table class="table mb-0" id="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                <label for="" class="ps-4  ">Name</label>
+            </th>
+            <th scope="col"><label for="" >Type</label></th>
+            <th scope="col"><label for="" >IsEnable</label></th>
+            <th scope="col">
+                <label for=""><label for="">Default</label></label>
+            </th>
+            <th scope="col"><label for="" >Taxes Value</label></th>
+            <th scope="col"><label for=""  >Action</label></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tax in @Model.taxes)
+        {
+            <tr>
+                <td><label for="" class="ps-4">@tax.Taxname</label></td>
+                <td><label for="">@tax.Taxtype</label></td>
+                <td style="padding-left: 4%;">
+                    @if (@tax.Isenabled)
+                    {
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox"  style="width:47px;"id="flexSwitchCheckChecked" checked>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-check form-switch ">
+                            <input class="form-check-input" type="checkbox"  style="width:47px;" id="flexSwitchCheckChecked" >
+                        </div>
+                    }
+                </td>
+                <td style="padding-left: 4%;">
+                    @if (@tax.Isenabled)
+                    {
+                        <div class="form-check form-switch  ">
+                            <input class="form-check-input" type="checkbox"   style="width:47px;"id="flexSwitchCheckChecked" checked>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="form-check form-switch  ">
+                            <input class="form-check-input" type="checkbox"  style="width:47px;" id="flexSwitchCheckChecked" >
+                        </div>
+                    }
+                </td>
+                <td>@tax.Taxpercentage</td>
+                <td class="align-items-center ">
+                    <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                        <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
+                        <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="OpenDeleteTaxModal(@tax.Taxid)" alt="Delete">
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<form id="deleteFormForTax">
+  <div class="modal fade" id="deleteForTaxModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header" style="border:none;">
+          <h5 class="modal-title" id="exampleModalLongTitle">Delete Confirmation</h5>
+          <button type="button" class="close" style="margin-left: auto;border: none;background: none;"
+            data-bs-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <input id="deleteId" type="hidden">
+        <div class="modal-body d-flex flex-column align-items-center justify-content-center pb-0">
+          <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+          <label for="" id="deleteText">Are you sure you want to delete this tax?</label>
+        </div>
+        <div class="modal-footer d-flex align-items-center justify-content-center" style="border: none;">
+          <button type="submit" class="btn btn-primary" id="deleteSection">Yes</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+<script>
+    function OpenDeleteTaxModal(Taxid){
+        document.getElementById("deleteId").value = Taxid;
+        $("#deleteForTaxModel").modal('show');
+    }
+
+    $("#deleteFormForTax").on('submit',function(e){
+        e.preventDefault();
+         Taxid = parseInt($("#deleteId").val());
+         console.log(Taxid);
+        $.ajax({
+            url:'@Url.Action("deleteTax","Taxes")',
+            type:'POST',
+            data:{Taxid: Taxid},
+            contentType:false,
+            processData: false,
+            success:function(data){
+                loadTaxes();
+            }
+        });
+    })
+</script>

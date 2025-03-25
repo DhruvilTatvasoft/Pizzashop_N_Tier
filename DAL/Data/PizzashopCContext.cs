@@ -73,7 +73,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;Password=Dhruvil@23;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -819,7 +819,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("tables");
 
-            entity.Property(e => e.Tableid).HasColumnName("tableid");
+            entity.Property(e => e.Tableid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("tableid");
             entity.Property(e => e.Capacity).HasColumnName("capacity");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
@@ -852,19 +854,23 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("taxesandfees");
 
-            entity.Property(e => e.Taxid).HasColumnName("taxid");
+            entity.Property(e => e.Taxid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("taxid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
             entity.Property(e => e.Isdefault)
+                .IsRequired()
                 .HasDefaultValueSql("true")
                 .HasColumnName("isdefault");
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
             entity.Property(e => e.Isenabled)
+                .IsRequired()
                 .HasDefaultValueSql("true")
                 .HasColumnName("isenabled");
             entity.Property(e => e.Modifiedat)
@@ -878,7 +884,9 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Taxpercentage)
                 .HasPrecision(10, 2)
                 .HasColumnName("taxpercentage");
-            entity.Property(e => e.Taxtype).HasColumnName("taxtype");
+            entity.Property(e => e.Taxtype)
+                .HasMaxLength(50)
+                .HasColumnName("taxtype");
         });
 
         modelBuilder.Entity<Unit>(entity =>

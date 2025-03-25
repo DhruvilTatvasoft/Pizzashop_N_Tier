@@ -17,5 +17,5 @@ public partial class Permission
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Rolesandpermission> Rolesandpermissions { get; set; } = new List<Rolesandpermission>();
+    public virtual ICollection<Rolesandpermission> Rolesandpermissions { get; } = new List<Rolesandpermission>();
 }

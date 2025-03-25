@@ -35,13 +35,13 @@ public partial class Orderitem
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Invoice> Invoices { get; set; } = new List<Invoice>();
+    public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual Item Item { get; set; } = null!;
 
     public virtual Order Order { get; set; } = null!;
 
-    public virtual ICollection<Ordermodifier> Ordermodifiers { get; set; } = new List<Ordermodifier>();
+    public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();
 
-    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; set; } = new List<Ordertaxesandfee>();
+    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }

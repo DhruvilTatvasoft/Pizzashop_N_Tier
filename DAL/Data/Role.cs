@@ -17,9 +17,9 @@ public partial class Role
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Rolesandpermission> Rolesandpermissions { get; set; } = new List<Rolesandpermission>();
+    public virtual ICollection<Rolesandpermission> Rolesandpermissions { get; } = new List<Rolesandpermission>();
 
-    public virtual ICollection<Useraccount> Useraccounts { get; set; } = new List<Useraccount>();
+    public virtual ICollection<Useraccount> Useraccounts { get; } = new List<Useraccount>();
 
-    public virtual ICollection<User> Users { get; set; } = new List<User>();
+    public virtual ICollection<User> Users { get; } = new List<User>();
 }

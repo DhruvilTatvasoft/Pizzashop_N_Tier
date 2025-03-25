@@ -9,15 +9,15 @@ public partial class Taxesandfee
 
     public string Taxname { get; set; } = null!;
 
-    public int Taxtype { get; set; }
+    public string Taxtype { get; set; } = null!;
 
     public bool? Isdeleted { get; set; }
 
-    public bool? Isenabled { get; set; }
+    public bool Isenabled { get; set; }
 
     public decimal Taxpercentage { get; set; }
 
-    public bool? Isdefault { get; set; }
+    public bool Isdefault { get; set; }
 
     public DateTime? Createdat { get; set; }
 
@@ -27,5 +27,5 @@ public partial class Taxesandfee
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; set; } = new List<Ordertaxesandfee>();
+    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }

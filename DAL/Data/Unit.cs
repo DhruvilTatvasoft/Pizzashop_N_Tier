@@ -21,7 +21,7 @@ public partial class Unit
 
     public int Modifiedby { get; set; }
 
-    public virtual ICollection<Item> Items { get; set; } = new List<Item>();
+    public virtual ICollection<Item> Items { get; } = new List<Item>();
 
-    public virtual ICollection<Modifier> Modifiers { get; set; } = new List<Modifier>();
+    public virtual ICollection<Modifier> Modifiers { get; } = new List<Modifier>();
 }
