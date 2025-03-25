@@ -92,16 +92,15 @@
         $("#deleteForTaxModel").modal('show');
     }
 
-    $("#deleteFormForTax").on('submit',function(e){
-        e.preventDefault();
-         Taxid = parseInt($("#deleteId").val());
+    $("#deleteFormForTax").on('submit',function(){
+        @* e.preventDefault(); *@
+         Taxid = $("#deleteId").val();
          console.log(Taxid);
         $.ajax({
             url:'@Url.Action("deleteTax","Taxes")',
-            type:'POST',
+            type:'GET',
             data:{Taxid: Taxid},
-            contentType:false,
-            processData: false,
+            
             success:function(data){
                 loadTaxes();
             }

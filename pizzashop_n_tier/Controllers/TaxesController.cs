@@ -28,9 +28,9 @@ public class TaxesController : Controller
             return PartialView("_taxesTable",model);
         }
 
-        [HttpPost]
-        public IActionResult deleteTax(int Taxid){
-            _taxService.deleteTax(Taxid);
+        [HttpGet]
+        public IActionResult deleteTax(string Taxid){
+            _taxService.deleteTax(int.Parse(Taxid));
             return Json(new {Taxid});
         }
         
