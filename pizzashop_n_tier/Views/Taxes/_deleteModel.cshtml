@@ -1,0 +1,46 @@
+@model TaxesViewModel
+<form id="deleteFormForTax">
+    <div class="modal fade" id="deleteForTaxModel" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header" style="border:none;">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Delete Confirmation</h5>
+                    <button type="button" class="close" style="margin-left: auto;border: none;background: none;"
+                        data-bs-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <input id="deleteId" type="hidden">
+                <div class="modal-body d-flex flex-column align-items-center justify-content-center pb-0">
+                    <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+                    <label for="" id="deleteText">Are you sure you want to delete this tax?</label>
+                </div>
+                <div class="modal-footer d-flex align-items-center justify-content-center" style="border: none;">
+                    <button type="submit" class="btn btn-primary" id="deleteSection"
+                        data-bs-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+    $("#deleteFormForTax").on('submit', function () {
+        deleteTax();
+    });
+    function deleteTax() {
+        event.preventDefault();
+        Taxid = $("#deleteId").val();
+        console.log(Taxid);
+        $.ajax({
+            url: '@Url.Action("deleteTax", "Taxes")',
+            type: 'POST',
+            data: { Taxid: Taxid },
+            success: function (data) {
+                loadTaxes();
+            }
+        });
+    }
+</script>

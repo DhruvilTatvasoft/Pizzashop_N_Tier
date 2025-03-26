@@ -11,11 +11,9 @@ public partial class Order
 
     public int Totalpersons { get; set; }
 
-    public int Ordernumber { get; set; }
-
     public string? Ordercomment { get; set; }
 
-    public int? Orderstatus { get; set; }
+    public int Statusid { get; set; }
 
     public string Paymentmethod { get; set; } = null!;
 
@@ -27,8 +25,6 @@ public partial class Order
 
     public decimal Totalamount { get; set; }
 
-    public bool? Issuggesionselected { get; set; }
-
     public DateTime? Createdat { get; set; }
 
     public DateTime? Modifiedat { get; set; }
@@ -36,6 +32,10 @@ public partial class Order
     public int Createdby { get; set; }
 
     public int Modifiedby { get; set; }
+
+    public int Rattings { get; set; }
+
+    public bool IsDeleted { get; set; }
 
     public virtual Customer Customer { get; set; } = null!;
 
@@ -46,4 +46,6 @@ public partial class Order
     public virtual ICollection<Orderreview> Orderreviews { get; } = new List<Orderreview>();
 
     public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
+
+    public virtual Orderstatus Status { get; set; } = null!;
 }

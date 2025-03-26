@@ -53,7 +53,7 @@ public class TableRepository : ITableRepository
 
     public bool updateTable(Table table)
     {
-        Table tableToUpdate = _context.Tables.FirstOrDefault(t=>t.Tableid == table.Tableid && t.Isdeleted == false)??new Table();
+        Table tableToUpdate = _context.Tables.FirstOrDefault(t=>t.Tableid == table.Tableid && t.Isdeleted == false)!;
         tableToUpdate.Tablename = table.Tablename;
         tableToUpdate.Sectionid = table.Sectionid;
         tableToUpdate.Capacity = table.Capacity;

@@ -148,4 +148,5 @@ public class TableAndSection : Controller
         _tableService.updateTable(model.table);
             return Json(new {model.table.Sectionid});
     }
+    
 }

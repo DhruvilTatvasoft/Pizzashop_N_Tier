@@ -1,4 +1,5 @@
 using DAL.Data;
+using Microsoft.IdentityModel.Tokens;
 
 public class SectionRepository : ISectionRepository
 {
@@ -49,7 +50,9 @@ public class SectionRepository : ISectionRepository
     {
         try
         {
-            if (_context.Sections.Where(s => s.Sectionname.ToLower().Trim() == section.Sectionname.ToLower().Trim()) == null)
+            var Isexist =  _context.Sections.FirstOrDefault(s => s.Sectionname.ToLower().Trim() == section.Sectionname.ToLower().Trim() && s.Isdeleted == false);
+            
+            if (Isexist == null)
             {
                 Section updatedSection = _context.Sections.FirstOrDefault(Section => Section.Sectionid == section.Sectionid && Section.Isdeleted == false)!;
                 updatedSection.Sectionname = section.Sectionname;

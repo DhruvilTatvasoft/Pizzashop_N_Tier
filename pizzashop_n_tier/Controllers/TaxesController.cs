@@ -1,3 +1,4 @@
+using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 
 public class TaxesController : Controller
@@ -28,10 +29,30 @@ public class TaxesController : Controller
             return PartialView("_taxesTable",model);
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult deleteTax(string Taxid){
             _taxService.deleteTax(int.Parse(Taxid));
-            return Json(new {Taxid});
+            TaxesViewModel model = new TaxesViewModel();
+            model.taxes = _taxService.getAllTaxes();
+            return PartialView("_taxesTable",model);
         }
-        
+
+        public IActionResult loadDeleteModal(){
+        return PartialView("_deleteModel");
+    }
+
+    public IActionResult EditModalGet(int taxid){
+        Taxesandfee tax = _taxService.getTaxById(taxid);
+        TaxesViewModel model = new TaxesViewModel();
+        model.tax = tax;
+        model.taxes = _taxService.getAllTaxes();
+        return PartialView("_addEditTax",model);
+    }
+
+    public IActionResult searchTax(string search){
+        TaxesViewModel model = new TaxesViewModel();
+        model.taxes = _taxService.searchTax(search);
+
+        return PartialView("_taxesTable",model);
+    }
     }

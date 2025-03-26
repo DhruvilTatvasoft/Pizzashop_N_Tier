@@ -38,6 +38,8 @@ builder.Services.AddScoped<ISectionRepository,SectionRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
 builder.Services.AddScoped<ITaxesRepository,TaxesRepository >();
 builder.Services.AddScoped<ITaxService,TaxesImpl>();
+builder.Services.AddScoped<IOrderService,OrderImple>();
+builder.Services.AddScoped<IOrderRepository,OrderRepository>();
 
 
 builder.Services.AddSession(options =>

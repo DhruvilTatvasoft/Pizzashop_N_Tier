@@ -23,4 +23,14 @@ public class TaxesImpl : ITaxService
     {
        return _taxesRepository.getAlltaxes();
     }
+
+    public Taxesandfee getTaxById(int taxid)
+    {
+        return _taxesRepository.getTaxById(taxid);
+    }
+
+    public List<Taxesandfee> searchTax(string search)
+    {
+        return _taxesRepository.getSearchedTax(search);
+    }
 }

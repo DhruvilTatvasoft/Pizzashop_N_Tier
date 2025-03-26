@@ -1,0 +1,133 @@
+@{
+    ViewData["Title"] = "TableAndSectionContainer";
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+}
+@model OrderViewModel
+<link rel="stylesheet" href="~/css/orders.css">
+<div class="container-fluid w-100 h-100 p-0">
+    <div class="container-fluid w-100 h-100 p-0">
+        <div id="nav-sidebar"></div>
+        <div class="row p-0 h-100 d-flex">
+            <div class="content pt-3 w-100 h-100">
+                <div class="header d-flex align-items-center justify-content-start mb-2 d-flex">
+                    <div>
+                        <h1>Orders</h1>
+                    </div>
+                    <div class="col-12 col-lg-10">
+                        <div class="row overflow-hidden d-flex justify-content-end align-items-center">
+                            <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
+                                <div class="form-floating ">
+                                    <input type="search" class="search-input form-control shadow-none"
+                                        id="SearchOrder" onkeyup="showOrdersBySearch()"  mailto:placeholder="name@example.com" >
+                                    <label for="floatingInput">Search </label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
+                                <div class="form-floating">
+                                    <select class="status-select form-select shadow-none" id="selectStatus"
+                                        aria-label="Floating label select example" onchange="showOrdersByStatus()">
+
+                                        <option selected value="0">All Status</option>
+                                        @foreach(var status in Model.status){
+                                            <option selected value="@status.Orderstatusid">@status.Statusname</option>
+                                        }
+                                    </select>
+                                    <label>Selects Status</label>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
+                                <div class="form-floating">
+                                    <select class="time-select form-select shadow-none"
+                                        aria-label="Floating label select example">
+                                        <option selected value="">All Time</option>
+                                        <option value="7Days">Last 7 days</option>
+                                        <option value="30Days">Last 30 days</option>
+                                        <option value="CurrentMonth">Current Month</option>
+                                    </select>
+                                    <label>Select Time</label>
+                                </div>
+                            </div>
+                            <div class="col-auto my-auto d-flex justify-content-end">
+                                <button type="button"
+                                    class="btn btn-primary d-flex  align-items-center justify-content-end p-md-2 add-item-modifier ">
+                                    <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
+                                    <span><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
+                                            alt="">Export</span>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <form id="date-diff-form">
+                    <div class="row mx-3 d-flex justify-content-end align-items-center">
+                        <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
+                            <div class="form-floating">
+                                <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
+                                    placeholder="From Date">
+                                <label for="floatingPassword" style="font-size: 10px;">From Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
+                            <div class="form-floating">
+                                <input type="date" class="to-date form-control shadow-none" style="font-size: 13px;"
+                                    placeholder="To Date">
+                                <label for="floatingPassword" style="font-size: 10px;">To Date</label>
+                            </div>
+                        </div>
+                        <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
+                            <button type="submit"
+                                class="btn btn-primary p-md-2 fw-semibold add-item-modifier">Search</button>
+                            <button type="reset" class="btn btn-outline-secondary fw-semibold ">Reset</button>
+                        </div>
+                    </div>
+                </form>
+        <div class="loadOrderTable mt-3" style="width:97%;"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        $("document").ready(function () {
+            loadOrderTable();
+        });
+        function loadOrderTable() {
+            console.log("loaded");
+            $.ajax({
+                url: '@Url.Action("showOrderDetails", "Order")',
+                type: 'GET',
+                success: function (data) {
+                    console.log(data)
+                    $(".loadOrderTable").html(data);
+                }
+            });
+        }
+
+        function showOrdersBySearch(){
+            var searchedOrder = $("#SearchOrder").val();
+            if(searchedOrder!=""){
+            $.ajax({
+                url:'@Url.Action("showOrderDetails","order")',
+                type:'GET',
+                data:{searchedOrder:searchedOrder},
+                success:function(data){
+                    $(".loadOrderTable").html(data);
+                }
+            });
+            }
+            else{
+                loadOrderTable();
+            }
+        }
+    function showOrdersByStatus(){
+            var selectedStatus = $("#selectStatus").val()
+            $.ajax({
+                url:'@Url.Action("showOrderDetails","order")',
+                type:'GET',
+                data:{status:selectedStatus},
+                success:function(data){
+                    $(".loadOrderTable").html(data);
+                }
+            });
+        }
+    </script>

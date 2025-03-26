@@ -12,7 +12,7 @@
                 <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
                     <h1>Taxes/Fees</h1>
                     <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
-                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" placeholder="Search">
+                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="taxSearch" onkeyup="searchtax()" placeholder="Search">
                         <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;" onclick="openModelForAddTax()">+ New Tax</button>
                     </div>
                 </div>
@@ -35,6 +35,23 @@
                 });
             }
 
+            function searchtax(){
+                var search = document.getElementById("taxSearch").value;
+                console.log("searching")
+                if(search == ""){
+                     loadTaxes();
+                }
+                else{
+                $.ajax({
+                    url:'@Url.Action("searchTax","Taxes")',
+                    type: 'GET',
+                    data: {search:search},
+                    success: function (data) {
+                        $(".taxTableContainer").html(data);
+                    }
+                });
+                }
+            }
             function openModelForAddTax(){
                 $.ajax({
                     url:'@Url.Action("addEditTaxModalGet","Taxes")',
@@ -42,9 +59,24 @@
                     success: function (data) {
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
+                        
                     }
                 });
             }
-            
+            function openModelForEditTax(TaxId){
+                $.ajax({
+                    url:'@Url.Action("EditModalGet","Taxes")',
+                    type: 'GET',
+                    data:{taxid :TaxId },
+                    success: function (data) {
+                        $(".loadTaxModal").html(data);
+                        $("#addEditTaxModal").modal('show');
+                        document.getElementById("deleteText").innerHTML = "Edit Tax";
+                        console.log(data);
+                        $("#editTaxButtton").css()
+                    }
+                });
+            }
 
+          
         </script>

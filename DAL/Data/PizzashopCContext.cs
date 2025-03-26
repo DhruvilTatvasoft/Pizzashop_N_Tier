@@ -43,6 +43,8 @@ public partial class PizzashopCContext : DbContext
 
     public virtual DbSet<Orderreview> Orderreviews { get; set; }
 
+    public virtual DbSet<Orderstatus> Orderstatuses { get; set; }
+
     public virtual DbSet<Ordertable> Ordertables { get; set; }
 
     public virtual DbSet<Ordertaxesandfee> Ordertaxesandfees { get; set; }
@@ -161,7 +163,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("customers");
 
-            entity.Property(e => e.Customerid).HasColumnName("customerid");
+            entity.Property(e => e.Customerid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("customerid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -410,7 +414,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("orders");
 
-            entity.Property(e => e.Orderid).HasColumnName("orderid");
+            entity.Property(e => e.Orderid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("orderid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -418,7 +424,6 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Createdby).HasColumnName("createdby");
             entity.Property(e => e.Customerid).HasColumnName("customerid");
             entity.Property(e => e.Discount).HasColumnName("discount");
-            entity.Property(e => e.Issuggesionselected).HasColumnName("issuggesionselected");
             entity.Property(e => e.Modifiedat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -427,11 +432,11 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Ordercomment)
                 .HasMaxLength(256)
                 .HasColumnName("ordercomment");
-            entity.Property(e => e.Ordernumber).HasColumnName("ordernumber");
-            entity.Property(e => e.Orderstatus).HasColumnName("orderstatus");
             entity.Property(e => e.Paymentmethod)
                 .HasMaxLength(20)
                 .HasColumnName("paymentmethod");
+            entity.Property(e => e.Rattings).HasColumnName("rattings");
+            entity.Property(e => e.Statusid).HasColumnName("statusid");
             entity.Property(e => e.Subtotalamount)
                 .HasPrecision(10, 2)
                 .HasColumnName("subtotalamount");
@@ -445,6 +450,11 @@ public partial class PizzashopCContext : DbContext
                 .HasForeignKey(d => d.Customerid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("orders_customerid_fkey");
+
+            entity.HasOne(d => d.Status).WithMany(p => p.Orders)
+                .HasForeignKey(d => d.Statusid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("order_orderstatusid_fkey");
         });
 
         modelBuilder.Entity<Orderitem>(entity =>
@@ -570,6 +580,21 @@ public partial class PizzashopCContext : DbContext
                 .HasForeignKey(d => d.Orderid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("orderreviews_orderid_fkey");
+        });
+
+        modelBuilder.Entity<Orderstatus>(entity =>
+        {
+            entity.HasKey(e => e.Orderstatusid).HasName("orderStatus_pkey");
+
+            entity.ToTable("orderstatus");
+
+            entity.Property(e => e.Orderstatusid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("orderstatusid");
+            entity.Property(e => e.Statusname)
+                .HasMaxLength(50)
+                .IsFixedLength()
+                .HasColumnName("statusname");
         });
 
         modelBuilder.Entity<Ordertable>(entity =>
@@ -869,10 +894,7 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
-            entity.Property(e => e.Isenabled)
-                .IsRequired()
-                .HasDefaultValueSql("true")
-                .HasColumnName("isenabled");
+            entity.Property(e => e.Isenabled).HasColumnName("isenabled");
             entity.Property(e => e.Modifiedat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
