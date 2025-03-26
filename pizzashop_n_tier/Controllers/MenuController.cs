@@ -37,7 +37,6 @@ public class MenuController : Controller
     {
         return View();
     }
-
     public IActionResult loadCategoryAndItems()
     {
 

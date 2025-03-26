@@ -10,12 +10,19 @@ namespace BAL.Implementations
             _orderRepository = orderRepository;
         }
 
+        public List<Order> getAllOrderByOptionFilter(string filterBy)
+        {
+          
+            return _orderRepository.getAllOrderByOptionFilter(filterBy);
+          
+        }
+
         public List<Order> getAllOrders()
         {
             return _orderRepository.getAllorders();
         }
 
-        public List<Order>? getAllOrdersBySearch(string searchedOrder)
+        public List<Order> getAllOrdersBySearch(string searchedOrder)
         {
             return _orderRepository.getAllordersBySearch(searchedOrder);
         }
@@ -29,5 +36,6 @@ namespace BAL.Implementations
         {
             return _orderRepository.getAllStatus();
         }
+        
     }
 }

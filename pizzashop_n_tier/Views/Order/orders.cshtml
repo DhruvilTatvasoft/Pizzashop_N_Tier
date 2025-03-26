@@ -37,12 +37,12 @@
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="time-select form-select shadow-none"
-                                        aria-label="Floating label select example">
-                                        <option selected value="">All Time</option>
-                                        <option value="7Days">Last 7 days</option>
-                                        <option value="30Days">Last 30 days</option>
-                                        <option value="CurrentMonth">Current Month</option>
+                                    <select class="time-select form-select shadow-none timePeriodFilter"
+                                        aria-label="Floating label select example" onchange="searchByTimePeriod()">
+                                        <option selected value="All Time">All Time</option>
+                                        <option value="Last 7 days">Last 7 days</option>
+                                        <option value="Last 30 days">Last 30 days</option>
+                                        <option value="Current Month">Current Month</option>
                                     </select>
                                     <label>Select Time</label>
                                 </div>
@@ -130,4 +130,21 @@
                 }
             });
         }
+    
+    function searchByTimePeriod(){
+        var selectedOption = $(".timePeriodFilter").val(); 
+        if(selectedOption === "All Time"){
+            loadOrderTable();
+        }
+        else{
+        $.ajax({
+            url:'@Url.Action("showOrderDetails","Order")',
+            type:'GET',
+            data:{filterBy : selectedOption},
+            success:function(data){
+                   $(".loadOrderTable").html(data);
+            }
+        });
+        }
+    }
     </script>

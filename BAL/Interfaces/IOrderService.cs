@@ -9,11 +9,15 @@ namespace BAL.Interfaces
     public interface IOrderService
     {
         List<Order> getAllOrders();
-        List<Order>? getAllOrdersBySearch(string v);
+        List<Order> getAllOrdersBySearch(string v);
 
         // List<Order> getAllOrdersByStatus(int statusid);
         List<Order> getAllOrdersByStatus(int status);
 
         List<Orderstatus> getAllStatus();
+        
+        List<Order> getAllOrderByOptionFilter(string filterBy);
+
+
     }
 }
