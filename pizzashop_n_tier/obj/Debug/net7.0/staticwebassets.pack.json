@@ -1,6 +1,10 @@
 {
   "Files": [
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\MyExcel_2025-27-03--17-54-25.xls",
+      "PackagePath": "staticwebassets\\MyExcel_2025-27-03--17-54-25.xls"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\Layout.css",
       "PackagePath": "staticwebassets\\css\\Layout.css"
     },
@@ -67,6 +71,26 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\Default_pfp.svg.png",
       "PackagePath": "staticwebassets\\images\\Default_pfp.svg.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\MyExcel_2025-27-03--17-31-56.xls",
+      "PackagePath": "staticwebassets\\images\\MyExcel_2025-27-03--17-31-56.xls"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\MyExcel_2025-27-03--17-40-07.xls",
+      "PackagePath": "staticwebassets\\images\\MyExcel_2025-27-03--17-40-07.xls"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\MyExcel_2025-27-03--17-40-14.xls",
+      "PackagePath": "staticwebassets\\images\\MyExcel_2025-27-03--17-40-14.xls"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\MyExcel_2025-27-03--17-44-42.xls",
+      "PackagePath": "staticwebassets\\images\\MyExcel_2025-27-03--17-44-42.xls"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\MyExcel_2025-27-03--17-45-23.xls",
+      "PackagePath": "staticwebassets\\images\\MyExcel_2025-27-03--17-45-23.xls"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\QR.png",

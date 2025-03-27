@@ -24,9 +24,9 @@ public class TaxesController : Controller
         }
 [HttpPost]
         public IActionResult AddNewTax(TaxesViewModel model){
-            _taxService.addNewTax(model.tax);
-            model.taxes = _taxService.getAllTaxes();
-            return PartialView("_taxesTable",model);
+             _taxService.addNewTax(model.tax);
+             model.taxes = _taxService.getAllTaxes();
+             return PartialView("_taxesTable",model);
         }
 
         [HttpPost]

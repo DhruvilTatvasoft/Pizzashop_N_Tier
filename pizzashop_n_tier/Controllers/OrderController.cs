@@ -36,7 +36,7 @@ namespace pizzashop_n_tier.Controllers
         }
         public IActionResult ExportData(string? searchedOrder="",int? searchbystatus=1,string searchByPeriod="All Time",DateTime? startDate=null,DateTime? endDate=null){
             OrderViewModel model = new OrderViewModel();
-            _orderService.createExcelSheet(searchedOrder,searchbystatus,searchByPeriod,startDate,endDate);
+            _orderService.createExcelSheet(searchbystatus,searchedOrder,searchByPeriod,startDate,endDate);
             return PartialView("_orderTable",model);
         }
 

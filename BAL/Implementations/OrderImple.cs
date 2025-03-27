@@ -10,20 +10,21 @@ namespace BAL.Implementations
     public class OrderImple : IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        public OrderImple(IOrderRepository orderRepository){
+        public OrderImple(IOrderRepository orderRepository)
+        {
             _orderRepository = orderRepository;
         }
 
-        public List<Order> getAllOrderByDateFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate)
+        public List<Order> getAllOrderByDateFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
         {
-            return _orderRepository.getAllOrderByDateFilter(status,searchedOrder,filterBy,startDate,endDate);
+            return _orderRepository.getAllOrderByDateFilter(status, searchedOrder, filterBy, startDate, endDate);
         }
 
-        public List<Order> getAllOrderByOptionFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate)
+        public List<Order> getAllOrderByOptionFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
         {
-          
-            return _orderRepository.getAllOrderByOptionFilter(status,searchedOrder,filterBy,startDate,endDate);
-          
+
+            return _orderRepository.getAllOrderByOptionFilter(status, searchedOrder, filterBy, startDate, endDate);
+
         }
 
         public List<Order> getAllOrders()
@@ -31,15 +32,15 @@ namespace BAL.Implementations
             return _orderRepository.getAllorders();
         }
 
-        public List<Order> getAllOrdersBySearch(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate)
+        public List<Order> getAllOrdersBySearch(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
         {
-            return _orderRepository.getAllordersBySearch(status,searchedOrder,filterBy,startDate,endDate);
+            return _orderRepository.getAllordersBySearch(status, searchedOrder, filterBy, startDate, endDate);
         }
 
 
-        public List<Order> getAllOrdersByStatus(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate)
+        public List<Order> getAllOrdersByStatus(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
         {
-            return _orderRepository.getAllOrdersFromStatus(status,searchedOrder,filterBy,startDate,endDate);
+            return _orderRepository.getAllOrdersFromStatus(status, searchedOrder, filterBy, startDate, endDate);
         }
 
         public List<Orderstatus> getAllStatus()
@@ -47,18 +48,42 @@ namespace BAL.Implementations
             return _orderRepository.getAllStatus();
         }
 
-        public List<Order> getOrdersByFilters(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate){
-            return _orderRepository.GetAllOrdersByFilters(status,searchedOrder,filterBy,startDate,endDate);
+        public List<Order> getOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
+        {
+            return _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
         }
 
-        public void createExcelSheet(string? searchedOrder, int? searchbystatus, string searchByPeriod, DateTime? startDate, DateTime? endDate)
+
+        private void ApplyMergedCellStyle(ISheet sheet, CellRangeAddress range, ICellStyle style)
         {
-             HSSFWorkbook workbook = new HSSFWorkbook();
-             HSSFSheet sheet = (HSSFSheet)workbook.CreateSheet("orders");
-             HSSFFont font = (HSSFFont)workbook.CreateFont();
+            for (int i = range.FirstRow; i <= range.LastRow; i++)
+            {
+                var row = sheet.GetRow(i) ?? sheet.CreateRow(i);
+                for (int j = range.FirstColumn; j <= range.LastColumn; j++)
+                {
+                    var cell = row.GetCell(j) ?? row.CreateCell(j);
+                    cell.CellStyle = style;
+                }
+            }
+        }
+
+        public void createExcelSheet(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
+        {
+            try
+            {
+
+                HSSFWorkbook workbook = new HSSFWorkbook();
+                HSSFSheet sheet = (HSSFSheet)workbook.CreateSheet("orders");
+                HSSFFont font = (HSSFFont)workbook.CreateFont();
+                HSSFPalette palette = workbook.GetCustomPalette();
+                palette.SetColorAtIndex(HSSFColor.Blue.Index,
+                                        (byte)27,
+                                        (byte)101,
+                                        (byte)161);
 
                 var Company = workbook.CreateCellStyle();
                 Company.Alignment = HorizontalAlignment.Left;
+                Company.VerticalAlignment = VerticalAlignment.Center;
                 var CompanyFont = workbook.CreateFont();
                 CompanyFont.FontName = "Arial";
                 CompanyFont.Color = HSSFColor.Blue.Index;
@@ -67,17 +92,27 @@ namespace BAL.Implementations
                 Company.SetFont(CompanyFont);
 
                 var Address = workbook.CreateCellStyle();
-                Address.Alignment = HorizontalAlignment.Left;
+                Address.Alignment = HorizontalAlignment.Center;
                 var AddressFont = workbook.CreateFont();
                 AddressFont.FontName = "Arial";
                 AddressFont.Boldweight = (short)FontBoldWeight.Bold;
                 AddressFont.FontHeightInPoints = ((short)10);
                 Address.SetFont(AddressFont);
 
+                var Address1 = workbook.CreateCellStyle();
+                Address1.Alignment = HorizontalAlignment.Center;
+                var AddressFont1 = workbook.CreateFont();
+                AddressFont1.FontName = "Arial";
+                AddressFont1.Boldweight = (short)FontBoldWeight.Bold;
+                AddressFont1.FontHeightInPoints = ((short)10);
+                Address1.SetFont(AddressFont);
+
+
                 var Header = workbook.CreateCellStyle();
                 Header.Alignment = HorizontalAlignment.Center;
-                Header.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.LightBlue.Index;
-                Header.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.LightBlue.Index;
+                Header.VerticalAlignment = VerticalAlignment.Center;
+                Header.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Blue.Index;
+                Header.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Blue.Index;
                 Header.FillPattern = FillPattern.SolidForeground;
                 var HeaderFont = workbook.CreateFont();
                 HeaderFont.FontName = "Arial";
@@ -97,11 +132,13 @@ namespace BAL.Implementations
                     var newDataFormat = workbook.CreateDataFormat();
                     NumData.DataFormat = newDataFormat.GetFormat("##0.00");
                 }
-                else{
+                else
+                {
                     NumData.DataFormat = formatId;
                 }
                 var Data = workbook.CreateCellStyle();
                 Data.Alignment = HorizontalAlignment.Center;
+                Data.VerticalAlignment = VerticalAlignment.Center;
                 var DataFont = workbook.CreateFont();
                 DataFont.FontName = "Arial";
                 DataFont.FontHeightInPoints = ((short)9);
@@ -110,6 +147,25 @@ namespace BAL.Implementations
                 Data.BorderTop = BorderStyle.Thin;
                 Data.BorderRight = BorderStyle.Thin;
                 Data.BorderBottom = BorderStyle.Thin;
+
+
+                List<Orderstatus> statusList = _orderRepository.getAllStatus();
+                string statusName = "";
+                if (status.Value == 0)
+                {
+                    statusName = "All status";
+                }
+                else
+                {
+                    foreach (var Status in statusList)
+                    {
+                        if (Status.Orderstatusid == status)
+                        {
+                            statusName = Status.Statusname;
+                            break;
+                        }
+                    }
+                }
 
                 var linkData = workbook.CreateCellStyle();
                 linkData.Alignment = HorizontalAlignment.Center;
@@ -126,22 +182,62 @@ namespace BAL.Implementations
                 linkData.BorderRight = BorderStyle.Thin;
                 linkData.BorderBottom = BorderStyle.Thin;
 
-                 int rowIndex = 2; 
+                int rowIndex = 1;
                 var row = sheet.CreateRow(rowIndex);
-                var cell = row.CreateCell(4);
-                cell.SetCellValue("order details");
-                cell.CellStyle = Company;
-                sheet.AddMergedRegion(new CellRangeAddress(4, 4, 4, 14));
+                var cell = row.CreateCell(0);
+                cell.SetCellValue("Status");
+                cell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 0, 1));
 
-                 rowIndex = rowIndex + 1;
-                var row1 = sheet.CreateRow(rowIndex);
-                var cell1 = row1.CreateCell(4);
-                cell1.SetCellValue("1988/2019, 5th floor, Tower B, Bajrang Vihar, Patia, Bhubaneswar-400051, India");
-                cell1.CellStyle = Address;
-                sheet.AddMergedRegion(new CellRangeAddress(5, 5, 4, 14));
+                
+                cell = row.CreateCell(7);
+                cell.SetCellValue("Search Text:");
+                cell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 7, 8));
 
-                rowIndex = 7;
-                var SR_NO = 0; 
+                cell = row.CreateCell(9);
+                cell.SetCellValue(searchedOrder);
+                cell.CellStyle = Data;
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9,11));
+
+                cell = row.CreateCell(2);
+                cell.SetCellValue(statusName);
+                cell.CellStyle = Data;
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 2, 5));
+
+                // cell = row.CreateCell(7);
+                // cell.SetCellValue(searchedOrder);
+                // cell.CellStyle = Header;
+                // sheet.AddMergedRegion(new CellRangeAddress(4, 5, 7, 8));
+
+                rowIndex = 4;
+                row = sheet.CreateRow(rowIndex);
+                cell = row.CreateCell(0);
+                cell.SetCellValue("Date : ");
+                cell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 0, 1));
+
+                // row = sheet.CreateRow(rowIndex);
+                cell = row.CreateCell(7);
+                cell.SetCellValue("No of records:");
+                cell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 7, 8));
+
+          
+                cell = row.CreateCell(2);
+                cell.SetCellValue(filterBy);
+                cell.CellStyle = Data;
+                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 2, 5));
+
+                List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
+
+                cell = row.CreateCell(9);
+                cell.SetCellValue(orders.Count);
+                cell.CellStyle = Data;
+                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 9, 11));
+
+                rowIndex = 8;
+                var SR_NO = 0;
                 var cellheaderindex = 0;
 
                 var excelheaderrow = sheet.CreateRow(rowIndex);
@@ -153,31 +249,139 @@ namespace BAL.Implementations
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("Date");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2), Header);
 
-                cellheaderindex = cellheaderindex + 1;
+                cellheaderindex = cellheaderindex + 3;
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("Customer");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2), Header);
 
-                cellheaderindex = cellheaderindex + 1;
+
+                cellheaderindex = cellheaderindex + 3;
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("status");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 2), Header);
 
-                cellheaderindex = cellheaderindex + 1;
+                cellheaderindex = cellheaderindex + 3;
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("Payment Mode");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1), Header);
 
-                cellheaderindex = cellheaderindex + 1;
+                cellheaderindex = cellheaderindex + 2;
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("Ratting");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1), Header);
 
-                cellheaderindex = cellheaderindex + 1;
+                cellheaderindex = cellheaderindex + 2;
                 excelheadercell = excelheaderrow.CreateCell(cellheaderindex);
                 excelheadercell.SetCellValue("Total Amount");
                 excelheadercell.CellStyle = Header;
+                sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1), Header);
+
+               
+                foreach (var order in orders)
+                {
+                    rowIndex = rowIndex + 1;
+                    SR_NO = SR_NO + 1;
+                    var cellindex = 0;
+                    var gridrow = sheet.CreateRow(rowIndex);
+                    var gridcell = gridrow.CreateCell(cellindex);
+
+                    gridcell.SetCellValue(order.Orderid);
+
+                    gridcell.CellStyle = Data;
+
+
+
+                    cellindex = cellindex + 1;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue(order.Createdat.HasValue ? order.Createdat.Value.ToString("yyyy-MM-dd") : "N/A");
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2), Data);
+
+
+                    cellindex = cellindex + 3;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue(order.Customer.Customername);
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2), Data);
+
+                    cellindex = cellindex + 3;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue(order.Status.Statusname.Trim());
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2), Data);
+
+                    cellindex = cellindex + 3;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue(order.Paymentmethod);
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);
+
+                    cellindex = cellindex + 2;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue(order.Rattings);
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);
+
+                    cellindex = cellindex + 2;
+                    gridcell = gridrow.CreateCell(cellindex);
+                    gridcell.SetCellValue((double)order.Totalamount);
+                    gridcell.CellStyle = Data;
+                    sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
+                    ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);
+                }
+                sheet.CreateFreezePane(0, 8, 0, 8);
+                for (int i = 0; i <= cellheaderindex; i++)
+                {
+                    sheet.SetColumnWidth(i, 5000);
+                }
+
+                HSSFPatriarch patriarch = (HSSFPatriarch)sheet.CreateDrawingPatriarch();
+                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 12, 1,13, 4)
+                {
+                    AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
+                };
+                //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
+                picture.Resize();
+                picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
+
+
+                string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
+                using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\" + FileName, FileMode.Create))
+                {
+                    workbook.Write(file);
+                    file.Close();
+                    Console.WriteLine("File Created Successfully...");
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+        }
+        public static int LoadImage(string path, HSSFWorkbook wb)
+        {
+            FileStream file = new FileStream(path, FileMode.Open, FileAccess.Read);
+            byte[] buffer = new byte[file.Length];
+            file.Read(buffer, 0, (int)file.Length);
+            return wb.AddPicture(buffer, PictureType.JPEG);
         }
     }
 }

@@ -1,0 +1,22 @@
+@{
+    ViewData["Title"] = "TableAndSectionContainer";
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+}
+@model OrderViewModel
+<link rel="stylesheet" href="~/css/orders.css">
+<div class="container-fluid w-100 h-100 p-0">
+    <div class="container-fluid w-100 h-100 p-0">
+        <div id="nav-sidebar"></div>
+        <div class="row p-0 h-100 d-flex">
+            <div class="content pt-3 w-100 h-100">
+                <div class="header d-flex align-items-center justify-content-start mb-2 d-flex"
+                    style="margin-left: 1%;">
+                    <div>
+                        <h1>Orders</h1>
+                    </div> 
+                </div>
+                <div class="loadOrderTable mt-3" style="width:97%;"></div>
+            </div>
+
+        </div>
+    </div>

@@ -1,4 +1,5 @@
 @model TaxesViewModel
+<partial name="_ValidationScriptsPartial" />
 <form id="AddEditTaxForm">
     <div class="modal fade" id="addEditTaxModal" tabindex="-1" style="--bs-modal-width: 367px;"
         aria-labelledby="addTableModalLabel" aria-hidden="true">
@@ -13,7 +14,7 @@
                         <div class="mb-3 col-md-12">
                             <input type="text" class="form-control" asp-for="@Model.tax.Taxname" id="tableName"
                                 placeholder="Name*">
-
+                        <span asp-validation-for="@Model.tax.Taxname" class="text-danger"></span>
                                 @if(@Model.tax != null){
                                     <input type="hidden" class="form-control" asp-for="@Model.tax.Taxid" >
                                 }
@@ -53,9 +54,9 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="AddTaxButtton" data-bs-dismiss="modal">Save</button>
+                    <button type="submit" class="btn btn-primary" id="AddTaxButtton">Save</button>
                     <button type="button" class="btn btn-primary" id="editTaxButtton" onclick="updateTaxDetails()" style="display: none;">Update</button>
-                    <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button" class="btn btn-outline-secondary modalClose" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -65,6 +66,7 @@
 <script>
             $("#AddEditTaxForm").on('submit',function(e){
                 e.preventDefault();
+                if($(this).valid()){
                 var data = new FormData(this);
                 $.ajax({
                     url:'@Url.Action("AddNewTax","Taxes")',
@@ -74,6 +76,7 @@
                     processData:false,
                     success:function(){
                         loadTaxes();
+                        $(".modalClose").click();
                         if( $("#isUpdated").val() == 'true'){
                         toastr.success("Tax details updated successfully");
                         }
@@ -82,5 +85,6 @@
                         }
                     }
                 });
+                }
             })
 </script>
