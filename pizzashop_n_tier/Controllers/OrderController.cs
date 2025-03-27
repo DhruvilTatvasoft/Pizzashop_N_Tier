@@ -23,20 +23,20 @@ namespace pizzashop_n_tier.Controllers
               model.status = _orderService.getAllStatus();
             return View("orders",model);
         }
-        public IActionResult showOrderDetails(int? status,string? searchedOrder,string? filterBy){
+        public IActionResult showOrderDetails(){
             OrderViewModel model = new OrderViewModel();
-            if(status != null && status != 0){
-                model.orders = _orderService.getAllOrdersByStatus(status.Value);
-            }
-            else if(searchedOrder != null && searchedOrder != ""){
-                model.orders = _orderService.getAllOrdersBySearch(searchedOrder.ToString());
-            }
-            else if(filterBy != null && filterBy != ""){
-                model.orders = _orderService.getAllOrderByOptionFilter(filterBy);
-            }
-            else{
             model.orders = _orderService.getAllOrders();
-            }
+            return PartialView("_orderTable",model);
+        }
+
+        public IActionResult showOrderDetailsByFilter(int? status=0,string? searchedOrder="",string? filterBy="All Time",DateTime? startDate=null,DateTime? endDate=null){
+            OrderViewModel model = new OrderViewModel();
+            model.orders = _orderService.getOrdersByFilters(status,searchedOrder,filterBy,startDate,endDate);
+            return PartialView("_orderTable",model);
+        }
+        public IActionResult ExportData(string? searchedOrder="",int? searchbystatus=1,string searchByPeriod="All Time",DateTime? startDate=null,DateTime? endDate=null){
+            OrderViewModel model = new OrderViewModel();
+            _orderService.createExcelSheet(searchedOrder,searchbystatus,searchByPeriod,startDate,endDate);
             return PartialView("_orderTable",model);
         }
 

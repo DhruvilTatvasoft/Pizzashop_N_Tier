@@ -9,7 +9,8 @@
         <div id="nav-sidebar"></div>
         <div class="row p-0 h-100 d-flex">
             <div class="content pt-3 w-100 h-100">
-                <div class="header d-flex align-items-center justify-content-start mb-2 d-flex">
+                <div class="header d-flex align-items-center justify-content-start mb-2 d-flex"
+                    style="margin-left: 1%;">
                     <div>
                         <h1>Orders</h1>
                     </div>
@@ -17,38 +18,38 @@
                         <div class="row overflow-hidden d-flex justify-content-end align-items-center">
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating ">
-                                    <input type="search" class="search-input form-control shadow-none"
-                                        id="SearchOrder" onkeyup="showOrdersBySearch()"  mailto:placeholder="name@example.com" >
+                                    <input type="search" class="search-input form-control shadow-none" id="SearchOrder"
+                                        onkeyup="showOrdersBySearch()" mailto:placeholder="name@example.com">
                                     <label for="floatingInput">Search </label>
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="status-select form-select shadow-none" id="selectStatus"
-                                        aria-label="Floating label select example" onchange="showOrdersByStatus()">
-
+                                    <select class="status-select form-select shadow-none" id="selectStatus" style="padding: 3%;" aria-label="Floating label select example" onchange="showOrdersByStatus()" placeholder="Selects Status">
                                         <option selected value="0">All Status</option>
-                                        @foreach(var status in Model.status){
-                                            <option selected value="@status.Orderstatusid">@status.Statusname</option>
+                                        @foreach (var status in Model.status)
+                                        {
+                                            <option value="@status.Orderstatusid">@status.Statusname</option>
                                         }
                                     </select>
-                                    <label>Selects Status</label>
+                                    @* <label>Selects Status</label> *@
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="time-select form-select shadow-none timePeriodFilter"
-                                        aria-label="Floating label select example" onchange="searchByTimePeriod()">
+                                    <select class="time-select form-select shadow-none timePeriodFilter" style="padding: 3%;"
+                                        aria-label="Floating label select example" placeholder="Selects Time"
+                                        onchange="searchByTimePeriod()">
                                         <option selected value="All Time">All Time</option>
                                         <option value="Last 7 days">Last 7 days</option>
                                         <option value="Last 30 days">Last 30 days</option>
                                         <option value="Current Month">Current Month</option>
                                     </select>
-                                    <label>Select Time</label>
+                                    @* <label>Select Time</label> *@
                                 </div>
                             </div>
                             <div class="col-auto my-auto d-flex justify-content-end">
-                                <button type="button"
+                                <button type="button" onclick="exportExcelSheet()"
                                     class="btn btn-primary d-flex  align-items-center justify-content-end p-md-2 add-item-modifier ">
                                     <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
                                     <span><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
@@ -58,30 +59,30 @@
                         </div>
                     </div>
                 </div>
-                <form id="date-diff-form">
-                    <div class="row mx-3 d-flex justify-content-end align-items-center">
-                        <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
-                            <div class="form-floating">
-                                <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
-                                    placeholder="From Date">
-                                <label for="floatingPassword" style="font-size: 10px;">From Date</label>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
-                            <div class="form-floating">
-                                <input type="date" class="to-date form-control shadow-none" style="font-size: 13px;"
-                                    placeholder="To Date">
-                                <label for="floatingPassword" style="font-size: 10px;">To Date</label>
-                            </div>
-                        </div>
-                        <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
-                            <button type="submit"
-                                class="btn btn-primary p-md-2 fw-semibold add-item-modifier">Search</button>
-                            <button type="reset" class="btn btn-outline-secondary fw-semibold ">Reset</button>
+                <div class="row mx-3 d-flex justify-content-end align-items-center">
+                    <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
+                        <div class="form-floating">
+                            <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
+                                placeholder="From Date" id="startDate">
+                            <label for="floatingPassword" style="font-size: 10px;">From Date</label>
                         </div>
                     </div>
-                </form>
-        <div class="loadOrderTable mt-3" style="width:97%;"></div>
+                    <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
+                        <div class="form-floating">
+                            <input type="date" class="to-date form-control shadow-none" style="font-size: 13px;"
+                                placeholder="To Date" id="endDate">
+                            <label for="floatingPassword" style="font-size: 10px;">To Date</label>
+                        </div>
+                    </div>
+                    <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
+                        <button type="submit" class="btn btn-primary p-md-2 fw-semibold add-item-modifier"
+                            id="searchByDate" onclick="searchOrderBydate()">Search</button>
+                        <button type="reset" class="btn btn-outline-primary fw-semibold" id="Reset"
+                            onclick="resetDropDowns()">Clear</button>
+                    </div>
+
+                </div>
+                <div class="loadOrderTable mt-3" style="width:97%;"></div>
             </div>
 
         </div>
@@ -97,54 +98,106 @@
                 url: '@Url.Action("showOrderDetails", "Order")',
                 type: 'GET',
                 success: function (data) {
-                    console.log(data)
                     $(".loadOrderTable").html(data);
                 }
             });
         }
 
-        function showOrdersBySearch(){
+        function showOrdersBySearch() {
+              var selectedStatus = $("#selectStatus").val()
+            var selectedOption = $(".timePeriodFilter").val();
             var searchedOrder = $("#SearchOrder").val();
-            if(searchedOrder!=""){
-            $.ajax({
-                url:'@Url.Action("showOrderDetails","order")',
-                type:'GET',
-                data:{searchedOrder:searchedOrder},
-                success:function(data){
-                    $(".loadOrderTable").html(data);
-                }
-            });
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            if (searchedOrder != "") {
+                $.ajax({
+                    url: '@Url.Action("showOrderDetailsByFilter", "order")',
+                    type: 'GET',
+                    data: {status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
+                    success: function (data) {
+                        $(".loadOrderTable").html(data);
+                    }
+                });
             }
-            else{
+            else {
                 loadOrderTable();
             }
         }
-    function showOrdersByStatus(){
+        function showOrdersByStatus() {
             var selectedStatus = $("#selectStatus").val()
+            var selectedOption = $(".timePeriodFilter").val();
+            var searchedOrder = $("#SearchOrder").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
             $.ajax({
-                url:'@Url.Action("showOrderDetails","order")',
-                type:'GET',
-                data:{status:selectedStatus},
-                success:function(data){
+                url: '@Url.Action("showOrderDetailsByFilter", "order")',
+                type: 'GET',
+                data: { status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
+                success: function (data) {
                     $(".loadOrderTable").html(data);
                 }
             });
         }
-    
-    function searchByTimePeriod(){
-        var selectedOption = $(".timePeriodFilter").val(); 
-        if(selectedOption === "All Time"){
+
+        function searchByTimePeriod() {
+            var selectedStatus = $("#selectStatus").val()
+            var selectedOption = $(".timePeriodFilter").val();
+            var searchedOrder = $("#SearchOrder").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+                $.ajax({
+                    url: '@Url.Action("showOrderDetailsByFilter", "Order")',
+                    type: 'GET',
+                    data: {status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
+                    success: function (data) {
+                        $(".loadOrderTable").html(data);
+                    }
+                });
+        }
+
+        function searchOrderBydate() {
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var selectedStatus = $("#selectStatus").val()
+            var selectedOption = $(".timePeriodFilter").val();
+            var searchedOrder = $("#SearchOrder").val();
+            $.ajax({
+                url: '@Url.Action("showOrderDetailsByFilter", "Order")',
+                type: 'GET',
+                data: { status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
+                success: function (data) {
+                    $(".loadOrderTable").html(data);
+                }
+            });
+        }
+        function resetDropDowns() {
+            $("#SearchOrder").val('');
+            $('option[value="All Time"]').attr('selected', 'selected');
+            $('option[value=0]').attr('selected', 'selected');
+            $('input[type=date]').val('');
             loadOrderTable();
         }
-        else{
-        $.ajax({
-            url:'@Url.Action("showOrderDetails","Order")',
-            type:'GET',
-            data:{filterBy : selectedOption},
-            success:function(data){
-                   $(".loadOrderTable").html(data);
-            }
-        });
+
+        function exportExcelSheet(){
+            var searchedOrder = $("#SearchOrder").val();
+            var searchByPeriod = $(".timePeriodFilter").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var searchbystatus = $("#selectStatus").val();
+
+            $.ajax({
+                url:'@Url.Action("ExportData","Order")',
+                type: 'POST',
+                data:{
+                    searchedOrder: searchedOrder,
+                    searchByPeriod: searchByPeriod,
+                    startDate: startDate,
+                    endDate: endDate,
+                    searchbystatus: searchbystatus
+                },
+                success:function(data){
+                    toastr.success("Data Exported Successfully");
+                }
+            })
         }
-    }
     </script>

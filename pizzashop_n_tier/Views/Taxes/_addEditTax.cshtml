@@ -37,6 +37,7 @@
                             <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;"
                                 placeholder="capacity" min="0" asp-for="@Model.tax.Taxpercentage">
                         </div>
+                        <input type="checkbox" id="isUpdated" value="false" hidden>
                         <div class="row d-flex" style="padding-left: 17%;">
                             <div class="col-md-6 form-check form-switch d-flex align-items-center">
                                 <input class="form-check-input" type="checkbox" style="width:47px;" asp-for="@Model.tax.Isenabled"
@@ -52,8 +53,8 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" id="AddTaxButtton">Save</button>
-                    <button type="button" class="btn btn-primary" id="editTaxButtton"onclick="updateTaxDetails()" style="display: none;">Update</button>
+                    <button type="submit" class="btn btn-primary" id="AddTaxButtton" data-bs-dismiss="modal">Save</button>
+                    <button type="button" class="btn btn-primary" id="editTaxButtton" onclick="updateTaxDetails()" style="display: none;">Update</button>
                     <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -73,12 +74,13 @@
                     processData:false,
                     success:function(){
                         loadTaxes();
-                        $('#addEditTaxModal').modal('hide');
+                        if( $("#isUpdated").val() == 'true'){
+                        toastr.success("Tax details updated successfully");
+                        }
+                        else{
+                        toastr.success("New tax Created");
+                        }
                     }
                 });
             })
-            function updateTaxDetails(){
-                var data = new FormData($("#AddEditTaxForm")[0]);
-                console.log(data);
-            }
 </script>

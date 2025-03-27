@@ -59,7 +59,7 @@
                     success: function (data) {
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
-                        
+                        $("#isUpdated").val('false') 
                     }
                 });
             }
@@ -67,13 +67,15 @@
                 $.ajax({
                     url:'@Url.Action("EditModalGet","Taxes")',
                     type: 'GET',
-                    data:{taxid :TaxId },
+                    data:{taxid :TaxId},
                     success: function (data) {
+                        console.log("edit clicked");
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
                         document.getElementById("deleteText").innerHTML = "Edit Tax";
+                        $("#isUpdated").val('true') 
                         console.log(data);
-                        $("#editTaxButtton").css()
+                        @* $("#editTaxButtton").css() *@
                     }
                 });
             }

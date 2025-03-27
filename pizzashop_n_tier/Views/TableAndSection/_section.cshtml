@@ -125,6 +125,7 @@
       $('#sectionId').val(data.section.sectionid);
    
       document.getElementById('addNewSectionForm').action = '@Url.Action("UpdateSection", "TableAndSection")';
+      toastr.success("Section details updated");
     },
     error: function () {
       alert("Failed to load section data. Please try again.");
@@ -151,6 +152,7 @@
         $('#addNewSectionModal').modal('hide');
         loadSections();
         @* location.reload(); *@
+         toastr.success("New Section Created");
       },
       complete: function () {
         $(".saveNewSection, .updateSection").attr("disabled", false);
@@ -188,6 +190,7 @@ $(document).on('submit', '#deleteFormForSectionAndTable', function (e) {
     success: function (data) {
       $('#deleteForTableSAndSectionModel').modal('hide');
       loadSections();
+      toastr.success("Section Deleted successfully");
     },
     error: function () {
       alert("Failed to delete the section.");

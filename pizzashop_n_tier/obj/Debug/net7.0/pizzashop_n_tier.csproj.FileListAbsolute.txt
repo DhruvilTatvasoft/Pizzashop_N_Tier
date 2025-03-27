@@ -265,3 +265,9 @@ C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\NPOI.OOXML.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\NPOI.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\NPOI.OpenXml4Net.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\NPOI.OpenXmlFormats.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\NPOI.DotNetCore.ExcelService.dll
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\ICSharpCode.SharpZipLib.dll
