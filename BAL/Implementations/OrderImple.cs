@@ -188,22 +188,26 @@ namespace BAL.Implementations
                 cell.SetCellValue("Status");
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 0, 1));
-
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 0, 1), Header);
                 
                 cell = row.CreateCell(7);
                 cell.SetCellValue("Search Text:");
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 7, 8));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 7, 8), Header);
 
                 cell = row.CreateCell(9);
                 cell.SetCellValue(searchedOrder);
                 cell.CellStyle = Data;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9,11));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 9,11), Data);
 
                 cell = row.CreateCell(2);
                 cell.SetCellValue(statusName);
                 cell.CellStyle = Data;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 2, 5));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 2, 5), Data);
+                
 
                 // cell = row.CreateCell(7);
                 // cell.SetCellValue(searchedOrder);
@@ -216,18 +220,21 @@ namespace BAL.Implementations
                 cell.SetCellValue("Date : ");
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 0, 1));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 0, 1), Data);
 
                 // row = sheet.CreateRow(rowIndex);
                 cell = row.CreateCell(7);
                 cell.SetCellValue("No of records:");
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 7, 8));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 7, 8), Header);
 
           
                 cell = row.CreateCell(2);
                 cell.SetCellValue(filterBy);
                 cell.CellStyle = Data;
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 2, 5));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 2, 5), Data);
 
                 List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
 
@@ -235,6 +242,7 @@ namespace BAL.Implementations
                 cell.SetCellValue(orders.Count);
                 cell.CellStyle = Data;
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 9, 11));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 9, 11), Data);
 
                 rowIndex = 8;
                 var SR_NO = 0;
@@ -349,22 +357,22 @@ namespace BAL.Implementations
                 sheet.CreateFreezePane(0, 8, 0, 8);
                 for (int i = 0; i <= cellheaderindex; i++)
                 {
-                    sheet.SetColumnWidth(i, 5000);
+                    sheet.SetColumnWidth(i, 2800);
                 }
 
                 HSSFPatriarch patriarch = (HSSFPatriarch)sheet.CreateDrawingPatriarch();
-                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 12, 1,13, 4)
+                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 13, 0, 19, 20)
                 {
                     AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
                 };
                 //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
-                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
-                picture.Resize();
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
+                 picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
-                using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\" + FileName, FileMode.Create))
+                using (FileStream file = new FileStream(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
                 {
                     workbook.Write(file);
                     file.Close();
