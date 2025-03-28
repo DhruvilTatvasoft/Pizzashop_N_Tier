@@ -9,4 +9,6 @@ public class OrderViewModel
 
     public string? statusname{get;set;}
 
+    public orderItemModifierViewModel orderedItemModifiers{get;set;}
+
 }

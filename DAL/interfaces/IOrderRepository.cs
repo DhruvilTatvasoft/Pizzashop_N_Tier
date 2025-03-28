@@ -8,4 +8,6 @@ public interface IOrderRepository{
     List<Order> getAllOrdersFromStatus(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
     List<Orderstatus> getAllStatus();
     List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate);
+    Order? GetOrderDetails(int orderid);
+    Dictionary<Item, List<Modifier>> GetItemsAndModifiersForOrder(int orderid);
 }

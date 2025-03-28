@@ -14,7 +14,7 @@
                         <div class="mb-3 col-md-12">
                             <input type="text" class="form-control" asp-for="@Model.tax.Taxname" id="tableName"
                                 placeholder="Name*">
-                        <span asp-validation-for="@Model.tax.Taxname" class="text-danger"></span>
+                        <span asp-validation-for="@Model.tax.Taxname" class="text-danger pt-2"></span>
                                 @if(@Model.tax != null){
                                     <input type="hidden" class="form-control" asp-for="@Model.tax.Taxid" >
                                 }
@@ -22,8 +22,9 @@
                     </div>
                     <div class="row">
                         <div class="mb-3 col-md-6">
+                            <div class="form-floating">
                             <label for="" class="form-label"
-                                style="position: absolute;left: 7%;top: 41%;font-size: 52%;">Type*</label>
+                                style="font-size: 61%;top: -12px;left: -1px;">Type*</label>
 
                             <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.tax.Taxtype">
                                 @foreach (var tax in @Model.taxes)
@@ -31,12 +32,17 @@
                                     <option value="@tax.Taxtype">@tax.Taxtype</option>
                                 }
                             </select>
+                            <span asp-validation-for="@Model.tax.Taxtype" class="text-danger"></span>
+                            </div>
                         </div>
                         <div class="mb-3 col-md-6">
+                            <div class="form-floating">
                             <label for="" class="form-label"
-                                style="position: absolute;left: 56%;top: 41%;font-size: 52%;">Tax Amount</label>
+                                style="font-size: 61%;top: -12px;left: -1px;">Tax Amount</label>
                             <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;"
-                                placeholder="capacity" min="0" asp-for="@Model.tax.Taxpercentage">
+                                placeholder="capacity" min="0"  asp-for="@Model.tax.Taxpercentage">
+                                </div>
+                            <span asp-validation-for="@Model.tax.Taxpercentage" class="text-danger"></span>
                         </div>
                         <input type="checkbox" id="isUpdated" value="false" hidden>
                         <div class="row d-flex" style="padding-left: 17%;">
@@ -74,7 +80,13 @@
                     data: data,
                     contentType:false,
                     processData:false,
-                    success:function(){
+                    success:function(response){
+                        console.log(response);
+                        if(response.error){
+                            console.log("error");
+                             toastr.error("Tax already exist");
+                        }
+                        else{
                         loadTaxes();
                         $(".modalClose").click();
                         if( $("#isUpdated").val() == 'true'){
@@ -82,6 +94,7 @@
                         }
                         else{
                         toastr.success("New tax Created");
+                        }
                         }
                     }
                 });

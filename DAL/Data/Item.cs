@@ -49,5 +49,7 @@ public partial class Item
 
     public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
+    public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();
+
     public virtual Unit Unit { get; set; } = null!;
 }

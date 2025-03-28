@@ -50,20 +50,12 @@ public class SectionRepository : ISectionRepository
     {
         try
         {
-            var Isexist =  _context.Sections.FirstOrDefault(s => s.Sectionname.ToLower().Trim() == section.Sectionname.ToLower().Trim() && s.Isdeleted == false);
-            
-            if (Isexist == null)
-            {
                 Section updatedSection = _context.Sections.FirstOrDefault(Section => Section.Sectionid == section.Sectionid && Section.Isdeleted == false)!;
                 updatedSection.Sectionname = section.Sectionname;
                 updatedSection.Description = section.Description;
                 _context.Sections.Update(updatedSection);
                 _context.SaveChanges();
                 return true;
-            }
-            else{
-                return false;
-            }
         }
         catch (Exception)
         {

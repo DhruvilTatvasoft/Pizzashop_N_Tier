@@ -24,9 +24,15 @@ public class TaxesController : Controller
         }
 [HttpPost]
         public IActionResult AddNewTax(TaxesViewModel model){
-             _taxService.addNewTax(model.tax);
+
+             bool isAdded =_taxService.addNewTax(model.tax);
+             if(!isAdded){
+                return Json(new { error = "An error occurred" });
+             }
+             else{
              model.taxes = _taxService.getAllTaxes();
              return PartialView("_taxesTable",model);
+             }
         }
 
         [HttpPost]

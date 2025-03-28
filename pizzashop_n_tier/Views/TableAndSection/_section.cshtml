@@ -59,9 +59,9 @@
           
         </div>
         <div class="modal-footer" style="border: none;">
-          <button type="submit" class="btn btn-primary saveNewSection" data-bs-dismiss="modal">Save</button>
+          <button type="submit" class="btn btn-primary saveNewSection">Save</button>
           <button type="submit" class="btn btn-primary updateSection" data-bs-dismiss="modal">Update</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal" onclick="">Cancel</button>
+          <button type="button" class="btn btn-outline-primary closebtn" data-bs-dismiss="modal" onclick="">Cancel</button>
         </div>
       </div>
     </div>
@@ -123,9 +123,11 @@
       $('#sectionname').val(data.section.sectionname);
       $('#Section-description').val(data.section.description);
       $('#sectionId').val(data.section.sectionid);
+
+      document.getElementById('addNewSectionForm').action = '@Url.Action("AddNewSection", "TableAndSection")';
    
-      document.getElementById('addNewSectionForm').action = '@Url.Action("UpdateSection", "TableAndSection")';
-      toastr.success("Section details updated");
+      @* document.getElementById('addNewSectionForm').action = '@Url.Action("UpdateSection", "TableAndSection")'; *@
+      @* toastr.success("Section details updated"); *@
     },
     error: function () {
       alert("Failed to load section data. Please try again.");
@@ -135,13 +137,17 @@
 
 
   $("#addNewSectionForm").on('submit', function (e) {
+
+
     e.preventDefault();
+
+    if($(this).valid()){
     var data = new FormData(this);
     $(".saveNewSection, .updateSection").attr("disabled", true);
-
     var formAction = $(this).attr('action');
-
-
+    if( $('#sectionId').val() != 0){
+      data.append("section.Sectionid", $('#sectionId').val());
+    }
     $.ajax({
       url: formAction,
       type: "POST",
@@ -149,20 +155,25 @@
       contentType: false,
       processData: false,
       success: function (data) {
+        if(data.error){
+          $(".closebtn").click();
+          toastr.error("Section already exists");
+        }
+        else{
         $('#addNewSectionModal').modal('hide');
+                $(".closebtn").click();
         loadSections();
-        @* location.reload(); *@
-         toastr.success("New Section Created");
+         toastr.success(data.success);
+        }
       },
       complete: function () {
         $(".saveNewSection, .updateSection").attr("disabled", false);
       }
     });
+    }
   });
 
 function deleteModal(sectionId){
-
-
 $.ajax({
   url:'@Url.Action("deleteModalGet","TableAndSection")',
   type:"GET",

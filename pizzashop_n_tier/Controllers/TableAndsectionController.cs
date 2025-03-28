@@ -46,17 +46,18 @@ public class TableAndSection : Controller
 
     public IActionResult AddNewSection(TableAndSectionViewModel model)
     {
-        if (_sectionService.addNewSection(model))
+        if (!_sectionService.addNewSection(model))
         {
-            TempData["ToastrMessage"] = "Table added successfully";
-            TempData["ToastrType"] = "success";
+            return Json(new { error = "An error occurred" });
+        }
+        else if(model.section.Sectionid == 0){
+
+            return Json(new { success = "Section Added Successfully" });
         }
         else
         {
-            TempData["ToastrMessage"] = "Error occured";
-            TempData["ToastrType"] = "error";
+            return Json(new { success = "Section Updated Successfully" });
         }
-        return RedirectToAction("SectionData");
     }
 
     public IActionResult updateSectionGet(int sectionId)
@@ -73,20 +74,8 @@ public class TableAndSection : Controller
     public IActionResult UpdateSection(TableAndSectionViewModel model)
     {
         model.section.Sectionid = model.sectionId;
-        if (!_sectionService.updateSection(model))
-        {
-            ModelState.AddModelError("section.Sectionname", "Section already exists");
-        }
-
-        model.sections = _sectionService.getAllSections();
-        ModelState.Remove("tables");
-        ModelState.Remove("sectionId");
-        if (!ModelState.IsValid)
-        {
-            return PartialView("_section", model);
-        }
-
-        return Json(new { success = true });
+        
+        return PartialView("_section", model);
     }
     [HttpPost]
     public IActionResult deleteSection(int sectionId)

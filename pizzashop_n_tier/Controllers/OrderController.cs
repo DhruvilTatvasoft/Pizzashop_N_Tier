@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.Extensions.Logging;
 
 namespace pizzashop_n_tier.Controllers
@@ -38,6 +39,17 @@ namespace pizzashop_n_tier.Controllers
             OrderViewModel model = new OrderViewModel();
             _orderService.createExcelSheet(searchbystatus,searchedOrder,searchByPeriod,startDate,endDate);
             return PartialView("_orderTable",model);
+        }
+
+        public IActionResult showOrderDetailsView(int orderid)
+        {
+            OrderViewModel model = new OrderViewModel();
+         
+             model.order = _orderService.getOrderDetails(orderid);
+             orderItemModifierViewModel model2 =  new orderItemModifierViewModel();
+             model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid); 
+             model.orderedItemModifiers = model2;
+            return View("orderDetails",model);
         }
 
        

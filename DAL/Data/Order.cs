@@ -37,15 +37,25 @@ public partial class Order
 
     public bool IsDeleted { get; set; }
 
+    public int Tableid { get; set; }
+
+    public int Sectionid { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
+    public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();
+
     public virtual ICollection<Orderreview> Orderreviews { get; } = new List<Orderreview>();
 
     public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
 
+    public virtual Section Section { get; set; } = null!;
+
     public virtual Orderstatus Status { get; set; } = null!;
+
+    public virtual Table Table { get; set; } = null!;
 }

@@ -199,8 +199,8 @@ namespace BAL.Implementations
                 cell = row.CreateCell(9);
                 cell.SetCellValue(searchedOrder);
                 cell.CellStyle = Data;
-                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9,11));
-                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 9,11), Data);
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9,12));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 9,12), Data);
 
                 cell = row.CreateCell(2);
                 cell.SetCellValue(statusName);
@@ -220,7 +220,7 @@ namespace BAL.Implementations
                 cell.SetCellValue("Date : ");
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 0, 1));
-                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 0, 1), Data);
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 0, 1), Header);
 
                 // row = sheet.CreateRow(rowIndex);
                 cell = row.CreateCell(7);
@@ -241,8 +241,8 @@ namespace BAL.Implementations
                 cell = row.CreateCell(9);
                 cell.SetCellValue(orders.Count);
                 cell.CellStyle = Data;
-                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 9, 11));
-                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 9, 11), Data);
+                sheet.AddMergedRegion(new CellRangeAddress(4, 5, 9, 12));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 9, 12), Data);
 
                 rowIndex = 8;
                 var SR_NO = 0;
@@ -357,22 +357,22 @@ namespace BAL.Implementations
                 sheet.CreateFreezePane(0, 8, 0, 8);
                 for (int i = 0; i <= cellheaderindex; i++)
                 {
-                    sheet.SetColumnWidth(i, 2800);
+                    sheet.SetColumnWidth(i, 2700);
                 }
 
                 HSSFPatriarch patriarch = (HSSFPatriarch)sheet.CreateDrawingPatriarch();
-                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 13, 0, 19, 20)
+                HSSFClientAnchor anchor = new HSSFClientAnchor(0, 0, 0, 0, 14, 0, 20, 20)
                 {
                     AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
                 };
                 //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
-                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
                  picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
-                using (FileStream file = new FileStream(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
+                using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
                 {
                     workbook.Write(file);
                     file.Close();
@@ -390,6 +390,16 @@ namespace BAL.Implementations
             byte[] buffer = new byte[file.Length];
             file.Read(buffer, 0, (int)file.Length);
             return wb.AddPicture(buffer, PictureType.JPEG);
+        }
+
+        public Order? getOrderDetails(int orderid)
+        {
+            return _orderRepository.GetOrderDetails(orderid);
+        }
+
+        public Dictionary<Item, List<Modifier>> getItemsAndModifiers(int orderid)
+        {
+            return _orderRepository.GetItemsAndModifiersForOrder(orderid);
         }
     }
 }

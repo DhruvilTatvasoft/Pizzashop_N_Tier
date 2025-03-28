@@ -16,5 +16,7 @@ namespace BAL.Interfaces
         List<Order> getAllOrderByOptionFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         List<Order> getAllOrderByDateFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         void createExcelSheet(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
+        Order? getOrderDetails(int orderid);
+        Dictionary<Item, List<Modifier>> getItemsAndModifiers(int orderid);
     }
 }

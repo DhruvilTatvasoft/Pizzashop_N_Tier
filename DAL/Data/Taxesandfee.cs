@@ -15,9 +15,9 @@ public partial class Taxesandfee
 
     public bool Isenabled { get; set; }
 
-    public decimal Taxpercentage { get; set; }
+    public decimal Taxpercentage { get; set; } 
 
-    public bool? Isdefault { get; set; }
+    public bool Isdefault { get; set; }
 
     public DateTime? Createdat { get; set; }
 

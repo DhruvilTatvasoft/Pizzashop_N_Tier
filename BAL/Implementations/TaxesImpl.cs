@@ -9,9 +9,9 @@ public class TaxesImpl : ITaxService
         _taxesRepository = taxesRepository;
     }
 
-    public void addNewTax(Taxesandfee tax)
+    public bool addNewTax(Taxesandfee tax)
     {
-         _taxesRepository.addNewTax(tax);
+         return _taxesRepository.addNewTax(tax);
     }
 
     public void deleteTax(int taxid)

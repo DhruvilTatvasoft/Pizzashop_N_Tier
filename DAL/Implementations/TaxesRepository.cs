@@ -9,8 +9,10 @@ public class TaxesRepository : ITaxesRepository
         _context = context;
     }
 
-    public void addNewTax(Taxesandfee tax)
+    public bool addNewTax(Taxesandfee tax)
     {
+        if(_context.Taxesandfees.FirstOrDefault(t=>t.Taxname == tax.Taxname.ToLower().Trim()) == null){
+
         if(_context.Taxesandfees.FirstOrDefault(t=>t.Taxid == tax.Taxid) != null){
             updateTaxDetails(tax);
         }
@@ -29,6 +31,11 @@ public class TaxesRepository : ITaxesRepository
         newTax.Modifiedat = DateTime.Now;
         _context.Taxesandfees.Add(newTax);
         _context.SaveChanges(); 
+        }
+        return true;
+        }
+        else{
+            return false;
         }
     }
 

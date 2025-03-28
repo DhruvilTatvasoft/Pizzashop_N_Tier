@@ -10,7 +10,12 @@ public class SectionImpl : ISectionService
 
     public bool addNewSection(TableAndSectionViewModel model)
     {
-        return _sectionRepository.addNewSection(model.section);
+        if(model.sectionId == 0){
+            return _sectionRepository.addNewSection(model.section);
+        }
+        else{
+            return _sectionRepository.updateSection(model.section);
+        }
     }
 
     public Section getSection(int sectionId)

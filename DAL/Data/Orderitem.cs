@@ -41,7 +41,5 @@ public partial class Orderitem
 
     public virtual Order Order { get; set; } = null!;
 
-    public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();
-
     public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }
