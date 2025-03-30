@@ -4,14 +4,12 @@ using Microsoft.AspNetCore.Mvc;
 public class TaxesController : Controller
     {
         private readonly ITaxService _taxService;
-
         public TaxesController(ITaxService taxService){
             _taxService = taxService;
         }
         public IActionResult showTaxes(){
             return View("taxes");
         }
-
         public IActionResult Loadtaxes(){
             TaxesViewModel model = new TaxesViewModel();
             model.taxes = _taxService.getAllTaxes();

@@ -20,14 +20,24 @@ public class TableImpl : ITableService
         }
     }
 
+    public int getAllTables()
+    {
+        return _tableRepository.getAllTables();
+    }
+
     public Table gettablebyid(int tableid)
     {
         return _tableRepository.gettablebyid(tableid);
     }
 
-    public List<Table> getTablesForsection(int sectionid)
+    public List<Table> getTablesForsection(int sectionid,int pageNumber, int pageSize)
     {
-        return _tableRepository.getTablesForSection(sectionid);
+        return _tableRepository.getTablesForSection(sectionid,pageNumber,pageSize);
+    }
+
+    public bool isOccupied(int tableid)
+    {
+        return _tableRepository.isOccupied(tableid);
     }
 
     public bool updateTable(Table table)

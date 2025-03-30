@@ -11,7 +11,9 @@ public class TaxesRepository : ITaxesRepository
 
     public bool addNewTax(Taxesandfee tax)
     {
-        if(_context.Taxesandfees.FirstOrDefault(t=>t.Taxname == tax.Taxname.ToLower().Trim()) == null){
+
+        Taxesandfee taxes = _context.Taxesandfees.FirstOrDefault(t=>t.Taxname.ToLower().Trim() == tax.Taxname.ToLower().Trim () && t.Isdeleted == true);
+        if(_context.Taxesandfees.FirstOrDefault(t=>t.Taxname.ToLower().Trim() == tax.Taxname.ToLower().Trim () && t.Isdeleted == true) != null){
 
         if(_context.Taxesandfees.FirstOrDefault(t=>t.Taxid == tax.Taxid) != null){
             updateTaxDetails(tax);

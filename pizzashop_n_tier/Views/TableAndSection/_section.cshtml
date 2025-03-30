@@ -15,7 +15,7 @@
       @foreach (var sec in Model.sections)
       {
         <li class="w-100" id="selectedSection_@sec.Sectionid" style="display: flex; align-items: center;"
-          onclick="loadTableData(@sec.Sectionid)">
+          onclick="loadTableData(@sec.Sectionid,1)">
           <label for="" class="ms-0" style="font-size: 13px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">≣
             @sec.Sectionname</label>
           <div class="d-flex">

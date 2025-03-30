@@ -28,22 +28,39 @@ public class TableAndSection : Controller
         model.sections = _sectionService.getAllSections();
         return PartialView("_section", model);
     }
-    public IActionResult LoadTableDataForSection(int sectionId)
+    public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 2)
+{
+    if (pageSize <= 0)
     {
-        TableAndSectionViewModel model = new TableAndSectionViewModel();
-        model.tables = _tableService.getTablesForsection(sectionId);
-        model.sectionId = sectionId;
-        return PartialView("_tables", model);
+        pageSize = 1; 
     }
+    if(pageNumber <= 0){
+        pageNumber = 1;
+    }
+
+    if(pageNumber > _tableService.getAllTables()/pageSize){
+        pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
+    }
+    TableAndSectionViewModel model = new TableAndSectionViewModel
+    {
+        tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),
+        PageNumber = pageNumber,
+        PageSize = pageSize,
+        sectionId = sectionId,
+        TotalTables = _tableService.getAllTables()
+    };
+
+    return PartialView("_tables", model);
+}
    
     public IActionResult loadTablePage(int sectionId)
     {
         TableAndSectionViewModel model = new TableAndSectionViewModel();
         model.sectionId = sectionId;
+        model.PageNumber = 1;
         model.sections = _sectionService.getAllSections();
         return PartialView("_TableContainer", model);
     }
-
     public IActionResult AddNewSection(TableAndSectionViewModel model)
     {
         if (!_sectionService.addNewSection(model))
@@ -90,24 +107,35 @@ public class TableAndSection : Controller
         }
     }
 
-    public IActionResult deleteModalGet()
+    public IActionResult deleteModalGet(int? tableid,List<int>? selectedTables,int? sectionid)
     {
+        if(sectionid.HasValue && selectedTables.Count>0){
+            foreach(var Tableid in selectedTables){
+                if(_tableService.isOccupied(Tableid)){
+                    return Json(new {error = "Ocuppied tables can not be deleted"});
+                }
+            }
+        }
+
+        if(tableid.HasValue && _tableService.isOccupied(tableid.Value)){
+            return Json(new {error = "Ocuppied table can not be deleted"});
+        }
+        
+        else{
         return PartialView("_deleteModal");
+        }
     }
 
     public IActionResult AddNewTable(TableAndSectionViewModel model)
     {
-        if (_tableService.addNewTable(model.table))
+        if (!_tableService.addNewTable(model.table))
         {
-            TempData["ToastrMessage"] = "New Table added succesfully";
-            TempData["ToastrType"] = "success";
+            return Json(new { table = model.table,Error = "Table Already Exist" });
         }
         else
         {
-            TempData["ToastrMessage"] = "Error occured";
-            TempData["ToastrType"] = "error";
+        return Json(new { table = model.table, success= "Table created successfully" });
         }
-        return Json(new { model.table });
     }
 
     [HttpPost]
@@ -121,7 +149,6 @@ public class TableAndSection : Controller
         }
         return Json(new { sectionid });
     }
-
     [HttpGet]
     public IActionResult updatetableGet(int tableid){
         Table table = _tableService.gettablebyid(tableid);

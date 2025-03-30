@@ -5,8 +5,10 @@ public class TableAndSectionViewModel{
 
     public List<Table>? tables{get;set;}
 
+    public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+    public int TotalTables { get; set; }
     public Section? section{get;set;}
-
     public int sectionId {get;set;}
     public Table table {get;set;}
 }

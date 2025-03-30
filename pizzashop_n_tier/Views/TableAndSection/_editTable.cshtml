@@ -1,4 +1,5 @@
 @model TableAndSectionViewModel
+<partial name="_ValidationScriptsPartial" />
 <form id="EditTableForm">
     <div class="modal fade" id="EditTableModal" tabindex="-1" style="--bs-modal-width: 367px;"
       aria-labelledby="addTableModalLabel" aria-hidden="true">
@@ -13,11 +14,12 @@
               <div class="mb-3 col-md-6">
                 <input type="text" class="form-control" asp-for="@Model.table.Tablename"
                   style="padding: 6%;padding-top: 8%;" id="tableName" placeholder="Name*">
+                 <span asp-validation-for="@Model.table.Tablename" style="font-size: 10px;" class="text-danger"></span>
                 <input type="hidden" class="form-control" asp-for="@Model.table.Tableid">
               </div>
-              <div class="mb-3 col-md-6">
+              <div class="mb-3 col-md-6 form-floating">
                 <label for="" class="form-label"
-                  style="position: absolute;left: 56%;top: 12%;font-size: 54%;">section*</label>
+                  style="position: absolute;left: 6%;top: -16%;font-size: 64%;">section*</label>
                 <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.table.Sectionid"
                   id="tableSection">
                   @foreach (var sec in @Model.sections)
@@ -28,15 +30,16 @@
               </div>
             </div>
             <div class="row">
+              <div class="col-md-6 mb-3 form-floating">
               <label for="" class="form-label"
-                style="position: absolute;left: 3%;top: 52%;font-size: 54%;">capacity*</label>
-              <div class="col-md-6 mb-3">
+                style="position: absolute;left: 5%;top: -19%;font-size: 64%;">capacity*</label>
                 <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;" id="tableCapacity"
                   asp-for="@Model.table.Capacity" placeholder="capacity" value="0" min="0">
+                <span asp-validation-for="@Model.table.Capacity" class="text-danger" style="font-size: 10px;"></span>
               </div>
-              <div class="col-md-6 mb-3">
+              <div class="col-md-6 mb-3 form-floating">
                 <label for="" class="form-label"
-                  style="position: absolute;left: 56%;top: 52%;font-size: 54%;">Status*</label>
+                  style="position: absolute;left: 6%;top: -17%;font-size: 64%;">Status*</label>
                 <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.table.Status" placeholder="status" id="tableStatus">
                  @if(Model.table.Status){
                   <option value="true" selected>Available</option>
@@ -51,8 +54,8 @@
             </div>
           </div>
           <div class="modal-footer">
-            <button type="submit" class="btn btn-primary" data-bs-dismiss="modal">Save</button>
-            <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary" >Save</button>
+            <button type="button" class="btn btn-outline-primary btnclose" data-bs-dismiss="modal">Cancel</button>
           </div>
         </div>
       </div>
@@ -60,25 +63,34 @@
   </form>
 
 <script>
-      $("#EditTableForm").on('submit',function(e){
+
+  $("#EditTableForm").on('submit', function (e) {
     e.preventDefault();
+    if (!$(this).valid()) {
+      e.stopPropagation(); 
+    }
+  else{
     var data = new FormData(this);
-     for (var pair of data.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
-      }
+    for (var pair of data.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
     $.ajax({
-      url:'@Url.Action("updatetablePost","TableAndsection")',
-      type:'POST',
-      data:data,
-      contentType:false,
+      url: '@Url.Action("updatetablePost","TableAndsection")',
+      type: 'POST',
+      data: data,
+      contentType: false,
       processData: false,
-      success:function(data){
+      success: function (data) {
         console.log("edited");
         console.log(data);
-         loadTableData(data.sectionid);
-         $("#EditTableModal").modal('hide');
-          toastr.success("Table Updated successfully");
+        $(".btnclose").click();
+        loadTableData(data.sectionid,1);
+        $("#EditTableModal").modal('hide');
+        toastr.success("Table Updated successfully");
       }
     });
-   });
+  }
+  });
+
 </script>

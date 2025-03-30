@@ -41,18 +41,27 @@
                 }
             })
         }
-        function loadTableData(sectionId){
-            $.ajax({
-                url:'@Url.Action("LoadTableDataForSection","TableAndSection")',
-                type:"GET",
-                cache:false,
-                data:{sectionId: sectionId},
-                success:function(data){
-                    $("table").html(data);
-                    $("#sectionIdFortables").val(sectionId)
-                }
-            })
+      window.loadTableData = function (sectionId, pageNumber) {
+    var pageSize = $(".pagesize").val();
+    console.log("PageSize: ", pageSize);
+
+    $.ajax({
+        url: '@Url.Action("LoadTableDataForSection", "TableAndSection")',
+        type: "GET",
+        cache: false,
+        data: {
+            sectionId: sectionId,
+            pageNumber: pageNumber,
+            pageSize: pageSize
+        },
+        success: function (data) {
+            $("table").html(data);
+            $("#sectionIdFortables").val(sectionId);
         }
+    });
+}
+
+
         function loadTablePage(sectionId){
             $.ajax({
                 url:'@Url.Action("loadTablePage","TableAndSection")',

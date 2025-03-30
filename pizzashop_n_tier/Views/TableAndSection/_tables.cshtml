@@ -5,8 +5,8 @@ Layout = null;
 <thead>
    <tr>
       <th scope="col">
-         <div class="form-check">
-            <input class="form-check-input col1" type="checkbox" value="" id="flexCheckDefault">
+         <div class="form-check ps-4">
+            <input class="form-check-input col1" type="checkbox" style="width:1em;height:1em;" value="" id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">
             Name
             </label>
@@ -52,6 +52,21 @@ Layout = null;
       </td>
    </tr>
    }
+
+   
+
+    
+
+<script>
+   document.getElementById('flexCheckDefault').addEventListener('change', function () {
+    const checkboxes = document.querySelectorAll('.checkedTable');
+    checkboxes.forEach(checkbox => {
+        checkbox.checked = this.checked;
+    });
+});
+
+
+</script>
 
 
    

@@ -41,7 +41,7 @@ public class SectionRepository : ISectionRepository
         return _context.Sections.FirstOrDefault(section => section.Sectionid == sectionId && section.Isdeleted == false)!;
     }
 
-    public List<Table> getTableForSection(int sectionid)
+    public List<Table> getTableForSection(int sectionid,int pageNumber, int pageSize)
     {
         return _context.Tables.Where(table => table.Sectionid == sectionid).ToList();
     }
