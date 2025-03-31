@@ -55,7 +55,7 @@
         </div>
     </div>
 </form>
- <form method="Post" asp-controller="Menu" asp-action="AddCategory">
+ <form id="addNewCategoryForm">
             <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel"
                 aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered">
@@ -78,14 +78,42 @@
                             </div>
                         </div>
                         <div class="modal-footer pt-0" style="border-top: none;">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary">+Add</button>
+                            <button type="button" class="btn btn-secondary closebutton" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary ">+Add</button>
                         </div>
                     </div>
                 </div>
             </div>
         </form>
 <script>
+
+
+    $("#addNewCategoryForm").on('submit',function(e){
+        e.preventDefault();
+        if(!$(this).valid()){
+            e.stopPropagation();  
+        }
+        var data = new FormData(this);
+        $.ajax({
+            url:'@Url.Action("AddCategory","Menu")',
+            type:'POST',
+            data:data,
+            processData: false,
+            contentType: false,
+            success:function(data){
+                loadCategories();
+                $(".closebutton").click();
+                if(data.success){
+                    toastr.success(data.success);
+                }
+                else{
+                    toastr.error(data.error);
+                }
+            }
+        });
+    })
+
+
 function openEditModal(categoryId,categoryname,description){
     console.log(categoryId);
     $('#exampleModal6').modal('show');

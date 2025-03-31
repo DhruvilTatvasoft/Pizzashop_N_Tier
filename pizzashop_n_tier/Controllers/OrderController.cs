@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SelectPdf;
+using System.Threading.Tasks;
 
 // using Microsoft.AspNetCore.Mvc.Infrastructure;
 
@@ -75,7 +76,7 @@ namespace pizzashop_n_tier.Controllers
             return View("orderDetails", model);
         }
 
-        public IActionResult generatePdf(int orderid)
+        public async Task<IActionResult> generatePdf(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
 
@@ -86,7 +87,7 @@ namespace pizzashop_n_tier.Controllers
             model.orders = _orderService.getAllOrders();
             model.status = _orderService.getAllStatus();
 
-            var ViewHtml = ViewToStringAsync("Order/invoice", model);
+            var viewHtml = await ViewToStringAsync("Order/invoice", model);
 
             try
             {
@@ -96,7 +97,7 @@ namespace pizzashop_n_tier.Controllers
                 converter.Options.PdfPageSize = PdfPageSize.A4;
                 converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
 
-                PdfDocument doc = converter.ConvertHtmlString(ViewHtml.Result);
+                PdfDocument doc = converter.ConvertHtmlString(viewHtml);
                 using (var memoryStream = new MemoryStream())
                 {
                     doc.Save(memoryStream);
@@ -140,17 +141,6 @@ namespace pizzashop_n_tier.Controllers
                 return $"Error Message : {ex.Message}";
             }
         }
-
-        // public IActionResult invoice(int orderid)
-        // {
-        //     OrderViewModel model = new OrderViewModel();
-        //     model.order = _orderService.getOrderDetails(orderid);
-        //     orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-        //     model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
-        //     model.orderedItemModifiers = model2;
-
-        //     return View(model);
-        // }
 
         private IView FindView(ActionContext actionContext, string viewName)
         {

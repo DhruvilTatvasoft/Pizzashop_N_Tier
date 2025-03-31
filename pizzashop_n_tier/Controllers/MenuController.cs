@@ -53,25 +53,19 @@ public class MenuController : Controller
     [HttpPost]
     public IActionResult AddCategory(MenuModel model)
     {
-        if (ModelState.IsValid)
-        {
             var req = HttpContext.Request;
             string email = _cookieService.getValueFromCookie("username", req);
             if (_menuService.addNewcategory(model, email))
             {
-                return View("Menu", model);
+                 _menuService.GetCategories(model);
+                return Json(new {success = "category Added Successfully" });
             }
             else
             {
-                TempData["ToastrMessage"] = "Category Already exist";
-                TempData["ToastrType"] = "error";
-                return View("Menu", model);
+                return Json(new { error = "Category Already Exist"});
             }
-        }
-        else
-        {
-            return PartialView("_menuPartial1", model);
-        }
+        
+       
     }
 
     public IActionResult ItemsData(int categoryId)
