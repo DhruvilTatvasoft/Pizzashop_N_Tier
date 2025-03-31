@@ -41,6 +41,7 @@ builder.Services.AddScoped<ITaxService,TaxesImpl>();
 builder.Services.AddScoped<IOrderService,OrderImple>();
 builder.Services.AddScoped<IOrderRepository,OrderRepository>();
 
+builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSession(options =>
 {
@@ -129,6 +130,12 @@ app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// app.UseEndpoints(endpoints=>{
+// endpoints.MapControllerRoute(
+//     name:"default",
+//     pattern: "{controller=Order}/{action=generatePdf}/{1}");
+// }  
+// );
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");
