@@ -40,6 +40,7 @@ builder.Services.AddScoped<ITaxesRepository,TaxesRepository >();
 builder.Services.AddScoped<ITaxService,TaxesImpl>();
 builder.Services.AddScoped<IOrderService,OrderImple>();
 builder.Services.AddScoped<IOrderRepository,OrderRepository>();
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddHttpContextAccessor();
 
@@ -112,6 +113,9 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
+
+builder.Services.AddRazorPages();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -130,6 +134,7 @@ app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/Error/NotFound");
+app.UseDeveloperExceptionPage();
 
 // app.UseEndpoints(endpoints=>{
 // endpoints.MapControllerRoute(
@@ -140,8 +145,11 @@ app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 
 
 
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Login}/{action=Index}/{id?}");
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+        name: "default",
+        pattern: "{controller=Login}/{action=Index}/{id?}");
+});
 
 app.Run();

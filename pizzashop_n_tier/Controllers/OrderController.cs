@@ -18,27 +18,26 @@ namespace pizzashop_n_tier.Controllers
 
     public class OrderController : Controller
     {
-
-
-        // private readonly ICompositeViewEngine _viewEngine;
         private readonly ITempDataProvider _tempDataProvider;
-       
-
 
         private readonly IOrderService _orderService;
 
         private IRazorViewEngine _RazorViewEngine;
         private IServiceProvider _serviceProvider;
 
-       
-        public OrderController( IRazorViewEngine RazorViewEngine, IOrderService orderService, ITempDataProvider tempDataProvider,IServiceProvider serviceProvider)
+        private LinkGenerator _linkGenerator;
+
+
+        public OrderController(IRazorViewEngine RazorViewEngine,LinkGenerator linkGenerator,IOrderService orderService, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider)
         {
             _orderService = orderService;
             // _viewEngine = viewEngine;
             _RazorViewEngine = RazorViewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
+             _linkGenerator = linkGenerator;
         }
+         
         public IActionResult showOrders()
         {
             OrderViewModel model = new OrderViewModel();
@@ -87,7 +86,7 @@ namespace pizzashop_n_tier.Controllers
             model.orders = _orderService.getAllOrders();
             model.status = _orderService.getAllStatus();
 
-            var viewHtml = await ViewToStringAsync("Order/invoice", model);
+            var viewHtml = await ViewToStringAsync("Order/invoice.cshtml", model);
 
             try
             {
@@ -110,37 +109,46 @@ namespace pizzashop_n_tier.Controllers
                 return View("invoice");
             }
         }
-        private async Task<string> ViewToStringAsync<TModel>(string viewName, TModel model)
+       private async Task<string> ViewToStringAsync<TModel>(string viewName, TModel model)
+{
+    try
+    {
+        ViewDataDictionary viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
         {
-            try
-            {
-                ViewDataDictionary viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
-                {
-                    Model = model
-                };
-                 var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-                var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-                if (actionContext == null)
-                {
-                    throw new InvalidOperationException("ActionContext cannot be null");
-                }
-                var viewResult = _RazorViewEngine.FindView(actionContext, viewName, false);
-                if (!viewResult.Success)
-                {
-                    throw new InvalidOperationException($"View {viewName} not found.");
-                }
-                using (var sw = new StringWriter())
-                {
-                    var viewContext = new ViewContext(actionContext, viewResult.View, viewData, new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw, new HtmlHelperOptions());
-                    await viewResult.View.RenderAsync(viewContext);
-                    return sw.ToString();
-                }
-            }
-            catch (Exception ex)
-            {
-                return $"Error Message : {ex.Message}";
-            }
+            Model = model
+        };
+        var httpContext = new DefaultHttpContext
+        {
+            RequestServices = _serviceProvider
+        };
+
+        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+        httpContext.SetEndpoint(new Endpoint((_) => Task.CompletedTask, new EndpointMetadataCollection(), "invoice"));
+        if (actionContext == null)
+        {
+            throw new InvalidOperationException("ActionContext cannot be null");
         }
+
+        // Use GetView with the full virtual path
+        var viewResult = _RazorViewEngine.GetView(null, "~/Views/Order/invoice.cshtml", false);
+        if (!viewResult.Success)
+        {
+            var searchedLocations = string.Join(", ", viewResult.SearchedLocations);
+            throw new InvalidOperationException($"View not found. Searched locations: {searchedLocations}");
+        }
+
+        using (var sw = new StringWriter())
+        {
+            var viewContext = new ViewContext(actionContext, viewResult.View, viewData, new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw, new HtmlHelperOptions());
+            await viewResult.View.RenderAsync(viewContext);
+            return sw.ToString();
+        }
+    }
+    catch (Exception ex)
+    {
+        return $"Error Message : {ex.Message}";
+    }
+}
 
         private IView FindView(ActionContext actionContext, string viewName)
         {
