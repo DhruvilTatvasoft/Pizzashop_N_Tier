@@ -115,20 +115,21 @@ builder.Services.AddControllers().AddJsonOptions(x =>
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
-
 app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
+
 app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 
 // app.UseEndpoints(endpoints=>{
 // endpoints.MapControllerRoute(
@@ -136,6 +137,9 @@ app.UseAuthorization();
 //     pattern: "{controller=Order}/{action=generatePdf}/{1}");
 // }  
 // );
+
+
+
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");

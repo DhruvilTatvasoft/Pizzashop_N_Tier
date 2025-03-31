@@ -7,8 +7,10 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SelectPdf;
-using NPOI.HSSF.Record.PivotTable;
+
+// using Microsoft.AspNetCore.Mvc.Infrastructure;
 
 namespace pizzashop_n_tier.Controllers
 {
@@ -16,21 +18,25 @@ namespace pizzashop_n_tier.Controllers
     public class OrderController : Controller
     {
 
+
+        // private readonly ICompositeViewEngine _viewEngine;
+        private readonly ITempDataProvider _tempDataProvider;
+       
+
+
         private readonly IOrderService _orderService;
 
         private IRazorViewEngine _RazorViewEngine;
         private IServiceProvider _serviceProvider;
 
-        ITempDataProvider _tempDataProvider;
-
-
-
-        public OrderController(IOrderService orderService, IRazorViewEngine RazorViewEngine, IServiceProvider serviceProvider,ITempDataProvider tempDataProvider)
+       
+        public OrderController( IRazorViewEngine RazorViewEngine, IOrderService orderService, ITempDataProvider tempDataProvider,IServiceProvider serviceProvider)
         {
             _orderService = orderService;
+            // _viewEngine = viewEngine;
             _RazorViewEngine = RazorViewEngine;
-            _serviceProvider = serviceProvider;
             _tempDataProvider = tempDataProvider;
+            _serviceProvider = serviceProvider;
         }
         public IActionResult showOrders()
         {
@@ -77,83 +83,100 @@ namespace pizzashop_n_tier.Controllers
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
             model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
             model.orderedItemModifiers = model2;
-            var ViewHtml = RenderViewToStringAsync("Order/invoice",model);
+            model.orders = _orderService.getAllOrders();
+            model.status = _orderService.getAllStatus();
 
-            HtmlToPdf converter = new HtmlToPdf();
+            var ViewHtml = ViewToStringAsync("Order/invoice", model);
 
-            converter.Options.PdfPageSize = PdfPageSize.A4;
+            try
+            {
+
+                HtmlToPdf converter = new HtmlToPdf();
+
+                converter.Options.PdfPageSize = PdfPageSize.A4;
                 converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
-                
-            PdfDocument doc = converter.ConvertHtmlString(ViewHtml.Result);
-            using (var memoryStream = new MemoryStream()){
-                doc.Save(memoryStream);
-                doc.Close();
-                return File(memoryStream.ToArray(), "application/pdf",$"invoice.pdf");
+
+                PdfDocument doc = converter.ConvertHtmlString(ViewHtml.Result);
+                using (var memoryStream = new MemoryStream())
+                {
+                    doc.Save(memoryStream);
+                    doc.Close();
+                    return File(memoryStream.ToArray(), "application/pdf", $"invoice.pdf");
+                }
+            }
+            catch (Exception ex)
+            {
+                return View("invoice");
             }
         }
-         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
-    {
-        var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
-        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-
-        using var writer = new StringWriter();
-        var viewResult = _RazorViewEngine.FindView(actionContext, viewName, false);
-
-        if (viewResult.View == null)
+        private async Task<string> ViewToStringAsync<TModel>(string viewName, TModel model)
         {
-            throw new ArgumentNullException($"{viewName} does not exist.");
+            try
+            {
+                ViewDataDictionary viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = model
+                };
+                 var httpContext = new DefaultHttpContext { RequestServices = _serviceProvider };
+                var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+                if (actionContext == null)
+                {
+                    throw new InvalidOperationException("ActionContext cannot be null");
+                }
+                var viewResult = _RazorViewEngine.FindView(actionContext, viewName, false);
+                if (!viewResult.Success)
+                {
+                    throw new InvalidOperationException($"View {viewName} not found.");
+                }
+                using (var sw = new StringWriter())
+                {
+                    var viewContext = new ViewContext(actionContext, viewResult.View, viewData, new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw, new HtmlHelperOptions());
+                    await viewResult.View.RenderAsync(viewContext);
+                    return sw.ToString();
+                }
+            }
+            catch (Exception ex)
+            {
+                return $"Error Message : {ex.Message}";
+            }
         }
 
-        var viewContext = new ViewContext(
-            actionContext,
-            viewResult.View,
-            new ViewDataDictionary<TModel>(new EmptyModelMetadataProvider(), new ModelStateDictionary()) { Model = model },
-            new TempDataDictionary(httpContext, _tempDataProvider),
-            writer,
-            new HtmlHelperOptions()
-        );
+        // public IActionResult invoice(int orderid)
+        // {
+        //     OrderViewModel model = new OrderViewModel();
+        //     model.order = _orderService.getOrderDetails(orderid);
+        //     orderItemModifierViewModel model2 = new orderItemModifierViewModel();
+        //     model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+        //     model.orderedItemModifiers = model2;
 
-        await viewResult.View.RenderAsync(viewContext);
-        return writer.ToString();
-    }
+        //     return View(model);
+        // }
 
-        public IActionResult invoice(int orderid){
-            OrderViewModel model = new OrderViewModel();
-            model.order = _orderService.getOrderDetails(orderid);
-            orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
-            model.orderedItemModifiers = model2;
-
-            return View(model);
-        }
-
-         private IView FindView(ActionContext actionContext, string viewName)
-    {
-        var getViewResult = _RazorViewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
-        if (getViewResult.Success)
+        private IView FindView(ActionContext actionContext, string viewName)
         {
-            return getViewResult.View;
-        }
+            var getViewResult = _RazorViewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
+            if (getViewResult.Success)
+            {
+                return getViewResult.View;
+            }
 
-        var findViewResult = _RazorViewEngine.FindView(actionContext, viewName, isMainPage: true);
-        if (findViewResult.Success)
-        {
-            return findViewResult.View;
-        }
-        // hello
-        var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
-        var errorMessage = string.Join(
-            Environment.NewLine,
-            new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
+            var findViewResult = _RazorViewEngine.FindView(actionContext, viewName, isMainPage: true);
+            if (findViewResult.Success)
+            {
+                return findViewResult.View;
+            }
+            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
+            var errorMessage = string.Join(
+                Environment.NewLine,
+                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
 
-        throw new InvalidOperationException(errorMessage);
-    }
+            throw new InvalidOperationException(errorMessage);
+        }
         //   private ActionContext GetActionContext()
         // {
         //     var httpContext = new DefaultHttpContext();
         //     httpContext.RequestServices = _serviceProvider;
         //     return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
         // }
-
     }
 }
