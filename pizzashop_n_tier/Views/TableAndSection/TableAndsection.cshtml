@@ -41,9 +41,10 @@
                 }
             })
         }
-      window.loadTableData = function (sectionId, pageNumber) {
-    var pageSize = $(".pagesize").val();
-    console.log("PageSize: ", pageSize);
+
+    function loadTableData (sectionId, pageNumber,pageSize) {
+
+    console.log(pageSize);
 
     $.ajax({
         url: '@Url.Action("LoadTableDataForSection", "TableAndSection")',
@@ -55,7 +56,7 @@
             pageSize: pageSize
         },
         success: function (data) {
-            $("table").html(data);
+            $(".t-contain").html(data);
             $("#sectionIdFortables").val(sectionId);
         }
     });

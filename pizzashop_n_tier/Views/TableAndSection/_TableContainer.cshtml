@@ -1,3 +1,4 @@
+
 @model TableAndSectionViewModel
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex">
@@ -18,29 +19,11 @@
 </div>
 <div id="loadEditModel"></div>
 <div class="tbl m-3 table-responsive">
-  <table class="table">
-  </table>
-  <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2"></div>
-    <div class="d-flex justify-content-end align-items-center">
-      <label for="" class="me-2">items per page:</label>
-      <div class="dropdown mt-2 me-2">
-        <select class="form-select form-select-lg mb-3 pagesize" aria-label=".form-select-lg example">
-          <option value="1" >1</option>
-          <option value="2" selected>2</option>
-          <option value="3">3</option>
-          <option value="4">4</option>
-          <option value="5">5</option>
-          <option value="6">6</option>
-        </select>
-      </div>
-<label for="" class="me-2">Showing 1-5 of 13</label>
-    <div class="d-flex mt-1">
-      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1))"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px" alt=""></button>
-      <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber+1))"><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px;rotate: 180deg;" alt=""></button>
-    </div>
-    </div>
+ 
+  <div class="bg-white w-100 d-flex flex-column justify-content-end align-items-center pe-2 t-contain">
+
+  </div>
+    
   
   <!-- Add Table Modal -->
 
@@ -106,7 +89,6 @@
   <script>
 
     $("document").ready(function () {
-      console.log("loaded..........");
       loadTableData(@Model.sectionId, @Model.PageNumber);
     })
 
@@ -115,7 +97,6 @@
     loadTableData(sectionId, 1); 
 });
     $("#addNewTableForm").on("submit", function (e) {
-      console.log("-----------")
        e.preventDefault();
        if (!$(this).valid()) {
         console.log("validation failed");

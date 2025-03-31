@@ -42,3 +42,5 @@ C:\Users\pct78\pizzashop_N_tier\DAL\obj\Debug\net7.0\refint\DAL.dll
 C:\Users\pct78\pizzashop_N_tier\DAL\obj\Debug\net7.0\DAL.pdb
 C:\Users\pct78\pizzashop_N_tier\DAL\obj\Debug\net7.0\DAL.genruntimeconfig.cache
 C:\Users\pct78\pizzashop_N_tier\DAL\obj\Debug\net7.0\ref\DAL.dll
+C:\Users\pct78\pizzashop_N_tier\DAL\bin\Debug\net7.0\Select.Html.dep
+C:\Users\pct78\pizzashop_N_tier\DAL\bin\Debug\net7.0\Select.Tools.dep

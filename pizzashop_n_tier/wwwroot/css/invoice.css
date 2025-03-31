@@ -1,0 +1,33 @@
+body {
+    font-family: Arial, sans-serif;
+    color: #333;
+  }
+  .logo {
+    display: block;
+    margin: 0 auto 20px;
+  }
+  .header-text {
+    color: #0056b3;
+    font-weight: bold;
+  }
+  .table th {
+    background-color: #0056b3;
+    color: white;
+  }
+  .total-label {
+    font-weight: bold;
+  }
+  .thank-you {
+    color: #0056b3;
+    font-weight: bold;
+    text-align: center;
+  }
+  .payment-info {
+    color: #0056b3;
+  }
+  .summary-table td {
+    text-align: left;
+  }
+  .summary-table td:last-child {
+    text-align: right;
+  }

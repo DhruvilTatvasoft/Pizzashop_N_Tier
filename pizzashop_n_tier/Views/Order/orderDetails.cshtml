@@ -19,8 +19,6 @@
                                     alt="">Export</span>
                         </button>
                     </div>
-    using System.Reflection.Emit;
-
                     <div class="row mb-2">
                         <div class="col-md-12">
                             <p><strong>Invoice No.:</strong> #DOM202500229</p>
@@ -97,7 +95,7 @@
                                     @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
                                     {
                                         <br>@modifier.Modifierquantity
-                                        @* <br /> *@
+                                        
                                     }
 
                                 </td>
@@ -105,7 +103,6 @@
                                     @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
                                     {
                                         <br>@(modifier.Modifierrate)
-                                        @* <br /> *@
                                     }
                                 </td>
                                 <td class="d-flex justify-content-end"><label style="display: none;">@(item.Itemrate * item.Itemquantity)</label>
@@ -115,8 +112,6 @@
                                     {
                                         <br>@(modifier.Modifierrate * modifier.Modifierquantity)
                                         <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
-                                        @* subtotal += modifier.Modifierrate * modifier.Modifierquantity *@
-                                        @* <br /> *@
                                     }
                                 </td>
                             </tr>

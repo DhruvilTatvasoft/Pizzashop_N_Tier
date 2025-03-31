@@ -2,6 +2,10 @@
 Layout = null;
 }
 @model TableAndSectionViewModel
+
+ <table class="table">
+    
+  
 <thead>
    <tr>
       <th scope="col">
@@ -53,6 +57,31 @@ Layout = null;
    </tr>
    }
 
+   </table>
+   <div class="d-flex justify-content-end align-items-center w-100">
+      <label for="" class="me-2">items per page:</label>
+      <div class="dropdown mt-2 me-2">
+        <select class="form-select form-select-lg mb-3 pagesize" aria-label=".form-select-lg example">
+         
+          <option value="1" selected="@(Model.PageSize == 1 ? "selected" : null)">1</option>
+          <option value="2" selected="@(Model.PageSize == 2 ? "selected" : null)">2</option>
+          <option value="3" selected="@(Model.PageSize == 3 ? "selected" : null)">3</option>
+          <option value="4" selected="@(Model.PageSize == 4 ? "selected" : null)">4</option>
+          <option value="5" selected="@(Model.PageSize == 5 ? "selected" : null)">5</option>
+          <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
+        </select>
+      </div>
+<label for="" class="me-2">Showing 1-5 of 13</label>
+    <div class="d-flex mt-1">
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1),@Model.PageSize)"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px" alt=""></button>
+          <!-- Debugger removed as it is not valid Razor syntax -->
+      <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber+1),@Model.PageSize)"><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px;rotate: 180deg;" alt=""></button>
+    </div>
+    </div>
+    </div>
+
    
 
     
@@ -63,6 +92,11 @@ Layout = null;
     checkboxes.forEach(checkbox => {
         checkbox.checked = this.checked;
     });
+});
+
+ $(".pagesize").on("change", function () {
+    var sectionId = $("#sectionIdFortables").val() || 1; 
+    loadTableData(sectionId, 1,this.value); 
 });
 
 

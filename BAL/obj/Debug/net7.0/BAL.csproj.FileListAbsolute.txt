@@ -45,3 +45,5 @@ C:\Users\pct78\pizzashop_N_tier\BAL\obj\Debug\net7.0\BAL.dll
 C:\Users\pct78\pizzashop_N_tier\BAL\obj\Debug\net7.0\refint\BAL.dll
 C:\Users\pct78\pizzashop_N_tier\BAL\obj\Debug\net7.0\BAL.pdb
 c:\Users\pct78\pizzashop_N_tier\BAL\obj\Debug\net7.0\ref\BAL.dll
+C:\Users\pct78\pizzashop_N_tier\BAL\bin\Debug\net7.0\Select.Html.dep
+C:\Users\pct78\pizzashop_N_tier\BAL\bin\Debug\net7.0\Select.Tools.dep

@@ -28,19 +28,17 @@ public class TableAndSection : Controller
         model.sections = _sectionService.getAllSections();
         return PartialView("_section", model);
     }
+
+    
     public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 2)
 {
-    if (pageSize <= 0)
-    {
-        pageSize = 1; 
-    }
+  
     if(pageNumber <= 0){
         pageNumber = 1;
     }
-
-    if(pageNumber > _tableService.getAllTables()/pageSize){
-        pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
-    }
+    // if(pageNumber > _tableService.getAllTables()/pageSize){
+    //     pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
+    // }
     TableAndSectionViewModel model = new TableAndSectionViewModel
     {
         tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),

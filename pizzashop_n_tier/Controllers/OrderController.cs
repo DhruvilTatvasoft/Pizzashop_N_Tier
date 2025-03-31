@@ -1,57 +1,165 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Routing;
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
+using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.AspNetCore.Mvc.ViewEngines;
+using Microsoft.AspNetCore.Mvc.ViewFeatures;
+using SelectPdf;
 
 namespace pizzashop_n_tier.Controllers
 {
-    
+
     public class OrderController : Controller
     {
 
         private readonly IOrderService _orderService;
 
-        public OrderController(IOrderService orderService){
+        private IRazorViewEngine _RazorViewEngine;
+        private IServiceProvider _serviceProvider;
+
+        ITempDataProvider _tempDataProvider;
+
+
+
+        public OrderController(IOrderService orderService, IRazorViewEngine RazorViewEngine, IServiceProvider serviceProvider,ITempDataProvider tempDataProvider)
+        {
             _orderService = orderService;
+            _RazorViewEngine = RazorViewEngine;
+            _serviceProvider = serviceProvider;
+            _tempDataProvider = tempDataProvider;
         }
-        public IActionResult showOrders(){
-             OrderViewModel model = new OrderViewModel();
-              model.status = _orderService.getAllStatus();
-            return View("orders",model);
+        public IActionResult showOrders()
+        {
+            OrderViewModel model = new OrderViewModel();
+            model.status = _orderService.getAllStatus();
+            return View("orders", model);
         }
-        public IActionResult showOrderDetails(){
+        public IActionResult showOrderDetails()
+        {
             OrderViewModel model = new OrderViewModel();
             model.orders = _orderService.getAllOrders();
-            return PartialView("_orderTable",model);
+            return PartialView("_orderTable", model);
         }
 
-        public IActionResult showOrderDetailsByFilter(int? status=0,string? searchedOrder="",string? filterBy="All Time",DateTime? startDate=null,DateTime? endDate=null){
+        public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null)
+        {
             OrderViewModel model = new OrderViewModel();
-            model.orders = _orderService.getOrdersByFilters(status,searchedOrder,filterBy,startDate,endDate);
-            return PartialView("_orderTable",model);
+            model.orders = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
+            return PartialView("_orderTable", model);
         }
-        public IActionResult ExportData(string? searchedOrder="",int? searchbystatus=1,string searchByPeriod="All Time",DateTime? startDate=null,DateTime? endDate=null){
+        public IActionResult ExportData(string? searchedOrder = "", int? searchbystatus = 1, string searchByPeriod = "All Time", DateTime? startDate = null, DateTime? endDate = null)
+        {
             OrderViewModel model = new OrderViewModel();
-            _orderService.createExcelSheet(searchbystatus,searchedOrder,searchByPeriod,startDate,endDate);
-            return PartialView("_orderTable",model);
+            _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
+            return PartialView("_orderTable", model);
         }
 
         public IActionResult showOrderDetailsView(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
-         
-             model.order = _orderService.getOrderDetails(orderid);
-             orderItemModifierViewModel model2 =  new orderItemModifierViewModel();
-             model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid); 
-             model.orderedItemModifiers = model2;
-            return View("orderDetails",model);
+
+            model.order = _orderService.getOrderDetails(orderid);
+            orderItemModifierViewModel model2 = new orderItemModifierViewModel();
+            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+            model.orderedItemModifiers = model2;
+            return View("orderDetails", model);
         }
 
-       
+        public IActionResult generatePdf(int orderid)
+        {
+            OrderViewModel model = new OrderViewModel();
+
+            model.order = _orderService.getOrderDetails(orderid);
+            orderItemModifierViewModel model2 = new orderItemModifierViewModel();
+            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+            model.orderedItemModifiers = model2;
+
+            var ViewHtml = RenderViewToStringAsync("Order/invoice",model);
+
+            HtmlToPdf converter = new HtmlToPdf();
+
+            converter.Options.PdfPageSize = PdfPageSize.A4;
+                converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+                
+            PdfDocument doc = converter.ConvertHtmlString(ViewHtml.Result);
+            using (var memoryStream = new MemoryStream()){
+                doc.Save(memoryStream);
+                doc.Close();
+                return File(memoryStream.ToArray(), "application/pdf",$"invoice.pdf");
+            }
+        }
+         public async Task<string> RenderViewToStringAsync<TModel>(string viewName, TModel model)
+        {
+            var actionContext = GetActionContext();
+            var view = FindView(actionContext, viewName);
+
+            using (var output = new StringWriter())
+            {
+                var viewContext = new ViewContext(
+                    actionContext,
+                    view,
+                    new ViewDataDictionary<TModel>(
+                        metadataProvider: new EmptyModelMetadataProvider(),
+                        modelState: new ModelStateDictionary())
+                    {
+                        Model = model
+                    },
+                    new TempDataDictionary(
+                        actionContext.HttpContext,
+                        _tempDataProvider),
+                    output,
+                    new HtmlHelperOptions());
+
+                await view.RenderAsync(viewContext);
+
+                return output.ToString();
+            }
+        }
+
+        public IActionResult invoice(int orderid){
+            OrderViewModel model = new OrderViewModel();
+            model.order = _orderService.getOrderDetails(orderid);
+            orderItemModifierViewModel model2 = new orderItemModifierViewModel();
+            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+            model.orderedItemModifiers = model2;
+
+            return View(model);
+        }
+
+        private IView FindView(ActionContext actionContext, string viewName)
+        {
+            var getViewResult = _RazorViewEngine.GetView(executingFilePath: null, viewPath: $"{viewName}", isMainPage: false);
+            if (getViewResult.Success)
+            {
+                return getViewResult.View;
+            }
+
+            var findViewResult = _RazorViewEngine.FindView(actionContext,viewName,isMainPage: false);
+            // findViewResult.SearchedLocations.Concat(new[] { "/Views/Order/invoice.cshtml" });
+            if (findViewResult.Success)
+            {
+                return findViewResult.View;
+            }
+            // "/Views/invoice.cshtml"
+
+            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
+           
+            var errorMessage = string.Join(
+                Environment.NewLine,
+                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
+
+            throw new InvalidOperationException(errorMessage);
+        }
+
+          private ActionContext GetActionContext()
+        {
+            var httpContext = new DefaultHttpContext();
+            httpContext.RequestServices = _serviceProvider;
+            return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+        }
+
     }
 }

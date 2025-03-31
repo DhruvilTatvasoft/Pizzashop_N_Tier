@@ -4,10 +4,17 @@ using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
+using iText.IO.Source;
+using iText.Kernel.Geom;
+using iText.Kernel.Pdf;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc;
+using System.Text;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace BAL.Implementations
 {
-    public class OrderImple : IOrderService
+    public class OrderImple :  IOrderService
     {
         private readonly IOrderRepository _orderRepository;
         public OrderImple(IOrderRepository orderRepository)
@@ -189,7 +196,7 @@ namespace BAL.Implementations
                 cell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 0, 1));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 0, 1), Header);
-                
+
                 cell = row.CreateCell(7);
                 cell.SetCellValue("Search Text:");
                 cell.CellStyle = Header;
@@ -199,15 +206,15 @@ namespace BAL.Implementations
                 cell = row.CreateCell(9);
                 cell.SetCellValue(searchedOrder);
                 cell.CellStyle = Data;
-                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9,12));
-                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 9,12), Data);
+                sheet.AddMergedRegion(new CellRangeAddress(1, 2, 9, 12));
+                ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 9, 12), Data);
 
                 cell = row.CreateCell(2);
                 cell.SetCellValue(statusName);
                 cell.CellStyle = Data;
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 2, 5));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 2, 5), Data);
-                
+
 
                 // cell = row.CreateCell(7);
                 // cell.SetCellValue(searchedOrder);
@@ -229,7 +236,7 @@ namespace BAL.Implementations
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 7, 8));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 7, 8), Header);
 
-          
+
                 cell = row.CreateCell(2);
                 cell.SetCellValue(filterBy);
                 cell.CellStyle = Data;
@@ -296,7 +303,7 @@ namespace BAL.Implementations
                 sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1), Header);
 
-               
+
                 foreach (var order in orders)
                 {
                     rowIndex = rowIndex + 1;
@@ -367,7 +374,7 @@ namespace BAL.Implementations
                 };
                 //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
                 HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
-                 picture.Resize(0.34);
+                picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
 
@@ -401,5 +408,18 @@ namespace BAL.Implementations
         {
             return _orderRepository.GetItemsAndModifiersForOrder(orderid);
         }
+        // public FileResult OnPostExport(string GridHtml)
+        // {
+        //     using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(GridHtml)))
+        //     {
+        //         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        //         PdfWriter writer = new PdfWriter(byteArrayOutputStream);
+        //         PdfDocument pdfDocument = new PdfDocument(writer);
+        //         pdfDocument.SetDefaultPageSize(PageSize.A4);
+        //         HtmlConverter.ConvertToPdf(stream, pdfDocument);
+        //         pdfDocument.Close();
+        //         return File(byteArrayOutputStream.ToArray(), "application/pdf", "invoice.pdf");
+        //     }
+        // }
     }
 }
