@@ -1,0 +1,28 @@
+@model TaxesViewModel
+@{
+    ViewData["Title"] = "Customers";
+    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+}
+<link rel="stylesheet" href="~/css/TaxesandFees.css">
+<div class="container-fluid w-100 h-100 p-0">
+    <div class="container-fluid w-100 h-100 p-0">
+        <div id="nav-sidebar"></div>
+        <div class="row p-0 h-100 d-flex">
+            <div class="content pt-3 w-100 h-100">
+                <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
+                    <h1>Customers</h1>
+                    <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
+                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="taxSearch" onkeyup="searchtax()" placeholder="Search">
+                        <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;" onclick="openModelForAddTax()">+ New Tax</button>
+                    </div>
+                </div>
+                <div class="form-container shadow customerTableContainer" id="t-container"></div>
+            </div>
+            <div class="loadCustomerModal"></div>
+        </div>
+
+        <script>
+            function loadCustomerTable(){
+                
+            }
+        </script>

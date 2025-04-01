@@ -36,9 +36,9 @@ public class TableAndSection : Controller
     if(pageNumber <= 0){
         pageNumber = 1;
     }
-    // if(pageNumber > _tableService.getAllTables()/pageSize){
-    //     pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
-    // }
+    if(pageNumber > _tableService.getAllTables()/pageSize){
+        pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
+    }
     TableAndSectionViewModel model = new TableAndSectionViewModel
     {
         tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),

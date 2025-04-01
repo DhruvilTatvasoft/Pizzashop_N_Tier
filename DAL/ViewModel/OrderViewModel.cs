@@ -11,4 +11,13 @@ public class OrderViewModel
 
     public orderItemModifierViewModel orderedItemModifiers{get;set;}
 
+      public int PageNumber { get; set; }
+    public int PageSize { get; set; }
+    public int TotalOrders { get; set; }
+
+    public string sortOrder{get;set;} = "asc";
+    public string sortBy{get;set;} = "orderid";
+
+
+
 }

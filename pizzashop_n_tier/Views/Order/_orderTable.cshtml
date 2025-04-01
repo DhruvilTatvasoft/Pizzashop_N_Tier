@@ -4,15 +4,18 @@
         <tr>
             <th scope="col">
                 <label for="" class="ps-2">#Order</label>
-                <img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "orderId" && Model.sortOrder == "asc" ? "desc" : "asc")','orderId')" style="width: 15px;cursor: pointer;" alt=""></a>
             </th>
             <th scope="col">
                 <label for="">Date</label>
-                <img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;" alt="">
+                
+                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "Date" && Model.sortOrder == "asc" ? "desc" : "asc")','Date')" style="width: 15px;cursor: pointer;" alt="">
             </th>
             <th scope="col">Customer
-                <img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;" alt="">
+                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "customerName" && Model.sortOrder == "asc" ? "desc" : "asc")','customerName')" style="width: 15px;cursor: pointer;" alt="">
             </th>
+
+            @* onclick="loadOrdersTable('@Model.CurrentPage','@Model.PageSize','','','','orderId', '@(Model.SortBy == "orderId" && Model.SortOrder == "asc" ? "desc" : "asc")')" *@
             <th scope="col">
                 <label for="">Status</label>
             </th>
@@ -20,7 +23,7 @@
             <th scope="col"><label for="">Ratting</label></th>
             <th scope="col" class="d-flex justify-content-end align-items-center pe-4"><div>
 
-                <label for="" class="me-2">Total Amount</label><img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;" alt="">
+                <label for="" class="me-2">Total Amount</label><img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "totalAmount" && Model.sortOrder == "asc" ? "desc" : "asc")','totalAmount')" style="width: 15px;cursor: pointer;" alt="">
             </div>
             </th>
             <th scope="col"><label for="">Action</label></th>
@@ -83,4 +86,37 @@
         }
     </tbody>
 </table>
+
+<div class="d-flex justify-content-end align-items-center w-100 pe-3 pt-1" style="background-color: white;">
+      <label for="" class="me-2">items per page:</label>
+      <div class="dropdown mt-2 me-2">
+        <select class="form-select form-select-lg mb-3 pagesize" aria-label=".form-select-lg example">
+         
+          <option value="1" selected="@(Model.PageSize == 1 ? "selected" : null)">1</option>
+          <option value="2" selected="@(Model.PageSize == 2 ? "selected" : null)">2</option>
+          <option value="3" selected="@(Model.PageSize == 3 ? "selected" : null)">3</option>
+          <option value="4" selected="@(Model.PageSize == 4 ? "selected" : null)">4</option>
+          <option value="5" selected="@(Model.PageSize == 5 ? "selected" : null)">5</option>
+          <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
+        </select>
+      </div>
+<label for="" class="me-2">Showing 1-5 of 13</label>
+    <div class="d-flex mt-1">
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px" alt=""></button>
+          <!-- Debugger removed as it is not valid Razor syntax -->
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')"><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px;rotate: 180deg;" alt=""></button>
+    </div>
+      </div>
+
+<script>
+      $(".pagesize").on("change", function () {
+             showOrdersBySearch(1,$(".pagesize").val(),'asc','orderid'); 
+});
+</script>
+
+
+ 
+
 

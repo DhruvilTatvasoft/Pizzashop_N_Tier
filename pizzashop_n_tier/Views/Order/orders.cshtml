@@ -19,13 +19,13 @@
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 @* <div class="form-floating "> *@
                                     <input type="search" class="form-control shadow-none" id="SearchOrder"
-                                        onkeyup="showOrdersBySearch()" placeholder="Search">
+                                        onkeyup="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')" placeholder="Search">
                                     @* <label for="floatingInput">Search </label> *@
                                 @* </div> *@
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="status-select form-select shadow-none" id="selectStatus" style="padding: 3%;" aria-label="Floating label select example" onchange="showOrdersByStatus()" placeholder="Selects Status">
+                                    <select class="status-select form-select shadow-none" id="selectStatus" style="padding: 3%;" aria-label="Floating label select example" onchange="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')" placeholder="Selects Status">
                                         <option selected value="0">All Status</option>
                                         @foreach (var status in Model.status)
                                         {
@@ -39,7 +39,7 @@
                                 <div class="form-floating">
                                     <select class="time-select form-select shadow-none timePeriodFilter" style="padding: 3%;"
                                         aria-label="Floating label select example" placeholder="Selects Time"
-                                        onchange="searchByTimePeriod()">
+                                        onchange="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')">
                                         <option selected value="All Time">All Time</option>
                                         <option value="Last 7 days">Last 7 days</option>
                                         <option value="Last 30 days">Last 30 days</option>
@@ -76,11 +76,10 @@
                     </div>
                     <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
                         <button type="submit" class="btn btn-primary p-md-2 fw-semibold add-item-modifier"
-                            id="searchByDate" onclick="searchOrderBydate()">Search</button>
+                            id="searchByDate" onclick="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')">Search</button>
                         <button type="reset" class="btn btn-outline-primary fw-semibold" id="Reset"
                             onclick="resetDropDowns()">Clear</button>
                     </div>
-
                 </div>
                 <div class="loadOrderTable mt-3" style="width:97%;"></div>
             </div>
@@ -90,94 +89,33 @@
 
     <script>
         $("document").ready(function () {
-            loadOrderTable();
+            showOrdersBySearch(1,2,'asc','orderId');
         });
-        function loadOrderTable() {
-            console.log("loaded");
-            $.ajax({
-                url: '@Url.Action("showOrderDetails", "Order")',
-                type: 'GET',
-                success: function (data) {
-                    $(".loadOrderTable").html(data);
-                }
-            });
-        }
-
-        function showOrdersBySearch() {
+        function showOrdersBySearch(pageNumber,pagesize,sortOrder,sortBy) {
               var selectedStatus = $("#selectStatus").val()
             var selectedOption = $(".timePeriodFilter").val();
             var searchedOrder = $("#SearchOrder").val();
             var startDate = $("#startDate").val();
             var endDate = $("#endDate").val();
-            if (searchedOrder != "") {
+            pagesize = $(".pagesize").val();
+            console.log(sortOrder)
+            console.log(sortBy)
                 $.ajax({
                     url: '@Url.Action("showOrderDetailsByFilter", "order")',
                     type: 'GET',
-                    data: {status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
+                    data: {status: selectedStatus,filterBy : selectedOption,pageNumber:parseInt(pageNumber),pagesize:parseInt(pagesize),searchedOrder : searchedOrder,startDate:startDate,endDate:endDate,sortOrder:sortOrder,sortBy:sortBy},
                     success: function (data) {
                         $(".loadOrderTable").html(data);
                     }
                 });
-            }
-            else {
-                loadOrderTable();
-            }
-        }
-        function showOrdersByStatus() {
-            var selectedStatus = $("#selectStatus").val()
-            var selectedOption = $(".timePeriodFilter").val();
-            var searchedOrder = $("#SearchOrder").val();
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            $.ajax({
-                url: '@Url.Action("showOrderDetailsByFilter", "order")',
-                type: 'GET',
-                data: { status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
-                success: function (data) {
-                    $(".loadOrderTable").html(data);
-                }
-            });
-        }
-
-        function searchByTimePeriod() {
-            var selectedStatus = $("#selectStatus").val()
-            var selectedOption = $(".timePeriodFilter").val();
-            var searchedOrder = $("#SearchOrder").val();
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-                $.ajax({
-                    url: '@Url.Action("showOrderDetailsByFilter", "Order")',
-                    type: 'GET',
-                    data: {status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
-                    success: function (data) {
-                        $(".loadOrderTable").html(data);
-                    }
-                });
-        }
-
-        function searchOrderBydate() {
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            var selectedStatus = $("#selectStatus").val()
-            var selectedOption = $(".timePeriodFilter").val();
-            var searchedOrder = $("#SearchOrder").val();
-            $.ajax({
-                url: '@Url.Action("showOrderDetailsByFilter", "Order")',
-                type: 'GET',
-                data: { status: selectedStatus,filterBy : selectedOption,searchedOrder : searchedOrder,startDate:startDate,endDate:endDate},
-                success: function (data) {
-                    $(".loadOrderTable").html(data);
-                }
-            });
         }
         function resetDropDowns() {
             $("#SearchOrder").val('');
             $('option[value="All Time"]').attr('selected', 'selected');
             $('option[value=0]').attr('selected', 'selected');
             $('input[type=date]').val('');
-            loadOrderTable();
+            showOrdersBySearch(1,$(".pagesize").val(),'asc','orderid')
         }
-
         function exportExcelSheet(){
             var searchedOrder = $("#SearchOrder").val();
             var searchByPeriod = $(".timePeriodFilter").val();

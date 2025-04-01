@@ -41,6 +41,9 @@ builder.Services.AddScoped<ITaxService,TaxesImpl>();
 builder.Services.AddScoped<IOrderService,OrderImple>();
 builder.Services.AddScoped<IOrderRepository,OrderRepository>();
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddSingleton<ICustomerService, CustomerImpl>();
+builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+
 
 builder.Services.AddHttpContextAccessor();
 
@@ -153,3 +156,8 @@ app.UseEndpoints(endpoints =>
 });
 
 app.Run();
+
+
+
+
+// dotnet ef dbcontext scaffold "Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Data --context PizzashopCContext --context-dir Data -f

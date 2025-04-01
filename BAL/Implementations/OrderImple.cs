@@ -34,9 +34,9 @@ namespace BAL.Implementations
 
         }
 
-        public List<Order> getAllOrders()
+        public List<Order> getAllOrders(int pageNumber,int pageSize)
         {
-            return _orderRepository.getAllorders();
+            return _orderRepository.getAllorders(pageNumber,pageSize);
         }
 
         public List<Order> getAllOrdersBySearch(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
@@ -55,9 +55,9 @@ namespace BAL.Implementations
             return _orderRepository.getAllStatus();
         }
 
-        public List<Order> getOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
+        public List<Order> getOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy)
         {
-            return _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
+            return _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
         }
 
 
@@ -243,7 +243,7 @@ namespace BAL.Implementations
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 2, 5));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 2, 5), Data);
 
-                List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
+                List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,5,1,"asc","orderid");
 
                 cell = row.CreateCell(9);
                 cell.SetCellValue(orders.Count);
@@ -407,6 +407,11 @@ namespace BAL.Implementations
         public Dictionary<Item, List<Modifier>> getItemsAndModifiers(int orderid)
         {
             return _orderRepository.GetItemsAndModifiersForOrder(orderid);
+        }
+
+        public int getTotalOrderCount()
+        {
+            return _orderRepository.GetTotalOrderCount();
         }
         // public FileResult OnPostExport(string GridHtml)
         // {

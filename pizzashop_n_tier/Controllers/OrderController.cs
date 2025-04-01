@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SelectPdf;
 using System.Threading.Tasks;
 
-// using Microsoft.AspNetCore.Mvc.Infrastructure;
+
 
 namespace pizzashop_n_tier.Controllers
 {
@@ -28,33 +28,35 @@ namespace pizzashop_n_tier.Controllers
         private LinkGenerator _linkGenerator;
 
 
-        public OrderController(IRazorViewEngine RazorViewEngine,LinkGenerator linkGenerator,IOrderService orderService, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider)
+        public OrderController(IRazorViewEngine RazorViewEngine, LinkGenerator linkGenerator, IOrderService orderService, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider)
         {
             _orderService = orderService;
-            // _viewEngine = viewEngine;
             _RazorViewEngine = RazorViewEngine;
             _tempDataProvider = tempDataProvider;
             _serviceProvider = serviceProvider;
-             _linkGenerator = linkGenerator;
+            _linkGenerator = linkGenerator;
         }
-         
+
         public IActionResult showOrders()
         {
             OrderViewModel model = new OrderViewModel();
             model.status = _orderService.getAllStatus();
             return View("orders", model);
         }
-        public IActionResult showOrderDetails()
-        {
-            OrderViewModel model = new OrderViewModel();
-            model.orders = _orderService.getAllOrders();
-            return PartialView("_orderTable", model);
-        }
+        
 
-        public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null)
+        public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null,int pageNumber=1,int pageSize=2,string sortBy="orderid",string sortOrder="asc")
         {
             OrderViewModel model = new OrderViewModel();
-            model.orders = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate);
+            model.orders = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
+            if(pageNumber > _orderService.getTotalOrderCount()/pageSize ){
+                pageNumber = (int)Math.Ceiling((double) _orderService.getTotalOrderCount()/pageSize);
+            }
+            model.PageSize = pageSize;
+            model.PageNumber = pageNumber;
+            model.TotalOrders = _orderService.getTotalOrderCount();
+            model.sortBy = sortBy;
+            model.sortOrder = sortOrder;
             return PartialView("_orderTable", model);
         }
         public IActionResult ExportData(string? searchedOrder = "", int? searchbystatus = 1, string searchByPeriod = "All Time", DateTime? startDate = null, DateTime? endDate = null)
@@ -83,7 +85,6 @@ namespace pizzashop_n_tier.Controllers
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
             model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
             model.orderedItemModifiers = model2;
-            model.orders = _orderService.getAllOrders();
             model.status = _orderService.getAllStatus();
 
             var viewHtml = await ViewToStringAsync("Order/invoice.cshtml", model);
@@ -95,8 +96,10 @@ namespace pizzashop_n_tier.Controllers
 
                 converter.Options.PdfPageSize = PdfPageSize.A4;
                 converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
+                HttpRequest req = HttpContext.Request;
+                 string baseUrl = $"{req.Scheme}://{req.Host}";
 
-                PdfDocument doc = converter.ConvertHtmlString(viewHtml);
+                PdfDocument doc = converter.ConvertHtmlString(viewHtml,baseUrl);
                 using (var memoryStream = new MemoryStream())
                 {
                     doc.Save(memoryStream);
@@ -109,72 +112,44 @@ namespace pizzashop_n_tier.Controllers
                 return View("invoice");
             }
         }
-       private async Task<string> ViewToStringAsync<TModel>(string viewName, TModel model)
-{
-    try
-    {
-        ViewDataDictionary viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+        private async Task<string> ViewToStringAsync<TModel>(string viewName, TModel model)
         {
-            Model = model
-        };
-        var httpContext = new DefaultHttpContext
-        {
-            RequestServices = _serviceProvider
-        };
-
-        var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-        httpContext.SetEndpoint(new Endpoint((_) => Task.CompletedTask, new EndpointMetadataCollection(), "invoice"));
-        if (actionContext == null)
-        {
-            throw new InvalidOperationException("ActionContext cannot be null");
-        }
-
-        // Use GetView with the full virtual path
-        var viewResult = _RazorViewEngine.GetView(null, "~/Views/Order/invoice.cshtml", false);
-        if (!viewResult.Success)
-        {
-            var searchedLocations = string.Join(", ", viewResult.SearchedLocations);
-            throw new InvalidOperationException($"View not found. Searched locations: {searchedLocations}");
-        }
-
-        using (var sw = new StringWriter())
-        {
-            var viewContext = new ViewContext(actionContext, viewResult.View, viewData, new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw, new HtmlHelperOptions());
-            await viewResult.View.RenderAsync(viewContext);
-            return sw.ToString();
-        }
-    }
-    catch (Exception ex)
-    {
-        return $"Error Message : {ex.Message}";
-    }
-}
-
-        private IView FindView(ActionContext actionContext, string viewName)
-        {
-            var getViewResult = _RazorViewEngine.GetView(executingFilePath: null, viewPath: viewName, isMainPage: true);
-            if (getViewResult.Success)
+            try
             {
-                return getViewResult.View;
-            }
+                ViewDataDictionary viewData = new ViewDataDictionary(new EmptyModelMetadataProvider(), new ModelStateDictionary())
+                {
+                    Model = model
+                };
+                var httpContext = new DefaultHttpContext
+                {
+                    RequestServices = _serviceProvider
+                };
 
-            var findViewResult = _RazorViewEngine.FindView(actionContext, viewName, isMainPage: true);
-            if (findViewResult.Success)
+                var actionContext = new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
+                httpContext.SetEndpoint(new Endpoint((_) => Task.CompletedTask, new EndpointMetadataCollection(), "invoice"));
+                if (actionContext == null)
+                {
+                    throw new InvalidOperationException("ActionContext cannot be null");
+                }
+
+                var viewResult = _RazorViewEngine.GetView(null, "~/Views/Order/invoice.cshtml", false);
+                if (!viewResult.Success)
+                {
+                    var searchedLocations = string.Join(", ", viewResult.SearchedLocations);
+                    throw new InvalidOperationException($"View not found. Searched locations: {searchedLocations}");
+                }
+
+                using (var sw = new StringWriter())
+                {
+                    var viewContext = new ViewContext(actionContext, viewResult.View, viewData, new TempDataDictionary(actionContext.HttpContext, _tempDataProvider), sw, new HtmlHelperOptions());
+                    await viewResult.View.RenderAsync(viewContext);
+                    return sw.ToString();
+                }
+            }
+            catch (Exception ex)
             {
-                return findViewResult.View;
+                return $"Error Message : {ex.Message}";
             }
-            var searchedLocations = getViewResult.SearchedLocations.Concat(findViewResult.SearchedLocations);
-            var errorMessage = string.Join(
-                Environment.NewLine,
-                new[] { $"Unable to find view '{viewName}'. The following locations were searched:" }.Concat(searchedLocations)); ;
-
-            throw new InvalidOperationException(errorMessage);
         }
-        //   private ActionContext GetActionContext()
-        // {
-        //     var httpContext = new DefaultHttpContext();
-        //     httpContext.RequestServices = _serviceProvider;
-        //     return new ActionContext(httpContext, new RouteData(), new ActionDescriptor());
-        // }
     }
 }

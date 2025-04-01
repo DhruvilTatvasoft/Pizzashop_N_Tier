@@ -1,0 +1,39 @@
+@* <table class="table mb-0" id="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                <label for="" class="ps-4  ">Name</label>
+            </th>
+            <th scope="col"><label for="" >Type</label></th>
+            <th scope="col"><label for="" >IsEnable</label></th>
+            <th scope="col">
+                <label for=""><label for="">Default</label></label>
+            </th>
+            <th scope="col"><label for="" >Taxes Value</label></th>
+            <th scope="col"><label for=""  >Action</label></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var tax in @Model.taxes)
+        {
+            <tr>
+                <td><label for="" class="ps-4">@tax.Taxname</label></td>
+                <td><label for="">@tax.Taxtype</label></td>
+                <td style="padding-left: 4%;">
+                    
+                </td>
+                <td style="padding-left: 4%;">
+                    
+                    
+                </td>
+                <td></td>
+                <td class="align-items-center ">
+                    <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                        <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="" onclick="openModelForEditTax(@tax.Taxid)">
+                        <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="OpenDeleteTaxModal(@tax.Taxid)" alt="Delete">
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table> *@
