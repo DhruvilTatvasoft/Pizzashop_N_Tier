@@ -64,7 +64,6 @@ public IActionResult ShowDashboard()
 
     public IActionResult Myprofile()
     {
-
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
         var user = _log.getUser(email);
@@ -200,6 +199,8 @@ public IActionResult ShowDashboard()
     {
         userpagingdetailmodel model = new userpagingdetailmodel();
         model = _user.loadusers(model, currentPage, maxRows, search, sortBy, sortOrder);
+        Console.WriteLine(model.sortBy);
+        Console.WriteLine(model.sortOrder);
         return PartialView("_TablePartialView", model);
     }
     public IActionResult getSearchedUser(string search, string sortBy, string sortOrder, int maxRows = 5, int currentPage = 1)

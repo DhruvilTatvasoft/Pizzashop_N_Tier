@@ -47,7 +47,7 @@
 </div>
 <script>
   $(document).ready(function () {
-    loadPage();
+    loadRows("asc","name");
   });
   function loadPage(pageIndex, pageSize) {
     $.ajax({
@@ -64,6 +64,22 @@
  function setUserId(userId) {
     document.querySelector("#userIdToDelete").value = userId;
 }
+
+ function loadRows(sortOrder, sortBy) {
+      console.log("OK");
+      console.log(sortOrder);
+      console.log(sortBy);
+      var currentpage = $(this).data('page');
+      $.ajax({
+        url: '@Url.Action("getUsers", "Dashboard")',
+        type: 'GET',
+        data: { currentPage: currentpage, search: $("#search-record").val(),pageSize:$("#recordPerPage").val() ,maxRows: $('#recordPerPage').val(), sortOrder: sortOrder, sortBy: sortBy },
+        success: function (response) {
+          $("#t-container").html(response);
+          console.log($('#recordPerPage').val());
+        },
+      });
+    };
 
 function deleteUser() {
     var userId = document.querySelector("#userIdToDelete").value;

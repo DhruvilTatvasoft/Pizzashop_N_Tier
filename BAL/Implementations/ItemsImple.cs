@@ -40,6 +40,20 @@ public class ItemsImple : IItemService
         }
     }
 
+    public List<Category> getAllCategories()
+    {
+        return _itemRepository.getAllCategories();
+    }
+
+    public List<Modifiergroup> getAllModifierGroups()
+    {
+        return _itemRepository.getAllModifierGroups();
+    }
+
+    public List<Unit> getAllUnits(){
+        return _itemRepository.getAllUnits();
+    }
+
     public Item getItemFromId(int itemid)
     {
         Item item = _itemRepository.getItem(itemid);
@@ -63,6 +77,7 @@ public class ItemsImple : IItemService
         model.units = units;
         model.modifiergroups = modifiergroups;
     }
+
 
     public List<Item> getSearchedItem(string searchedItem,ItemModel model,int categoryId)
     {

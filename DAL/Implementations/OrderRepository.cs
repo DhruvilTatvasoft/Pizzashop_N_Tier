@@ -72,7 +72,7 @@ public class OrderRepository : IOrderRepository
                    .Skip((pageNumber - 1) * pageSize)
                    .Take(pageSize)
                    .ToList();
-                   
+
         foreach (var order in orders)
         {
             order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
@@ -99,7 +99,7 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
-    public List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy,bool fromExport)
+    public List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate, int pageNumber, int pageSize, string sortOrder, string sortBy, bool fromExport)
     {
         IQueryable<Order> query = _context.Orders.AsQueryable();
         DateTime currentDate = DateTime.Now;
@@ -125,11 +125,29 @@ public class OrderRepository : IOrderRepository
         {
             query = query.Where(order => order.Createdat <= endDate);
         }
-        else if(fromExport){
-            query = query.Where(order=>order.IsDeleted == false);
+        else if (fromExport)
+        {
+            query = query.Where(order => order.IsDeleted == false);
+            var StatusIds = query.Select(o => o.Statusid).Distinct().ToList();
+            var CustomerIds = query.Select(o => o.Customerid).Distinct().ToList();
+
+            var StatusDict = _context.Orderstatuses
+                                    .Where(os => StatusIds.Contains(os.Orderstatusid))
+                                    .ToDictionary(os => os.Orderstatusid);
+
+            var CustomerDict = _context.Customers
+                                       .Where(c => CustomerIds.Contains(c.Customerid))
+                                       .ToDictionary(c => c.Customerid);
+
+            foreach (var order in query)
+            {
+                order.Status = StatusDict.ContainsKey(order.Statusid) ? StatusDict[order.Statusid] : null!;
+                order.Customer = CustomerDict.ContainsKey(order.Customerid) ? CustomerDict[order.Customerid] : new Customer();
+            }
+
             return query.ToList();
         }
-        
+
         if (!string.IsNullOrEmpty(filterBy))
         {
             switch (filterBy)
@@ -169,36 +187,48 @@ public class OrderRepository : IOrderRepository
             order.Status = statusDict.ContainsKey(order.Statusid) ? statusDict[order.Statusid] : null!;
             order.Customer = customerDict.ContainsKey(order.Customerid) ? customerDict[order.Customerid] : new Customer();
         }
-        
-     if(sortBy == "orderId"){
-            if(sortOrder == "desc"){
-                query = query.OrderByDescending(o=>o.Orderid);
+
+        if (sortBy == "orderId")
+        {
+            if (sortOrder == "desc")
+            {
+                query = query.OrderByDescending(o => o.Orderid);
             }
-            else{
-                query = query.OrderBy(o=>o.Orderid);
+            else
+            {
+                query = query.OrderBy(o => o.Orderid);
             }
         }
-        if(sortBy == "customerName"){
-                if(sortOrder == "desc"){
-                    query = query.OrderByDescending(order => order.Customer.Customername);
-                }
-                else{
-                   query = query.OrderBy(order => order.Customer.Customername);
-                }
+        if (sortBy == "customerName")
+        {
+            if (sortOrder == "desc")
+            {
+                query = query.OrderByDescending(order => order.Customer.Customername);
+            }
+            else
+            {
+                query = query.OrderBy(order => order.Customer.Customername);
+            }
         }
-        if(sortBy == "Date"){
-            if(sortOrder == "desc"){
+        if (sortBy == "Date")
+        {
+            if (sortOrder == "desc")
+            {
                 query = query.OrderByDescending(order => order.Createdat);
             }
-            else{
+            else
+            {
                 query = query.OrderBy(order => order.Createdat);
             }
         }
-        else if(sortBy == "totalAmount"){
-               if(sortOrder == "desc"){
+        else if (sortBy == "totalAmount")
+        {
+            if (sortOrder == "desc")
+            {
                 query = query.OrderByDescending(order => order.Totalamount);
             }
-            else{
+            else
+            {
                 query = query.OrderBy(order => order.Totalamount);
             }
         }
@@ -278,6 +308,6 @@ public class OrderRepository : IOrderRepository
 
     public int GetTotalOrderCount()
     {
-        return _context.Orders.Where(order=>order.IsDeleted == false).Count();
+        return _context.Orders.Where(order => order.IsDeleted == false).Count();
     }
 }

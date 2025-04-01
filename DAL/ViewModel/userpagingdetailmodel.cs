@@ -1,3 +1,5 @@
+using Microsoft.Data.SqlClient;
+
 public class userpagingdetailmodel{
     public List<users> users{
         get;
@@ -6,6 +8,9 @@ public class userpagingdetailmodel{
     public int CurrentPageIndex  { get; set; }
     
     public int PageCount { get; set; }
+
+    public string SortOrder{get;set;} = "name";
+    public string SortBy{get;set;} = "asc";
 
     public int totalusers{
         get;

@@ -4,17 +4,17 @@
     <tr>
       <th scope="col">
         <label for="" class="ps-4">Name</label>
-        <a href="@Url.Action("getUsers", "Dashboard", new { sortBy = "name", sortOrder = Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc" })"
-          class="sort-link">
-          <img src="~/images/icons8-sorting-arrows-50.png" style="width: 15px;" alt=""></a>
+        <img src="~/images/icons8-sorting-arrows-50.png"
+          onclick="loadRows('@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','name')"
+          style="width: 15px;" alt="">
       </th>
       <th scope="col">Email</th>
       <th scope="col">phone</th>
       <th scope="col">
         <label for="">Role</label>
-        <a href="@Url.Action("getUsers", "Dashboard", new { sortBy = "role", sortOrder = Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc" })"
-          class="sort-link"><img src="~/images/icons8-sorting-arrows-50.png" onclick="sortTable()" style="width: 15px;"
-            alt=""></a>
+        <img src="~/images/icons8-sorting-arrows-50.png"
+          onclick="loadRows('@(Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc")','role')"
+          onclick="" style="width: 15px;" alt="">
       </th>
       <th scope="col">status</th>
       <th scope="col">Action</th>
@@ -66,7 +66,8 @@
 <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
   <label for="items per page:" class="me-3" style="font-size: 16px;">items per page : </label>
   <div class="dropdown mt-2 me-2">
-    <select class="form-select form-select-lg mb-3" id="recordPerPage" onchange="loadRows()"
+    <select class="form-select form-select-lg mb-3" id="recordPerPage"
+      onchange="loadRows('@(Model.sortBy == "orderId" && Model.sortOrder == "asc" ? "desc" : "asc")','name')"
       aria-label=".form-select-lg example">
       <option value="5" selected="@(Model.maxRows == 5)">5</option>
       <option value="10" selected="@(Model.maxRows == 10)">10</option>
@@ -138,40 +139,21 @@
       });
     };
 
-    function loadRows() {
+    @* function loadRows(sortOrder, sortBy) {
       console.log("OK");
       var currentpage = $(this).data('page');
-
       $.ajax({
         url: '@Url.Action("getUsers", "Dashboard")',
         type: 'GET',
-        data: { currentPage: currentpage, search: $("#search-record").val(), maxRows: $('#recordPerPage').val() },
+        data: { currentPage: currentpage, search: $("#search-record").val(),pageSize:$("#recordPerPage").val() ,maxRows: $('#recordPerPage').val(), sortOrder: sortOrder, sortBy: sortBy },
         success: function (response) {
           $("#t-container").html(response);
           console.log($('#recordPerPage').val());
         },
       });
-    };
+    }; *@
 
-    function sortTable() {
 
-      $(document).ready(function () {
-        $(".sort-link").click(function (event) {
-          console.log("ajax worked");
-          event.preventDefault();
-          var url = $(this).attr("href");
-          $.ajax({
-            url: url,
-            type: "GET",
-            success: function (data) {
-              $("#t-container").html(data);
-            },
-            error: function () {
-              console.error("Error loading sorted data.");
-            }
-          });
-        });
-      });
   </script>
 </div>
 

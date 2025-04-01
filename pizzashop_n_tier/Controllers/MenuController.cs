@@ -168,26 +168,29 @@ public class MenuController : Controller
     [HttpGet]
     public IActionResult OpenAddItemModel()
     {
-        ItemModel model = new ItemModel();
-        _itemService.getItemsForcategory(1, model);
+
+        ItemViewModel model = new ItemViewModel();
+        model.categories = _itemService.getAllCategories();
+        model.units = _itemService.getAllUnits();
+        model.modifiergroups = _itemService.getAllModifierGroups();
         return PartialView("_add_edititem", model);
     }
 
     [HttpPost]
-    public IActionResult AddNewItem(ItemModel model)
+    public IActionResult AddNewItem(ItemViewModel model)
     {
         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        if (!_itemService.addItem(model.IModel, email))
+        if (!_itemService.addItem(model, email))
         {
-            return Json(new { error = "Item already exists", categoryId = model.IModel.Categoryid });
+            return Json(new { error = "Item already exists", categoryId = model.Categoryid });
         }
         else
         {
-            int itemid = _itemService.getItemFromItemName(model.IModel.Itemname);
+            int itemid = _itemService.getItemFromItemName(model.Itemname);
             _modifierService.addModifiersForItem(model.ModifierModels, itemid, email);
-            return Json(new { success = "Item Added successfully", categoryid = model.IModel.Categoryid });
+            return Json(new { success = "Item Added successfully", categoryid = model.Categoryid });
         }
     }
 

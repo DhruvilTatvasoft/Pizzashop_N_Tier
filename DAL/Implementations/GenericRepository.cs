@@ -155,7 +155,7 @@ public class GenericRepository : IGenericRepository
         return role;
     }
 
-   public List<users> getUsersForPage(int currentPage, int maxRows, string search, string sortBy, string sortOrder)
+public List<users> getUsersForPage(int currentPage, int maxRows, string search, string sortBy, string sortOrder)
 {
     var userQuery = from u in _context.Users
                     where u.Isdeleted == false

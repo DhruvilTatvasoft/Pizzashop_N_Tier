@@ -1,10 +1,10 @@
-@model ItemModel
+@model ItemViewModel
+<partial name="_ValidationScriptsPartial" />
 <form id="AddItemForm">
     <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog"
         aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
-
                 <div class="d-flex">
                     <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"
@@ -15,7 +15,7 @@
                         <div class="left col-8">
                             <div class="row d-flex justify-content-between model-row">
                                 <div class="form-floating col-6">
-                                    <select class="form-select model-select" asp-for="@Model.IModel.Categoryid"
+                                    <select class="form-select model-select" asp-for="Categoryid"
                                         id="floatingSelect" aria-label="Floating label select example">
                                         @foreach (var c in Model.categories)
                                         {
@@ -26,8 +26,8 @@
                                 </div>
                                 <div class="form-floating mb-3 col-6">
                                     <input type="text" class="form-control" id="floatingInput"
-                                        asp-for="@Model.IModel.Itemname">
-                                    <span asp-validation-for="@Model.IModel.Itemname" class="bg-danger"></span>
+                                        asp-for="Itemname">
+                                    <span asp-validation-for="Itemname" class="text-danger pt-2"></span>
                                     <label for="floatingInput" class="model-label">Name</label>
                                 </div>
                             </div>
@@ -35,7 +35,7 @@
                                 <div class="col-3 w-25">
                                     <div class="form-floating col-3 w-100">
                                         <select class="form-select model-select model-select"
-                                            asp-for="@Model.IModel.Itemtype" id="floatingSelect"
+                                            asp-for="Itemtype" id="floatingSelect"
                                             aria-label="Floating label select example">
                                             <option value="true">veg</option>
                                             <option value="false">Non-veg</option>
@@ -46,28 +46,30 @@
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="number" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.IModel.Itemrate">
+                                            placeholder="name@example.com" asp-for="Itemrate">
                                         <label for="floatingInput" class="model-label">Rate</label>
+                                        <span asp-validation-for="Itemrate" class="text-danger pt-2"></span>
                                     </div>
                                 </div>
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
-                                        <input type="number" class="form-control" asp-for="@Model.IModel.Itemquantity"
+                                        <input type="number" class="form-control" asp-for="Itemquantity"
                                             id="floatingInput" placeholder="name@example.com">
                                         <label for="floatingInput" class="model-label">Quantity</label>
+                                        <span asp-validation-for="Itemquantity" class="text-danger pt-2"></span>
                                     </div>
                                 </div>
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <select class="form-select model-select model-select" id="floatingSelect"
-                                            asp-for="@Model.IModel.Unitid" aria-label="Floating label select example">
+                                            asp-for="Unitid" aria-label="Floating label select example">
                                             @foreach (var u in Model.units)
                                             {
                                                 <option value="@u.Unitid">@u.Unitname</option>
                                             }
                                         </select>
                                         <label for="floatingInput" class="model-label"
-                                            asp-for="@Model.i.Unitid">unit</label>
+                                            asp-for="Unitid">unit</label>
                                     </div>
                                 </div>
                             </div>
@@ -75,7 +77,7 @@
                                 <div class="col-3">
                                     <div class="form-check form-switch d-flex align-items-center w-100 h-100 pe-0">
                                         <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
-                                            asp-for="@Model.IModel.Isavailable"
+                                            asp-for="Isavailable"
                                             style="height:35px;width:65px;margin:0px;">
                                         <label class="form-check-label model-label "
                                             for="flexSwitchCheckDefault">Available</label>
@@ -85,7 +87,7 @@
                                     <div class="form-check form-switch d-flex align-items-center  w-100 h-100">
                                         <input class="form-check-input m-0 me-2" type="checkbox"
                                             id="flexSwitchCheckDefault" style="height:35px;width:65px;"
-                                            asp-for="@Model.IModel.Isdefaulttax">
+                                            asp-for="Isdefaulttax">
                                         <label class="form-check-label model-label" for="flexSwitchCheckDefault">Default
                                             Tax</label>
                                     </div>
@@ -93,14 +95,15 @@
                                 <div class="col-3 p-0 ps-1">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="number" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.IModel.Taxpercentage">
+                                            placeholder="name@example.com" asp-for="Taxpercentage">
                                         <label for="floatingInput" class="model-label">tax percentage</label>
+                                        <span asp-validation-for="Taxpercentage" class="text-danger pt-2"></span>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="text" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.IModel.Shortcode">
+                                            placeholder="name@example.com" asp-for="Shortcode">
                                         <label for="floatingInput" class="model-label">Short code</label>
                                     </div>
                                 </div>
@@ -110,7 +113,7 @@
                                     <div class="form-floating">
                                         <textarea class="form-control" placeholder="Leave a comment here"
                                             id="floatingTextarea2" style="height: 100px"
-                                            asp-for="@Model.IModel.Description"></textarea>
+                                            asp-for="Description"></textarea>
                                         <label for="floatingTextarea2">description</label>
                                     </div>
                                 </div>
@@ -120,7 +123,7 @@
                                     <div class="form-floating">
                                         <div class="container-fluid"
                                             style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;">
-                                            <input type="file" asp-for="@Model.IModel.ImagePath" id="fileUpload1"
+                                            <input type="file" asp-for="ImagePath" id="fileUpload1"
                                                 hidden>
                                             <div class="d-flex justify-content-center p-4 align-items-center">
                                                 <label for="fileUpload1" class="fileUploadLabel">

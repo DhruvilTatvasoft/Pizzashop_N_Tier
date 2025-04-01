@@ -30,7 +30,7 @@
             </div>
            <div class="row fileUploadRow me-1 ms-1 mb-3">
             <div class="d-flex flex-column justify-content-start">
-              <h2>Admin</h2>
+              <h2>@Model.role</h2>
               <h2 class="Username">@Model.role</h2>
             </div>
           </div>
@@ -49,7 +49,7 @@
               <div class="form-group w-100">
                 <div>
                   <div class="row">
-                    <div class="form-floating mb-2 col-6">
+                    <div class="form-floating mb-2 pe-2 col-6">
                       <input type="text" class="form-control pb-1" id="floatingInput" placeholder="name@example.com"
                         asp-for="firstname" maxlength="50" />
                         <span asp-validation-for="firstname" class="mb-4 text-danger invalidmsg"></span>
@@ -63,13 +63,13 @@
                     </div>
                   </div>
                   <div class="row">
-                    <div class="form-floating mb-2 col-6">
+                    <div class="form-floating mb-2 pe-2 col-6">
                       <input type="text" class="form-control col-6" id="floatingInput" asp-for="username" ,
                         placeholder="name@example.com" maxlength="50" />
                         <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
                       <label for="floatingInput">User Name</label>
                     </div>
-                    <div class="form-floating mb-2 col-6">
+                    <div class="form-floating mb-2  col-6">
                       <input type="tel" class="form-control col-6" id="floatingInput" asp-for="Phone" ,
                         placeholder="name@example.com" maxlength="10" size="10" />
                         <span asp-validation-for="Phone" class="mb-4 text-danger invalidmsg"></span>
@@ -125,7 +125,7 @@
                   Update
                 </button>
                 <button type="cancel" class="btn btn-outline-primary">
-                 <a asp-action="ShowDashboard" asp-controller="Dashboard" style="text-decoration: none;">cancel</a>
+                 <a asp-action="ShowDashboard" asp-controller="Dashboard" class="text-primary" style="text-decoration: none;">cancel</a>
                 </button>
               </div>
             </form>

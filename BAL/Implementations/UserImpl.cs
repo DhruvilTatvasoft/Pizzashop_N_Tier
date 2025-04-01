@@ -91,6 +91,8 @@ public class UserImpl : IUser
         model.CurrentPageIndex = currentPage;
         model.totalusers = (int)_repository.getUserCount();
         model.maxRows = maxRows;
+        model.sortBy = sortBy;
+        model.sortOrder = sortOrder;
 
         return model;
     }

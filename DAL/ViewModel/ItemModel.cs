@@ -101,11 +101,13 @@ public class ItemViewModel{
     public string Itemname{get;set;}
 
     [Required(ErrorMessage = "Item rate is required")]
+    [Range(0, int.MaxValue, ErrorMessage = "Item rate cannot be less than 0")]
     public int Itemrate{get;set;}
 
     public bool Itemtype{get;set;}
 
     [Required(ErrorMessage = "Item Quantity is required")]
+    [Range(0, int.MaxValue, ErrorMessage = "Item Quantity cannot be less than 0")]
     public int Itemquantity{get;set;}
 
     public int Unitid{get;set;}
@@ -114,16 +116,33 @@ public class ItemViewModel{
     public bool Isavailable{get;set;}
 
     public bool Isdefaulttax{get;set;}
-
+    [Range(0, 100, ErrorMessage = "Tax percentage cannot be less than 0 or greater than 100")]
     public int Taxpercentage{get;set;}
 
-    [Required(ErrorMessage = "Shortcode is required")]
-    public string Shortcode{get;set;}
+    public string? Shortcode{get;set;}
 
-    public string Description{get;set;}
+    public string? Description{get;set;}
 
-    public IFormFile ImagePath{get;set;}
+    public IFormFile? ImagePath{get;set;}
 
-    public string ItemImagePathString{get;set;}
+    public string? ItemImagePathString{get;set;}
+
+    public List<Category>? categories{get;set;}
+
+    public List<Unit>? units{get;set;}
+
+    public List<Modifiergroup> modifiergroups{get;set;}
+
+     public List<ModifierModel>? ModifierModels
+    {
+        get;
+        set;
+    }
+
+    public string? payload{
+        get;
+        set;
+    }
+
 
 }

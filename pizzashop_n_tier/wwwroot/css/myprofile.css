@@ -76,7 +76,7 @@ html,
     .form-container {
       width: 97%;
       height: 60%; /* Use viewport height to maintain consistency */
-      background-color: #e9eaeb;
+      background-color: #f8f9fa;
       position: relative;
       overflow: hidden;
     }
@@ -107,7 +107,7 @@ html,
     .form-floating > .form-control:not(:placeholder-shown) ~ label,
     .form-floating > .form-select ~ label {
       color: rgba(var(--bs-body-color-rgb), 0.65);
-      transform: scale(0.85) translateY(-0.5rem) translateX(1.1rem);
+      transform: scale(0.85) translateY(-0.5rem) translateX(0.1rem);
     }
 
     .camera-icon-container img {

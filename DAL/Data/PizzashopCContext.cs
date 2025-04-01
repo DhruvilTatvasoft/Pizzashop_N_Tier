@@ -75,7 +75,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;Password=Dhruvil@23;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -228,9 +228,7 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("items");
 
-            entity.Property(e => e.Itemid)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("itemid");
+            entity.Property(e => e.Itemid).HasColumnName("itemid");
             entity.Property(e => e.Categoryid).HasColumnName("categoryid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
@@ -438,12 +436,10 @@ public partial class PizzashopCContext : DbContext
                 .HasMaxLength(20)
                 .HasColumnName("paymentmethod");
             entity.Property(e => e.Rattings).HasColumnName("rattings");
-            entity.Property(e => e.Sectionid).HasColumnName("sectionid");
             entity.Property(e => e.Statusid).HasColumnName("statusid");
             entity.Property(e => e.Subtotalamount)
                 .HasPrecision(10, 2)
                 .HasColumnName("subtotalamount");
-            entity.Property(e => e.Tableid).HasColumnName("tableid");
             entity.Property(e => e.Taxamount).HasColumnName("taxamount");
             entity.Property(e => e.Totalamount)
                 .HasPrecision(10, 2)
@@ -457,8 +453,7 @@ public partial class PizzashopCContext : DbContext
 
             entity.HasOne(d => d.Section).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Sectionid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("order_sectionid_fkey");
+                .HasConstraintName("orders_sectionid_fkey");
 
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Statusid)
@@ -467,8 +462,7 @@ public partial class PizzashopCContext : DbContext
 
             entity.HasOne(d => d.Table).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Tableid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("order_tableid_fkey");
+                .HasConstraintName("orders_Tablenid_fkey");
         });
 
         modelBuilder.Entity<Orderitem>(entity =>
@@ -545,13 +539,12 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Modifierid).HasColumnName("modifierid");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
-            entity.Property(e => e.Orderitemquantity).HasColumnName("orderitemquantity");
             entity.Property(e => e.Ordermodifierquantity).HasColumnName("ordermodifierquantity");
 
             entity.HasOne(d => d.Item).WithMany(p => p.Ordermodifiers)
                 .HasForeignKey(d => d.Itemid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("orderitem_itemid_fkey");
+                .HasConstraintName("ordermodifiers_itemid_fkey");
 
             entity.HasOne(d => d.Modifier).WithMany(p => p.Ordermodifiers)
                 .HasForeignKey(d => d.Modifierid)
@@ -560,8 +553,7 @@ public partial class PizzashopCContext : DbContext
 
             entity.HasOne(d => d.Order).WithMany(p => p.Ordermodifiers)
                 .HasForeignKey(d => d.Orderid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("orderid_fkey");
+                .HasConstraintName("ordermodifiers_orderid_fkey");
         });
 
         modelBuilder.Entity<Orderreview>(entity =>
@@ -931,9 +923,7 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("units");
 
-            entity.Property(e => e.Unitid)
-                .UseIdentityAlwaysColumn()
-                .HasColumnName("unitid");
+            entity.Property(e => e.Unitid).HasColumnName("unitid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
