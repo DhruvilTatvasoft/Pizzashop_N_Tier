@@ -5,13 +5,17 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
 
-                <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
+                <div class="d-flex">
+                    <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        style="margin-left: auto;padding: 1%;width: 3%;" aria-label="Close"></button>
+                </div>
                 <div class="modal-body w-100 d-flex flex-column">
                     <div class="row w-100">
                         <div class="left col-8">
                             <div class="row d-flex justify-content-between model-row">
                                 <div class="form-floating col-6">
-                                    <select class="form-select model-select" asp-for="@Model.i.Categoryid"
+                                    <select class="form-select model-select" asp-for="@Model.IModel.Categoryid"
                                         id="floatingSelect" aria-label="Floating label select example">
                                         @foreach (var c in Model.categories)
                                         {
@@ -22,7 +26,8 @@
                                 </div>
                                 <div class="form-floating mb-3 col-6">
                                     <input type="text" class="form-control" id="floatingInput"
-                                        asp-for="@Model.i.Itemname">
+                                        asp-for="@Model.IModel.Itemname">
+                                    <span asp-validation-for="@Model.IModel.Itemname" class="bg-danger"></span>
                                     <label for="floatingInput" class="model-label">Name</label>
                                 </div>
                             </div>
@@ -30,7 +35,7 @@
                                 <div class="col-3 w-25">
                                     <div class="form-floating col-3 w-100">
                                         <select class="form-select model-select model-select"
-                                            asp-for="@Model.i.Itemtype" id="floatingSelect"
+                                            asp-for="@Model.IModel.Itemtype" id="floatingSelect"
                                             aria-label="Floating label select example">
                                             <option value="true">veg</option>
                                             <option value="false">Non-veg</option>
@@ -41,13 +46,13 @@
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="number" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.i.Itemrate">
+                                            placeholder="name@example.com" asp-for="@Model.IModel.Itemrate">
                                         <label for="floatingInput" class="model-label">Rate</label>
                                     </div>
                                 </div>
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
-                                        <input type="number" class="form-control" asp-for="@Model.i.Itemquantity"
+                                        <input type="number" class="form-control" asp-for="@Model.IModel.Itemquantity"
                                             id="floatingInput" placeholder="name@example.com">
                                         <label for="floatingInput" class="model-label">Quantity</label>
                                     </div>
@@ -55,7 +60,7 @@
                                 <div class="col-3 w-25">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <select class="form-select model-select model-select" id="floatingSelect"
-                                            asp-for="@Model.i.Unitid" aria-label="Floating label select example">
+                                            asp-for="@Model.IModel.Unitid" aria-label="Floating label select example">
                                             @foreach (var u in Model.units)
                                             {
                                                 <option value="@u.Unitid">@u.Unitname</option>
@@ -70,7 +75,8 @@
                                 <div class="col-3">
                                     <div class="form-check form-switch d-flex align-items-center w-100 h-100 pe-0">
                                         <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
-                                            asp-for="@Model.i.Isavailable" style="height:35px;width:65px;margin:0px;">
+                                            asp-for="@Model.IModel.Isavailable"
+                                            style="height:35px;width:65px;margin:0px;">
                                         <label class="form-check-label model-label "
                                             for="flexSwitchCheckDefault">Available</label>
                                     </div>
@@ -79,7 +85,7 @@
                                     <div class="form-check form-switch d-flex align-items-center  w-100 h-100">
                                         <input class="form-check-input m-0 me-2" type="checkbox"
                                             id="flexSwitchCheckDefault" style="height:35px;width:65px;"
-                                            asp-for="@Model.i.Isdefaulttax">
+                                            asp-for="@Model.IModel.Isdefaulttax">
                                         <label class="form-check-label model-label" for="flexSwitchCheckDefault">Default
                                             Tax</label>
                                     </div>
@@ -87,14 +93,14 @@
                                 <div class="col-3 p-0 ps-1">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="number" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.i.Taxpercentage">
+                                            placeholder="name@example.com" asp-for="@Model.IModel.Taxpercentage">
                                         <label for="floatingInput" class="model-label">tax percentage</label>
                                     </div>
                                 </div>
                                 <div class="col-3">
                                     <div class="form-floating mb-3 col-3 w-100">
                                         <input type="text" class="form-control" id="floatingInput"
-                                            placeholder="name@example.com" asp-for="@Model.i.Shortcode">
+                                            placeholder="name@example.com" asp-for="@Model.IModel.Shortcode">
                                         <label for="floatingInput" class="model-label">Short code</label>
                                     </div>
                                 </div>
@@ -104,7 +110,7 @@
                                     <div class="form-floating">
                                         <textarea class="form-control" placeholder="Leave a comment here"
                                             id="floatingTextarea2" style="height: 100px"
-                                            asp-for="@Model.i.Description"></textarea>
+                                            asp-for="@Model.IModel.Description"></textarea>
                                         <label for="floatingTextarea2">description</label>
                                     </div>
                                 </div>
@@ -112,9 +118,19 @@
                             <div class="row mb-2">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <textarea class="form-control" placeholder="Leave a comment here"
-                                            id="floatingTextarea2" style="height: 100px"></textarea>
-                                        <label for="floatingTextarea2">Comments</label>
+                                        <div class="container-fluid"
+                                            style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;">
+                                            <input type="file" asp-for="@Model.IModel.ImagePath" id="fileUpload1"
+                                                hidden>
+                                            <div class="d-flex justify-content-center p-4 align-items-center">
+                                                <label for="fileUpload1" class="fileUploadLabel">
+                                                    <img src="/images/icons8-cloud-upload-50.png"
+                                                        style="margin-left: 47%;margin-top:2%;">
+                                                </label>
+                                                <div style="text-align: center;" class="ms-5">Drag and drop or Browse
+                                                    Files</div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -123,8 +139,8 @@
                         <div class="right col-4" style="background-color: antiquewhite;">
                             <div class="dropdown mt-2 me-2">
                                 <select class="form-select form-select-lg mb-1" id="modifier-group"
-                                    onchange="getModifier()" aria-label=".form-select-lg example">
-
+                                    onchange="getModifier()" style="font-size: 80%;"
+                                    aria-label=".form-select-lg example">
                                     <option value="1" selected><label for="" class="fs-2">Select Modifier
                                             Groups(s)</label>
                                     </option>
@@ -134,20 +150,20 @@
                                     }
                                 </select>
                             </div>
-                            <div class="loadModifiers p-3">
-                                @if(Model.ModifierModels != null){
+                              <div class="loadModifiers p-3"></div>
+                                @* @if(Model.ModifierModels != null){
                                     @foreach(var m in Model.ModifierModels){
                                         
                                     }
-                                }
-                            </div>
+                                } *@
+
                             <input type="hidden" name="modifiername" id="modifierData">
                         </div>
                     </div>
                 </div>
                 <div class="pb-3 ps-3">
                     <button class="btn btn-primary" type="submit">Submit</button>
-                    <button class="btn btn-outline-primary">Cancel</button>
+                    <button class="btn btn-outline-primary closeBTN" data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
         </div>
@@ -188,40 +204,47 @@
 
     $("#AddItemForm").on('submit', function (e) {
         e.preventDefault();
-        console.log("model opened");
-        var data = new FormData(this);
+                debugger;
+        if ($(this).valid()) {
 
-        var modifierData = [];
-        $(".modifier-group-item").each(function (index) {
-            let modifierGroupId = $(this).find(".modifiergroupID").val();
-            let minValue = $(this).find(".min_value").val();
-            let maxValue = $(this).find(".max_value").val();
-            console.log("--------------------------------------");
-            console.log(modifierGroupId, minValue, maxValue);
-            console.log("--------------------------------------");
-            if (modifierGroupId) {
-                modifierData.push({
-                    ModifiergroupId: modifierGroupId,
-                    min_value: minValue || 0,
-                    max_value: maxValue || 0
-                });
-            }
-        });
+            console.log("model opened");
+            var data = new FormData(this);
+            var modifierData = [];
+            $(".modifier-group-item").each(function (index) {
+                let modifierGroupId = $(this).find(".modifiergroupID").val();
+                let minValue = $(this).find(".min_value").val();
+                let maxValue = $(this).find(".max_value").val();
+                console.log("--------------------------------------");
+                console.log(modifierGroupId, minValue, maxValue);
+                console.log("--------------------------------------");
+                if (modifierGroupId) {
+                    modifierData.push({
+                        ModifiergroupId: modifierGroupId,
+                        min_value: minValue || 0,
+                        max_value: maxValue || 0
+                    });
+                }
+            });
 
-        data.append("payload", JSON.stringify(modifierData));
-        console.log(JSON.stringify(modifierData));
-    
-
-        $.ajax({
-            url: "/Menu/AddNewItem",
-            method: 'POST',
-            data: data,
-            contentType: false,
-            processData: false,
-            success: function (data) {
-                $("#exampleModalCenter3").modal("hide");
-                $("table").html(data);
-            }
-        });
+            data.append("payload", JSON.stringify(modifierData));
+            console.log(JSON.stringify(modifierData));
+            $.ajax({
+                url: "/Menu/AddNewItem",
+                method: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.error) {
+                        toastr.error(data.error);
+                    }
+                    else {
+                        $(".closeBTN").click();
+                        toastr.success(data.success);
+                        loadTableData(data.categoryid);
+                    }
+                }
+            });
+        }
     });
 </script>

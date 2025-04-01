@@ -1,10 +1,11 @@
 using DAL.Data;
 
 public interface IItemService{
-    void addItem(Item i, string email);
+    bool addItem(ItemViewModel itemViewModel, string email);
     bool deleteItem(int itemid);
     void deleteItems(List<int> itemIds);
     Item getItemFromId(int itemid);
+    int getItemFromItemName(string itemname);
     void getItemsForcategory(int categoryId,ItemModel model);
     List<Item> getSearchedItem(string searchedItem,ItemModel model,int categoryId);
 }

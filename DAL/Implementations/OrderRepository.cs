@@ -99,7 +99,7 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
-    public List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy)
+    public List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy,bool fromExport)
     {
         IQueryable<Order> query = _context.Orders.AsQueryable();
         DateTime currentDate = DateTime.Now;
@@ -124,6 +124,10 @@ public class OrderRepository : IOrderRepository
         else if (endDate.HasValue)
         {
             query = query.Where(order => order.Createdat <= endDate);
+        }
+        else if(fromExport){
+            query = query.Where(order=>order.IsDeleted == false);
+            return query.ToList();
         }
         
         if (!string.IsNullOrEmpty(filterBy))
@@ -200,10 +204,6 @@ public class OrderRepository : IOrderRepository
         }
         List<Order> orders = query.Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize).ToList();
-
-           
-        
-
         return orders;
     }
 

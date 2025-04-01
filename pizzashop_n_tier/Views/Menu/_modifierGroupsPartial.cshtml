@@ -393,26 +393,26 @@
       method: 'POST',
       data: { modifierid: modifierid, modifiergroupid, modifiergroupid: modifiergroupid },
       success: function (data) {
-    $('#deleteModifierModel').modal('hide');
-    console.log("modal closed");
+        $('#deleteModifierModel').modal('hide');
+        console.log("modal closed");
         loadModifiersForModifierGroup(modifiergroupid);
       }
     });
   })
 
-  function OpenEditModifierModel(Modifierid,Modifiergroupid){
+  function OpenEditModifierModel(Modifierid, Modifiergroupid) {
     $.ajax({
       url: '@Url.Action("EditmodifierGet", "Menu")',
-      method : 'GET',
-      data: { modifierid: Modifierid,modifierGroupId: Modifiergroupid },
+      method: 'GET',
+      data: { modifierid: Modifierid, modifierGroupId: Modifiergroupid },
       success: function (data) {
         $(".menubody").html(data);
-       $('#addNewModifier').modal('show');
-       $("#updateModifier").attr("style", "display:block");
-       $("#saveNewModifier").attr("style", "display:none");
-       document.getElementById("modifierIdForUpdate").value = Modifierid;
-       console.log(Modifierid);
-       document.querySelector("#addNewModifier h5").innerHTML = 'Edit Modifier';
+        $('#addNewModifier').modal('show');
+        $("#updateModifier").attr("style", "display:block");
+        $("#saveNewModifier").attr("style", "display:none");
+        document.getElementById("modifierIdForUpdate").value = Modifierid;
+        console.log(Modifierid);
+        document.querySelector("#addNewModifier h5").innerHTML = 'Edit Modifier';
       }
     })
   }

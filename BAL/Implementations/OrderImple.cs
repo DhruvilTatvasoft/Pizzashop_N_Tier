@@ -57,7 +57,7 @@ namespace BAL.Implementations
 
         public List<Order> getOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy)
         {
-            return _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
+            return _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy,false);
         }
 
 
@@ -243,7 +243,7 @@ namespace BAL.Implementations
                 sheet.AddMergedRegion(new CellRangeAddress(4, 5, 2, 5));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(4, 5, 2, 5), Data);
 
-                List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,5,1,"asc","orderid");
+                List<Order> orders = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,5,1,"asc","orderid",true);
 
                 cell = row.CreateCell(9);
                 cell.SetCellValue(orders.Count);

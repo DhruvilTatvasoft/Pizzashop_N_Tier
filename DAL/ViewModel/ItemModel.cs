@@ -1,4 +1,6 @@
+using System.ComponentModel.DataAnnotations;
 using DAL.Data;
+using Microsoft.AspNetCore.Http;
 
 public class ItemModel
 {
@@ -83,9 +85,45 @@ public class ItemModel
         get;
         set;
     }
-
     public Modifier modifier{
         get;
         set;
     }
+
+    public ItemViewModel IModel{
+        get;set;
+    }
+}
+public class ItemViewModel{
+
+    [Required(ErrorMessage = "Item Name is required")]
+    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "please Use only letters")]
+    public string Itemname{get;set;}
+
+    [Required(ErrorMessage = "Item rate is required")]
+    public int Itemrate{get;set;}
+
+    public bool Itemtype{get;set;}
+
+    [Required(ErrorMessage = "Item Quantity is required")]
+    public int Itemquantity{get;set;}
+
+    public int Unitid{get;set;}
+
+    public int Categoryid{get;set;}
+    public bool Isavailable{get;set;}
+
+    public bool Isdefaulttax{get;set;}
+
+    public int Taxpercentage{get;set;}
+
+    [Required(ErrorMessage = "Shortcode is required")]
+    public string Shortcode{get;set;}
+
+    public string Description{get;set;}
+
+    public IFormFile ImagePath{get;set;}
+
+    public string ItemImagePathString{get;set;}
+
 }

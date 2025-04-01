@@ -228,7 +228,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("items");
 
-            entity.Property(e => e.Itemid).HasColumnName("itemid");
+            entity.Property(e => e.Itemid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("itemid");
             entity.Property(e => e.Categoryid).HasColumnName("categoryid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
@@ -929,7 +931,9 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("units");
 
-            entity.Property(e => e.Unitid).HasColumnName("unitid");
+            entity.Property(e => e.Unitid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("unitid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")

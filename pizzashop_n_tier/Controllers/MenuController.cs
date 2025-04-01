@@ -53,19 +53,19 @@ public class MenuController : Controller
     [HttpPost]
     public IActionResult AddCategory(MenuModel model)
     {
-            var req = HttpContext.Request;
-            string email = _cookieService.getValueFromCookie("username", req);
-            if (_menuService.addNewcategory(model, email))
-            {
-                 _menuService.GetCategories(model);
-                return Json(new {success = "category Added Successfully" });
-            }
-            else
-            {
-                return Json(new { error = "Category Already Exist"});
-            }
-        
-       
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        if (_menuService.addNewcategory(model, email))
+        {
+            _menuService.GetCategories(model);
+            return Json(new { success = "category Added Successfully" });
+        }
+        else
+        {
+            return Json(new { error = "Category Already Exist" });
+        }
+
+
     }
 
     public IActionResult ItemsData(int categoryId)
@@ -177,18 +177,18 @@ public class MenuController : Controller
     public IActionResult AddNewItem(ItemModel model)
     {
         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
-
         var req = HttpContext.Request;
         string email = _cookieService.getValueFromCookie("username", req);
-        _itemService.addItem(model.i, email);
-        _modifierService.addModifiersForItem(model.ModifierModels, model.i.Itemid, email);
-        Console.WriteLine(model.ModifierModels.Count);
-
-        foreach (var x in model.ModifierModels)
+        if (!_itemService.addItem(model.IModel, email))
         {
-            Console.WriteLine(x.max_value);
+            return Json(new { error = "Item already exists", categoryId = model.IModel.Categoryid });
         }
-        return RedirectToAction("ItemsData", new { categoryId = model.i.Categoryid });
+        else
+        {
+            int itemid = _itemService.getItemFromItemName(model.IModel.Itemname);
+            _modifierService.addModifiersForItem(model.ModifierModels, itemid, email);
+            return Json(new { success = "Item Added successfully", categoryid = model.IModel.Categoryid });
+        }
     }
 
     public IActionResult EditItem(int itemid)
@@ -271,7 +271,7 @@ public class MenuController : Controller
         model.modifiers = modifiers;
         return View("_modifierListPartial", model);
     }
-    
+
     public IActionResult EditModifierGroupGet(int modifiergroupid)
     {
         ItemModel model = new ItemModel();
@@ -300,21 +300,23 @@ public class MenuController : Controller
     public IActionResult AddNewModifier(ItemModel model)
     {
         _modifierService.AddNewModifier(model.modifier);
-         TempData["ToastrMessage"] = "Modifier Added Successfully";
-         TempData["ToastrType"] = "success";
+        TempData["ToastrMessage"] = "Modifier Added Successfully";
+        TempData["ToastrType"] = "success";
         return View("Menu");
     }
 
-    public IActionResult EditmodifierGet(int modifierid,int modifierGroupId){
+    public IActionResult EditmodifierGet(int modifierid, int modifierGroupId)
+    {
         ItemModel model = new ItemModel();
         model.modifiergroups = _modifierService.getAllModifierGroups();
-        model.modifier = _modifierService.getModifier(modifierid,modifierGroupId);
+        model.modifier = _modifierService.getModifier(modifierid, modifierGroupId);
         model.units = _modifierService.GetAllUnits();
         return PartialView("_modifersContainerPartial", model);
     }
 
-    public IActionResult EditmodifierPost(ItemModel model,int modifierGroupId){
-        _modifierService.updateModifier(model.modifier,modifierGroupId);
+    public IActionResult EditmodifierPost(ItemModel model, int modifierGroupId)
+    {
+        _modifierService.updateModifier(model.modifier, modifierGroupId);
         return View("Menu");
     }
 }

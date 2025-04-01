@@ -7,7 +7,7 @@ public interface IOrderRepository{
     List<Order> getAllordersBySearch(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
     List<Order> getAllOrdersFromStatus(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
     List<Orderstatus> getAllStatus();
-    List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy);
+    List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy,bool fromExport);
     Order? GetOrderDetails(int orderid);
     Dictionary<Item, List<Modifier>> GetItemsAndModifiersForOrder(int orderid);
     int GetTotalOrderCount();

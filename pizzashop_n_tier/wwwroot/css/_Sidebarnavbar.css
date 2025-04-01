@@ -55,7 +55,7 @@ html,
     }
     .dropdown-menu[data-bs-popper] {
         top: 100%;
-        left: -135%;
+        left: -227%;
         margin-top: var(--bs-dropdown-spacer);
     }
     .sticky-top {
@@ -100,7 +100,10 @@ html,
         color: #0066A7;
         font-weight: bold;
     }
-
+    
+.dropdown-toggle::after {
+    display: none;
+}
     .tg-btn {
         
         border: 0;

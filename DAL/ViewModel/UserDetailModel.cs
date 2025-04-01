@@ -65,4 +65,5 @@ public class UserDetailModel
     public IFormFile profilePicPath {get;set;}
     public string ProfilePath {get;set;}
 
+    
 }

@@ -6,13 +6,21 @@ public class ItemsImple : IItemService
 
     public IItemRepository _itemRepository;
 
-    public ItemsImple(IItemRepository itemRepository){
+     public IImagePath _imagePath;
+    public ItemsImple(IItemRepository itemRepository,IImagePath imagePath){
         _itemRepository = itemRepository;
+        _imagePath = imagePath;
     }
 
-    public void addItem(Item i, string email)
+    public bool addItem(ItemViewModel itemViewModel, string email)
     {
-        _itemRepository.addItemInDb(i,email);
+        if(itemViewModel.ImagePath!= null){
+        string imagePath = _imagePath.getImagePath(itemViewModel.ImagePath); 
+       return _itemRepository.addItemInDb(itemViewModel,email,imagePath);
+        }
+        else{
+      return  _itemRepository.addItemInDb(itemViewModel, email, null);
+        }
     }
 
     public bool deleteItem(int itemid)
@@ -36,6 +44,11 @@ public class ItemsImple : IItemService
     {
         Item item = _itemRepository.getItem(itemid);
         return item;
+    }
+
+    public int getItemFromItemName(string itemname)
+    {
+        return _itemRepository.getItemFromItemName(itemname);
     }
 
     public void getItemsForcategory(int categoryId,ItemModel model)

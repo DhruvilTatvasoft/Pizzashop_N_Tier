@@ -6,7 +6,7 @@
         <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
             onclick="deleteModifierGroup(@Model.mg.Modifiergroupid)" alt="">
     </div>
-   <input  class="modifiergroupID" value="@Model.mg.Modifiergroupid">
+   <input  class="modifiergroupID" value="@Model.mg.Modifiergroupid" hidden>
    @* <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ids[@Model.mg.Modifiergroupid]" value="@Model.mg.Modifiergroupid" hidden> *@
     <div class="d-flex">
         <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"

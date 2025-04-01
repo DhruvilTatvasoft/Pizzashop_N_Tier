@@ -31,17 +31,17 @@
                     </button>
                 </div>
                 <div class="dropdown me-5" style="margin-left: auto;">
-                    <button class="btn btn-secondary dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false">
+                    <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false" style="border: 0;">
                         <a href=""> <img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
                     </button>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile">My profile</a>
+                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile"><img src="~/images/account.png" class="me-2" alt="">My profile</a>
                         </li>
-                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword">Change
+                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword"><img src="~/images/reload.png" class="me-2" alt="">Change
                                 Password</a></li>
                         <li><a class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalCenter">Logout</a></li>
+                                data-bs-target="#exampleModalCenter"><img src="~/images/logout.png" class="me-2" alt="">Logout</a></li>
                     </ul>
                 </div>
             </div>
@@ -95,7 +95,6 @@
                     </li>
                     </a>
                     <li class="ps-2">
-                        
                         <a href=""><img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt=""><label for="">Customers</label></a>
                     </li>
                 </ul>
@@ -128,6 +127,8 @@
         </div>
 
         <script>
+
+           
             document.querySelector(".tg-btn").addEventListener("click", function () {
                 document.querySelector(".sidebar").style.display = "block";
             

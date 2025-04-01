@@ -62,7 +62,8 @@ public class TaxesRepository : ITaxesRepository
 
     public List<Taxesandfee> getAlltaxes()
     {
-        return _context.Taxesandfees.Where(taxes=>taxes.Isdeleted == false).ToList();
+        return _context.Taxesandfees.Where(taxes=>taxes.Isdeleted == false)
+                                    .GroupBy(taxes => taxes.Taxname.ToLower().Trim()).Select(taxes => taxes.First()).ToList();
     }
 
     public Taxesandfee getTaxById(int taxid)

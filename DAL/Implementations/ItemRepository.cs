@@ -1,5 +1,6 @@
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 
 public class ItemRepository : IItemRepository
 {
@@ -64,11 +65,35 @@ public class ItemRepository : IItemRepository
         return units;
     }
 
-    public void addItemInDb(Item i, string email)
-    {
-        i.Itemid = _context.Items.Count() + 1;
+    public bool addItemInDb(ItemViewModel itemViewModel , string email,string? imagePath)
+    {   
+        if(_context.Items.FirstOrDefault(item=>item.Itemname == itemViewModel.Itemname && item.Categoryid == itemViewModel.Categoryid) != null){
+            return false;
+        }
+        else{
+        Item i = new Item();
+        i.Itemname = itemViewModel.Itemname;
+        i.Categoryid = itemViewModel.Categoryid;
+        i.Itemtype = itemViewModel.Itemtype;
+        i.Itemrate = itemViewModel.Itemrate;
+        i.Itemquantity = itemViewModel.Itemquantity;
+        i.Isdefaulttax = itemViewModel.Isdefaulttax;
+        i.Createdby = (int)(_context.Logins.FirstOrDefault(lg => lg.Email == email)?.Id ?? 1);
+        i.Taxpercentage = itemViewModel.Taxpercentage;
+        i.Shortcode = itemViewModel.Shortcode;
+        i.Unitid = itemViewModel.Unitid;
+        if(imagePath!=null){
+        i.Itemimage = imagePath;
+        }
+        i.Createdat = DateTime.Now;
+        i.Modifiedat = DateTime.Now;
+        i.Modifiedby = (int)(_context.Logins.FirstOrDefault(lg => lg.Email == email)?.Id ?? 1);
         _context.Items.Add(i);
         _context.SaveChanges();
+
+        return true;
+        }
+
     }
 
     public void deleteItemFromDb(int itemId)
@@ -107,5 +132,10 @@ public class ItemRepository : IItemRepository
     public Item getItem(int itemid)
     {
         return _context.Items.FirstOrDefault(i => i.Itemid == itemid && i.Isdeleted == false) ?? new Item();
+    }
+
+    public int getItemFromItemName(string itemname)
+    {
+       return _context.Items.FirstOrDefault(i => i.Itemname == itemname && i.Isdeleted == false).Itemid;
     }
 }
