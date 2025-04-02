@@ -1,0 +1,213 @@
+@model ItemViewModel
+<partial name="_ValidationScriptsPartial" />
+<form id="EditItemForm">
+    <div class="modal fade" id="ModelForEditItem" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="d-flex">
+                    <h4 class="ms-3 mt-2 mb-0">Add New Menu Item</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                        style="margin-left: auto;padding: 1%;width: 3%;" aria-label="Close"></button>
+                </div>
+                <div class="modal-body w-100 d-flex flex-column">
+                    <div class="row w-100">
+                        <div class="left col-8">
+                            <div class="row d-flex justify-content-between model-row">
+                                <div class="form-floating col-6">
+                                    <select class="form-select model-select" asp-for="Categoryid"
+                                        id="floatingSelect" aria-label="Floating label select example">
+                                        @foreach (var c in Model.categories)
+                                        {
+                                            <option value="@c.Categoryid" selected>@c.Categoryname</option>
+                                        }
+                                    </select>
+                                    <label for="floatingSelect" class="model-label">Category</label>
+                                </div>
+                                <div class="form-floating mb-3 col-6">
+                                    <input type="text" class="form-control" id="floatingInput"
+                                        asp-for="Itemname">
+                                    <span asp-validation-for="Itemname" class="text-danger pt-2"></span>
+                                    <label for="floatingInput" class="model-label">Name</label>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between  model-row">
+                                <div class="col-3 w-25">
+                                    <div class="form-floating col-3 w-100">
+                                        <select class="form-select model-select model-select"
+                                            asp-for="Itemtype" id="floatingSelect"
+                                            aria-label="Floating label select example">
+                                            <option value="true">veg</option>
+                                            <option value="false">Non-veg</option>
+                                        </select>
+                                        <label for="floatingSelect" class="model-label">Item Type*</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="Itemrate">
+                                        <label for="floatingInput" class="model-label">Rate</label>
+                                        <span asp-validation-for="Itemrate" class="text-danger pt-2"></span>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" asp-for="Itemquantity"
+                                            id="floatingInput" placeholder="name@example.com">
+                                        <label for="floatingInput" class="model-label">Quantity</label>
+                                        <span asp-validation-for="Itemquantity" class="text-danger pt-2"></span>
+                                    </div>
+                                </div>
+                                <div class="col-3 w-25">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <select class="form-select model-select model-select" id="floatingSelect"
+                                            asp-for="Unitid" aria-label="Floating label select example">
+                                            @foreach (var u in Model.units)
+                                            {
+                                                <option value="@u.Unitid">@u.Unitname</option>
+                                            }
+                                        </select>
+                                        <label for="floatingInput" class="model-label"
+                                            asp-for="Unitid">unit</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row d-flex justify-content-between">
+                                <div class="col-3">
+                                    <div class="form-check form-switch d-flex align-items-center w-100 h-100 pe-0">
+                                        <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
+                                            asp-for="Isavailable"
+                                            style="height:35px;width:65px;margin:0px;">
+                                        <label class="form-check-label model-label "
+                                            for="flexSwitchCheckDefault">Available</label>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-check form-switch d-flex align-items-center  w-100 h-100">
+                                        <input class="form-check-input m-0 me-2" type="checkbox"
+                                            id="flexSwitchCheckDefault" style="height:35px;width:65px;"
+                                            asp-for="Isdefaulttax">
+                                        <label class="form-check-label model-label" for="flexSwitchCheckDefault">Default
+                                            Tax</label>
+                                    </div>
+                                </div>
+                                <div class="col-3 p-0 ps-1">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="number" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="Taxpercentage">
+                                        <label for="floatingInput" class="model-label">tax percentage</label>
+                                        <span asp-validation-for="Taxpercentage" class="text-danger pt-2"></span>
+                                    </div>
+                                </div>
+                                <div class="col-3">
+                                    <div class="form-floating mb-3 col-3 w-100">
+                                        <input type="text" class="form-control" id="floatingInput"
+                                            placeholder="name@example.com" asp-for="Shortcode">
+                                        <label for="floatingInput" class="model-label">Short code</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <div class="form-floating">
+                                        <textarea class="form-control" placeholder="Leave a comment here"
+                                            id="floatingTextarea2" style="height: 100px"
+                                            asp-for="Description"></textarea>
+                                        <label for="floatingTextarea2">description</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row mb-2">
+                                <div class="col-12">
+                                    <div class="form-floating">
+                                        <div class="container-fluid"
+                                            style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;">
+                                            <input type="file" asp-for="ImagePath" id="fileUpload1"
+                                                hidden>
+                                            <div class="d-flex justify-content-center p-4 align-items-center">
+                                                <label for="fileUpload1" class="fileUploadLabel">
+                                                    <img src="/images/icons8-cloud-upload-50.png"
+                                                        style="margin-left: 47%;margin-top:2%;">
+                                                </label>
+                                                <div style="text-align: center;" class="ms-5">Drag and drop or Browse
+                                                    Files @Model.ModifierModels.Count</div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <div class="right col-4" style="background-color: antiquewhite;">
+                            <div class="dropdown mt-2 me-2">
+                                <select class="form-select form-select-lg mb-1" id="modifier-group"
+                                    onchange="getModifier()" style="font-size: 80%;"
+                                    aria-label=".form-select-lg example">
+                                    <option value="1"><label for="" class="fs-2">Select Modifier
+                                            Groups(s)</label>
+                                    </option>
+                                    
+                                    @foreach (var m in @Model.modifiergroups)
+                                    {
+                                        <option value="@m.Modifiergroupid">@m.Modifiergroupname</option>
+                                    }
+                                </select>
+                            </div>
+                              <div class="loadModifiers p-3">
+                                @* @foreach(var modifierModel in @Model.ModifierModels){
+
+ <div class="modifier-group-item" id="modifiergroup_@modifierModel.ModifiergroupId">
+    <div class="d-flex ps-3  pe-3 pt-1 mb-2" >
+        <label>@modifierModel.mg.Modifiergroupname</label>
+        <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
+            onclick="deleteModifierGroup(@modifierModel.ModifiergroupId)" alt="">
+    </div>
+   <input  class="modifiergroupID" value="@modifierModel.ModifiergroupId" hidden> *@
+   @* <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ids[@Model.mg.Modifiergroupid]" value="@Model.mg.Modifiergroupid" hidden> *@
+    @* <div class="d-flex">
+        <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"
+            aria-label=".form-select-lg example">
+            <option selected>0</option>
+            <option value="101" selected>1</option>
+        </select>
+        <select class="form-select form-select-lg mb-3 w-25 max_value" id="modifiergroupid_@modifierModel.ModifiergroupId"   style="margin-left:auto;font-size: 0.75rem;"
+            aria-label=".form-select-lg example">
+            <option value="1">0</option>
+            <option value="202" selected>1</option>
+            <option value="3">2</option>
+        </select>
+    </div>
+    <ul class="">
+        @foreach (var m in @modifierModel.modifiers)
+        {
+            <div class="d-flex justify-content-between">
+                <li class="pb-1 pt-1 w-75" style="list-style-type: circle;">@m.Modifiername</li>
+                <li class="pb-1 pt-1 w-25">@m.Modifierrate</li>
+            </div>
+        }
+    </ul>
+</div> *@
+
+                                }
+                              </div>
+                               
+
+                            <input type="hidden" name="modifiername" id="modifierData">
+                        </div>
+                    </div>
+                </div>
+                <div class="pb-3 ps-3">
+                    <button class="btn btn-primary" type="submit">Submit</button>
+                    <button class="btn btn-outline-primary closeBTN" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</form>
+
+<script>
+
+    
+</script>

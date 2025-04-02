@@ -16,4 +16,5 @@ public interface IItemRepository {
     Item getItem(int itemid);
     int getItemFromItemName(string itemname);
     int getAllItemsForCategory(int categoryId);
+    Item getItemFromItemId(int itemId);
 }

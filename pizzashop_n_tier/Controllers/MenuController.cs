@@ -174,7 +174,7 @@ public class MenuController : Controller
         model.categories = _itemService.getAllCategories();
         model.units = _itemService.getAllUnits();
         model.modifiergroups = _itemService.getAllModifierGroups();
-        return PartialView("_add_edititem", model);
+        return PartialView("_additem", model);
     }
 
     [HttpPost]
@@ -200,7 +200,7 @@ public class MenuController : Controller
         ItemModel model = new ItemModel();
         model.i = _itemService.getItemFromId(itemid);
         model.ModifierModels = _modifierService.getModifiersForItem(itemid);
-        return PartialView("_add_edititem", model);
+        return PartialView("_additem", model);
     }
 
     [HttpGet]
@@ -322,5 +322,11 @@ public class MenuController : Controller
     {
         _modifierService.updateModifier(model.modifier, modifierGroupId);
         return View("Menu");
+    }
+
+    public IActionResult EditItemGet(int itemId){
+        ItemViewModel model = new ItemViewModel();
+        _itemService.loadItemModel(model,itemId);
+        return PartialView("_edititem",model);
     }
 }

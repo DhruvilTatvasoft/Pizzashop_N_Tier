@@ -15,8 +15,8 @@
     <input type="text" id="categoryid_hidden" value="@Model.categoryId" hidden>
 </div>
 <div class="tbl m-3 table-container"></div>
-
 <div id="AddItemModelDiv">
+<div id="editItemModel"></div>
 </div>
 <script>
     $("document").ready(() => {
@@ -53,4 +53,16 @@
             }
         });
     }
+
+    function EditItemGet(itemid){   
+    $.ajax({
+        url:'@Url.Action("EditItemGet","Menu")',
+        type:'GET',
+        data:{itemId : itemid},
+        success:function(data){
+            $('#editItemModel').html(data);
+            $('#ModelForEditItem').modal('show');
+        }
+    });
+}
 </script>

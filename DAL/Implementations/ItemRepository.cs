@@ -148,4 +148,10 @@ public class ItemRepository : IItemRepository
     {
         return _context.Items.Where(item=>item.Categoryid == categoryId && item.Isdeleted == false).Count();
     }
+
+    public Item getItemFromItemId(int itemId)
+    {
+        Item item = _context.Items.FirstOrDefault(item=>item.Itemid == itemId && item.Isdeleted == false)! ;
+        return item;
+    }
 }

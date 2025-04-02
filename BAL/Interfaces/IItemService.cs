@@ -12,4 +12,5 @@ public interface IItemService{
     void getItemsForcategory(int categoryId,ItemModel model,int pageSize,int pageNumber);
     
     List<Item> getSearchedItem(string searchedItem,ItemModel model,int categoryId);
+    ItemViewModel loadItemModel(ItemViewModel model, int itemId);
 }

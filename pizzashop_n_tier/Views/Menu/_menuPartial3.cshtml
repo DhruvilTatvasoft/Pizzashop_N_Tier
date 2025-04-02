@@ -74,7 +74,7 @@
             </td>
             <td>
                 <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                    <img src="~/images/pencil-square.svg" class="me-2" onclick="EditItemGet(@item.Itemid)" alt="">
+                    <img src="~/images/pencil-square.svg" class="me-2" style="cursor: pointer;" onclick="EditItemGet(@item.Itemid)" alt="">
                     <img src="~/images/trash-fill.svg" onclick="deleteItemGet(@item.Itemid,@item.Categoryid)"
                         style="cursor: pointer;" alt="">
 
@@ -121,8 +121,9 @@
         }
     </div>
 </div>
+ 
 <script>
-    function EditItemGet(itemid) {
+    @* function EditItemGet(itemid) {
         $.ajax({
             url: '@Url.Action("EditItem", "Menu")',
             method: 'GET',
@@ -131,7 +132,7 @@
                 console.log(data);
             }
         });
-    }
+    } *@
         $(".pageSize").on("change", function () {
              loadTableData(selectedCategoryId,$(".pageSize").val(),1)
              console.log("page size changed to "+$(".pageSize").val())

@@ -1,5 +1,6 @@
 using System;
 using DAL.Data;
+using DAL.interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class ItemsImple : IItemService
@@ -8,9 +9,12 @@ public class ItemsImple : IItemService
     public IItemRepository _itemRepository;
 
      public IImagePath _imagePath;
-    public ItemsImple(IItemRepository itemRepository,IImagePath imagePath){
+
+     public IModifierRepository _modifierRepository;
+    public ItemsImple(IItemRepository itemRepository,IImagePath imagePath,IModifierRepository modifierRepository){
         _itemRepository = itemRepository;
         _imagePath = imagePath;
+        _modifierRepository = modifierRepository;
     }
 
     public bool addItem(ItemViewModel itemViewModel, string email)
@@ -92,5 +96,27 @@ public class ItemsImple : IItemService
        model.units = unitlist;
        model.categories = categoryList;
        return itemList;
+    }
+
+    public ItemViewModel loadItemModel(ItemViewModel model, int itemId)
+    {
+        Item item = _itemRepository.getItemFromItemId(itemId);
+        model.Itemname = item.Itemname;
+        model.Itemrate = (int)item.Itemrate;
+        model.Itemtype = item.Itemtype;
+        model.Itemquantity = item.Itemquantity;
+        model.Isavailable = item.Isavailable;
+        model.Categoryid = item.Categoryid;
+        model.Isdefaulttax = item.Isdefaulttax;
+        model.Taxpercentage = (int)item.Taxpercentage;
+        model.Shortcode = item.Shortcode;
+        model.Description = item.Description;
+        model.ItemImagePathString = item.Itemimage;
+        model.categories = _itemRepository.getAllCategories();
+        model.units = _itemRepository.getAllUnits();
+        model.modifiergroups = _itemRepository.getAllModifierGroups();
+        List<ModifierModel> modifierModels = _modifierRepository.getModifiersForItem(itemId);
+        model.ModifierModels = modifierModels;
+        return model;
     }
 }

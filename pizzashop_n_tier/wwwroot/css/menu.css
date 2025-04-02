@@ -342,6 +342,10 @@ body{
     --bs-modal-width: 70%;
     --bs-modal-height: 55%;
 }
+#ModelForEditItem{
+    --bs-modal-width: 70%;
+    --bs-modal-height: 55%;
+}
     @media (max-width: 992px) {
         li {
             font-size: 70%;
