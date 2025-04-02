@@ -1,0 +1,19 @@
+.container-fluid{
+    background-color: #D8EFF7;
+    width: 100%;
+    height: 100%;
+}
+html,body{
+        height: 100%;
+        /* width: 100%; */
+        overflow: hidden;
+        margin: 0;
+        padding: auto;
+        /* background-color: red; */
+    }
+    .logo{
+        width: 8%;
+    }
+    .error-logo{
+        width:25%;
+    }

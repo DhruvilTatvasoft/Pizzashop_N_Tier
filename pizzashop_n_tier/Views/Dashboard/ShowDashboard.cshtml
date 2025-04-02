@@ -1,5 +1,11 @@
 @{
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
     ViewData["Title"] = "Dashboard Page";
-
 }
+<script>
+     $("document").ready(function(){
+      $('.sidebar ul li').removeClass('active-class');
+             $('.dashboard').addClass('active-class')
+  })
+
+</script>

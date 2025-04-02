@@ -30,6 +30,8 @@
         $("document").ready(function(){
             loadSections();
             loadTablePage(1);
+              $('.sidebar ul li').removeClass('active-class');
+             $('.tableandsection').addClass('active-class')
         })
         function loadSections(){
             $.ajax({

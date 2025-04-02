@@ -47,6 +47,9 @@
 </div>
 <script>
   $(document).ready(function () {
+
+      $('.sidebar ul li').removeClass('active-class');
+             $('.Users').addClass('active-class')
     loadRows("asc","name");
   });
   function loadPage(pageIndex, pageSize) {

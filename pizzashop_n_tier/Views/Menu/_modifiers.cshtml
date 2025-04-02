@@ -1,12 +1,11 @@
-@model ItemModel
-
-<div class="modifier-group-item">
-    <div class="d-flex ps-3  pe-3 pt-1 mb-2">
-        <label>@Model.mg.Modifiergroupname</label>
+@model ItemViewModel
+<div class="modifier-group-item" id="modifiergroup_@Model.modifiergroup.Modifiergroupid">
+    <div class="d-flex ps-3  pe-3 pt-1 mb-2" >
+        <label>@Model.modifiergroup.Modifiergroupname</label>
         <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
-            onclick="deleteModifierGroup(@Model.mg.Modifiergroupid)" alt="">
+            onclick="deleteModifierGroup(@Model.modifiergroup.Modifiergroupid)" alt="">
     </div>
-   <input  class="modifiergroupID" value="@Model.mg.Modifiergroupid" hidden>
+   <input  class="modifiergroupID" value="@Model.modifiergroup.Modifiergroupid" hidden>
    @* <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ids[@Model.mg.Modifiergroupid]" value="@Model.mg.Modifiergroupid" hidden> *@
     <div class="d-flex">
         <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"
@@ -14,7 +13,7 @@
             <option selected>0</option>
             <option value="101" selected>1</option>
         </select>
-        <select class="form-select form-select-lg mb-3 w-25 max_value" id="modifiergroupid_@Model.mg.Modifiergroupid"   style="margin-left:auto;font-size: 0.75rem;"
+        <select class="form-select form-select-lg mb-3 w-25 max_value" id="modifiergroupid_@Model.modifiergroup.Modifiergroupid"   style="margin-left:auto;font-size: 0.75rem;"
             aria-label=".form-select-lg example">
             <option value="1">0</option>
             <option value="202" selected>1</option>
@@ -36,6 +35,6 @@
     function deleteModifierGroup(id) {
         var temp = "#modifiergroup_" + id;
         document.querySelector(temp).remove();
-        $("#modifier-group").val("");
+        $("#modifier-group").val("Select Modifier Group(s)");
     }
 </script>

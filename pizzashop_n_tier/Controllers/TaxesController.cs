@@ -2,61 +2,77 @@ using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 
 public class TaxesController : Controller
+{
+    private readonly ITaxService _taxService;
+    public TaxesController(ITaxService taxService)
     {
-        private readonly ITaxService _taxService;
-        public TaxesController(ITaxService taxService){
-            _taxService = taxService;
-        }
-        public IActionResult showTaxes(){
-            return View("taxes");
-        }
-        public IActionResult Loadtaxes(){
-            TaxesViewModel model = new TaxesViewModel();
-            model.taxes = _taxService.getAllTaxes();
-            return PartialView("_taxesTable",model);
-        }
-        public IActionResult addEditTaxModalGet(){
-            TaxesViewModel model = new TaxesViewModel();
-            model.taxes = _taxService.getAllTaxes();
-            return PartialView("_addEditTax",model);
-        }
-[HttpPost]
-        public IActionResult AddNewTax(TaxesViewModel model){
+        _taxService = taxService;
+    }
+    public IActionResult showTaxes()
+    {
+        return View("taxes");
+    }
+    public IActionResult Loadtaxes()
+    {
+        TaxesViewModel model = new TaxesViewModel();
+        model.taxes = _taxService.getAllTaxes();
+        return PartialView("_taxesTable", model);
+    }
+    public IActionResult addEditTaxModalGet()
+    {
+        TaxesViewModel model = new TaxesViewModel();
+        model.taxes = _taxService.getAllTaxes();
+        return PartialView("_addEditTax", model);
+    }
+    [HttpPost]
+    public IActionResult AddNewTax(TaxesViewModel model)
+    {
 
-             bool isAdded =_taxService.addNewTax(model.tax);
-             if(!isAdded){
-                return Json(new { error = "An error occurred" });
-             }
-             else{
-             model.taxes = _taxService.getAllTaxes();
-             return PartialView("_taxesTable",model);
-             }
+        bool isAdded = _taxService.addNewTax(model.tax);
+        if (!isAdded && model.tax.Taxid != 0)
+        {
+            return Json(new { error = "Tax with the updated name already exist !!" });
         }
-
-        [HttpPost]
-        public IActionResult deleteTax(string Taxid){
-            _taxService.deleteTax(int.Parse(Taxid));
-            TaxesViewModel model = new TaxesViewModel();
+        if(!isAdded && model.tax.Taxid == 0){
+            return Json(new {error = "Tax already present !!"});
+        }
+        else
+        {
             model.taxes = _taxService.getAllTaxes();
-            return PartialView("_taxesTable",model);
+            return PartialView("_taxesTable", model);
         }
+    }
 
-        public IActionResult loadDeleteModal(){
+
+
+    [HttpPost]
+    public IActionResult deleteTax(string Taxid)
+    {
+        _taxService.deleteTax(int.Parse(Taxid));
+        TaxesViewModel model = new TaxesViewModel();
+        model.taxes = _taxService.getAllTaxes();
+        return PartialView("_taxesTable", model);
+    }
+
+    public IActionResult loadDeleteModal()
+    {
         return PartialView("_deleteModel");
     }
 
-    public IActionResult EditModalGet(int taxid){
+    public IActionResult EditModalGet(int taxid)
+    {
         Taxesandfee tax = _taxService.getTaxById(taxid);
         TaxesViewModel model = new TaxesViewModel();
         model.tax = tax;
         model.taxes = _taxService.getAllTaxes();
-        return PartialView("_addEditTax",model);
+        return PartialView("_addEditTax", model);
     }
 
-    public IActionResult searchTax(string search){
+    public IActionResult searchTax(string search)
+    {
         TaxesViewModel model = new TaxesViewModel();
         model.taxes = _taxService.searchTax(search);
 
-        return PartialView("_taxesTable",model);
+        return PartialView("_taxesTable", model);
     }
-    }
+}

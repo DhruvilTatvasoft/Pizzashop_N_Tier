@@ -37,7 +37,7 @@
         }
         <td>@user.Email</td>
         <td>@user.phone</td>
-        <td>@user.role @user.userid</td>
+        <td>@user.role</td>
         <td>
           @if (user.IsActive)
           {
@@ -47,14 +47,12 @@
           {
             <span class="badge bg-secondary">Inactive</span>
           }
-
-
         <td class="align-items-center ">
           <div class="d-flex justify-content-start w-100 pb-2 h-100">
             <a href='@Url.Action("EditUser", "Dashboard", new { Id = @user.userid })'>
               <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
             </a>
-            I<a href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setUserId(@user.userid)">
+            <a href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setUserId(@user.userid)">
               <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="Delete">
             </a>
           </div>

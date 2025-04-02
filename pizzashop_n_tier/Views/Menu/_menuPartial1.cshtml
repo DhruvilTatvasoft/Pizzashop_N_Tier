@@ -4,7 +4,7 @@
     <label class=" c-text">Category</label>
     @* <button type="submit"  data-bs-toggle="modal" data-bs-target="#exampleModal5" style="width:100%;background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:35%;margin-top: 5px;margin-left: 30%;" alt="">
     </button> *@
-       <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#exampleModal5" style="background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:75%;margin-top: 5px;" alt="">
+       <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#exampleModal5" style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square.svg" style="width:75%;margin-top: 5px;" alt="">
     </button>
 </div>
 <div class="scrollbar w-100">
@@ -18,7 +18,7 @@
                     <label for="" class="ms-0" style="font-size: 13px;"  >≣ @category.categoryName</label>
                     <div class="d-flex" style="margin-left:auto;">
                         <img src="~/images/edit.png" class="pe-2" onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')" style="width:25px;cursor:pointer;" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deletecategory(@category.categoryId)" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deleteCategoryGet(@category.categoryId)" alt="">
                     </div>
                 </li>
             }
@@ -87,6 +87,21 @@
         </form>
 <script>
 
+    function deleteCategoryGet(categoryid){
+        $.ajax({
+            url:'@Url.Action("deleteItem", "Menu")',
+            type:'GET',
+            success:function(data){
+                     $('#deletemodel').html(data);
+                     $('#exampleModalCenter8').modal('show');
+                     $('#categoryid_hidden').val(categoryid);
+                     $('.singleItemDelete').css("display","none");
+                    $('.MultipleItemsDelete').css("display","none");
+                    $('.categoryDelete').css("display","block");
+            }
+            });
+    }
+
 
     $("#addNewCategoryForm").on('submit',function(e){
         e.preventDefault();
@@ -121,15 +136,15 @@ function openEditModal(categoryId,categoryname,description){
     $('#recipient-name').val(categoryname);
     $('#hiddnField').val(categoryId);
    };
-   function deletecategory(categoryId) {
+   function deletecategory() {
+    console.log($("#categoryid_hidden").val());
         $.ajax({
             url: '@Url.Action("DeleteCategory", "Menu")',
-            type: "GET",
-            data: { categoryId: categoryId },
+            type: "POST",
+            data: { categoryId: parseInt($("#categoryid_hidden").val()) },
             cache: false,
             success: function (data) {
                 $(".menubody").html(data);
-                console.log(categoryId);
             }
         });
     };

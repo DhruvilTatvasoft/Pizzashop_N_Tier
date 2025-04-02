@@ -68,11 +68,12 @@ public class MenuController : Controller
 
     }
 
-    public IActionResult ItemsData(int categoryId)
+    public IActionResult ItemsData(int categoryId,int pageSize=4,int pageNumber=1)
     {
         Console.WriteLine(categoryId);
         ItemModel model = new ItemModel();
-        _itemService.getItemsForcategory(categoryId, model);
+
+        _itemService.getItemsForcategory(categoryId, model,pageSize,pageNumber);
         return PartialView("_menuPartial3", model);
     }
 
@@ -80,7 +81,7 @@ public class MenuController : Controller
     {
         ItemModel model = new ItemModel();
         model.categoryId = categoryId;
-        _itemService.getItemsForcategory(categoryId, model);
+        // _itemService.getItemsForcategory(categoryId, model);
         return PartialView("_menuPartial2", model);
     }
 
@@ -104,6 +105,7 @@ public class MenuController : Controller
         return View("menu");
     }
 
+    [HttpPost]
     public IActionResult DeleteCategory(int categoryId)
     {
         if (ModelState.IsValid)
@@ -138,9 +140,7 @@ public class MenuController : Controller
         _itemService.deleteItems(selectedItems);
         Console.WriteLine("items deleted");
         ItemModel model = new ItemModel();
-        model.categoryId = categoryId;
-        _itemService.getItemsForcategory(categoryId, model);
-        return PartialView("_menuPartial3", model);
+        return Json(new {categoryid = categoryId, success = "Items deleted successfully"});
     }
 
     [HttpPost]
@@ -154,13 +154,14 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public bool deleteItem(int itemid, int categoryId)
+    public IActionResult deleteItem(int itemid, int categoryId)
     {
-        return _itemService.deleteItem(itemid);
+        _itemService.deleteItem(itemid);
+        return Json(new {categoryid = categoryId, success = "Item deleted successfully"});
     }
 
     [HttpGet]
-    public IActionResult deleteItem(int itemid)
+    public IActionResult deleteItem(int? itemid)
     {
         return PartialView("_deleteModal");
     }
@@ -205,9 +206,9 @@ public class MenuController : Controller
     [HttpGet]
     public IActionResult getModifiers(int modifiergroupId)
     {
-        ItemModel model = new ItemModel();
+        ItemViewModel model = new ItemViewModel();
         model.modifiers = _modifierService.getModifiersForMGroup(modifiergroupId);
-        model.mg = _modifierService.GetModifiergroup(modifiergroupId);
+        model.modifiergroup = _modifierService.GetModifiergroup(modifiergroupId);
         return PartialView("_modifiers", model);
     }
 

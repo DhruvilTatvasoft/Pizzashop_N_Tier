@@ -73,11 +73,27 @@ Layout = null;
       </div>
 <label for="" class="me-2">Showing 1-5 of 13</label>
     <div class="d-flex mt-1">
+
+@if(Model.PageNumber > 1){
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1),@Model.PageSize)"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px" alt=""></button>
+}
+else{
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1),@Model.PageSize)" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px" alt=""></button>
+}
           <!-- Debugger removed as it is not valid Razor syntax -->
+
+          
+      @if(Model.PageNumber*Model.PageSize < Model.TotalTables){
       <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber+1),@Model.PageSize)"><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px;rotate: 180deg;" alt=""></button>
+      }
+      else{
+      <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber+1),@Model.PageSize)" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px;rotate: 180deg;" alt=""></button>
+
+      }
     </div>
     </div>
     

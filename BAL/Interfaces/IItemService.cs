@@ -9,7 +9,7 @@ public interface IItemService{
     List<Unit> getAllUnits();
     Item getItemFromId(int itemid);
     int getItemFromItemName(string itemname);
-    void getItemsForcategory(int categoryId,ItemModel model);
+    void getItemsForcategory(int categoryId,ItemModel model,int pageSize,int pageNumber);
     
     List<Item> getSearchedItem(string searchedItem,ItemModel model,int categoryId);
 }

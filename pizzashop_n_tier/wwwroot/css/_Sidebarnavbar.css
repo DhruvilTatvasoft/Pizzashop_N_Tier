@@ -58,6 +58,11 @@ html,
         left: -227%;
         margin-top: var(--bs-dropdown-spacer);
     }
+
+    .active-class{
+        background-color: #dbdbdb;
+        color:#0066A7;
+    }
     .sticky-top {
         position: -webkit-sticky;
         position: sticky;

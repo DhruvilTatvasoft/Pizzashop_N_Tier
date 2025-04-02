@@ -19,7 +19,7 @@ public class LoginController : Controller
 
     private readonly IImagePath _imageService;
 
-    public LoginController(ILogger<LoginController> logger,IImagePath imageService, ICookieService cookieService,IAESService AesService, ILogin log, IEmailGenService emailGenService)
+    public LoginController(ILogger<LoginController> logger, IImagePath imageService, ICookieService cookieService, IAESService AesService, ILogin log, IEmailGenService emailGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
@@ -35,9 +35,9 @@ public class LoginController : Controller
         if (_CookieService.IsSetCookie(req, "token"))
         {
             Console.WriteLine("OK");
-            
-           TempData["ToastrMessage"] = "Logged in Successfully";
-           TempData["ToastrType"] = "success";
+
+            TempData["ToastrMessage"] = "Logged in Successfully";
+            TempData["ToastrType"] = "success";
             return RedirectToAction("showDashboard", "Dashboard");
         }
         return View();
@@ -48,25 +48,24 @@ public class LoginController : Controller
         if (!ModelState.IsValid)
         {
             TempData["ToastrMessage"] = "Some credentials are missing";
-           TempData["ToastrType"] = "error";
+            TempData["ToastrType"] = "error";
             return View(lgnmdl);
         }
         Console.WriteLine(_log.checkloggerInDb(lgnmdl));
         if (_log.checkloggerInDb(lgnmdl))
         {
-
             var token = _log.saveLogger(lgnmdl);
             var res = HttpContext.Response;
-            _CookieService.setInCookie(token, res, "token",lgnmdl.IsChecked);
-            _CookieService.setInCookie(lgnmdl.username, res, "username",true);
+            _CookieService.setInCookie(token, res, "token", lgnmdl.IsChecked);
+            _CookieService.setInCookie(lgnmdl.username, res, "username", true);
             int userid = _log.getLoggerUId(lgnmdl.username);
-            _CookieService.setInCookie(lgnmdl.password, res, "password",true);
-            _CookieService.setInCookie(userid.ToString(), res, "userid",true);
+            _CookieService.setInCookie(lgnmdl.password, res, "password", true);
+            _CookieService.setInCookie(userid.ToString(), res, "userid", true);
             // string imagePath = _imageService.getImagePathFromUid(userid);
             // _CookieService.setInCookie(imagePath,res,"userImage",true);
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
-           TempData["ToastrType"] = "success";
+            TempData["ToastrType"] = "success";
             return RedirectToAction("showDashboard", "Dashboard");
         }
         else
@@ -83,14 +82,16 @@ public class LoginController : Controller
     [HttpPost]
     public async Task<IActionResult> ForgetPass(string Email)
     {
-        if(Email == null){
-             ModelState.AddModelError("username", "Enter Your Registered Email Address");
+        if (Email == null)
+        {
+            ModelState.AddModelError("username", "Enter Your Registered Email Address");
             LoginViewModel model = new LoginViewModel();
             TempData["ToastrMessage"] = "Please enter email address";
             TempData["ToastrType"] = "error";
-             return View(model);
+            return View(model);
         }
-        if(!ModelState.IsValid){
+        if (!ModelState.IsValid)
+        {
             LoginViewModel model = new LoginViewModel();
             TempData["ToastrMessage"] = "Invalid email address";
             TempData["ToastrType"] = "error";
@@ -104,34 +105,36 @@ public class LoginController : Controller
             TempData["ToastrMessage"] = "Email sended";
             TempData["ToastrType"] = "success";
         }
-        else{
-             ModelState.AddModelError("Username", "Email does not exist !! Register First !!");
+        else
+        {
+            ModelState.AddModelError("Username", "Email does not exist !! Register First !!");
         }
         return View();
     }
     [HttpGet]
     public IActionResult ForgetPass()
     {
-        
         return View();
     }
     [HttpPost]
     public IActionResult ResetPass(PasswordModel model)
     {
-        if(model.confirmpass != model.newpass){
+        if (model.confirmpass != model.newpass)
+        {
             ModelState.AddModelError("confirmpass", "Password and Confirm Password does not match");
             TempData["ToastrMessage"] = "New password and confirm password does not matched";
-           TempData["ToastrType"] = "error";
+            TempData["ToastrType"] = "error";
             return View(model);
         }
-        if(!ModelState.IsValid){
+        if (!ModelState.IsValid)
+        {
             TempData["ToastrMessage"] = "Please enter password";
-           TempData["ToastrType"] = "error";
+            TempData["ToastrType"] = "error";
             return View(model);
         }
         _log.updatePass(model);
         TempData["ToastrMessage"] = "Password updated Successfully";
-           TempData["ToastrType"] = "success";
+        TempData["ToastrType"] = "success";
         return View("Index");
     }
     [HttpGet]

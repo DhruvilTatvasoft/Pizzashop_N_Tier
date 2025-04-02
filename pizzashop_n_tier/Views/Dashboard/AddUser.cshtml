@@ -107,7 +107,6 @@
                                                 aria-label="Floating label select example">
                                                 <option value="">select state </option>
                                             </select>
-                                            @* <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span> *@
                                             </select>
                                             <label for="floatingSelect">State</label>
                                             <span asp-validation-for="stateid"
@@ -118,13 +117,12 @@
                                                 id="cityid" asp-for="cityid">
                                                 <option value="">select city</option>
                                             </select>
-                                            @* <span asp-validation-for="stateid" class="mb-4 text-danger invalidmsg"></span> *@
+                                            
                                             <span asp-validation-for="cityid"
                                                 class="mb-4 text-danger invalidmsg"></span>
                                             <label for="floatingSelect">City</label>
                                         </div>
                                     </div>
-
                                     <div class="row">
                                         <div class="form-floating mb-3 col-4">
                                             <input type="text" class="form-control" asp-for="Zipcode" id="floatingInput"
@@ -161,7 +159,8 @@
     </div>
     <script>
         $(document).ready(function () {
-            var selectedCountry = $('#countryid').val();
+             var selectedCountry = $('#countryid').val();
+
             var selectedState = '@Model.stateid';
             var selectedCity = '@Model.cityid';
 
@@ -239,6 +238,7 @@
                         });
                     });
                 });
+                }
             });
     </script>
     

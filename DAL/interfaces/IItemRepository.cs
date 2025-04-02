@@ -1,7 +1,7 @@
 using DAL.Data;
 
 public interface IItemRepository {
-    List<Item> getItemsForCategory(int categoryId);
+    List<Item> getItemsForCategory(int categoryId,int pageSize,int pageNumber);
     bool addNewCategory(string categoryName, string categoryDescription,string createdBy);
 
       List<Category> getAllCategories();
@@ -15,4 +15,5 @@ public interface IItemRepository {
     List<Modifiergroup> getAllModifierGroups();
     Item getItem(int itemid);
     int getItemFromItemName(string itemname);
+    int getAllItemsForCategory(int categoryId);
 }

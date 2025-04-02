@@ -70,6 +70,12 @@ public class ItemModel
         get;
         set;
     }
+
+    public int pageSize{get;set;}
+    public int pageNumber{get;set;}
+
+    public int? totalrecords{get;set;}
+
     public string searchItemName
     {
         get;
@@ -97,7 +103,7 @@ public class ItemModel
 public class ItemViewModel{
 
     [Required(ErrorMessage = "Item Name is required")]
-    [RegularExpression(@"^[a-zA-Z]+$", ErrorMessage = "please Use only letters")]
+    [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]
     public string Itemname{get;set;}
 
     [Required(ErrorMessage = "Item rate is required")]
@@ -139,10 +145,21 @@ public class ItemViewModel{
         set;
     }
 
+        public int? pageSize{get;set;}
+    public int? pageNumber{get;set;}
+
+    public int? totalrecords{get;set;}
+
     public string? payload{
         get;
         set;
     }
-
+    public Modifiergroup? modifiergroup{
+        get;
+        set;
+    }
+    public List<Modifier> modifiers{
+        get;set;
+    }
 
 }

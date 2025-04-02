@@ -90,6 +90,8 @@
     <script>
         $("document").ready(function () {
             showOrdersBySearch(1,2,'asc','orderId');
+              $('.sidebar ul li').removeClass('active-class');
+             $('.orders').addClass('active-class')
         });
         function showOrdersBySearch(pageNumber,pagesize,sortOrder,sortBy) {
               var selectedStatus = $("#selectStatus").val()
@@ -134,7 +136,8 @@
                     searchbystatus: searchbystatus
                 },
                 success:function(data){
-                    toastr.success("Data Exported Successfully");
+                    toastr.success(data.success);
+                    showOrdersBySearch();
                 }
             })
         }

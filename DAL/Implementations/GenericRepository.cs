@@ -378,6 +378,13 @@ public List<users> getUsersForPage(int currentPage, int maxRows, string search, 
         user.Stateid = model.stateid;
         user.Address = model.address;
         user.Zipcode = model.Zipcode;
+        user.Roleid = _context.Roles.FirstOrDefault(role=>role.Rolename.ToLower().Trim() == model.role.ToLower().Trim())!.Roleid;
+        if(model.status != null && model.status.ToString() == "Active"){
+            user.Isactive = true;
+        }
+        else{
+            user.Isactive = false;
+        }
         user.Profilephoto = imagePath;
         _context.Users.Update(user);
         _context.SaveChanges();

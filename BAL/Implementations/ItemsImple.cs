@@ -1,5 +1,6 @@
 using System;
 using DAL.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class ItemsImple : IItemService
 {
@@ -65,9 +66,9 @@ public class ItemsImple : IItemService
         return _itemRepository.getItemFromItemName(itemname);
     }
 
-    public void getItemsForcategory(int categoryId,ItemModel model)
+    public void getItemsForcategory(int categoryId,ItemModel model,int pageSize,int pageNumber)
     {
-        List<Item> itemList = _itemRepository.getItemsForCategory(categoryId);
+        List<Item> itemList = _itemRepository.getItemsForCategory(categoryId,pageSize,pageNumber);
         List<Category> categoryList = _itemRepository.getAllCategories();
         List<Unit> units = _itemRepository.getAllUnits();
         List<Modifiergroup> modifiergroups = _itemRepository.getAllModifierGroups();
@@ -76,6 +77,9 @@ public class ItemsImple : IItemService
         model.categories = categoryList;
         model.units = units;
         model.modifiergroups = modifiergroups;
+        model.totalrecords =  _itemRepository.getAllItemsForCategory(categoryId);
+        model.pageSize = pageSize;
+        model.pageNumber = pageNumber;
     }
 
 

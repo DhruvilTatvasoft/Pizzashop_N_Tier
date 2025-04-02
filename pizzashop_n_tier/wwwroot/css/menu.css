@@ -21,7 +21,7 @@ body{
    }
    .active2{
     color: #0066A7;
-    background-color: #e0edf6;
+    background-color: #dbdbdb;
    }
 
     nav {
@@ -321,7 +321,7 @@ body{
         overflow: auto;
     }
     .scrollbox ul li:hover{
-        background-color: white;
+        background-color: #E9EAEB;
     }
     .scrollbox ul li{
         /* padding: 20px; */

@@ -1,5 +1,6 @@
 using DAL.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.IdentityModel.Tokens;
 
 public class ItemRepository : IItemRepository
@@ -9,9 +10,13 @@ public class ItemRepository : IItemRepository
     {
         _context = context;
     }
-    public List<Item> getItemsForCategory(int categoryId)
+    public List<Item> getItemsForCategory(int categoryId,int pageSize,int pageNumber)
     {
-        List<Item> itemList = _context.Items.Where(i => i.Categoryid == categoryId && i.Isdeleted == false).ToList();
+        var query = _context.Items.Where(i => i.Categoryid == categoryId && i.Isdeleted == false)
+                                  .Skip((pageNumber - 1) * pageSize)
+                                  .Take(pageSize)
+                                  .ToList();
+         List<Item> itemList = query.ToList();
         return itemList;
     }
     public bool addNewCategory(string categoryName, string categoryDescription, string createdBy)
@@ -106,7 +111,7 @@ public class ItemRepository : IItemRepository
 
     public List<Item> getSearchedItemFromDb(string searchedItem, int categoryId)
     {
-        List<Item> items = _context.Items.Where(i => i.Categoryid == categoryId && i.Itemname.ToLower().Contains(searchedItem)).ToList();
+        List<Item> items = _context.Items.Where(i => i.Categoryid == categoryId && i.Itemname.ToLower().Contains(searchedItem.ToLower().Trim()) && i.Isdeleted == false).ToList();
         return items;
     }
 
@@ -137,5 +142,10 @@ public class ItemRepository : IItemRepository
     public int getItemFromItemName(string itemname)
     {
        return _context.Items.FirstOrDefault(i => i.Itemname == itemname && i.Isdeleted == false).Itemid;
+    }
+
+    public int getAllItemsForCategory(int categoryId)
+    {
+        return _context.Items.Where(item=>item.Categoryid == categoryId && item.Isdeleted == false).Count();
     }
 }

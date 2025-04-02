@@ -144,7 +144,7 @@
                                 <select class="form-select form-select-lg mb-1" id="modifier-group"
                                     onchange="getModifier()" style="font-size: 80%;"
                                     aria-label=".form-select-lg example">
-                                    <option value="1" selected><label for="" class="fs-2">Select Modifier
+                                    <option value="1"><label for="" class="fs-2">Select Modifier
                                             Groups(s)</label>
                                     </option>
                                     @foreach (var m in @Model.modifiergroups)
@@ -190,9 +190,9 @@
 
     function getModifier() {
         console.log("changed");
-        var temp = "#modifiergroup_" + $('#modifier-group').val();
-        console.log(temp);
-        var modifiergroup = document.querySelector(temp);
+        var temporaryId = "#modifiergroup_" + $('#modifier-group').val();
+        console.log(temporaryId);
+        var modifiergroup = document.querySelector(temporaryId);
         if (modifiergroup == null) {
             $.ajax({
                 url: '/Menu/getModifiers',
@@ -207,9 +207,7 @@
 
     $("#AddItemForm").on('submit', function (e) {
         e.preventDefault();
-                debugger;
         if ($(this).valid()) {
-
             console.log("model opened");
             var data = new FormData(this);
             var modifierData = [];
@@ -244,7 +242,8 @@
                     else {
                         $(".closeBTN").click();
                         toastr.success(data.success);
-                        loadTableData(data.categoryid);
+                        loadTableData(data.categoryid,$(".pageSize").val(),1);
+                        selectedCategoryId = data.categoryid;
                     }
                 }
             });

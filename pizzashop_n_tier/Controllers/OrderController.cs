@@ -63,7 +63,7 @@ namespace pizzashop_n_tier.Controllers
         {
             OrderViewModel model = new OrderViewModel();
             _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
-            return PartialView("_orderTable", model);
+            return Json(new {success = "Exported successfully !!"});
         }
 
         public IActionResult showOrderDetailsView(int orderid)

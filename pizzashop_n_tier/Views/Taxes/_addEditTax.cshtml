@@ -84,7 +84,7 @@
                         console.log(response);
                         if(response.error){
                             console.log("error");
-                             toastr.error("Tax already exist");
+                            toastr.error(response.error);
                         }
                         else{
                         loadTaxes();

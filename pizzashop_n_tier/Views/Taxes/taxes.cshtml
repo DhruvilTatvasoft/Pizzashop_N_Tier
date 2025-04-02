@@ -23,6 +23,11 @@
         <script>
             $("document").ready(function () {
                 loadTaxes();
+                 $("document").ready(function(){
+      $('.sidebar ul li').removeClass('active-class');
+             $('.tax').addClass('active-class')
+  })
+
             });
 
             function loadTaxes() {
