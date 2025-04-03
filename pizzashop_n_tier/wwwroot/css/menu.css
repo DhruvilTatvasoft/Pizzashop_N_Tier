@@ -103,7 +103,7 @@ body{
         width: 100%;
         background-color: #E9EAEB;
         padding-left: 19%;
-        overflow: hidden;
+        /* overflow: hidden; */
     }
 
     .bg-img {
@@ -178,7 +178,7 @@ body{
         height: 80%;
         max-height: 80vh; /* Prevent height from increasing */
         background-color: #E9EAEB;
-        overflow: hidden;
+        /* overflow: hidden; */
     }
 
     .profile-icon {

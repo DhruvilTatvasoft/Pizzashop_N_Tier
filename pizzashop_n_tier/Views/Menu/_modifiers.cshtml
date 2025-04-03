@@ -1,7 +1,7 @@
 @model ItemViewModel
 <div class="modifier-group-item" id="modifiergroup_@Model.modifiergroup.Modifiergroupid">
-    <div class="d-flex ps-3  pe-3 pt-1 mb-2" >
-        <label>@Model.modifiergroup.Modifiergroupname</label>
+    <div class="d-flex  pe-3 pt-1 mb-2" >
+        <label class="fw-bold">@Model.modifiergroup.Modifiergroupname</label>
         <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
             onclick="deleteModifierGroup(@Model.modifiergroup.Modifiergroupid)" alt="">
     </div>
@@ -10,24 +10,45 @@
     <div class="d-flex">
         <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"
             aria-label=".form-select-lg example">
-            <option selected>0</option>
-            <option value="101" selected>1</option>
+             
+                        @if(Model.modifiers.Count>0){
+                            @for(int i=1;i<=Model.modifiers.Count;i++){
+                                    <option value="@i">@i</option>
+                                        }
+                                    }
+                        else{
+                                    <option value="0">0</option>
+                            }   
         </select>
         <select class="form-select form-select-lg mb-3 w-25 max_value" id="modifiergroupid_@Model.modifiergroup.Modifiergroupid"   style="margin-left:auto;font-size: 0.75rem;"
             aria-label=".form-select-lg example">
-            <option value="1">0</option>
-            <option value="202" selected>1</option>
-            <option value="3">2</option>
+                        @if(Model.modifiers.Count>0){
+                            @for(int i=1;i<=Model.modifiers.Count;i++){
+                                    <option value="@i">@i</option>
+                                        }
+                                    }
+                        else{
+                                    <option value="0">0</option>
+                            }   
         </select>
     </div>
     <ul class="">
-        @foreach (var m in @Model.modifiers)
-        {
-            <div class="d-flex justify-content-between">
-                <li class="pb-1 pt-1 w-75" style="list-style-type: circle;">@m.Modifiername</li>
-                <li class="pb-1 pt-1 w-25">@m.Modifierrate</li>
-            </div>
-        }
+                                              @if(Model.modifiers.Count <= 0){
+                                                    <div class="d-flex align-items-center mt-0 ps-4">
+                                                        <img src="~/images/exclamation-circle-fill.svg" class="pe-3 pt-0" alt="">
+                                                        <label for="" class="pt-0">No records found</label>
+                                                    </div>
+                                                }
+                                                else{
+                                                @foreach (var m in @Model.modifiers)
+                                                {
+                                                    <div class="d-flex justify-content-between">
+                                                        <li class="pb-1 pt-1 w-75" style="list-style-type: circle;">@m.Modifiername</li>
+                                                        <li class="pb-1 pt-1 w-25">@m.Modifierrate</li>
+                                                    </div>
+                                                }
+
+                                                }
     </ul>
 </div>
 

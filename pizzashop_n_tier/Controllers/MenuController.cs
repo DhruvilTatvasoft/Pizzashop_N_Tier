@@ -195,12 +195,24 @@ public class MenuController : Controller
         }
     }
 
-    public IActionResult EditItem(int itemid)
-    {
-        ItemModel model = new ItemModel();
-        model.i = _itemService.getItemFromId(itemid);
-        model.ModifierModels = _modifierService.getModifiersForItem(itemid);
-        return PartialView("_additem", model);
+    // public IActionResult EditItem(int itemid)
+    // {
+    //     ItemModel model = new ItemModel();
+    //     model.i = _itemService.getItemFromId(itemid);
+    //     model.ModifierModels = _modifierService.getModifiersForItem(itemid);
+    //     return PartialView("_additem", model);
+    // }
+
+    public IActionResult EditItemGet(int itemId){
+        ItemViewModel model = new ItemViewModel();
+        _itemService.loadItemModel(model,itemId);
+        return PartialView("_edititem",model);
+    }
+
+    public IActionResult EditItemPost(ItemViewModel model){
+         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
+         _itemService.updateItemdetails(model,model.itemid??1);
+        return View("Menu");
     }
 
     [HttpGet]
@@ -219,6 +231,15 @@ public class MenuController : Controller
         model.modifiergroups = _modifierService.getAllModifierGroups();
         return PartialView(partialViewName, model);
     }
+
+    //  [HttpGet]
+    // public IActionResult getModifierGroupsForEdit(string partialViewName)
+    // {
+    //     ItemViewModel model = new ItemViewModel();
+    //     model.modifiergroups = _modifierService.getAllModifierGroups();
+    //     return PartialView(partialViewName, model);
+    // }
+
 
     [HttpGet]
     public IActionResult LoadAllModifiers()
@@ -324,9 +345,5 @@ public class MenuController : Controller
         return View("Menu");
     }
 
-    public IActionResult EditItemGet(int itemId){
-        ItemViewModel model = new ItemViewModel();
-        _itemService.loadItemModel(model,itemId);
-        return PartialView("_edititem",model);
-    }
+    
 }

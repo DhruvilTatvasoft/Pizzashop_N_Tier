@@ -141,6 +141,48 @@
                 }
             });
         };
+
+         $("#AddItemForm").off('submit').on('submit', function (e) {
+        e.preventDefault();
+        if ($(this).valid()) {
+            console.log("model opened");
+            var data = new FormData(this);
+            var modifierData = [];
+            $(".modifier-group-item").each(function (index) {
+                let modifierGroupId = $(this).find(".modifiergroupID").val();
+                let minValue = $(this).find(".min_value").val();
+                let maxValue = $(this).find(".max_value").val();           
+                if (modifierGroupId) {
+                    modifierData.push({
+                        ModifiergroupId: modifierGroupId,
+                        min_value: minValue || 0,
+                        max_value: maxValue || 0
+                    });
+                }
+            })
+            data.append("payload", JSON.stringify(modifierData));
+            console.log(JSON.stringify(modifierData));
+            $.ajax({
+                url: "/Menu/AddNewItem",
+                method: 'POST',
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    if (data.error) {
+                        toastr.error(data.error);
+                    }
+                    else {
+                        $(".closeBTN").click();
+                        toastr.success(data.success);
+                        loadTableData(data.categoryid,$(".pageSize").val(),1);
+                        selectedCategoryId = data.categoryid;
+                    }
+                }
+            });
+            return false;
+        }
+    });
         
         function deleteItemPost() {
             console.log("clicked");
@@ -160,6 +202,8 @@
             });
 
         };
+
+
         
         
 @* -------------------------------------ModifierPage-------------------------------------------- *@
@@ -219,6 +263,8 @@ function loadModifiersData(modifierGroupId) {
     });
 }
 
+
+ 
 
 
 </script>
