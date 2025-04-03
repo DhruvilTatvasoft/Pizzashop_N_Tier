@@ -39,10 +39,11 @@ builder.Services.AddScoped<ITaxesRepository,TaxesRepository >();
 builder.Services.AddScoped<ITaxService,TaxesImpl>();
 builder.Services.AddScoped<IOrderService,OrderImple>();
 builder.Services.AddScoped<IOrderRepository,OrderRepository>();
-builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-builder.Services.AddSingleton<ICustomerService, CustomerImpl>();
-builder.Services.AddSingleton<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerRepository,CustomerRepository>();
+builder.Services.AddScoped<ICustomerService,CustomerImpl>();
 
+
+builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
 builder.Services.AddHttpContextAccessor();
 

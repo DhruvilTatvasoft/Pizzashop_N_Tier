@@ -1,28 +1,75 @@
-@model TaxesViewModel
+@model CustomerViewModel
 @{
     ViewData["Title"] = "Customers";
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
 }
-<link rel="stylesheet" href="~/css/TaxesandFees.css">
+<link rel="stylesheet" href="~/css/customer.css">
 <div class="container-fluid w-100 h-100 p-0">
     <div class="container-fluid w-100 h-100 p-0">
         <div id="nav-sidebar"></div>
         <div class="row p-0 h-100 d-flex">
             <div class="content pt-3 w-100 h-100">
-                <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
+                <div class="header d-flex align-items-center justify-content-start mb-4 d-flex row">
+                    <div class="col-6">
                     <h1>Customers</h1>
-                    <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
-                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="taxSearch" onkeyup="searchtax()" placeholder="Search">
-                        <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;" onclick="openModelForAddTax()">+ New Tax</button>
+                    </div>
+                    <div class=" d-flex  align-items-center col-6 pe-0" style="margin-left: auto;">
+                       <div class="container-fluid d-flex me-0 pe-0">
+                            <div class="w-100 me-2">
+                            <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="searchCustomer" onkeyup="searchCustomer()" placeholder="Search">
+                            </div>
+                        <div class="w-100 me-2">
+                            <div class="form-floating">
+                                        <select class="time-select form-select shadow-none timePeriodFilter" style="padding: 3%;min-height: 2.5rem;height:2.5rem;"
+                                            aria-label="Floating label select example" placeholder="Selects Time"
+                                            onchange="filterRecords()">
+                                            <option selected value="All Time">All Time</option>
+                                            <option value="Last 7 days">Last 7 days</option>
+                                            <option value="Last 30 days">Last 30 days</option>
+                                            <option value="Current Month">Current Month</option>
+                                            <option value="Current Month">Custom Date</option>
+                                        </select>
+                                        @* <label>Select Time</label> *@
+                                    </div>
+                            </div>
+                        <button class="btn btn-primary add-item-modifier" type="button" style="width:30%;" onclick="openModelForAddTax()">
+                                    <span style="font-size: 82%;"><img src="~/images/export (1).svg"  style="filter: brightness(0) invert(1);"
+                                            alt="">Export</span></button>
+                       </div>
                     </div>
                 </div>
                 <div class="form-container shadow customerTableContainer" id="t-container"></div>
+         
             </div>
-            <div class="loadCustomerModal"></div>
         </div>
 
         <script>
-            function loadCustomerTable(){
-                
+            $("document").ready(function(){
+                loadCustomerTable();
+            })
+            function loadCustomerTable(sortBy,sortOrder,pageNumber,pageSize){
+                pageSize = $(".pagesize").val()
+                $.ajax({
+                    url:'@Url.Action("loadAllCustomers","Customer")',
+                    type: 'GET',
+                    data:{pageNumber:pageNumber,pageSize:pageSize,sortBy:sortBy,sortOrder:sortOrder},
+                    success: function(data){
+                        $(".customerTableContainer").html(data);
+                    }
+                });
             }
+            function searchCustomer(){
+                var searchValue = $("#taxSearch").val();
+                 pageSize = $(".pagesize").val()
+                $.ajax({
+                    url:'@Url.Action("loadAllCustomers","Customer")',
+                    type:'GET',
+                    data:{pageSize:pageSize,search:$('#searchCustomer').val()},
+                    success:function(data){
+                        $(".customerTableContainer").html(data);
+                    }
+                });
+            }
+
+
         </script>

@@ -2,6 +2,7 @@ using System.ComponentModel.DataAnnotations;
 using DAL.Data;
 using Microsoft.AspNetCore.Http;
 
+
 public class ItemModel
 {
     public List<Item>? items
@@ -101,6 +102,8 @@ public class ItemModel
     }
 }
 public class ItemViewModel{
+
+    public int? itemid{get;set;}
 
     [Required(ErrorMessage = "Item Name is required")]
     [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]

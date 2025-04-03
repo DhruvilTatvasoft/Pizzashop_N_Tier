@@ -154,4 +154,31 @@ public class ItemRepository : IItemRepository
         Item item = _context.Items.FirstOrDefault(item=>item.Itemid == itemId && item.Isdeleted == false)! ;
         return item;
     }
+
+    public void updateItemdetails(ItemViewModel model)
+    {
+        // Item isItemExist = _context.Items.FirstOrDefault(item=>item.Itemname == model.Itemname && item.Itemid == model.itemid && item.Categoryid != model.Categoryid && item.Isdeleted == false);
+
+        Item item = _context.Items.FirstOrDefault(item=>item.Itemid == model.itemid)!;
+        item.Itemname = model.Itemname;
+        item.Categoryid = model.Categoryid;
+        item.Itemtype = model.Itemtype;
+        item.Itemrate = model.Itemrate;
+        item.Itemquantity = model.Itemquantity;
+        item.Isdefaulttax = model.Isdefaulttax;
+        item.Isavailable = model.Isavailable;
+        item.Taxpercentage = model.Taxpercentage;
+        item.Shortcode = model.Shortcode;
+        item.Description = model.Description;
+        item.Unitid = model.Unitid;
+        item.Itemimage = model.ItemImagePathString;
+        item.Isdeleted = false;
+        item.Createdat = DateTime.Now;
+        item.Modifiedat = DateTime.Now;
+        item.Modifiedby = 1;
+        item.Createdby = 1;
+        _context.Items.Update(item);
+        _context.SaveChanges();
+
+    }
 }

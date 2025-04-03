@@ -1,39 +1,74 @@
-@* <table class="table mb-0" id="table">
+@model CustomerViewModel
+<table class="table mb-0" id="table">
     <thead>
         <tr>
             <th scope="col">
-                <label for="" class="ps-4  ">Name</label>
+               <img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")',@(Model.pageNumber),@Model.pageSize)" style="width: 15px;cursor: pointer;" alt=""> <label for="" >Name</label>
             </th>
-            <th scope="col"><label for="" >Type</label></th>
-            <th scope="col"><label for="" >IsEnable</label></th>
+            <th scope="col"><label for="" class="ps-4"><label for="" >Email</label></th>
+            <th scope="col"><label for="" >Phone Number</label></th>
             <th scope="col">
-                <label for=""><label for="">Default</label></label>
+                <label for=""><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('date','@(Model.sortBy == "date" && Model.sortOrder == "asc" ? "desc" : "asc")',@(Model.pageNumber),@Model.pageSize)" style="width: 15px;cursor: pointer;" alt=""><label for="" ><label for="">Date</label></label>
             </th>
-            <th scope="col"><label for="" >Taxes Value</label></th>
-            <th scope="col"><label for=""  >Action</label></th>
+            <th scope="col"><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('totalOrders','@(Model.sortBy == "totalOrders" && Model.sortOrder == "asc" ? "desc" : "asc")',@(Model.pageNumber),@Model.pageSize)" style="width: 15px;cursor: pointer;" alt=""><label for="" ><label for="" >Total Order</label></th>
+
         </tr>
     </thead>
     <tbody>
-        @foreach (var tax in @Model.taxes)
-        {
+        @if(@Model.customers.Count <= 0){
             <tr>
-                <td><label for="" class="ps-4">@tax.Taxname</label></td>
-                <td><label for="">@tax.Taxtype</label></td>
-                <td style="padding-left: 4%;">
-                    
-                </td>
-                <td style="padding-left: 4%;">
-                    
-                    
-                </td>
-                <td></td>
-                <td class="align-items-center ">
-                    <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                        <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="" onclick="openModelForEditTax(@tax.Taxid)">
-                        <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="OpenDeleteTaxModal(@tax.Taxid)" alt="Delete">
-                    </div>
-                </td>
+                <td class="w-100"><div class="d-flex align-items-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt=""><label for="">No records found</label></div></td>
             </tr>
         }
+        else{
+        @foreach (var customer in @Model.customers)
+        {
+            <tr>
+                <td><label class="ps-2">@customer.Customername</label></td>
+                <td><label for="">@customer.Email</label></td>
+                <td><label for="">@customer.Phonenumber</label></td>
+                <td><label for="">@customer.Createdat</label></td>
+                <td><label for="">@customer.Totalorders</label></td>
+            </tr>
+        }
+        }
     </tbody>
-</table> *@
+</table>
+
+    <div class="d-flex justify-content-end align-items-center w-100 bg-white pe-2">
+        <label for="" class="me-2">items per page:</label>
+        <div class="dropdown mt-2 me-2">
+            <select class="form-select form-select-lg mb-3 pagesize" onchange="loadCustomerTable(@Model.sortBy,'@Model.sortOrder',@(Model.pageNumber),@Model.pageSize)" aria-label=".form-select-lg example">
+            <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)">1</option>
+            <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)">2</option>
+            <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)">3</option>
+            <option value="4" selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
+            <option value="5" selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
+            <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
+            </select>
+        </div>
+    <label for="" class="me-2">Showing 1-5 of 13</label>
+        <div class="d-flex mt-1">
+
+    @if(Model.pageNumber > 1){
+        <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadCustomerTable(@Model.sortBy,@Model.sortOrder,@(Model.pageNumber-1),@Model.pageSize)"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+            style="width:25px" alt=""></button>
+    }
+    else{
+        <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadCustomerTable(@Model.sortBy,@Model.sortOrder,@(Model.pageNumber-1),@Model.pageSize)" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+            style="width:25px" alt=""></button>
+    }
+            <!-- Debugger removed as it is not valid Razor syntax -->
+
+            
+        @if(Model.pageNumber*Model.pageSize < Model.totalCustomers){
+        <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadCustomerTable(@Model.sortBy,@Model.sortOrder,@(Model.pageNumber+1),@Model.pageSize)"><img src="~/images/left-chevron-svgrepo-com.svg"
+            style="width:25px;rotate: 180deg;" alt=""></button>
+        }
+        else{
+        <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadCustomerTable(@Model.sortBy,@Model.sortOrder,@(Model.pageNumber+1),@Model.pageSize)" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
+            style="width:25px;rotate: 180deg;" alt=""></button>
+        }
+        </div>
+</div> 
+    

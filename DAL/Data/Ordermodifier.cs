@@ -7,8 +7,6 @@ public partial class Ordermodifier
 {
     public int Ordermodifierid { get; set; }
 
-    public int Itemid { get; set; }
-
     public int Modifierid { get; set; }
 
     public int Ordermodifierquantity { get; set; }
@@ -23,9 +21,11 @@ public partial class Ordermodifier
 
     public int Modifiedby { get; set; }
 
-    public int? Orderitemquantity { get; set; }
+    public int Itemid { get; set; }
 
-    public int? Orderid { get; set; }
+    public int Orderid { get; set; }
+
+    public int? Orderitemquantity { get; set; }
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
@@ -33,5 +33,5 @@ public partial class Ordermodifier
 
     public virtual Modifier Modifier { get; set; } = null!;
 
-    public virtual Order? Order { get; set; }
+    public virtual Order Order { get; set; } = null!;
 }

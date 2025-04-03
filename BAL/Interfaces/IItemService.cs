@@ -13,4 +13,5 @@ public interface IItemService{
     
     List<Item> getSearchedItem(string searchedItem,ItemModel model,int categoryId);
     ItemViewModel loadItemModel(ItemViewModel model, int itemId);
+    void updateItemdetails(ItemViewModel model,int itemid);
 }

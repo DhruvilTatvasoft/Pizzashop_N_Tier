@@ -72,14 +72,14 @@ public class ModifierRepository : IModifierRepository
     public List<ModifierModel> getModifiersForItem(int itemid)
     {
         List<ModifierModel> modifiersMdls = new List<ModifierModel>();
-        List<Itemsandmodifier> itemmodifiers = _context.Itemsandmodifiers.Where(im => im.Itemid == itemid).ToList();
-        ModifierModel modifierModel = new ModifierModel();
+        List<Itemsandmodifier> itemmodifiers = _context.Itemsandmodifiers.Where(im => im.Itemid == itemid && im.Isdeleted == false).ToList();
         foreach (var im in itemmodifiers)
         {
+        ModifierModel modifierModel = new ModifierModel();
             modifierModel.ModifiergroupId = im.Modifiergroupid;
             modifierModel.max_value = im.Allowedmaxselection;
             modifierModel.min_value = im.Requiredminselection;
-            modifierModel.modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == im.Modifiergroupid).Distinct().ToList();
+            modifierModel.modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == im.Modifiergroupid && m.Isdeleted == false).Distinct().ToList();
             modifierModel.modifiers.ForEach(m =>
             {
                 m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
@@ -283,5 +283,59 @@ public class ModifierRepository : IModifierRepository
        m.Unitid = modifier.Unitid;
        _context.Modifiers.Update(m);
        _context.SaveChanges();
+    }
+
+    public void updateModifiersForItem(List<ModifierModel> model,int? itemid)
+    {
+        List<int> modifierGroupids = new List<int>();
+        foreach(var modifierModel in model){
+            modifierGroupids.Add(modifierModel.ModifiergroupId);
+        }
+        List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier=>itemModifier.Itemid == itemid).Select(itemModifier=>itemModifier.Modifiergroupid).ToList();
+        List<int> deleteModifierGroups = modifiergroupIdsForItem.Except(modifierGroupids).ToList();
+        List<int> AddModifierGroups =  modifierGroupids.Except(modifiergroupIdsForItem).ToList();
+
+        // List<Itemsandmodifier> itemModifiersList = new List<Itemsandmodifie r>();
+        // itemModifiersList = _context.Itemsandmodifiers.Where(itemModifiers=>itemModifiers.Itemid == itemid).ToList();
+        // // foreach(var id in deleteModifierGroups){
+        // //     Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == id && im.Itemid == itemid);
+        // //     _context.Itemsandmodifiers.Remove(im);
+        // // }
+        foreach(var item in model){
+            if(AddModifierGroups.Contains(item.ModifiergroupId)){
+                Itemsandmodifier im = new Itemsandmodifier();
+                im.Itemid = itemid??1;
+                im.Allowedmaxselection = item.max_value;
+                im.Requiredminselection = item.min_value;
+                im.Modifiergroupid = item.ModifiergroupId;
+                im.Createdat = DateTime.Now;
+                im.Modifiedat = DateTime.Now;
+                im.Createdby = 1;
+                im.Modifiedby = 2;
+                _context.Itemsandmodifiers.Add(im);
+                _context.SaveChanges();
+            }
+            else if(!deleteModifierGroups.Contains(item.ModifiergroupId)){
+                Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == item.ModifiergroupId && im.Itemid == itemid);
+                im.Itemid = itemid??1;
+                im.Allowedmaxselection = item.max_value;
+                im.Requiredminselection = item.min_value;
+                im.Modifiergroupid = item.ModifiergroupId;
+                im.Createdat = DateTime.Now;
+                im.Modifiedat = DateTime.Now;
+                im.Createdby = 1;
+                im.Modifiedby = 2;
+                _context.Itemsandmodifiers.Update(im);
+                _context.SaveChanges();
+            }
+            
+        }
+        foreach(var id in deleteModifierGroups){
+                Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == id && im.Itemid == itemid);
+                im.Isdeleted = true;
+                _context.Itemsandmodifiers.Update(im);
+                _context.SaveChanges();
+        }
+       
     }
 }

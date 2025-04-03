@@ -21,5 +21,9 @@ public partial class Customer
 
     public int Modifiedby { get; set; }
 
+    public bool? Isdeleted { get; set; }
+
+    public int? Totalorders { get; set; }
+
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 }
