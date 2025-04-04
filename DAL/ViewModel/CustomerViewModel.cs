@@ -5,6 +5,16 @@ public class CustomerViewModel
     public string customerName{get;set;}
     public string customerEmail{get;set;}
     public string phoneNumber{get;set;}
+
+    public decimal max_order{get;set;}
+
+    public decimal avg_order{get;set;}
+
+    public DateTime comingAt{get;set;}
+
+    public int totalVisits{get;set;}
+
+    public List<OrderDetailModel>? orderDetails{get;set;}
     public DateTime orderPlacedDate{get;set;}
     public int totalOrders{get;set;}
 
@@ -17,4 +27,12 @@ public class CustomerViewModel
     public string filterBy{get;set;} = "All Time";
 
     public List<Customer>? customers{get;set;}
+}
+
+public class OrderDetailModel{
+    public DateTime orderDate{get;set;}
+    public string orderType{get;set;}
+    public string paymentStatus{get;set;}
+    public int noOfItems{get;set;}
+    public decimal amount{get;set;}
 }

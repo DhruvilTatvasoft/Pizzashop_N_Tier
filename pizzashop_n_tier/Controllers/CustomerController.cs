@@ -32,5 +32,9 @@ namespace pizzashop_n_tier.Controllers
             // model.totalCustomers = _customerService.getAllCustomerCount(search,filterBy);
             return PartialView("_customertable",model);
         }
+        public IActionResult getCustomerHistory(int customerid){
+            CustomerViewModel model = _customerService.getCustomerHistory(customerid);
+            return PartialView("_customerHistory",model);
+        }
     }
 }

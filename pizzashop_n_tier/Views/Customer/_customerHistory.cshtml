@@ -1,0 +1,101 @@
+@model CustomerViewModel
+<link rel="stylesheet" href="~/css/_customerHistory.css">
+<div class="modal fade" style="--bs-modal-width: 68%;" id="CustomerHistory" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header d-flex">
+                <h5 class="modal-title">Customer History</h5>
+                <button type="button" class="close" data-bs-dismiss="modal"
+                    style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-2 pe-2 m-1"
+                style="background-color: #f2f2f2;">
+                <div class="row w-100">
+                    <div class="col-6 ps-2 pe-0 part-1" style="background-color: #ffff;">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="">Name</label>
+                            <label for="" class="fw-bold">Dhruvil</label>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="">Mobile Number</label>
+                            <label for="" class="fw-bold">1234567891</label>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <label for="">Max Orders</label>
+                            <label for="" class="fw-bold">18</label>
+                        </div>
+                    </div>
+                    <div class="col-6 pe-0">
+                        <div class="container h-100 part-2 pe-2 d-flex flex-column justify-content-between ">
+                            <div class="d-flex justify-content-between align-items-center p-2 mb-2">
+                                <label for="">Average Bill</label>
+                                <label for="" class="fw-bold">1512</label>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center p-2 mb-2">
+                                <label for="">Coming Since</label>
+                                <label for="" class="fw-bold">hajhkk</label>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center p-2">
+                                <label for="">Visits</label>
+                                <label for="" class="fw-bold">2</label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="w-100 mt-4 table-contatiner">
+                    <table class="table table-striped mb-0">
+                        <thead>
+                            <tr>
+                                <th scope="col">Orders Date</th>
+                                <th scope="col">Orders Type</th>
+                                <th scope="col">Payment</th>
+                                <th scope="col">Items</th>
+                                <th scope="col">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>Mark</td>
+                                <td>Otto</td>
+                                <td>fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">2</th>
+                                <td>Jacob</td>
+                                <td>Thornton</td>
+                                <td>fat</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">3</th>
+                                <td>Larry</td>
+                                <td>the Bird</td>
+                                <td>fat</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function loadCustomerHistory(customerid){
+        $.ajax({
+            url:'@Url.Action("getCustomerHistory","Customer")',
+            type:'GET',
+            data: {customerid: customerid},
+            success: function(data){
+                $("#customerHistoryDiv").html(data);
+                $('#customerHistory').modal('show');
+                }
+        })
+    }
+</script>

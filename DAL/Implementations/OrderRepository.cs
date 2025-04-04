@@ -99,10 +99,12 @@ public class OrderRepository : IOrderRepository
         return orders;
     }
 
-    public List<Order>? GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate, int pageNumber, int pageSize, string sortOrder, string sortBy, bool fromExport)
+
+    public OrderViewModel GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate, int pageNumber, int pageSize, string sortOrder, string sortBy, bool fromExport)
     {
         IQueryable<Order> query = _context.Orders.AsQueryable();
         DateTime currentDate = DateTime.Now;
+        OrderViewModel model = new OrderViewModel();
 
         if (!string.IsNullOrEmpty(searchedOrder) && int.TryParse(searchedOrder, out int searchOrderId))
         {
@@ -144,8 +146,8 @@ public class OrderRepository : IOrderRepository
                 order.Status = StatusDict.ContainsKey(order.Statusid) ? StatusDict[order.Statusid] : null!;
                 order.Customer = CustomerDict.ContainsKey(order.Customerid) ? CustomerDict[order.Customerid] : new Customer();
             }
-
-            return query.ToList();
+            model.orders = query.ToList();
+            return model;
         }
 
         if (!string.IsNullOrEmpty(filterBy))
@@ -232,9 +234,16 @@ public class OrderRepository : IOrderRepository
                 query = query.OrderBy(order => order.Totalamount);
             }
         }
+
+        model.PageNumber = pageNumber;
+        model.PageSize = pageSize;
+        model.TotalOrders = query.Count();
+        model.sortBy = sortBy;
+        model.sortOrder = sortOrder;
         List<Order> orders = query.Skip((pageNumber - 1) * pageSize)
                                     .Take(pageSize).ToList();
-        return orders;
+        model.orders = orders;
+        return model;
     }
 
 

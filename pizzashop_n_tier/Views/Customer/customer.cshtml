@@ -31,7 +31,7 @@
                                         <option value="Current Month">Current Month</option>
                                         <option value="Custom Date">Custom Date</option>
                                     </select>
-                                    @* <label>Select Time</label> *@
+                                    
                                 </div>
                             </div>
                             <button class="btn btn-primary add-item-modifier" type="button" style="width:30%;"
@@ -42,6 +42,7 @@
                     </div>
                 </div>
                 <div class="form-container shadow customerTableContainer" id="t-container"></div>
+                <div id="customerHistoryDiv"></div>
             </div>
         </div>
 
@@ -52,15 +53,16 @@
                     <div class="modal-header d-flex">
                         <h5 class="modal-title">Search By Date Range</h5>
                         <button type="button" class="close" data-bs-dismiss="modal"
-                            style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;" aria-label="Close">
+                            style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
+                            aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
                     </div>
                     <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-1 pe-1">
                         <div class="d-flex row w-100  ps-2 pe-2 pb-2">
-                            <div class="col-6 ps-0 form-floating" >
-                                <label for="" class="form-label"
-                                style="font-size: 80%;top: -12px;left: -1px;">Start date </label>
+                            <div class="col-6 ps-0 form-floating">
+                                <label for="" class="form-label" style="font-size: 80%;top: -12px;left: -1px;">Start
+                                    date </label>
                                 <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
                                     placeholder="From Date" id="startDate">
                             </div>
@@ -68,27 +70,143 @@
                                 <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
                                     placeholder="From Date" id="endDate">
                                 <label for="" class="form-label"
-                                style="font-size: 80%;top: 0px;left: 7px;color:black;">End date</label>
+                                    style="font-size: 80%;top: 0px;left: 7px;color:black;">End date</label>
                             </div>
                         </div>
                         <div class="d-flex">
-                            <button type="button" class="btn btn-primary me-2"  onclick="searchCustomerByDate()">Submit</button>
-                            <button type="button" class="btn btn-outline-primary closebutton" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary me-2"
+                                onclick="searchCustomerByDate()">Submit</button>
+                            <button type="button" class="btn btn-outline-primary closebutton"
+                                data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
+
+        <div>
+
+            <style>
+                .part-1 div{
+                    border:1px solid #c6c3c3;
+                    border-radius: 5px;
+                    padding:2%;
+                    @* padding-left: 1%; *@
+                    margin:2%;
+                }
+                .part-1{
+                    box-shadow:1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+                }
+                .part-2 div{
+                    @* height: 30%; *@
+                    background-color: #ffff;    
+                   box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+                }
+                .table-contatiner{
+
+                   box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+                }
+            </style>
+
+            <div class="modal fade" style="--bs-modal-width: 68%;" id="CustomerHistory" tabindex="-1" role="dialog"
+                aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header d-flex">
+                            <h5 class="modal-title">Customer History</h5>
+                            <button type="button" class="close" data-bs-dismiss="modal"
+                                style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
+                                aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-2 pe-2 m-1" style="background-color: #f2f2f2;">
+                            <div class="row w-100">
+                                    <div class="col-6 ps-2 pe-0 part-1" style="background-color: #ffff;">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label for="">Name</label>
+                                            <label for="" class="fw-bold">Dhruvil</label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center" >
+                                            <label for="">Mobile Number</label>
+                                            <label for="" class="fw-bold">1234567891</label>
+                                        </div>
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <label for="">Max Orders</label>
+                                            <label for="" class="fw-bold">18</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-6 pe-0">
+                                        <div class="container h-100 part-2 pe-2 d-flex flex-column justify-content-between ">
+                                            <div class="d-flex justify-content-between align-items-center p-2 mb-2">
+                                                <label for="">Average Bill</label>
+                                                <label for="" class="fw-bold">1512</label>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center p-2 mb-2">
+                                                <label for="">Coming Since</label>
+                                                <label for="" class="fw-bold">hajhkk</label>
+                                            </div>
+                                            <div class="d-flex justify-content-between align-items-center p-2">
+                                                <label for="">Visits</label>
+                                                <label for="" class="fw-bold">2</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                            </div>
+                           <div class="w-100 mt-4 table-contatiner">
+                                        <table class="table table-striped mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Orders Date</th>
+                                                <th scope="col">Orders Type</th>
+                                                <th scope="col">Payment</th>
+                                                <th scope="col">Items</th>
+                                                <th scope="col">Amount</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <th scope="row">1</th>
+                                                <td>Mark</td>
+                                                <td>Otto</td>
+                                                <td>fat</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">2</th>
+                                                <td>Jacob</td>
+                                                <td>Thornton</td>
+                                                <td>fat</td>
+                                            </tr>
+                                            <tr>
+                                                <th scope="row">3</th>
+                                                <td>Larry</td>
+                                                <td>the Bird</td>
+                                                <td>fat</td>
+                                            </tr>
+                                        </tbody>
+                                        </table>
+                           </div>
+                     
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+
         <script>
             $("document").ready(function () {
                 loadCustomerTable();
+                $("#CustomerHistory").modal('show');
             })
             function loadCustomerTable(sortBy, sortOrder, pageNumber, pageSize) {
                 pageSize = $(".pagesize").val()
                 $.ajax({
                     url: '@Url.Action("loadAllCustomers", "Customer")',
                     type: 'GET',
-                    data: { pageNumber: pageNumber, pageSize: pageSize, sortBy: sortBy, sortOrder: sortOrder, filterBy: $('.timePeriodFilter').val(),startDate: $('#startDate').val() ?? null, endDate:  $('#endDate').val() ?? null },
+                    data: { pageNumber: pageNumber, pageSize: pageSize, sortBy: sortBy, sortOrder: sortOrder, filterBy: $('.timePeriodFilter').val(), startDate: $('#startDate').val() ?? null, endDate: $('#endDate').val() ?? null },
                     success: function (data) {
                         $(".customerTableContainer").html(data);
                     }
@@ -124,20 +242,22 @@
                 }
             }
 
-            function searchCustomerByDate(){
+            function searchCustomerByDate() {
                 var startDate = $('#startDate').val();
                 var endDate = $('#endDate').val();
                 pageSize = $(".pagesize").val()
                 $.ajax({
                     url: '@Url.Action("loadAllCustomers", "Customer")',
                     type: 'GET',
-                    data: { pageNumber: 1, pageSize: pageSize, sortBy: 'asc', sortOrder: 'name', filterBy: $('.timePeriodFilter').val(),startDate: startDate, endDate: endDate },
+                    data: { pageNumber: 1, pageSize: pageSize, sortBy: 'asc', sortOrder: 'name', filterBy: $('.timePeriodFilter').val(), startDate: startDate, endDate: endDate },
                     success: function (data) {
                         $(".customerTableContainer").html(data);
                         $(".closebutton").click();
                     }
                 });
             }
+
+            
 
 
 

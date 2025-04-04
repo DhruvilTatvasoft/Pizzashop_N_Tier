@@ -30,6 +30,12 @@
         </tr>
     </thead>
     <tbody>
+
+        @if(Model.TotalOrders <= 0){
+            <tr>
+                <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
+            </tr>
+        }
         @foreach (var order in @Model.orders)
         {
             <tr>
@@ -102,13 +108,25 @@
       </div>
 <label for="" class="me-2">Showing 1-5 of 13</label>
     <div class="d-flex mt-1">
-
-
+      
+    @if(Model.PageNumber > 1){
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px" alt=""></button>
-          
+    }
+    else{
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px" alt="" ></button>
+
+    }
+    @if(Model.PageNumber*Model.PageSize < Model.TotalOrders){
+
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')"><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px;rotate: 180deg;" alt=""></button>
+    }
+    else{
+      <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
+          style="width:25px;rotate: 180deg;" alt=""></button>
+    }
     </div>
       </div>
 

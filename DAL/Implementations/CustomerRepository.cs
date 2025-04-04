@@ -103,4 +103,38 @@ public class CustomerRepository : ICustomerRepository
         return model;
 
     }
+
+    public CustomerViewModel getCustomerHistory(int customerid)
+    {
+        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == customerid && customer.Isdeleted == false)!;
+        CustomerViewModel model = new CustomerViewModel();
+        model.customerName = customer.Customername;
+        model.phoneNumber = customer.Phonenumber;
+        List<Order> customerOrders = _context.Orders.Where(order => order.Customerid == customer.Customerid && order.IsDeleted == false).ToList();
+        model.totalVisits = customerOrders.Count();
+        decimal avg_order = 0;
+        decimal max_order = 0;
+        DateTime? coming_since = null;
+        foreach (var order in customerOrders)
+        {
+            avg_order += order.Totalamount;
+            if(order.Totalamount > max_order)
+            {
+                max_order = order.Totalamount;
+            }
+            if(coming_since == null){
+                coming_since = order.Createdat;
+            }
+            else{
+                if(coming_since < order.Createdat){
+                    coming_since = order.Createdat;
+                }
+            }
+        }
+        model.avg_order = avg_order / customerOrders.Count();
+        model.max_order = max_order;
+        model.comingAt = (DateTime)coming_since!;
+
+        
+    }
 }

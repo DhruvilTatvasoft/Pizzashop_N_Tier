@@ -22,5 +22,10 @@ namespace BAL.Implementations
            return _customerRepository.getAllCustomers(pageSize,pageNumber,sortBy,sortOrder,search,filterBy,startDate,endDate);
       
         }
+
+        public CustomerViewModel getCustomerHistory(int customerid)
+        {
+            return _customerRepository.getCustomerHistory(customerid);
+        }
     }
 }
