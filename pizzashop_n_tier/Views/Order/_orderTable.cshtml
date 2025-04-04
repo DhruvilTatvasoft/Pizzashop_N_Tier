@@ -102,9 +102,11 @@
       </div>
 <label for="" class="me-2">Showing 1-5 of 13</label>
     <div class="d-flex mt-1">
+
+
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px" alt=""></button>
-          <!-- Debugger removed as it is not valid Razor syntax -->
+          
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')"><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px;rotate: 180deg;" alt=""></button>
     </div>

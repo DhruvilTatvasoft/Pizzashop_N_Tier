@@ -123,16 +123,7 @@
 </div>
  
 <script>
-    @* function EditItemGet(itemid) {
-        $.ajax({
-            url: '@Url.Action("EditItem", "Menu")',
-            method: 'GET',
-            data: { itemid: itemid },
-            success: function (data) {
-                console.log(data);
-            }
-        });
-    } *@
+   
         $(".pageSize").on("change", function () {
              loadTableData(selectedCategoryId,$(".pageSize").val(),1)
              console.log("page size changed to "+$(".pageSize").val())

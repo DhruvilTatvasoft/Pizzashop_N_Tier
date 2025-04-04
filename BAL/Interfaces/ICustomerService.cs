@@ -8,7 +8,7 @@ namespace BAL.Interfaces
 {
     public interface ICustomerService
     {
-        int getAllCustomerCount();
-        public List<Customer> getAllCustomers(int pageSize,int pageNumber,string sortBy,string sortOrder,string? search);
+      
+        public CustomerViewModel getAllCustomers(int pageSize,int pageNumber,string sortBy,string sortOrder,string? search,string filterBy,DateTime? startDate,DateTime? endDate);
     }
 }

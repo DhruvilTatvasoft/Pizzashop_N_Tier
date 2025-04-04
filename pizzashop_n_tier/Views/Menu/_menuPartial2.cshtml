@@ -15,14 +15,11 @@
     <input type="text" id="categoryid_hidden" value="@Model.categoryId" hidden>
 </div>
 <div class="tbl m-3 table-container"></div>
-<div id="AddItemModelDiv">
-<div id="editItemModel"></div>
-</div>
 <script>
     $("document").ready(() => {
         loadTableData(10, $(".pageSize").val(), 1);
         console.log("page size is : " + $(".pageSize").val())
-    })
+    });
     function searchItem() {
         var SearchedItem = $('#searchedItem').val();
         if (SearchedItem.length > 2) {
@@ -39,33 +36,5 @@
         else {
             loadTableData(selectedCategoryId, $(".pageSize").val(), 1)
         }
-    };
-
-    function openAddItemModal() {
-        console.log("model opened");
-        $.ajax({
-            url: '@Url.Action("OpenAddItemModel", "Menu")',
-            method: 'GET',
-            success: function (data) {
-                console.log(data);
-                $("#AddItemModelDiv").html(data);
-                $("#exampleModalCenter3").modal('show');
-            }
-        });
     }
-
-    function EditItemGet(itemid){   
-    $.ajax({
-        url:'@Url.Action("EditItemGet","Menu")',
-        type:'GET',
-        data:{itemId : itemid},
-        success:function(data){
-            $('#editItemModel').html(data);
-            $('#ModelForEditItem').modal('show');
-        }
-    });
-}
-
-
-
 </script>

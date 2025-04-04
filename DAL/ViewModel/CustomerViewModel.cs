@@ -14,5 +14,7 @@ public class CustomerViewModel
     public string sortBy{get;set;} = "asc";
     public string sortOrder{get;set;} = "name";
 
+    public string filterBy{get;set;} = "All Time";
+
     public List<Customer>? customers{get;set;}
 }

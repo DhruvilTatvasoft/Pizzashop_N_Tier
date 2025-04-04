@@ -252,17 +252,23 @@ function getModifier() {
       }
    } 
 
-   $("#EditItemForm").off('submit').on('submit',function(e){
-    alert("OKKKKK");
-        e.preventDefault();
+    // Initialize form submission handler only once
+    if (!window.editItemFormHandlerInitialized) {
+        window.editItemFormHandlerInitialized = true;
+        
+        $(document).on('submit', '#EditItemForm', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
 
-        var data = new FormData(this);
+            var form = $(this);
+            var data = new FormData(this);
             var modifierData = [];
-            $(".modifier-group-item").each(function (index) {
+            
+            $(".modifier-group-item").each(function(index) {
                 let modifierGroupId = $(this).find(".modifiergroupID").val();
                 let minValue = $(this).find(".min_value").val();
                 let maxValue = $(this).find(".max_value").val();
-              
+                
                 if (modifierGroupId) {
                     modifierData.push({
                         ModifiergroupId: modifierGroupId,
@@ -271,18 +277,37 @@ function getModifier() {
                     });
                 }
             });
+            
             data.append("payload", JSON.stringify(modifierData));
+            
             $.ajax({
-                url:'@Url.Action("EditItemPost","Menu")',
+                url: form.attr('action') || '@Url.Action("PostEditItem","Menu")',
                 type: 'POST',
                 data: data,
                 processData: false,
-                contentType:false,
-                success:function(response){
-                    $('.closeBTN').click();
-                    toastr.success("Item updated successfully");
+                contentType: false,
+                success: function(response) {
+                    if (response.success) {
+                        $('#ModelForEditItem').modal('hide');
+                        toastr.success(response.success || "Item updated successfully");
+                        if (typeof loadItems === 'function') {
+                            loadItems(response.categoryid);
+                        }
+                    } else if (response.error) {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function(xhr) {
+                    try {
+                        var err = JSON.parse(xhr.responseText);
+                        toastr.error(err.error || 'Error updating item');
+                    } catch(e) {
+                        toastr.error('An unexpected error occurred');
+                    }
                 }
             });
+            
             return false;
-    })  
+        });
+    }
 </script>

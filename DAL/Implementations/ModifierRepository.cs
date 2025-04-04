@@ -294,13 +294,6 @@ public class ModifierRepository : IModifierRepository
         List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier=>itemModifier.Itemid == itemid).Select(itemModifier=>itemModifier.Modifiergroupid).ToList();
         List<int> deleteModifierGroups = modifiergroupIdsForItem.Except(modifierGroupids).ToList();
         List<int> AddModifierGroups =  modifierGroupids.Except(modifiergroupIdsForItem).ToList();
-
-        // List<Itemsandmodifier> itemModifiersList = new List<Itemsandmodifie r>();
-        // itemModifiersList = _context.Itemsandmodifiers.Where(itemModifiers=>itemModifiers.Itemid == itemid).ToList();
-        // // foreach(var id in deleteModifierGroups){
-        // //     Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == id && im.Itemid == itemid);
-        // //     _context.Itemsandmodifiers.Remove(im);
-        // // }
         foreach(var item in model){
             if(AddModifierGroups.Contains(item.ModifiergroupId)){
                 Itemsandmodifier im = new Itemsandmodifier();
@@ -336,6 +329,5 @@ public class ModifierRepository : IModifierRepository
                 _context.Itemsandmodifiers.Update(im);
                 _context.SaveChanges();
         }
-       
     }
 }

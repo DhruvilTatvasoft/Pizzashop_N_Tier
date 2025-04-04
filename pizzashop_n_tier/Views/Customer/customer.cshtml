@@ -11,65 +11,134 @@
             <div class="content pt-3 w-100 h-100">
                 <div class="header d-flex align-items-center justify-content-start mb-4 d-flex row">
                     <div class="col-6">
-                    <h1>Customers</h1>
+                        <h1>Customers</h1>
                     </div>
                     <div class=" d-flex  align-items-center col-6 pe-0" style="margin-left: auto;">
-                       <div class="container-fluid d-flex me-0 pe-0">
+                        <div class="container-fluid d-flex me-0 pe-0">
                             <div class="w-100 me-2">
-                            <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="searchCustomer" onkeyup="searchCustomer()" placeholder="Search">
+                                <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;"
+                                    id="searchCustomer" onkeyup="searchCustomer()" placeholder="Search">
                             </div>
-                        <div class="w-100 me-2">
-                            <div class="form-floating">
-                                        <select class="time-select form-select shadow-none timePeriodFilter" style="padding: 3%;min-height: 2.5rem;height:2.5rem;"
-                                            aria-label="Floating label select example" placeholder="Selects Time"
-                                            onchange="filterRecords()">
-                                            <option selected value="All Time">All Time</option>
-                                            <option value="Last 7 days">Last 7 days</option>
-                                            <option value="Last 30 days">Last 30 days</option>
-                                            <option value="Current Month">Current Month</option>
-                                            <option value="Current Month">Custom Date</option>
-                                        </select>
-                                        @* <label>Select Time</label> *@
-                                    </div>
+                            <div class="w-100 me-2">
+                                <div class="form-floating">
+                                    <select class="time-select form-select shadow-none timePeriodFilter"
+                                        style="padding: 3%;min-height: 2.5rem;height:2.5rem;"
+                                        aria-label="Floating label select example" placeholder="Selects Time"
+                                        onchange="filterRecords()">
+                                        <option selected value="All Time">All Time</option>
+                                        <option value="Last 7 days">Last 7 days</option>
+                                        <option value="Last 30 days">Last 30 days</option>
+                                        <option value="Current Month">Current Month</option>
+                                        <option value="Custom Date">Custom Date</option>
+                                    </select>
+                                    @* <label>Select Time</label> *@
+                                </div>
                             </div>
-                        <button class="btn btn-primary add-item-modifier" type="button" style="width:30%;" onclick="openModelForAddTax()">
-                                    <span style="font-size: 82%;"><img src="~/images/export (1).svg"  style="filter: brightness(0) invert(1);"
-                                            alt="">Export</span></button>
-                       </div>
+                            <button class="btn btn-primary add-item-modifier" type="button" style="width:30%;"
+                                onclick="openModelForAddTax()">
+                                <span style="font-size: 82%;"><img src="~/images/export (1).svg"
+                                        style="filter: brightness(0) invert(1);" alt="">Export</span></button>
+                        </div>
                     </div>
                 </div>
                 <div class="form-container shadow customerTableContainer" id="t-container"></div>
-         
             </div>
         </div>
 
+        <div class="modal fade" id="searchCustomerByDate" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content w-75">
+                    <div class="modal-header d-flex">
+                        <h5 class="modal-title">Search By Date Range</h5>
+                        <button type="button" class="close" data-bs-dismiss="modal"
+                            style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-1 pe-1">
+                        <div class="d-flex row w-100  ps-2 pe-2 pb-2">
+                            <div class="col-6 ps-0 form-floating" >
+                                <label for="" class="form-label"
+                                style="font-size: 80%;top: -12px;left: -1px;">Start date </label>
+                                <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
+                                    placeholder="From Date" id="startDate">
+                            </div>
+                            <div class="col-6 ps-0 pe-0 form-floating">
+                                <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
+                                    placeholder="From Date" id="endDate">
+                                <label for="" class="form-label"
+                                style="font-size: 80%;top: 0px;left: 7px;color:black;">End date</label>
+                            </div>
+                        </div>
+                        <div class="d-flex">
+                            <button type="button" class="btn btn-primary me-2"  onclick="searchCustomerByDate()">Submit</button>
+                            <button type="button" class="btn btn-outline-primary closebutton" data-bs-dismiss="modal">Cancel</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <script>
-            $("document").ready(function(){
+            $("document").ready(function () {
                 loadCustomerTable();
             })
-            function loadCustomerTable(sortBy,sortOrder,pageNumber,pageSize){
+            function loadCustomerTable(sortBy, sortOrder, pageNumber, pageSize) {
                 pageSize = $(".pagesize").val()
                 $.ajax({
-                    url:'@Url.Action("loadAllCustomers","Customer")',
+                    url: '@Url.Action("loadAllCustomers", "Customer")',
                     type: 'GET',
-                    data:{pageNumber:pageNumber,pageSize:pageSize,sortBy:sortBy,sortOrder:sortOrder},
-                    success: function(data){
+                    data: { pageNumber: pageNumber, pageSize: pageSize, sortBy: sortBy, sortOrder: sortOrder, filterBy: $('.timePeriodFilter').val(),startDate: $('#startDate').val() ?? null, endDate:  $('#endDate').val() ?? null },
+                    success: function (data) {
                         $(".customerTableContainer").html(data);
                     }
                 });
             }
-            function searchCustomer(){
+            function searchCustomer() {
                 var searchValue = $("#taxSearch").val();
-                 pageSize = $(".pagesize").val()
+                pageSize = $(".pagesize").val()
                 $.ajax({
-                    url:'@Url.Action("loadAllCustomers","Customer")',
-                    type:'GET',
-                    data:{pageSize:pageSize,search:$('#searchCustomer').val()},
-                    success:function(data){
+                    url: '@Url.Action("loadAllCustomers", "Customer")',
+                    type: 'GET',
+                    data: { pageSize: pageSize, search: $('#searchCustomer').val() },
+                    success: function (data) {
                         $(".customerTableContainer").html(data);
                     }
                 });
             }
+            function filterRecords() {
+                pageSize = $(".pagesize").val()
+                if ($('.timePeriodFilter').val() != 'Custom Date') {
+                    $.ajax({
+                        url: '@Url.Action("loadAllCustomers", "Customer")',
+                        type: 'GET',
+                        data: { pageSize: pageSize, search: $('#searchCustomer').val(), filterBy: $('.timePeriodFilter').val() },
+                        success: function (data) {
+                            $(".customerTableContainer").html(data);
+                        }
+                    });
+                }
+                else {
+                    console.log("abc");
+                    $('#searchCustomerByDate').modal('show');
+                }
+            }
+
+            function searchCustomerByDate(){
+                var startDate = $('#startDate').val();
+                var endDate = $('#endDate').val();
+                pageSize = $(".pagesize").val()
+                $.ajax({
+                    url: '@Url.Action("loadAllCustomers", "Customer")',
+                    type: 'GET',
+                    data: { pageNumber: 1, pageSize: pageSize, sortBy: 'asc', sortOrder: 'name', filterBy: $('.timePeriodFilter').val(),startDate: startDate, endDate: endDate },
+                    success: function (data) {
+                        $(".customerTableContainer").html(data);
+                        $(".closebutton").click();
+                    }
+                });
+            }
+
 
 
         </script>

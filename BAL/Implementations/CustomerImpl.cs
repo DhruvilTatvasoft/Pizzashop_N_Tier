@@ -14,18 +14,13 @@ namespace BAL.Implementations
         public CustomerImpl(ICustomerRepository customerRepository){
             _customerRepository = customerRepository;
         }
+        
 
-        public int getAllCustomerCount()
+
+        public CustomerViewModel getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search, string filterBy, DateTime? startDate, DateTime? endDate)
         {
-            return _customerRepository.getAllCustomerCount();
-        }
-
-        public List<Customer> getAllCustomers(int pageSize,int pageNumber,string sortBy,string sortOrder,string? search)
-        {
-            CustomerViewModel model = new CustomerViewModel();
-            List<Customer> allCustomers = _customerRepository.getAllCustomers(pageSize,pageNumber,sortBy,sortOrder,search);
-            return allCustomers;
-
+           return _customerRepository.getAllCustomers(pageSize,pageNumber,sortBy,sortOrder,search,filterBy,startDate,endDate);
+      
         }
     }
 }

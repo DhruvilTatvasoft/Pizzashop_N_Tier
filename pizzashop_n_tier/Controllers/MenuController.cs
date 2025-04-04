@@ -203,17 +203,24 @@ public class MenuController : Controller
     //     return PartialView("_additem", model);
     // }
 
+[HttpPost]
+    public IActionResult PostEditItem(ItemViewModel model){
+        model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
+         _itemService.updateItemdetails(model,model.itemid??1);
+        return Json(new { success = "Item Updated successfully", categoryid = model.Categoryid });
+    }
+
     public IActionResult EditItemGet(int itemId){
         ItemViewModel model = new ItemViewModel();
         _itemService.loadItemModel(model,itemId);
         return PartialView("_edititem",model);
     }
 
-    public IActionResult EditItemPost(ItemViewModel model){
-         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
-         _itemService.updateItemdetails(model,model.itemid??1);
-        return View("Menu");
-    }
+    // public IActionResult EditItemPost(ItemViewModel model){
+    //      model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
+    //      _itemService.updateItemdetails(model,model.itemid??1);
+    //     return View("Menu");
+    // }
 
     [HttpGet]
     public IActionResult getModifiers(int modifiergroupId)

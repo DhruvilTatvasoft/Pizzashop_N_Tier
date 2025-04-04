@@ -22,17 +22,15 @@ namespace pizzashop_n_tier.Controllers
             return View("customer");
         }
 
-        public IActionResult loadAllCustomers(int pageSize=4,int pageNumber=1,string sortBy="name",string sortOrder="asc",string? search=""){
-            CustomerViewModel model = new CustomerViewModel();
-            model.customers = _customerService.getAllCustomers(pageSize,pageNumber,sortBy,sortOrder,search);
-            model.pageNumber = pageNumber;
-            model.pageSize = pageSize;
-            model.sortBy = sortBy;
-            model.sortOrder = sortOrder;
-            model.totalCustomers = _customerService.getAllCustomerCount();
+        public IActionResult loadAllCustomers(int pageSize=4,int pageNumber=1,string sortBy="name",string sortOrder="desc",string? search="",string filterBy = "All Time",DateTime? startDate = null,DateTime? endDate = null){
+            CustomerViewModel model = _customerService.getAllCustomers(pageSize,pageNumber,sortBy,sortOrder,search,filterBy,startDate,endDate);
+            // model.pageNumber = pageNumber;
+            // model.pageSize = pageSize;
+            // model.sortBy = sortBy;
+            // model.sortOrder = sortOrder;
+            
+            // model.totalCustomers = _customerService.getAllCustomerCount(search,filterBy);
             return PartialView("_customertable",model);
         }
-
-
     }
 }

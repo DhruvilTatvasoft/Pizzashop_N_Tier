@@ -49,9 +49,6 @@ namespace pizzashop_n_tier.Controllers
         {
             OrderViewModel model = new OrderViewModel();
             model.orders = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
-            if(pageNumber > _orderService.getTotalOrderCount()/pageSize ){
-                pageNumber = (int)Math.Ceiling((double) _orderService.getTotalOrderCount()/pageSize);
-            }
             model.PageSize = pageSize;
             model.PageNumber = pageNumber;
             model.TotalOrders = _orderService.getTotalOrderCount();

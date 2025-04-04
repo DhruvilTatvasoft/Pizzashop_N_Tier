@@ -203,5 +203,64 @@
             });
         }
     }
-   
+    
+    // Initialize form submission handler only once
+    if (!window.addItemFormHandlerInitialized) {
+        window.addItemFormHandlerInitialized = true;
+        
+        $(document).on('submit', '#AddItemForm', function(e) {
+            e.preventDefault();
+            e.stopImmediatePropagation();
+            
+            if ($(this).valid()) {
+                var form = $(this);
+                var data = new FormData(this);
+                var modifierData = [];
+                
+                $(".modifier-group-item").each(function(index) {
+                    let modifierGroupId = $(this).find(".modifiergroupID").val();
+                    let minValue = $(this).find(".min_value").val();
+                    let maxValue = $(this).find(".max_value").val();
+                    
+                    if (modifierGroupId) {
+                        modifierData.push({
+                            ModifiergroupId: modifierGroupId,
+                            min_value: minValue || 0,
+                            max_value: maxValue || 0
+                        });
+                    }
+                });
+                
+                data.append("payload", JSON.stringify(modifierData));
+                
+                $.ajax({
+                    url: form.attr('action') || "/Menu/AddNewItem",
+                    method: 'POST',
+                    data: data,
+                    contentType: false,
+                    processData: false,
+                    success: function(response) {
+                        if (response.error) {
+                            toastr.error(response.error);
+                        } else {
+                            $('#exampleModalCenter3').modal('hide');
+                            toastr.success(response.success);
+                            if (typeof loadTableData === 'function') {
+                                loadTableData(response.categoryid, $(".pageSize").val(), 1);
+                                selectedCategoryId = response.categoryid;
+                            }
+                        }
+                    },
+                    error: function(xhr) {
+                        try {
+                            var err = JSON.parse(xhr.responseText);
+                            toastr.error(err.error || 'Error adding item');
+                        } catch(e) {
+                            toastr.error('An unexpected error occurred');
+                        }
+                    }
+                });
+            }
+        });
+    }
 </script>

@@ -10,17 +10,13 @@ public class CustomerRepository : ICustomerRepository
         _context = context;
     }
 
-    public int getAllCustomerCount()
-    {
-        return _context.Customers.Where(customer => customer.Isdeleted == false).ToList().Count();
-    }
 
-    public List<Customer> getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search)
+    public CustomerViewModel getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search, string filterBy,DateTime? startDate, DateTime? endDate)
     {
-
+        CustomerViewModel model = new CustomerViewModel();
 
         List<Customer> allCustomers = _context.Customers.Where(customer => customer.Isdeleted == false).ToList();
-
+        DateTime currentDate = DateTime.Now;
 
         foreach (var customer in allCustomers)
         {
@@ -32,17 +28,34 @@ public class CustomerRepository : ICustomerRepository
             }
         }
         IQueryable<Customer> query;
-        if (search != "")
+        query = _context.Customers.Where(customer => customer.Isdeleted == false);
+        query = query.Where(customer => search == "" || customer.Customername.ToLower().Trim().Contains(search.ToLower().Trim()));
+        var a = query.ToList();
+        if (!string.IsNullOrEmpty(filterBy) && startDate == null && endDate == null)
         {
-            // tax.Taxname.ToLower().Trim().Contains(search.ToLower().Trim())
-            query = _context.Customers.Where(customer => customer.Customername.ToLower().Trim().Contains(search.ToLower().Trim())&& customer.Isdeleted == false);
+            switch (filterBy)
+            {
+                case "Last 7 days":
+                    query = query.Where(customer => customer.Createdat >= currentDate.AddDays(-7));
+                    break;
+
+                case "Last 30 days":
+                    query = query.Where(customer => customer.Createdat >= currentDate.AddDays(-30));
+                    break;
+
+                case "Current Month":
+                    query = query.Where(customer => customer.Createdat.HasValue &&
+                                              customer.Createdat.Value.Month == currentDate.Month &&
+                                              customer.Createdat.Value.Year == currentDate.Year);
+                    break;
+            }
         }
-        else
+
+        if (startDate != null && endDate != null)
         {
-            query = _context.Customers.Where(customer => customer.Isdeleted == false)
-                                  .Skip((pageNumber - 1) * pageSize)
-                                  .Take(pageSize);
+            query = query.Where(customer => customer.Createdat >= startDate && customer.Createdat <= endDate);
         }
+
         if (sortBy == "name")
         {
             if (sortOrder == "desc")
@@ -76,6 +89,18 @@ public class CustomerRepository : ICustomerRepository
                 query = query.OrderBy(Customer => Customer.Totalorders);
             }
         }
-        return query.ToList();
+
+        model.totalCustomers = query.ToList().Count();
+        query = query.Where(customer => customer.Isdeleted == false)
+                              .Skip((pageNumber - 1) * pageSize)
+                              .Take(pageSize);
+
+        model.pageNumber = pageNumber;
+        model.pageSize = pageSize;
+        model.sortBy = sortBy;
+        model.sortOrder = sortOrder;
+        model.customers = query.ToList();
+        return model;
+
     }
 }
