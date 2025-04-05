@@ -7,14 +7,16 @@ public class ModifierImple : IModifierService
 {
 
     private readonly IModifierRepository _modifierRepository;
-    public ModifierImple(IModifierRepository modifierRepository){
+    public ModifierImple(IModifierRepository modifierRepository)
+    {
         _modifierRepository = modifierRepository;
     }
     public List<Modifier> getModifiersForMGroup(int modifiergroupId)
     {
         return _modifierRepository.getModifiersForMG(modifiergroupId);
     }
-    public Modifiergroup GetModifiergroup(int modifiergroupId){
+    public Modifiergroup GetModifiergroup(int modifiergroupId)
+    {
         return _modifierRepository.GetModifiergroup(modifiergroupId);
     }
     public List<Modifiergroup> getAllModifierGroups()
@@ -22,16 +24,24 @@ public class ModifierImple : IModifierService
         return _modifierRepository.getAllModifierGroups();
     }
 
-    public List<Modifier> getAllModifiers()
+    public List<Modifier> getAllModifiers(int? modifierGroupId)
     {
-        return _modifierRepository.getAllModifiers();
+        if (modifierGroupId != null)
+        {
+            return _modifierRepository.getAllMOdifiersForModifierGroup(modifierGroupId);
+        }
+        else
+        {
+            return _modifierRepository.getAllModifiers();
+        }
     }
 
-    public void addModifiersForItem(List<ModifierModel> modifierModels, int itemid,string email)
+    public void addModifiersForItem(List<ModifierModel> modifierModels, int itemid, string email)
     {
-       foreach (var modifier in modifierModels){
-        _modifierRepository.addModifiersForItem(modifier, itemid,email);
-       }
+        foreach (var modifier in modifierModels)
+        {
+            _modifierRepository.addModifiersForItem(modifier, itemid, email);
+        }
     }
 
     public List<ModifierModel> getModifiersForItem(int itemid)
@@ -47,23 +57,23 @@ public class ModifierImple : IModifierService
 
     public List<Modifier> getSearchedModifier(string searchedModifier)
     {
-       List<Modifier> modifiers = _modifierRepository.getSearchedModifier(searchedModifier);
+        List<Modifier> modifiers = _modifierRepository.getSearchedModifier(searchedModifier);
         return modifiers;
     }
 
     public void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
-        _modifierRepository.AddNewModifierGroup(mg,modifierIds);
+        _modifierRepository.AddNewModifierGroup(mg, modifierIds);
     }
 
     public void deleteModifier(int modifierid, int modifiergroupid)
     {
-        _modifierRepository.deleteModifier(modifierid,modifiergroupid);
+        _modifierRepository.deleteModifier(modifierid, modifiergroupid);
     }
 
     public void updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
-       _modifierRepository.updateModifierGroup(mg,modifierIds);
+        _modifierRepository.updateModifierGroup(mg, modifierIds);
     }
 
     public void deleteModifierGroup(int modifierGroupId)
@@ -86,7 +96,8 @@ public class ModifierImple : IModifierService
         return _modifierRepository.getModifierFromDb(modifierid);
     }
 
-    public void updateModifier(Modifier modifier, int modifierGroupId){
-         _modifierRepository.updateModifier(modifier,modifierGroupId);
+    public void updateModifier(Modifier modifier, int modifierGroupId)
+    {
+        _modifierRepository.updateModifier(modifier, modifierGroupId);
     }
 }

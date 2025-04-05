@@ -249,10 +249,10 @@ public class MenuController : Controller
 
 
     [HttpGet]
-    public IActionResult LoadAllModifiers()
+    public IActionResult LoadAllModifiers(int? modifierGroupId)
     {
         ItemModel model = new ItemModel();
-        model.modifiers = _modifierService.getAllModifiers();
+        model.modifiers = _modifierService.getAllModifiers(modifierGroupId);
         return PartialView("_modifierListPartial", model);
     }
 

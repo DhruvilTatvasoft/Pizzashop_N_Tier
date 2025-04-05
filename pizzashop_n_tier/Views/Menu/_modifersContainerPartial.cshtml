@@ -136,6 +136,10 @@
         $("#saveNewModifier").attr("style", "display:block");
         $("#updateModifier").attr("style", "display:none");
     }
+
+    $('document').ready(function(){
+        loadModifiersForModifierGroup(2);
+    })
     @* $("#AddNewModifier").on("submit", function (e) {
         e.preventDefault();
         var data = new FormData(this);

@@ -23,6 +23,13 @@
     </tr>
 </thead>
 <tbody>
+
+    @if(Model.modifiers.Count() <= 0){
+        <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
+        <h1>abcd</h1>
+    }
+    else{
+
     @foreach (var modifier in Model.modifiers)
     {
         <tr>
@@ -43,6 +50,7 @@
                 </div>
             </td>
         </tr>
+    }
     }
     
 </tbody>

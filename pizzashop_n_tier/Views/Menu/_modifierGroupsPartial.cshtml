@@ -37,11 +37,8 @@
       <div class="modal-content">
         <div class="modal-header" style="border:none;">
           <h5 class="modal-title" id="exampleModalLabel">Add New Modifiergroup</h5>
-          <button type="button" class="close" data-bs-dismiss="modal" style="
-    margin-left: auto;
-    border: none;
-    background: none;
-" aria-label="Close">
+          <button type="button" class="close" data-bs-dismiss="modal"
+            style="margin-left: auto;border: none;background: none;" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
@@ -49,18 +46,16 @@
 
           <div class="form-group mb-2">
             <input type="text" class="form-control h-100" asp-for="mg.Modifiergroupname" placeholder="Name*"
-              id="modifierGroup-Name">
-            @* <!-- #region >--> *@
+              id="modifierGroup-Name" data-val-required="Modifier name is required.">
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="form-group">
             <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
               id="Modifier-description"></textarea>
-            <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="mt-2">
             <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
-                for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
+                class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
             </div>
           </div>
@@ -211,6 +206,7 @@
     $.ajax({
       url: "/Menu/LoadAllModifiers",
       type: "GET",
+      data: {modifierGroupId : id},
       success: function (data) {
         $(".loadmodifiers").html(data);
         $(".modifier-img").hide();
@@ -319,6 +315,10 @@
 
   $("#newModifierGroup").on('submit', function (e) {
     e.preventDefault();
+
+    if (!$(this).valid()) {
+      return;
+    }
     const data = new FormData(this);
     const payload = JSON.stringify(selectedModifiers);
     data.append("payload", payload);

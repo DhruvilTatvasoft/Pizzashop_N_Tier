@@ -134,7 +134,7 @@ public class CustomerRepository : ICustomerRepository
         model.avg_order = avg_order / customerOrders.Count();
         model.max_order = max_order;
         model.comingAt = (DateTime)coming_since!;
-
+        return model;
         
     }
 }

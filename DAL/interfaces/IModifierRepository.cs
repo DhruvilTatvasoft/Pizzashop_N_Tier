@@ -26,5 +26,6 @@ namespace DAL.interfaces
         Modifier getModifierFromDb(int modifierid);
         void updateModifier(Modifier modifier, int modifierGroupId);
         void updateModifiersForItem(List<ModifierModel> modifierModels,int? itemid);
+        List<Modifier> getAllMOdifiersForModifierGroup(int? modifierGroupId);
     }
 }

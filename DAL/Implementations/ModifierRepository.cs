@@ -330,4 +330,31 @@ public class ModifierRepository : IModifierRepository
                 _context.SaveChanges();
         }
     }
+
+    public List<Modifier> getAllMOdifiersForModifierGroup(int? modifierGroupId)
+    {
+          List<Modifier> modifiers1 = _context.Modifiers
+    .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        // Pick only one per name
+    .ToList();
+
+// Get all modifiers from other groups (excluding modifierGroupId)
+List<Modifier> modifiers2 = _context.Modifiers
+    .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid != modifierGroupId)
+    .ToList();
+
+// Create a HashSet of names from modifiers1 to exclude duplicates
+HashSet<string> modifierNamesInGroup = modifiers1
+    .Select(m => m.Modifiername)
+    .ToHashSet();
+
+// From other groups, only take those that don't exist in the current group (by name)
+List<Modifier> uniqueOtherModifiers = modifiers2
+    .Where(m => !modifierNamesInGroup.Contains(m.Modifiername.Trim().ToLower()))
+    .ToList();
+
+// Final list: only modifiers from current group (ignore duplicates from other groups)
+List<Modifier> finalList = new List<Modifier>(modifiers1);
+finalList.AddRange(uniqueOtherModifiers);
+        return finalList;
+    }
 }

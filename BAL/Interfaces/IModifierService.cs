@@ -12,7 +12,7 @@ namespace BAL.Interfaces
         Modifiergroup GetModifiergroup(int modifiergroupId);
 
         List<Modifiergroup> getAllModifierGroups();
-        List<Modifier> getAllModifiers();
+        List<Modifier> getAllModifiers(int? modifierGroupId);
         void addModifiersForItem(List<ModifierModel> modifierModels, int itemid,string email);
         List<ModifierModel> getModifiersForItem(int itemid);
         List<Modifier> getSelectedModifiers(List<int> modifierIds);

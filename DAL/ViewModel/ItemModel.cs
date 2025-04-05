@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using DAL.Data;
 using Microsoft.AspNetCore.Http;
@@ -43,7 +44,6 @@ public class ItemModel
         get;
         set;
     }
-
     public int categoryId
     {
         get;
