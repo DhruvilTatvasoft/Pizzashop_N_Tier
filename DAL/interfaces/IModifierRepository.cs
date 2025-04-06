@@ -8,24 +8,25 @@ namespace DAL.interfaces
 {
     public interface IModifierRepository
     {
-        List<Modifier> getModifiersForMG(int ModifierGroupId);
+        ItemModel getModifiersForMG(int ModifierGroupId,int pageSize,int pageNumber);
         Modifiergroup GetModifiergroup(int ModifierGroupId);
         List<Modifiergroup> getAllModifierGroups();
-        List<Modifier> getAllModifiers();
+        ItemModel getAllModifiers(int pageSize,int pageNumber);
         void addModifiersForItem(ModifierModel modifier, int itemid,string email);
         // List<Modifier> getModifiersForItem(int itemid);
         List<ModifierModel> getModifiersForItem(int itemid);
         List<Modifier> getSelectedModifiers(List<int> modifierIds);
         List<Modifier> getSearchedModifier(string searchedModifier);
-        void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds);
+        bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifier(int modifierid, int modifiergroupid);
-        void updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
+        bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifierGroup(int modifierGroupId);
  List<Unit> GetAllUnits();
         void AddNewModifierGroup(Modifier modifier);
         Modifier getModifierFromDb(int modifierid);
         void updateModifier(Modifier modifier, int modifierGroupId);
         void updateModifiersForItem(List<ModifierModel> modifierModels,int? itemid);
-        List<Modifier> getAllMOdifiersForModifierGroup(int? modifierGroupId);
+        ItemModel getAllMOdifiersForModifierGroup(int? modifierGroupId,int pageSize,int pageNumber);
+        List<Modifier> getModifiersForMGroupForItem(int modifiergroupId);
     }
 }

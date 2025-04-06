@@ -11,9 +11,9 @@ public class ModifierImple : IModifierService
     {
         _modifierRepository = modifierRepository;
     }
-    public List<Modifier> getModifiersForMGroup(int modifiergroupId)
+    public ItemModel getModifiersForMGroup(int modifiergroupId,int pageSize,int pageNumber)
     {
-        return _modifierRepository.getModifiersForMG(modifiergroupId);
+        return _modifierRepository.getModifiersForMG(modifiergroupId,pageSize,pageNumber);
     }
     public Modifiergroup GetModifiergroup(int modifiergroupId)
     {
@@ -24,15 +24,15 @@ public class ModifierImple : IModifierService
         return _modifierRepository.getAllModifierGroups();
     }
 
-    public List<Modifier> getAllModifiers(int? modifierGroupId)
-    {
-        if (modifierGroupId != null)
+    public ItemModel getAllModifiers(int? modifierGroupId,int pageSize,int pageNumber)
+    {   
+        if (modifierGroupId != null || modifierGroupId != 0)
         {
-            return _modifierRepository.getAllMOdifiersForModifierGroup(modifierGroupId);
+            return _modifierRepository.getAllMOdifiersForModifierGroup(modifierGroupId,pageSize,pageNumber);
         }
         else
         {
-            return _modifierRepository.getAllModifiers();
+            return _modifierRepository.getAllModifiers(pageSize,pageNumber);
         }
     }
 
@@ -61,9 +61,9 @@ public class ModifierImple : IModifierService
         return modifiers;
     }
 
-    public void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    public bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
-        _modifierRepository.AddNewModifierGroup(mg, modifierIds);
+        return _modifierRepository.AddNewModifierGroup(mg, modifierIds);
     }
 
     public void deleteModifier(int modifierid, int modifiergroupid)
@@ -71,9 +71,9 @@ public class ModifierImple : IModifierService
         _modifierRepository.deleteModifier(modifierid, modifiergroupid);
     }
 
-    public void updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    public bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
-        _modifierRepository.updateModifierGroup(mg, modifierIds);
+        return _modifierRepository.updateModifierGroup(mg, modifierIds);
     }
 
     public void deleteModifierGroup(int modifierGroupId)
@@ -99,5 +99,10 @@ public class ModifierImple : IModifierService
     public void updateModifier(Modifier modifier, int modifierGroupId)
     {
         _modifierRepository.updateModifier(modifier, modifierGroupId);
+    }
+
+    public List<Modifier> getModifiersForMGroupForItem(int modifiergroupId)
+    {
+        return _modifierRepository.getModifiersForMGroupForItem(modifiergroupId);   
     }
 }

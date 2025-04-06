@@ -1,7 +1,10 @@
 using System.Data.Common;
+using System.Linq;
 using DAL.Data;
 using DAL.interfaces;
+using iText.Kernel.Geom;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class ModifierRepository : IModifierRepository
 {
@@ -10,15 +13,21 @@ public class ModifierRepository : IModifierRepository
     {
         _context = context;
     }
-    public List<Modifier> getModifiersForMG(int ModifierGroupId)
+    public ItemModel getModifiersForMG(int ModifierGroupId,int pageSize,int pageNumber)
     {
-        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == ModifierGroupId && m.Isdeleted == false).ToList();
-
-        modifiers.ForEach(m =>
+        ItemModel model = new ItemModel();
+        var query = _context.Modifiers.Where(m => m.Modifiergroupid == ModifierGroupId && m.Isdeleted == false);
+        model.totalrecords = query.ToList().Count();
+        model.modifiers = query.Skip((pageNumber - 1) * pageSize)
+                   .Take(pageSize).ToList();
+       model.modifiers.ForEach(m =>
         {
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
         });
-        return modifiers;
+        model.modifierGroupId = ModifierGroupId;
+        model.pageSize = pageSize;
+        model.pageNumber = pageNumber;
+        return model;
     }
     public Modifiergroup GetModifiergroup(int ModifierGroupId)
     {
@@ -28,21 +37,25 @@ public class ModifierRepository : IModifierRepository
 
     public List<Modifiergroup> getAllModifierGroups()
     {
-        return _context.Modifiergroups.Where(modifierGroup=>modifierGroup.Isdeleted == false).ToList();
+        return _context.Modifiergroups.Where(modifierGroup => modifierGroup.Isdeleted == false).ToList();
     }
 
-    public List<Modifier> getAllModifiers()
+    public ItemModel getAllModifiers(int pageSize,int pageNumber)
     {
-        List<Modifier> modifiers = _context.Modifiers
+        ItemModel model = new ItemModel();
+        var  query = _context.Modifiers
                     .Where(modifier => modifier.Isdeleted == false)
                     .GroupBy(m => new { ModifierName = m.Modifiername.Trim() })
-                    .Select(g => g.First())
-                    .ToList();
-        modifiers.ForEach(m =>
+                    .Select(g => g.First());
+        model.pageSize = pageSize;
+        model.pageNumber = pageNumber;
+        model.totalrecords = query.ToList().Count();
+        model.modifiers = query.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        model.modifiers.ForEach(m =>
         {
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
         });
-        return modifiers;
+        return model;
     }
 
     public void addModifiersForItem(ModifierModel modifier, int itemid, string email)
@@ -75,7 +88,7 @@ public class ModifierRepository : IModifierRepository
         List<Itemsandmodifier> itemmodifiers = _context.Itemsandmodifiers.Where(im => im.Itemid == itemid && im.Isdeleted == false).ToList();
         foreach (var im in itemmodifiers)
         {
-        ModifierModel modifierModel = new ModifierModel();
+            ModifierModel modifierModel = new ModifierModel();
             modifierModel.ModifiergroupId = im.Modifiergroupid;
             modifierModel.max_value = im.Allowedmaxselection;
             modifierModel.min_value = im.Requiredminselection;
@@ -116,8 +129,16 @@ public class ModifierRepository : IModifierRepository
         return modifiers;
     }
 
-    public void AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    public bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
+        Modifiergroup? isExist = _context.Modifiergroups.FirstOrDefault(modifierGroup=>modifierGroup.Modifiergroupname.ToLower().Trim() == mg.Modifiergroupname.ToLower().Trim() && modifierGroup.Isdeleted == false);
+
+        if(isExist != null)
+        {
+            return false;
+        }
+        else{
+
         Modifiergroup newModifierGroup = new Modifiergroup();
         newModifierGroup.Modifiergroupname = mg.Modifiergroupname;
         newModifierGroup.Description = mg.Description;
@@ -152,6 +173,8 @@ public class ModifierRepository : IModifierRepository
                 _context.SaveChanges();
             }
         }
+        return true;
+        }
     }
 
 
@@ -166,8 +189,14 @@ public class ModifierRepository : IModifierRepository
         }
     }
 
-    public void updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
+    public bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds)
     {
+        Modifiergroup? isExist = _context.Modifiergroups.FirstOrDefault(modifierGroup=>modifierGroup.Modifiergroupname.ToLower().Trim() == mg.Modifiergroupname.Trim().ToLower() && modifierGroup.Modifiergroupid != mg.Modifiergroupid && modifierGroup.Isdeleted != true);
+        if(isExist != null){
+            return false;
+        }
+        else{
+
         Modifiergroup modifierGroup = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupid == mg.Modifiergroupid) ?? new Modifiergroup();
         if (modifierGroup != null)
         {
@@ -188,6 +217,8 @@ public class ModifierRepository : IModifierRepository
 
         deleteMultipleModifiers(modifiersToDelete, mg.Modifiergroupid);
         addMultipleModifiers(modifiersToAdd, mg.Modifiergroupid);
+        return true;
+        }
     }
 
     private void deleteMultipleModifiers(List<int> modifiersToDelete, int modifiergroupid)
@@ -232,15 +263,16 @@ public class ModifierRepository : IModifierRepository
         });
         _context.SaveChanges();
     }
-       public List<Unit> GetAllUnits()
+    public List<Unit> GetAllUnits()
     {
-       List<Unit> units = _context.Units.Where(u=>u.Isdeleted == false).ToList();
-       return units;
+        List<Unit> units = _context.Units.Where(u => u.Isdeleted == false).ToList();
+        return units;
     }
 
     public void AddNewModifierGroup(Modifier modifier)
     {
-        try{
+        try
+        {
             Modifier newModifier = new Modifier();
             newModifier.Modifiername = modifier.Modifiername;
             newModifier.Createdat = DateTime.Now;
@@ -264,40 +296,43 @@ public class ModifierRepository : IModifierRepository
     public Modifier getModifierFromDb(int modifierid)
     {
 
-        Modifier modifier = _context.Modifiers.FirstOrDefault(modifier=>modifier.Modifierid==modifierid && modifier.Isdeleted == false)!;
-        modifier.Modifiergroup = _context.Modifiergroups.FirstOrDefault(modifierGroup=>modifierGroup.Modifiergroupid == modifier.Modifierid)!; 
+        Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid && modifier.Isdeleted == false)!;
+        modifier.Modifiergroup = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupid == modifier.Modifierid)!;
         return modifier;
     }
 
     public void updateModifier(Modifier modifier, int modifierGroupId)
     {
-       Modifier m = _context.Modifiers.FirstOrDefault(oldModifier=>oldModifier.Modifierid == modifier.Modifierid);
-       m.Modifiername = modifier.Modifiername;
-       m.Description = modifier.Description;
-       m.Modifierquantity = modifier.Modifierquantity;
-       m.Modifierrate = modifier.Modifierrate;
-       m.Modifiergroupid = modifier.Modifiergroupid;
-       m.Description = modifier.Description;
-       m.Modifiername = modifier.Modifiername;
-       m.Modifiername = modifier.Modifiername;
-       m.Unitid = modifier.Unitid;
-       _context.Modifiers.Update(m);
-       _context.SaveChanges();
+        Modifier m = _context.Modifiers.FirstOrDefault(oldModifier => oldModifier.Modifierid == modifier.Modifierid);
+        m.Modifiername = modifier.Modifiername;
+        m.Description = modifier.Description;
+        m.Modifierquantity = modifier.Modifierquantity;
+        m.Modifierrate = modifier.Modifierrate;
+        m.Modifiergroupid = modifier.Modifiergroupid;
+        m.Description = modifier.Description;
+        m.Modifiername = modifier.Modifiername;
+        m.Modifiername = modifier.Modifiername;
+        m.Unitid = modifier.Unitid;
+        _context.Modifiers.Update(m);
+        _context.SaveChanges();
     }
 
-    public void updateModifiersForItem(List<ModifierModel> model,int? itemid)
+    public void updateModifiersForItem(List<ModifierModel> model, int? itemid)
     {
         List<int> modifierGroupids = new List<int>();
-        foreach(var modifierModel in model){
+        foreach (var modifierModel in model)
+        {
             modifierGroupids.Add(modifierModel.ModifiergroupId);
         }
-        List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier=>itemModifier.Itemid == itemid).Select(itemModifier=>itemModifier.Modifiergroupid).ToList();
+        List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier => itemModifier.Itemid == itemid).Select(itemModifier => itemModifier.Modifiergroupid).ToList();
         List<int> deleteModifierGroups = modifiergroupIdsForItem.Except(modifierGroupids).ToList();
-        List<int> AddModifierGroups =  modifierGroupids.Except(modifiergroupIdsForItem).ToList();
-        foreach(var item in model){
-            if(AddModifierGroups.Contains(item.ModifiergroupId)){
+        List<int> AddModifierGroups = modifierGroupids.Except(modifiergroupIdsForItem).ToList();
+        foreach (var item in model)
+        {
+            if (AddModifierGroups.Contains(item.ModifiergroupId))
+            {
                 Itemsandmodifier im = new Itemsandmodifier();
-                im.Itemid = itemid??1;
+                im.Itemid = itemid ?? 1;
                 im.Allowedmaxselection = item.max_value;
                 im.Requiredminselection = item.min_value;
                 im.Modifiergroupid = item.ModifiergroupId;
@@ -308,9 +343,10 @@ public class ModifierRepository : IModifierRepository
                 _context.Itemsandmodifiers.Add(im);
                 _context.SaveChanges();
             }
-            else if(!deleteModifierGroups.Contains(item.ModifiergroupId)){
-                Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == item.ModifiergroupId && im.Itemid == itemid);
-                im.Itemid = itemid??1;
+            else if (!deleteModifierGroups.Contains(item.ModifiergroupId))
+            {
+                Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im => im.Modifiergroupid == item.ModifiergroupId && im.Itemid == itemid);
+                im.Itemid = itemid ?? 1;
                 im.Allowedmaxselection = item.max_value;
                 im.Requiredminselection = item.min_value;
                 im.Modifiergroupid = item.ModifiergroupId;
@@ -321,40 +357,67 @@ public class ModifierRepository : IModifierRepository
                 _context.Itemsandmodifiers.Update(im);
                 _context.SaveChanges();
             }
-            
+
         }
-        foreach(var id in deleteModifierGroups){
-                Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im=>im.Modifiergroupid == id && im.Itemid == itemid);
-                im.Isdeleted = true;
-                _context.Itemsandmodifiers.Update(im);
-                _context.SaveChanges();
+        foreach (var id in deleteModifierGroups)
+        {
+            Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im => im.Modifiergroupid == id && im.Itemid == itemid);
+            im.Isdeleted = true;
+            _context.Itemsandmodifiers.Update(im);
+            _context.SaveChanges();
         }
     }
 
-    public List<Modifier> getAllMOdifiersForModifierGroup(int? modifierGroupId)
+    public ItemModel getAllMOdifiersForModifierGroup(int? modifierGroupId,int pageSize,int pageNumber)
     {
-          List<Modifier> modifiers1 = _context.Modifiers
-    .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        // Pick only one per name
-    .ToList();
+        ItemModel model = new ItemModel();
+        
+        List<Modifier> modifiers1 = _context.Modifiers
+                .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        // Pick only one per name
+                .ToList();
+        List<Modifier> modifiers2 = _context.Modifiers
+            .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid != modifierGroupId)
+            .ToList();
 
-// Get all modifiers from other groups (excluding modifierGroupId)
-List<Modifier> modifiers2 = _context.Modifiers
-    .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid != modifierGroupId)
-    .ToList();
+ 
 
-// Create a HashSet of names from modifiers1 to exclude duplicates
-HashSet<string> modifierNamesInGroup = modifiers1
-    .Select(m => m.Modifiername)
-    .ToHashSet();
+        List<Modifier> finalList = new List<Modifier>();
+        if (modifiers1.Count() != 0)
+        {
+            List<Modifier> uniqueOtherModifiers = modifiers2
+                .Where(m => !modifiers1.Any(mod => mod.Modifiername.Trim().ToLower() == m.Modifiername.Trim().ToLower()))
+                .ToList();
+             
+             uniqueOtherModifiers = uniqueOtherModifiers.GroupBy(m=>m.Modifiername.ToLower().Trim()).Select(g=>g.First()).ToList();
 
-// From other groups, only take those that don't exist in the current group (by name)
-List<Modifier> uniqueOtherModifiers = modifiers2
-    .Where(m => !modifierNamesInGroup.Contains(m.Modifiername.Trim().ToLower()))
-    .ToList();
+            finalList = new List<Modifier>(modifiers1);
+            finalList.AddRange(uniqueOtherModifiers);
+        }
+        else
+        {
+            finalList = modifiers2.GroupBy(m => m.Modifiername.Trim().ToLower()).Select(g => g.First()).ToList();
+        }
 
-// Final list: only modifiers from current group (ignore duplicates from other groups)
-List<Modifier> finalList = new List<Modifier>(modifiers1);
-finalList.AddRange(uniqueOtherModifiers);
-        return finalList;
+
+        finalList.ForEach(m =>
+                {
+                    m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
+                });
+
+        model.pageNumber = pageNumber;
+        model.pageSize = pageSize;
+        model.totalrecords = finalList.Count();
+        model.modifiers = finalList.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        return model;
+    }
+
+    public List<Modifier> getModifiersForMGroupForItem(int modifiergroupId)
+    {
+        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == modifiergroupId && m.Isdeleted == false).ToList();
+        modifiers.ForEach(m =>
+        {
+            m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
+        });
+        return modifiers;
     }
 }

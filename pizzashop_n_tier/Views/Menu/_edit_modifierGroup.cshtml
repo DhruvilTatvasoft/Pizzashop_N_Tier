@@ -1,23 +1,24 @@
 @model ItemModel
 <partial name="_ValidationScriptsPartial" />
 <div class="update_Modifiergroup"></div>
-<form id="newModifierGroup1">
+<form id="EditModifierGroupForm">
   <div class="modal fade" id="EditModifierGroup" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header" style="border:none;">
           <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup</h5>
-          <button type="button" class="close"  style="margin-left: auto;border: none;background: none;" aria-label="Close" data-bs-dismiss="modal">
+          <button type="button" class="close" style="margin-left: auto;border: none;background: none;"
+            aria-label="Close" data-bs-dismiss="modal">
             <span aria-hidden="true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
-        
+
           <div class="form-group mb-2">
-            <input type="text"  class="form-control h-100" asp-for="@Model.mg.Modifiergroupname" placeholder="Name*"
+            <input type="text" class="form-control h-100" asp-for="@Model.mg.Modifiergroupname" placeholder="Name*"
               id="modifierGroup-Name" data-val-required="Modifier name is required.">
-        <input type="hidden" asp-for="mg.Modifiergroupid">
+            <input type="hidden" asp-for="mg.Modifiergroupid">
             <span asp-validation-for="mg.Modifiergroupname" class="text-danger"></span>
           </div>
           <div class="form-group">
@@ -25,56 +26,74 @@
               id="Modifier-description"></textarea>
           </div>
           <div class="mt-2">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers(@Model.mg.Modifiergroupid)"><label
+            <a href="#" data-bs-target="#addExistingModifiers" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,'1','2')"><label
                 for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
-              @foreach(var modifier in @Model.modifiers){
-                <div  id="modifier_@modifier.Modifierid">
-                  <span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">@modifier.Modifiername
-                  <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(@modifier.Modifierid)" style="width:10px;cursor:pointer;"><input type="hidden" class="modifierIdFromEdit" value="@modifier.Modifierid"/></span></div>
+              @foreach (var modifier in @Model.modifiers)
+              {
+                <div id="modifier_@modifier.Modifierid">
+                  <span class="badge bg-white text-secondary me-2 mb-2 mt-2"
+                    style="border: 1px solid grey;">@modifier.Modifiername
+                    <img src="/images/icons8-multiply-24.png" class="selectedModifiers"
+                      onclick="discardModifier(@modifier.Modifierid)" style="width:10px;cursor:pointer;"><input
+                      type="hidden" class="modifierIdFromEdit" value="@modifier.Modifierid" /></span>
+                </div>
               }
             </div>
           </div>
         </div>
         <div class="modal-footer" style="border: none;">
           <button type="submit" class="btn btn-primary">Save</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
-            onclick="cancelfromAddModifiers()">Cancel</button>
+          <button type="button" class="btn btn-outline-primary cancelFromEditModifierGroup"  data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
   </div>
 </form>
-
-
-
 <script>
 
-  $("#newModifierGroup1").on('submit',function(e){  
-    console.log("kjds");
-    selectedModifierIds = [...document.querySelectorAll(".modifierId")].map(x=>parseInt(x.value,10));
-    let s = new Set(selectedModifierIds);
-    selectedModifierIds = [...s]
-    console.log(selectedModifierIds);
+
+$(".cancelFromEditModifierGroup").on("click", function () {
+  $('#EditModifierGroup').modal('hide');
+ selectedModifiers = [];
+});
+
+
+  $("#EditModifierGroupForm").on('submit', function (e) {
     e.preventDefault();
-    var data = new FormData(this);
-    for (var pair of data.entries()) {
-console.log(pair[0]+ ', ' + pair[1]);
-}
-    var payload = JSON.stringify(selectedModifiers);
-    data.append("payload",payload);
-    $.ajax({
-      url:"/Menu/updateModifierGroup",
-      type:"POST",
-      data:data,
-      contentType:false,
-      processData : false,
-      success: function (data){
-         $('.modal-backdrop').remove();
-        $('body').removeClass('modal-open');
-        loadModifierGroups();
+    if (!$(this).valid()) {
+      return;
+    }
+    else {
+      selectedModifierIds = [...document.querySelectorAll(".modifierId")].map(x => parseInt(x.value, 10));
+      let s = new Set(selectedModifierIds);
+      selectedModifierIds = [...s]
+      console.log(selectedModifierIds);
+      var data = new FormData(this);
+      for (var pair of data.entries()) {
+        console.log(pair[0] + ', ' + pair[1]);
       }
-    })
+      var payload = JSON.stringify(selectedModifiers);
+      data.append("payload", payload);
+      $.ajax({
+        url: "/Menu/updateModifierGroup",
+        type: "POST",
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          if (data.success) {
+            $('.modal-backdrop').remove();
+            $('body').removeClass('modal-open');
+            loadModifierGroups();
+            toastr.success(data.success);
+          }
+          else {
+            toastr.error(data.error);
+          }
+        }
+      });
+    }
   })
 
 </script>

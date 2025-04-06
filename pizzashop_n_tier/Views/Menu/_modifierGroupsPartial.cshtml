@@ -3,7 +3,7 @@
 <div class="d-flex justify-content-between p-2 ps-4">
   <label class=" c-text" style="font-size:15px;">Modifier Groups</label>
   <button type="button" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#addModifierGroup1"
-    style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square.svg"
+    style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square copy.svg"
       style="width:75%;margin-top: 5px;" alt="">
   </button>
 </div>
@@ -15,7 +15,7 @@
       {
         <li class="w-100">
           <label for="" class="ms-0" style="font-size: 13px;"
-            onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid)">≣
+            onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid,1)">≣
             @ModifierGroup.Modifiergroupname</label>
 
           <div class="d-flex" style="margin-left:auto;">
@@ -53,8 +53,8 @@
             <textarea class="form-control h-100" placeholder="Description" asp-for="mg.Description"
               id="Modifier-description"></textarea>
           </div>
-          <div class="mt-2">
-            <a href="#" data-bs-toggle="modal" data-bs-target="#addExistingModifiers" onclick="loadModifiers()"><label
+          <div class="mt-2">  
+            <a href="#"  data-bs-target="#addExistingModifiers" onclick="selectModifiersForModifierGroup(@Model.pageNumber,@Model.pageSize)"><label
                 class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
             </div>
@@ -62,8 +62,7 @@
         </div>
         <div class="modal-footer" style="border: none;">
           <button type="submit" class="btn btn-primary">Add</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
-            onclick="cancelfromAddModifiers()">Cancel</button>
+          <button type="button" class="btn btn-outline-primary closebutton" data-bs-dismiss="modal">Cancel</button>
         </div>
       </div>
     </div>
@@ -78,11 +77,7 @@
     <div class="modal-content">
       <div class="modal-header pb-0" style="border:none;">
         <h5 class="modal-title" id="exampleModalLabel">Select existing Modifiers</h5>
-        <button type="button" class="close" data-bs-dismiss="modal" style="
-    margin-left: auto;
-    border: none;
-    background: none;
-" aria-label="Close">
+        <button type="button" style="margin-left: auto;border: none;background: none;" data-bs-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -97,7 +92,8 @@
             placeholder="search*">
         </div>
         <div>
-          <table class="table loadmodifiers"></table>
+          <div class="loadmodifiers"></div>
+          @* <table class="table loadmodifiers"></table>
           <div class="d-flex align-items-center justify-content-end">
             <label for="" class="me-2">items per page:</label>
             <div class="dropdown mt-2 me-2">
@@ -126,19 +122,18 @@
                                        "><img src="~/images/left-chevron-svgrepo-com.svg"
                     style="width:15px;rotate: 180deg;" alt=""></button>
               </div>
-            </div>
+            </div> *@
           </div>
         </div>
-      </div>
       <div class="modal-footer d-flex" style="border: none;">
         <div style="margin-right: auto;">
           <button type="submit" class="btn btn-primary" id="saveForAdd"
             onclick="addModifiersInNewMG(null)">Save</button>
           <button type="submit" class="btn btn-primary" id="saveForUpdate" onclick="addModifiersInNewMG(1)"
             style="display:none;">Save2</button>
-          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal"
-            onclick="cancelfromExistingModifiers()">Cancel</button>
+          <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">Cancel</button>
         </div>
+      </div>
       </div>
     </div>
   </div>
@@ -201,78 +196,119 @@
 <script>
   var selectedModifiers = [];
 
-  function loadModifiers(id) {
-    console.log(id);
-    $.ajax({
-      url: "/Menu/LoadAllModifiers",
-      type: "GET",
-      data: {modifierGroupId : id},
-      success: function (data) {
-        $(".loadmodifiers").html(data);
-        $(".modifier-img").hide();
-        const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
-        modal.show();
+  function loadModifiers(id,pageNumber,pageSize) {
+  console.log(id);
+  pageSize = $('.pagesize').val();
+  $.ajax({
+    url: "/Menu/LoadAllModifiers",
+    type: "GET",
+    data: { modifierGroupId: id,pageNumber:pageNumber,pageSize:pageSize},
+    success: function (data) {
+      $(".loadmodifiers").html(data);
+      $(".modifier-img").hide();
+      const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
+      modal.show();
 
-        if (id != null) {
-          document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
-          $("#saveForUpdate").show();
-          $("#saveForAdd").hide();
-        }
-
-
-        document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
-          const modifierId = parseInt(checkbox.value, 10);
-          if (selectedModifiers.includes(modifierId)) {
-            checkbox.checked = true;
-          }
-        });
-
-
-        $('.loadmodifiers').find('td[data-lastcolumn=L]').remove();
+      if (id != null) {
+        document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+        $("#saveForUpdate").show();
+        $("#saveForAdd").hide();
+      } else {
+        document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+        $("#saveForUpdate").hide();
+        $("#saveForAdd").show();
+        selectedModifiers = [];
       }
-    });
-  }
+
+      // Scope checkbox checking to the modal
+      $('#addExistingModifiers .IsModifierChecked').each(function () {
+        const modifierId = parseInt($(this).val(), 10);
+        if (selectedModifiers.includes(modifierId)) {
+          $(this).prop('checked', true);
+        }
+      });
+
+      $('.loadmodifiers').find('td[data-lastcolumn=L]').remove();
+    }
+  });
+}
+
+  function selectModifiersForModifierGroup(id,pageNumber,pageSize) {
+  console.log(id);
+  pageSize = $('.pagesize2').val();
+  $.ajax({
+    url: "/Menu/LoadAllModifiersForModifierGroup",
+    type: "GET",
+    data: { modifierGroupId: id,pageNumber:pageNumber,pageSize:pageSize},
+    success: function (data) {
+      $(".loadmodifiers").html(data);
+      $(".modifier-img").hide();
+      const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
+      modal.show();
+
+      if (id != null) {
+        document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+        $("#saveForUpdate").show();
+        $("#saveForAdd").hide();
+      } else {
+        document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+        $("#saveForUpdate").hide();
+        $("#saveForAdd").show();
+        selectedModifiers = [];
+      }
+      $('#addExistingModifiers .IsModifierChecked').each(function () {
+        const modifierId = parseInt($(this).val(), 10);
+        if (selectedModifiers.includes(modifierId)) {
+          $(this).prop('checked', true);
+        }
+      });
+
+      $('.loadmodifiers').find('td[data-lastcolumn=L]').remove();
+    }
+  });
+}
 
 
   function addModifiersInNewMG(id) {
+  // Scope modifier ID collection to the modal
+  const modifierIds = $('#addExistingModifiers .IsModifierChecked:checked')
+    .map(function () {
+      return parseInt($(this).val(), 10);
+    })
+    .get();
 
-    const modifierIds = [...document.querySelectorAll(".IsModifierChecked:checked")]
-      .map(x => parseInt(x.value, 10));
+  $.ajax({
+    url: "/Menu/selectedModifiers",
+    data: { modifierIds: modifierIds },
+    type: "POST",
+    success: function (data) {
+      const modalEl = document.getElementById('addExistingModifiers');
+      const modal = bootstrap.Modal.getInstance(modalEl);
+      modal.hide();
 
-    $.ajax({
-      url: "/Menu/selectedModifiers",
-      data: { modifierIds: modifierIds },
-      type: "POST",
-      success: function (data) {
-        const modalEl = document.getElementById('addExistingModifiers');
-        const modal = bootstrap.Modal.getInstance(modalEl);
-        modal.hide();
-        removeModalBackdrops();
+      const targetModalId = id === null ? 'addModifierGroup1' : 'EditModifierGroup';
+      const targetModal = new bootstrap.Modal(document.getElementById(targetModalId));
+      targetModal.show();
 
-        const targetModalId = id === null ? 'addModifierGroup1' : 'EditModifierGroup';
-        const targetModal = new bootstrap.Modal(document.getElementById(targetModalId));
-        targetModal.show();
+      $(`#${targetModalId} .addedModifiers`).empty();
+      selectedModifiers = modifierIds;
 
-
-        $(`#${targetModalId} .addedModifiers`).empty();
-        selectedModifiers = modifierIds;
-
-        data.modifiers.forEach((modifier) => {
-          if (!$(`#modifier_${modifier.modifierid}`).length) {
-            $(`#${targetModalId} .addedModifiers`).append(`
-            <div id="modifier_${modifier.modifierid}">
+      data.modifiers.forEach((modifier) => {
+        if (!$(`#modifier_${modifier.modifierid}`).length) {
+          $(`#${targetModalId} .addedModifiers`).append(
+            `<div id="modifier_${modifier.modifierid}">
               <span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">
                 ${modifier.modifiername}
                 <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;">
               </span>
               <input type="hidden" class="modifierId" value="${modifier.modifierid}" />
-            </div>
-          `);
-          }
-        });
-      }
-    });
-  }
+            </div>`
+          );
+        }
+      });
+    }
+  });
+}
 
   function discardModifier(modifierId) {
     $(`#modifier_${modifierId}`).remove();
@@ -292,9 +328,7 @@
     targetModal.show();
   }
 
-  function cancelfromAddModifiers() {
-    removeModalBackdrops();
-  }
+ 
 
 
   function searchModifier() {
@@ -329,9 +363,15 @@
       data: data,
       contentType: false,
       processData: false,
-      success: function () {
-        removeModalBackdrops();
+      success: function (response) {
+       if(response.success){
+        toastr.success(response.success);
+        $(".closebutton").click();
         loadModifierGroups();
+       }
+       else{
+        toastr.error(response.error);
+       }
       }
     });
   });
@@ -370,7 +410,6 @@
       data: { modifierGroupId: modifierGroupId },
       success: function () {
         loadModifierGroups();
-        removeModalBackdrops();
       }
     });
   });
@@ -395,7 +434,7 @@
       success: function (data) {
         $('#deleteModifierModel').modal('hide');
         console.log("modal closed");
-        loadModifiersForModifierGroup(modifiergroupid);
+        loadModifiersForModifierGroup(modifiergroupid,1);
       }
     });
   })

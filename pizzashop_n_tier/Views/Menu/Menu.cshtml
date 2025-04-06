@@ -257,13 +257,15 @@
             });
         }
 
-        function loadModifiersForModifierGroup(modifierGroupId) {
+        function loadModifiersForModifierGroup(modifierGroupId,pageNumber) {
+            var pageSize = $('.pagesize').val(); 
+            console.log(pageSize);
             $.ajax({
                 url: '/Menu/getModifiersForModifierGp',
                 type: 'GET',
-                data: { modifierGroupId: modifierGroupId },
+                data: { modifierGroupId: modifierGroupId,pageNumber:pageNumber,pageSize:pageSize},
                 success: function (response) {
-                    $("table").html(response);
+                    $(".table-container").html(response);
                 },
                 error: function (xhr, status, error) {
                     console.error('Error fetching modifiers:', error);
@@ -318,7 +320,7 @@
                         $("#addNewModifier").hide()
                     }
                     console.log("data should load for modifiergroup : " + selectedModifierGroup);
-                    loadModifiersForModifierGroup(selectedModifierGroup);
+                    loadModifiersForModifierGroup(selectedModifierGroup,1);
                     removeModalBackdrops();
                 }
             });

@@ -33,7 +33,6 @@
         }
         else
         {
-
             @foreach (var modifier in Model.modifiers)
             {
                 <tr>
@@ -59,7 +58,6 @@
                 </tr>
             }
         }
-
     </tbody>
 </table>
 
@@ -67,15 +65,15 @@
     <div class="d-flex justify-content-center align-items-center">
         <label for="" class="me-2">items per page:</label>
         <div class="dropdown mt-2 me-2">
-            <select class="form-select form-select-lg mb-3 pagesize"
+            <select class="form-select form-select-lg mb-3 pagesize2"
                 onchange="loadModifiersForModifierGroup(@Model.modifierGroupId,@Model.pageNumber)"
                 aria-label=".form-select-lg example">
-                <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)" >1</option>
-                <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)" >2</option>
-                <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)" >3</option>
-                <option value="4" selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
-                <option value="5" selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
-                <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6" selected>6</option>
             </select>
         </div>
     </div>
@@ -103,12 +101,3 @@
         
     </div>
 </div>
-
-<script>
-    var subchecks = document.querySelectorAll(".IsModifierChecked");
-    document.getElementById("masterCheck").addEventListener("change", () => {
-        subchecks.forEach((checkbox) => {
-            checkbox.checked = document.getElementById("masterCheck").checked;
-        })
-    })
-</script>
