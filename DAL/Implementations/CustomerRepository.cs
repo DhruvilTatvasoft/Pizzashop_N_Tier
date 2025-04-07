@@ -11,7 +11,7 @@ public class CustomerRepository : ICustomerRepository
     }
 
 
-    public CustomerViewModel getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search, string filterBy,DateTime? startDate, DateTime? endDate)
+    public CustomerViewModel getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search, string filterBy, DateTime? startDate, DateTime? endDate,bool? isExport = false)
     {
         CustomerViewModel model = new CustomerViewModel();
 
@@ -91,10 +91,12 @@ public class CustomerRepository : ICustomerRepository
         }
 
         model.totalCustomers = query.ToList().Count();
+        if(isExport != true)
+        {
         query = query.Where(customer => customer.Isdeleted == false)
                               .Skip((pageNumber - 1) * pageSize)
                               .Take(pageSize);
-
+        }
         model.pageNumber = pageNumber;
         model.pageSize = pageSize;
         model.sortBy = sortBy;
@@ -115,26 +117,50 @@ public class CustomerRepository : ICustomerRepository
         decimal avg_order = 0;
         decimal max_order = 0;
         DateTime? coming_since = null;
+
         foreach (var order in customerOrders)
         {
             avg_order += order.Totalamount;
-            if(order.Totalamount > max_order)
+            if (order.Totalamount > max_order)
             {
                 max_order = order.Totalamount;
             }
-            if(coming_since == null){
+            if (coming_since == null)
+            {
                 coming_since = order.Createdat;
             }
-            else{
-                if(coming_since < order.Createdat){
+            else
+            {
+                if (coming_since > order.Createdat)
+                {
                     coming_since = order.Createdat;
                 }
             }
         }
+        if(customerOrders.Count() > 0)
+    {
+
         model.avg_order = avg_order / customerOrders.Count();
+    }
+    else{
+        model.avg_order = 0;
+
+    }
         model.max_order = max_order;
-        model.comingAt = (DateTime)coming_since!;
+        model.comingAt = coming_since ?? DateTime.MinValue;
+
+        List<OrderDetailModel> orderDetails = new List<OrderDetailModel>();
+        foreach (var order in customerOrders)
+        {
+            OrderDetailModel orderDetail = new OrderDetailModel();
+            orderDetail.orderDate = order.Createdat ?? DateTime.MinValue;
+            orderDetail.orderType = "DineIn";
+            orderDetail.paymentStatus = order.PaymentStatus!;
+            orderDetail.noOfItems = _context.Ordermodifiers.Where(orderModifiers => orderModifiers.Orderid == order.Orderid && orderModifiers.Isdeleted == false).GroupBy(om => om.Itemid).Count();
+            orderDetail.amount = order.Totalamount;
+            orderDetails.Add(orderDetail);
+        }
+        model.orderDetails = orderDetails;
         return model;
-        
     }
 }

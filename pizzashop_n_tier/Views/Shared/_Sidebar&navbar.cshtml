@@ -1,5 +1,14 @@
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 @{
     string imagepath = Context.Request.Cookies["UserImage"]?? "/images/Default_pfp.svg.png";
+    var canViewForUser = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForRoleAndPermission = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForCustomers = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForOrders = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForMenu = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForTableAndSection = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+    var canViewForTax = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -30,7 +39,14 @@
                         <img src="~/images/menus.png" style="width:12px;" alt="">
                     </button>
                 </div>
-                <div class="dropdown me-5" style="margin-left: auto;">
+              
+
+                <div class="dropdown me-5 d-flex align-items-center" style="margin-left: auto;">
+                    @if(User.IsInRole("Admin")){
+                    <a href="@Url.Action("getKot", "OrderApp")" class="me-3" >
+                        <img src="~/images/phone.svg" style="width:160%;"alt="">
+                    </a>
+                    }
                     <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
                         aria-expanded="false" style="border: 0;">
                         <a href=""> <img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
@@ -59,44 +75,70 @@
                         <h4 class="col-6 ps-1">PIZZASHOP</h4>
                     </div>
                 </div>
-                <ul> <a asp-controller="Dashboard" asp-action="showDashboard"> 
+                <ul> 
+                    
+                    <a asp-controller="Dashboard" asp-action="showDashboard"> 
                     <li class="ps-2 dashboard">
-                       <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label for="">Dashboard</label>
+                       <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label for="">Dashboard </label>
                     </li>
                     </a>
+                    
+
+                    @if(canViewForUser){
                     <a asp-controller="Dashboard" asp-action="showUsers">
                     <li class="ps-2 Users">
-                        <img src="~/images/group.png" class="me-2 side-img" alt=""><label for="">Users</label></a>
+                        <img src="~/images/group.png" class="me-2 side-img" alt=""><label for="">Users</label>
                     </li>
+                    </a>
+                    }
+
+                    @if(canViewForRoleAndPermission){
                     <a asp-controller="Dashboard" asp-action="Roles">
                     <li class="ps-2 roleandpermission">
                         <img src="~/images/icons8-user-settings-32.png"  class="me-2" style="width:20px;" alt=""><label for="">Roles and Permissions</label>
                     </li>
                     </a>
+                    }
+                    @if(canViewForMenu){
                     <a asp-controller="Menu" asp-action="Menu">
                     <li class="ps-2 menu">
                         <img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" style="width:20px;"alt=""><label for="">Menu</label>
                     </li>
                     </a>
+                    }
+
+                    @if(canViewForTableAndSection){
                     <a asp-controller="TableAndSection" asp-action="TableSection">
                     <li class="ps-2 tableandsection">
                         <img src="~/images/icons8-stop-30.png" class="me-2 side-img" alt="">
                         <label for="">Table And Section</label>
                     </li>
                         </a>
+                    }
+
+                    @if(canViewForTax){
                          <a asp-controller="Taxes" asp-action="showTaxes">
                     <li class="ps-2 tax">
                         <img src="~/images/icons8-tax-money-50.png" class="me-2" alt=""><label for="">Taxes And Fees</label>
                     </li>
                     </a>
+                    }
+
+                    @if(canViewForOrders){
                     <a asp-action="showorders" asp-controller="Order" style="text-decoration: none;">
                     <li class="ps-2 orders">
                         <img src="~/images/icons8-order-30.png"  class="me-2 side-img"  style="width:20px;" alt=""><label for="">Orders</label>
                     </li>
                     </a>
+                    }
+
+                    @if(canViewForCustomers){
+                    <a asp-action="showCustomer" asp-controller="Customer">
                     <li class="ps-2 customers">
-                        <a asp-action="showCustomer" asp-controller="Customer"><img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt=""><label for="">Customers</label></a>
+                       <img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt=""><label for="">Customers</label>
                     </li>
+                    </a>
+                    }
                 </ul>
             </div>
             <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
@@ -127,6 +169,10 @@
         </div>
 
         <script>
+
+            $(".orderApp").on("click",function(){
+                window.location.href = "/Order/showorders";
+            })
 
             $("document").ready(function (){
                 $(".sidebar ul li").click(function(){

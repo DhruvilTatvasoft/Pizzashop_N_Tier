@@ -31,16 +31,16 @@ builder.Services.AddScoped<IPermissionService, PermissionImple>();
 builder.Services.AddScoped<IRoleAndPermissionRepository, RoleAndPermissionRepository>();
 builder.Services.AddScoped<IModifierService, ModifierImple>();
 builder.Services.AddScoped<IModifierRepository, ModifierRepository>();
-builder.Services.AddScoped<ITableService,TableImpl>();
-builder.Services.AddScoped<ISectionService,SectionImpl>();
-builder.Services.AddScoped<ISectionRepository,SectionRepository>();
+builder.Services.AddScoped<ITableService, TableImpl>();
+builder.Services.AddScoped<ISectionService, SectionImpl>();
+builder.Services.AddScoped<ISectionRepository, SectionRepository>();
 builder.Services.AddScoped<ITableRepository, TableRepository>();
-builder.Services.AddScoped<ITaxesRepository,TaxesRepository >();
-builder.Services.AddScoped<ITaxService,TaxesImpl>();
-builder.Services.AddScoped<IOrderService,OrderImple>();
-builder.Services.AddScoped<IOrderRepository,OrderRepository>();
-builder.Services.AddScoped<ICustomerRepository,CustomerRepository>();
-builder.Services.AddScoped<ICustomerService,CustomerImpl>();
+builder.Services.AddScoped<ITaxesRepository, TaxesRepository>();
+builder.Services.AddScoped<ITaxService, TaxesImpl>();
+builder.Services.AddScoped<IOrderService, OrderImple>();
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
+builder.Services.AddScoped<ICustomerService, CustomerImpl>();
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -76,17 +76,17 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     Console.WriteLine("No token found in cookie!");
                 }
                 return Task.CompletedTask;
-            },
-            OnAuthenticationFailed = context =>
-            {
-                Console.WriteLine("Authentication failed: " + context.Exception.Message);
-                return Task.CompletedTask;
-            },
-            OnChallenge = context =>
-            {
-                Console.WriteLine("Authorization challenge: Access denied.");
-                return Task.CompletedTask;
             }
+            // OnAuthenticationFailed = context =>
+            // {
+            //     Console.WriteLine("Authentication failed: " + context.Exception.Message);
+            //     return Task.CompletedTask;
+            // },
+            // OnChallenge = context =>
+            // {
+            //     Console.WriteLine("Authorization challenge: Access denied.");
+            //     return Task.CompletedTask;
+            // }
         };
         options.TokenValidationParameters = new TokenValidationParameters
         {
@@ -101,28 +101,31 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
-    // builder.Services.ConfigureApplicationCookie(options =>
-    // {
-    // options.AccessDeniedPath = "/Login/Index";
-    // options.Cookie.Name = "YourAppCookieName";
-    // options.Cookie.HttpOnly = true;
-    // // options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
-    // options.LoginPath = "/Login/Index";
-    // options.ReturnUrlParameter = CookieAuthenticationDefaults.ReturnUrlParameter;
-    // options.SlidingExpiration = true;
-    // });
+builder.Services.AddAuthorization(options =>
+{
+    var entities = new[] { "Users", "RolesAndPermissions", "Menu", "TableAndSection", "TaxAndFee", "Order", "Customers" };
+
+    foreach (var entity in entities)
+    {
+
+        options.AddPolicy($"CanView_{entity}", policy => policy.RequireClaim($"CanView_{entity}", "True"));
+        options.AddPolicy($"CanEdit_{entity}", policy => policy.RequireClaim($"CanEdit_{entity}", "True"));
+        options.AddPolicy($"CanDelete_{entity}", policy => policy.RequireClaim($"CanDelete_{entity}", "True"));
+    }
+});
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.LoginPath = "/Login/Index";
+    options.AccessDeniedPath = "/Error/NotFound";
+});
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
-
 builder.Services.AddRazorPages();
-
 var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-
 if (!app.Environment.IsDevelopment())
 {
     app.UseExceptionHandler("/Home/Error");
@@ -138,23 +141,9 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 app.UseDeveloperExceptionPage();
-
-// app.UseEndpoints(endpoints=>{
-// endpoints.MapControllerRoute(
-//     name:"default",
-//     pattern: "{controller=Order}/{action=generatePdf}/{1}");
-// }  
-// );
-
-
-
-app.UseEndpoints(endpoints =>
-{
-    endpoints.MapControllerRoute(
-        name: "default",
-        pattern: "{controller=Login}/{action=Index}/{id?}");
-});
-
+app.MapControllerRoute(
+    name: "default",
+    pattern: "{controller=Login}/{action=Index}/{id?}");
 app.Run();
 
 

@@ -18,30 +18,30 @@
                     <div class="col-6 ps-2 pe-0 part-1" style="background-color: #ffff;">
                         <div class="d-flex justify-content-between align-items-center">
                             <label for="">Name</label>
-                            <label for="" class="fw-bold">Dhruvil</label>
+                            <label for="" class="fw-bold">@Model.customerName</label>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <label for="">Mobile Number</label>
-                            <label for="" class="fw-bold">1234567891</label>
+                            <label for="" class="fw-bold">@Model.phoneNumber</label>
                         </div>
                         <div class="d-flex justify-content-between align-items-center">
                             <label for="">Max Orders</label>
-                            <label for="" class="fw-bold">18</label>
+                            <label for="" class="fw-bold">@Model.max_order</label>
                         </div>
                     </div>
                     <div class="col-6 pe-0">
                         <div class="container h-100 part-2 pe-2 d-flex flex-column justify-content-between ">
                             <div class="d-flex justify-content-between align-items-center p-2 mb-2">
                                 <label for="">Average Bill</label>
-                                <label for="" class="fw-bold">1512</label>
+                                <label for="" class="fw-bold">@Model.avg_order</label>
                             </div>
                             <div class="d-flex justify-content-between align-items-center p-2 mb-2">
                                 <label for="">Coming Since</label>
-                                <label for="" class="fw-bold">hajhkk</label>
+                                <label for="" class="fw-bold">@Model.comingAt</label>
                             </div>
                             <div class="d-flex justify-content-between align-items-center p-2">
                                 <label for="">Visits</label>
-                                <label for="" class="fw-bold">2</label>
+                                <label for="" class="fw-bold">@Model.totalVisits</label>
                             </div>
                         </div>
                     </div>
@@ -58,24 +58,27 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">2</th>
-                                <td>Jacob</td>
-                                <td>Thornton</td>
-                                <td>fat</td>
-                            </tr>
-                            <tr>
-                                <th scope="row">3</th>
-                                <td>Larry</td>
-                                <td>the Bird</td>
-                                <td>fat</td>
-                            </tr>
+                            @if(Model.orderDetails.Count == 0)
+                            {
+                                <tr>
+                                    @* <td colspan="5" class="text-center">No Orders Found</td> *@
+                                    <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
+
+                                </tr>
+                            }
+                            else{
+                            @foreach(var order in Model.orderDetails)
+                            {
+                                <tr>
+                                    <td>@order.orderDate</td>
+                                    <td>@order.orderType</td>
+                                    <td>@order.paymentStatus</td>
+                                    <td>@order.noOfItems</td>
+                                    <td>@order.amount</td>
+                                </tr>
+                            }
+                            }
+
                         </tbody>
                     </table>
                 </div>
@@ -87,7 +90,7 @@
 </div>
 
 <script>
-    function loadCustomerHistory(customerid){
+    @* function loadCustomerHistory(customerid){
         $.ajax({
             url:'@Url.Action("getCustomerHistory","Customer")',
             type:'GET',
@@ -96,6 +99,6 @@
                 $("#customerHistoryDiv").html(data);
                 $('#customerHistory').modal('show');
                 }
-        })
-    }
+        });
+    } *@
 </script>

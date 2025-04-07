@@ -10,7 +10,7 @@ public class CustomerViewModel
 
     public decimal avg_order{get;set;}
 
-    public DateTime comingAt{get;set;}
+    public DateTime? comingAt{get;set;}
 
     public int totalVisits{get;set;}
 
@@ -35,4 +35,5 @@ public class OrderDetailModel{
     public string paymentStatus{get;set;}
     public int noOfItems{get;set;}
     public decimal amount{get;set;}
+    
 }

@@ -41,6 +41,8 @@ public partial class Order
 
     public int Sectionid { get; set; }
 
+    public string? PaymentStatus { get; set; }
+
     public virtual Customer Customer { get; set; } = null!;
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();

@@ -75,7 +75,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=pizzashop_c;User id=postgres;password=Dhruvil@23;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -435,6 +435,9 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Ordercomment)
                 .HasMaxLength(256)
                 .HasColumnName("ordercomment");
+            entity.Property(e => e.PaymentStatus)
+                .HasColumnType("character varying")
+                .HasColumnName("payment_status");
             entity.Property(e => e.Paymentmethod)
                 .HasMaxLength(20)
                 .HasColumnName("paymentmethod");
@@ -693,28 +696,25 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("payments");
 
-            entity.Property(e => e.Paymentid).HasColumnName("paymentid");
-            entity.Property(e => e.Amount)
-                .HasPrecision(10, 2)
-                .HasColumnName("amount");
+            entity.Property(e => e.Paymentid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("paymentid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
-            entity.Property(e => e.Invoiceid).HasColumnName("invoiceid");
             entity.Property(e => e.Modifiedat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("modifiedat");
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
-            entity.Property(e => e.Paymentmethod).HasColumnName("paymentmethod");
-            entity.Property(e => e.Status).HasColumnName("status");
-
-            entity.HasOne(d => d.Invoice).WithMany(p => p.Payments)
-                .HasForeignKey(d => d.Invoiceid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("payments_invoiceid_fkey");
+            entity.Property(e => e.Paymentmethod)
+                .HasColumnType("char")
+                .HasColumnName("paymentmethod");
+            entity.Property(e => e.Status)
+                .HasColumnType("char")
+                .HasColumnName("status");
         });
 
         modelBuilder.Entity<Permission>(entity =>

@@ -7,4 +7,6 @@ public interface IRoleAndPermissionRepository
     void UpdatePermission(Rolesandpermission permission);
     void RemovePermission(int permissionId, int roleId);
     Rolesandpermission GetPermission(int permissionId, int roleId);
+    List<Rolesandpermission> GetUserPermissions(string role);
+    string getPermissionName(int permissionid);
 }

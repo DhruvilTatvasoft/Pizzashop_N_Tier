@@ -4,7 +4,7 @@
   Layout = "";
 }
 @model OrderViewModel
-<link rel="stylesheet" href="@Url.Content("~/css/bootstrap.min.css")">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
 <link rel="stylesheet" href="@Url.Content("~/css/invoice.css")">
 <!DOCTYPE html>
 <html lang="en">
@@ -15,11 +15,16 @@
 </head>
 <body>
   <div class="container my-5">
-  <div class="d-flex align-items-center justify-content-center w-100">
-    <img src="~/images/pizzashop_logo.png" alt="PizzaShop Logo" class="logo" width="120" />
+  <div class="invoice-header w-100">
+    <div>
+    <img src="~/images/pizzashop_logo.png" alt="PizzaShop Logo" class="logo m-2" width="80" />
+    </div>
+    <div>
     <h2 class="text-center header-text">PIZZASHOP</h2>
+    </div>
+
   </div>
-  <div class="row mt-4">
+  <div class="row mt-4 mb-4">
     <div class="col-md-6">
       <h6 class="header-text">Customer Details</h6>
       <p><strong>Name:</strong>@Model.order.Customer.Customername</p>
@@ -92,41 +97,42 @@
   </table>
 
   <div class="row">
-    <div class="col-md-6">
-      <h6 class="payment-info">Payment Information</h6>
-      <p><strong>Payment Method:</strong>@Model.order.Status.Statusname</p>
-    </div>
-    <div class="col-md-6">
-      <table class="table summary-table w-50 float-end">
+   
+    <div class="col-md-12">
+      <table class="table table-borderless w-100 mb-5 float-end">
         <tbody>
           <tr>
             <td class="total-label">Sub Total:</td>
-            <td>₹399.00</td>
+            <td style="text-align: end;">₹399.00</td>
           </tr>
           <tr>
             <td>CGST:</td>
-            <td>₹47.88</td>
+            <td style="text-align: end;">₹47.88</td>
           </tr>
           <tr>
             <td>SGST:</td>
-            <td>₹150.00</td>
+            <td style="text-align: end;">₹150.00</td>
           </tr>
           <tr>
             <td>GST:</td>
-            <td>₹7.98</td>
+            <td style="text-align: end;">₹7.98</td>
           </tr>
-          <tr>
+          <tr style="border-bottom: 1px solid #0d6efd;">
             <td>Other:</td>
-            <td>₹19.95</td>
+            <td style="text-align: end;">₹19.95</td>
           </tr>
           <tr>
-            <td class="total-label">Total Amount Due:</td>
-            <td class="header-text">₹624.81</td>
+            <td class="total-label text-primary">Total Amount Due:</td>
+            <td class="header-text" style="text-align: end;">₹624.81</td>
           </tr>
         </tbody>
       </table>
     </div>
   </div>
+   <div class="col-md-12"></div>
+      <h6 class="payment-info"><strong>Payment Information</strong></h6>
+      <p><strong >Payment information:</strong>@Model.order.Status.Statusname</p>
+    </div>
   <p class="thank-you mt-5">THANK YOU!</p>
 </div>
 

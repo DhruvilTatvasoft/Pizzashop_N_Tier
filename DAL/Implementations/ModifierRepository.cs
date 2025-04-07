@@ -373,7 +373,7 @@ public class ModifierRepository : IModifierRepository
         ItemModel model = new ItemModel();
         
         List<Modifier> modifiers1 = _context.Modifiers
-                .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        // Pick only one per name
+                .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        
                 .ToList();
         List<Modifier> modifiers2 = _context.Modifiers
             .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid != modifierGroupId)
@@ -397,8 +397,6 @@ public class ModifierRepository : IModifierRepository
         {
             finalList = modifiers2.GroupBy(m => m.Modifiername.Trim().ToLower()).Select(g => g.First()).ToList();
         }
-
-
         finalList.ForEach(m =>
                 {
                     m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();

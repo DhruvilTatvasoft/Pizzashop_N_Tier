@@ -1,0 +1,53 @@
+html,
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+}
+nav {
+  position: relative;
+  z-index: 4;
+}
+nav {
+  background-color: #0066a7;
+}
+.dropdown-toggle::after {
+  display: none;
+}
+.options a{
+    color: white;
+    border: 1px solid white;
+    border-radius: 15px;
+    font-size: 85%;
+    text-decoration: none;
+}
+.logo{
+    width: 3%;
+    background-color: white;
+    border-radius: 50%;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    margin-left: 1%;
+}
+.dropdown-menu li a {
+    color: black;
+}
+.dropdown1{
+    display: none;
+}
+@media (max-width: 593px) {
+    .dropdown1{
+        display: block;
+    }
+    .header{
+        display: none;
+    }
+    .logo{
+        display : none;
+    }
+}
+@media (max-width: 476px) {
+   #nav-tab{
+    display:none;
+   }
+}

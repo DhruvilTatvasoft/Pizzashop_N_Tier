@@ -3,7 +3,7 @@
     <thead>
         <tr>
             <th scope="col">
-               <img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize)'" style="width: 15px;cursor: pointer;" alt=""> <label for="" >Name</label>
+               <img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""> <label for="" >Name</label>
             </th>
             <th scope="col"><label for="" class="ps-4"><label for="" >Email</label></th>
             <th scope="col"><label for="" >Phone Number</label></th>
@@ -73,9 +73,29 @@
         }
         </div>
 </div> 
+<div id="customerHistoryDiv"></div>
 
 
 <script>
-    
+ function loadCustomerHistory(customerid){
+        $('#CustomerHistory').modal('hide');
+        $('#customerHistoryDiv').empty();
+        
+        $.ajax({
+            url:'@Url.Action("getCustomerHistory","Customer")',
+            type:'GET',
+            data:{customerid:customerid},
+            success:function(data){
+                $('#customerHistoryDiv').html(data);
+                $('#CustomerHistory').off('hidden.bs.modal').on('hidden.bs.modal', function () {
+                    $(this).removeData('bs.modal');
+                });
+                
+                $('#CustomerHistory').modal('show');
+            },
+            
+        });
+    }
+  
 </script>
     

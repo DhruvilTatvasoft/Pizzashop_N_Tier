@@ -10,7 +10,7 @@
         "dependencies": {
           "BAL": "1.0.0",
           "DAL": "1.0.0",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.20",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.19",
           "Microsoft.AspNetCore.Http": "2.3.0",
           "Microsoft.AspNetCore.Http.Abstractions": "2.3.0",
           "Microsoft.EntityFrameworkCore.Design": "7.0.0",
@@ -162,14 +162,14 @@
         }
       },
       "jQuery/1.6.3": {},
-      "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.20": {
+      "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.19": {
         "dependencies": {
           "Microsoft.IdentityModel.Protocols.OpenIdConnect": "6.35.0"
         },
         "runtime": {
           "lib/net7.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll": {
-            "assemblyVersion": "7.0.20.0",
-            "fileVersion": "7.0.2024.26907"
+            "assemblyVersion": "7.0.19.0",
+            "fileVersion": "7.0.1924.22306"
           }
         }
       },
@@ -1568,7 +1568,7 @@
       "BAL/1.0.0": {
         "dependencies": {
           "DAL": "1.0.0",
-          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.20",
+          "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.19",
           "Microsoft.AspNetCore.Http": "2.3.0",
           "NPOI.DotNetCore.ExcelService": "1.0.5",
           "Select.Pdf": "24.1.0",
@@ -1664,12 +1664,12 @@
       "path": "jquery/1.6.3",
       "hashPath": "jquery.1.6.3.nupkg.sha512"
     },
-    "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.20": {
+    "Microsoft.AspNetCore.Authentication.JwtBearer/7.0.19": {
       "type": "package",
       "serviceable": true,
-      "sha512": "sha512-lIjUAxtqNv+bD+Bnlksu96/haMLfuXA7nASXUnvxXfFWA3YEov7pM5AtvlelvQCtwFvu1LR4SFryHvLur491Qg==",
-      "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.20",
-      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.7.0.20.nupkg.sha512"
+      "sha512": "sha512-XhSkl7oCDyGSW3kbJAsPeOIdX7ofwuOFLkcw2HiTwDr70hE0NGCQCF/QOy3qemX/6rVA1ZEEkIKxHLm1ElaeOA==",
+      "path": "microsoft.aspnetcore.authentication.jwtbearer/7.0.19",
+      "hashPath": "microsoft.aspnetcore.authentication.jwtbearer.7.0.19.nupkg.sha512"
     },
     "Microsoft.AspNetCore.Http/2.3.0": {
       "type": "package",

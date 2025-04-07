@@ -10,6 +10,17 @@ body {
     color: #0056b3;
     font-weight: bold;
   }
+  .invoice-header{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  li{
+    list-style: none;
+  }
+  p{
+    margin-bottom: 2px;
+  }
   .table th {
     background-color: #0056b3;
     color: white;

@@ -26,6 +26,4 @@ public partial class Invoice
     public virtual Orderitem? Orderitem { get; set; }
 
     public virtual Ordermodifier? Ordermodifier { get; set; }
-
-    public virtual ICollection<Payment> Payments { get; } = new List<Payment>();
 }

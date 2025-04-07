@@ -29,7 +29,7 @@ public class DashboardController : Controller
     public readonly IModifierService _modifierService;
 
     public readonly IImagePath _imageService;
-    public DashboardController(ILogin log,IImagePath imagePath,IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+    public DashboardController(ILogin log, IImagePath imagePath, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -42,25 +42,25 @@ public class DashboardController : Controller
     }
 
     [Authorize(Roles = "Admin")]
-public IActionResult ShowDashboard()
-{
-    var user = HttpContext.User;
-    if (!user.Identity.IsAuthenticated)
+    public IActionResult ShowDashboard()
     {
-        return Unauthorized("User is not authenticated!");
-    }
+        var user = HttpContext.User;
+        if (!user.Identity.IsAuthenticated)
+        {
+            return Unauthorized("User is not authenticated !");
+        }
 
-    var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-    Console.WriteLine("User Roles: " + string.Join(", ", roles));
-    
+        var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+        Console.WriteLine("User Roles: " + string.Join(", ", roles));
 
-    if (!roles.Contains("Admin"))
-    {
-        return Forbid("User does not have Admin role!");
+
+        if (!roles.Contains("Admin"))
+        {
+            return Forbid("User does not have Admin role!");
+        }
+        Console.WriteLine("page access granted");
+        return View();
     }
-    Console.WriteLine("page access granted");
-    return View();
-}
 
     public IActionResult Myprofile()
     {
@@ -93,7 +93,7 @@ public IActionResult ShowDashboard()
             _user.updateUser(model, email);
             var res = HttpContext.Response;
             string userImagePath = _user.getUserImagePath(int.Parse(userid));
-             HttpContext.Response.Cookies.Delete("userImage");
+            HttpContext.Response.Cookies.Delete("userImage");
             TempData["ToastrMessage"] = "profile updated successfully";
             TempData["ToastrType"] = "success";
             return RedirectToAction("Myprofile");
@@ -150,6 +150,7 @@ public IActionResult ShowDashboard()
     }
 
     [HttpGet]
+    [Authorize(Policy="CanEdit_Users")]
     public IActionResult AddUser()
     {
         UserDetailModel model = new UserDetailModel();
@@ -285,8 +286,7 @@ public IActionResult ShowDashboard()
         PermissionsModel2 model = new PermissionsModel2();
         model.roleid = Id;
         model = _user.permissionsForRole(Id);
-         TempData["ToastrMessage"] = "Permissions updated successfully";
-         TempData["ToastrType"] = "success";
+        
         return View("permissions", model);
     }
 
@@ -296,6 +296,10 @@ public IActionResult ShowDashboard()
     {
         _permissionService.UpdatePermissions(model);
         model = _user.permissionsForRole(roleid);
+        TempData["ToastrMessage"] = "Permissions updated successfully";
+        TempData["ToastrType"] = "success";
+        HttpContext.Response.Cookies.Delete("token");
+        
         return View("permissions", model);
     }
 

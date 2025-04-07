@@ -74,7 +74,7 @@ namespace pizzashop_n_tier.Controllers
             model.orderedItemModifiers = model2;
             return View("orderDetails", model);
         }
-
+    
         public async Task<IActionResult> generatePdf(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
