@@ -39,15 +39,15 @@ public class TableAndSection : Controller
     // if(pageNumber > _tableService.getAllTables()/pageSize){
     //     pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
     // }
-    TableAndSectionViewModel model = new TableAndSectionViewModel
-    {
-        tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),
-        PageNumber = pageNumber,
-        PageSize = pageSize,
-        sectionId = sectionId,
-        TotalTables = _tableService.getAllTables()
-    };
-
+    // TableAndSectionViewModel model1 = new TableAndSectionViewModel
+    // {
+    //     tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),
+    //     PageNumber = pageNumber,
+    //     PageSize = pageSize,
+    //     sectionId = sectionId,
+    //     TotalTables = _tableService.getAllTables()
+    // };
+    TableAndSectionViewModel model = _tableService.getTablesForsection(sectionId,pageNumber, pageSize );
     return PartialView("_tables", model);
 }
    

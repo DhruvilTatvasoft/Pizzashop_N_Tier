@@ -30,7 +30,7 @@ public class TableImpl : ITableService
         return _tableRepository.gettablebyid(tableid);
     }
 
-    public List<Table> getTablesForsection(int sectionid,int pageNumber, int pageSize)
+    public TableAndSectionViewModel getTablesForsection(int sectionid,int pageNumber, int pageSize)
     {
         return _tableRepository.getTablesForSection(sectionid,pageNumber,pageSize);
     }

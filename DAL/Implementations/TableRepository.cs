@@ -56,32 +56,19 @@ public class TableRepository : ITableRepository
        return _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
     }
 
-    public List<Table> getTablesForSection(int sectionId, int pageNumber, int pageSize)
+    public TableAndSectionViewModel getTablesForSection(int sectionId, int pageNumber, int pageSize)
 {
-    if (pageSize <= 0)
-    {
-        pageSize = 1; // Prevent division by zero
-    }
-
-    int totalTables = _context.Tables.Count(t => t.Sectionid == sectionId && t.Isdeleted == false);
-
-    if (totalTables == 0)
-    {
-        return new List<Table>(); // Return empty if no tables found
-    }
-
-    int totalPages = (int)Math.Ceiling((double)totalTables / pageSize);
-
-    if (pageNumber > totalPages)
-    {
-        pageNumber = totalPages; // Ensure pageNumber is within bounds
-    }
-
-    return _context.Tables
-                   .Where(t => t.Sectionid == sectionId && t.Isdeleted == false)
-                   .Skip((pageNumber - 1) * pageSize)
+    var query = _context.Tables
+                   .Where(t => t.Sectionid == sectionId && t.Isdeleted == false);
+    TableAndSectionViewModel model = new TableAndSectionViewModel();
+    model.TotalTables = query.ToList().Count();
+    model.PageSize = pageSize;
+    model.PageNumber = pageNumber;
+    model.tables = query.Skip((pageNumber - 1) * pageSize)
                    .Take(pageSize)
                    .ToList();
+
+    return model;
 }
 
     public bool isOccupied(int tableid)
@@ -104,6 +91,7 @@ public class TableRepository : ITableRepository
         tableToUpdate.Modifiedat = DateTime.Now;
         tableToUpdate.Modifiedby = 1;
         tableToUpdate.Status = table.Status;
+        
         _context.Tables.Update(tableToUpdate);
         _context.SaveChanges();
         return true;
