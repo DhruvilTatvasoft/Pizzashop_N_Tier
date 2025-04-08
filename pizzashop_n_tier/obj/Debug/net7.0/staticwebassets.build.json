@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "c2NrVlhcrC1NS3POFWuNHavgyQhb8DXaHMrvDQj0Otw=",
+  "Hash": "7vnDjq9D7paVWCweF11J5wsTsR8RMePYM8eFAJQWp8M=",
   "Source": "pizzashop_n_tier",
   "BasePath": "_content/pizzashop_n_tier",
   "Mode": "Default",
@@ -561,6 +561,23 @@
       "OriginalItemSpec": "wwwroot\\images\\clipboard2-fill.svg"
     },
     {
+      "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\clock-fill copy 2.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/clock-fill copy 2.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\clock-fill copy 2.svg"
+    },
+    {
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\clock-fill copy.svg",
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
@@ -848,6 +865,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\group.png"
+    },
+    {
+      "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\hourglass-top.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/hourglass-top.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\hourglass-top.svg"
     },
     {
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-administrator-male-48.png",

@@ -1,4 +1,5 @@
 using DAL.Data;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.IdentityModel.Tokens;
 
 
@@ -65,8 +66,6 @@ public class OrderRepository : IOrderRepository
 
     public List<Order> getAllorders(int pageNumber, int pageSize)
     {
-
-
 
         List<Order> orders = _context.Orders.Where(order => order.IsDeleted == false)
                    .Skip((pageNumber - 1) * pageSize)
@@ -318,5 +317,45 @@ public class OrderRepository : IOrderRepository
     public int GetTotalOrderCount()
     {
         return _context.Orders.Where(order => order.IsDeleted == false).Count();
+    }
+
+    public Dictionary<int, orderItemModifierViewModel> GetOrderByOptionFilterForKot()
+    {
+        List<int> orderIds = _context.Orders.Where(order => order.IsDeleted == false).Select(order => order.Orderid).ToList();
+        Dictionary<int, orderItemModifierViewModel> model = new Dictionary<int, orderItemModifierViewModel>();
+        foreach(var id in orderIds){
+            orderItemModifierViewModel orderItemModifierModel = new orderItemModifierViewModel();
+            Dictionary<Item, List<Modifier>> modifiersForItem = new Dictionary<Item, List<Modifier>>();
+            List<Item> itemList = new List<Item>();
+            List<int> items = _context.Ordermodifiers.Where(orderModifier => orderModifier.Orderid == id).GroupBy(orderModifier => orderModifier.Itemid).Select(group => group.Key).ToList();
+            foreach(var itemid in items){
+                Item item = _context.Items.FirstOrDefault(item=>item.Itemid == itemid && item.Isdeleted == false)!;
+                itemList.Add(item);
+                List<int> modifierIds = _context.Ordermodifiers.Where(orderModifier=>orderModifier.Itemid == itemid && orderModifier.Orderid == id && orderModifier.Isdeleted == false).Select(orderModifier=>orderModifier.Modifierid).ToList();
+                List<Modifier> modifiers = new List<Modifier>();
+                foreach(var modifierid in modifierIds){
+                    Modifier modifier = _context.Modifiers.FirstOrDefault(modifier=>modifier.Modifierid == modifierid && modifier.Isdeleted == false)!;
+                    modifiers.Add(modifier);
+                }
+            modifiersForItem.Add(item,modifiers);
+            orderItemModifierModel.modifiersForItem = modifiersForItem;
+            }
+          model.Add(id,orderItemModifierModel); 
+        }
+
+        return model;
+    }
+
+    public Dictionary<int,tableAndsection> getOrderSectionAndTableDetails(int orderId)
+    {
+        Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
+        string tableName = _context.Tables.FirstOrDefault(table=>table.Tableid == order.Tableid && table.Sectionid == order.Sectionid ).Tablename!;
+        string sectionName = _context.Sections.FirstOrDefault(section=>section.Sectionid == order.Sectionid).Sectionname!;
+        tableAndsection tableAndsection = new tableAndsection();
+        tableAndsection.tableName = tableName;
+        tableAndsection.sectionName = sectionName;
+        Dictionary<int,tableAndsection>  orderTableAndSectionDetails = new Dictionary<int, tableAndsection>();
+        orderTableAndSectionDetails.Add(orderId,tableAndsection);
+        return orderTableAndSectionDetails;
     }
 }

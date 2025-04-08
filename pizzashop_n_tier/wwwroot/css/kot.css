@@ -41,7 +41,12 @@ h1{
     font-size: 14px;
     color: grey;
 }
-
+.itemContainer label{
+    color: grey;
+}
+.itemContainer li{
+    color: grey;
+}
 .inprogressImg{
     display: none;
 }

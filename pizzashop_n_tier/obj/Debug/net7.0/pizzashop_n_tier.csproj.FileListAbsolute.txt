@@ -194,8 +194,8 @@ C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\piz
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Select.Html.dep
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Select.Tools.dep
-C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\appsettings.json
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\appsettings.Development.json
+C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\appsettings.json
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\pizzashop_n_tier.staticwebassets.runtime.json
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\pizzashop_n_tier.exe
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\pizzashop_n_tier.deps.json

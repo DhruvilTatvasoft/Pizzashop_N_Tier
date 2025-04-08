@@ -161,6 +161,10 @@
       "PackagePath": "staticwebassets\\images\\clipboard2-fill.svg"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\clock-fill copy 2.svg",
+      "PackagePath": "staticwebassets\\images\\clock-fill copy 2.svg"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\clock-fill copy.svg",
       "PackagePath": "staticwebassets\\images\\clock-fill copy.svg"
     },
@@ -223,6 +227,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\group.png",
       "PackagePath": "staticwebassets\\images\\group.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\hourglass-top.svg",
+      "PackagePath": "staticwebassets\\images\\hourglass-top.svg"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-administrator-male-48.png",

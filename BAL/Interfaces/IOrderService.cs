@@ -19,5 +19,7 @@ namespace BAL.Interfaces
         Order? getOrderDetails(int orderid);
         Dictionary<Item, List<Modifier>> getItemsAndModifiers(int orderid);
         int getTotalOrderCount();
+        Dictionary<int, orderItemModifierViewModel> getAllOrderByOptionFilterForKot();
+        Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId);
     }
 }

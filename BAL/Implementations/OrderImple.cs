@@ -308,7 +308,7 @@ namespace BAL.Implementations
                 excelheadercell.CellStyle = Header;
                 sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellheaderindex, cellheaderindex + 1), Header);
-
+                
 
                 foreach (var order in orders)
                 {
@@ -419,6 +419,17 @@ namespace BAL.Implementations
         {
             return _orderRepository.GetTotalOrderCount();
         }
+
+        public Dictionary<int, orderItemModifierViewModel> getAllOrderByOptionFilterForKot()
+        {
+            return _orderRepository.GetOrderByOptionFilterForKot();
+        }
+
+        public Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId)
+        {
+            return _orderRepository.getOrderSectionAndTableDetails(orderId);
+        }
+
         // public FileResult OnPostExport(string GridHtml)
         // {
         //     using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(GridHtml)))
