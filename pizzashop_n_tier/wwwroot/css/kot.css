@@ -1,0 +1,56 @@
+.nav-tabs .nav-item.show .nav-link, .nav-tabs .nav-link.active {
+    color:#0066A7;
+    background-color: #dfdfdf;
+    border: none;
+    border-radius: 0;
+    border-color: var(--bs-nav-tabs-link-active-border-color);
+    border-bottom: 2px solid #39a7ed;
+}
+.nav-tabs{ 
+    border:none;
+    box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+    background-color: white;
+}
+h1{
+    font-weight: bold;
+    color: #0066A7;
+}
+.nav-link{
+    color: rgb(133, 133, 133);
+    font-weight: bold;
+    
+}
+.tab-content{
+    background-color: white;
+    box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+}
+/* .nav-tabs .nav-link:focus, .nav-tabs .nav-link:hover {
+    isolation: isolate;
+    border-color: white;
+} */
+
+#category-name{
+    color: #0066A7;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.tab-pane{
+    border: 1px dotted grey;
+}
+.ordertimeduration{
+    font-size: 14px;
+    color: grey;
+}
+
+.inprogressImg{
+    display: none;
+}
+@media (max-width: 458px){
+    .inprogressText{
+        display: none;
+    }
+    .inprogressImg{
+        display: block;
+        width: 22px;
+    }
+}

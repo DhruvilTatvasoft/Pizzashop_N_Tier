@@ -1,5 +1,6 @@
 @{
     string imagepath = Context.Request.Cookies["UserImage"] ?? "/images/Default_pfp.svg.png";
+    Layout = "";
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -26,7 +27,7 @@
     <nav class="navbar sticky-top navbar-light d-flex">
 
         <div class="d-flex align-items-center w-100">
-                <div class="dropdown1">
+                <div class="dropdown1" >
                 <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false" style="border: 0;">
                     <div  style="background-color: white;border-radius: 50%;">
@@ -35,14 +36,18 @@
 
                     </div>
                 </button>
-                <ul class="dropdown-menu">
-                    <li><a href="" class="p-2"><img src="~/images/clipboard2-fill copy.svg" class="me-2" alt=""><label
+                <ul class="dropdown-menu" id="nav-tab">
+
+                    <li class="p-1"><a href="" class="p-2"><img src="~/images/clipboard2-fill copy.svg" class="me-2" alt=""><label
                                 for="">KOT</label></a>
                     </li>
-                    <li><a href="" class="p-2"><img src="~/images/clock-fill copy.svg" alt="" class="me-2"><label for="">Waiting
+                    @if(User.IsInRole("Admin"))
+                    {
+                    <li  class="p-1"><a href="" class="p-2"><img src="~/images/clock-fill copy.svg" alt="" class="me-2"><label for="">Waiting
                                 List</label></a></li>
-                    <li><a href="" class="p-2"><img src="~/images/stop-fill copy.svg" class="me-2" alt=""><label>Tables</label></a></li>
-                    <li> <a href="" class="p-2"><img src="~/images/bell-fill copy.svg" class="me-2" alt=""><label for="">Menu</label></a></li>
+                    <li class="p-1"><a href="" class="p-2"><img src="~/images/stop-fill copy.svg" class="me-2" alt=""><label>Tables</label></a></li>
+                    <li class="p-1"> <a href="" class="p-2"><img src="~/images/bell-fill copy.svg" class="me-2" alt=""><label for="">Menu</label></a></li>
+                    }
                 </ul>
             
                 </div>
@@ -51,12 +56,14 @@
             <label for="" class="text-white ms-2 header">PIZZASHOP</label>
             
 
-            <div class="dropdown me-3 d-flex align-items-center" id="nav-tab" style="margin-left: auto;">
-                <div class="options d-flex" style="gap: 10px;">
+            <div class="dropdown me-3 d-flex align-items-center"  style="margin-left: auto;">
+                <div class="options" style="gap: 10px;">
                     <div>
-                        <a href="" class="p-2"><img src="~/images/clipboard2-fill.svg" alt=""><label
+                        <a href="" class="p-2 selectedOption"  onclick="loadKot()"><img src="~/images/clipboard2-fill.svg" alt=""><label
                                 for="">KOT</label></a>
                     </div>
+                    @if(User.IsInRole("Admin"))
+                    {
                     <div>
                         <a href="" class="p-2"><img src="~/images/clock-fill.svg" alt=""><label for="">Waiting
                                 List</label></a>
@@ -67,30 +74,45 @@
                     <div>
                         <a href="" class="p-2"><img src="~/images/bell-fill.svg" alt=""><label for="">Menu</label></a>
                     </div>
+                    }
                 </div>
                 <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false" style="border: 0;">
                     <a href=""> <img src="@imagepath" alt=""
                             style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
                 </button>
-                <ul class="dropdown-menu">
+                <ul class="dropdown-menu" id="myProfile">
                     <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile"><img
-                                src="~/images/account.png" class="me-2" alt="" style="">My profile</a>
+                                src="~/images/account.png" style="width:9%;"class="me-2" alt="" style="">My profile</a>
                     </li>
                     <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword"><img
-                                src="~/images/reload.png" class="me-2" alt="">Change
+                                src="~/images/reload.png" style="width:9%;"class="me-2" alt="">Change
                             Password</a></li>
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><img
-                                src="~/images/logout.png" class="me-2" alt="">Logout</a></li>
+                                src="~/images/logout.png" style="width:8%;" class="me-2" alt="">Logout</a></li>
+                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="showDashboard"><img
+                                src="~/images/chevron-left.svg" style="width:8%;" class="me-2" alt="">Back</a></li>
                 </ul>
             </div>
         </div>
     </nav>
-
-    <main>
+    
+    <main class="h-100">
         @RenderBody()
     </main>
-
 </body>
 
+
 </html>
+<script>
+    $('.options a').on('click', function (e) {
+        e.preventDefault();
+        $('.options a').removeClass('selectedOption');
+        $(this).addClass('selectedOption');
+    });
+
+
+
+
+   
+</script>

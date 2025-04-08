@@ -29,7 +29,10 @@ public class MenuImpl : IMenuService
         _itemRepository.EditCategory(m,email);
     }
 
-    
+    public List<Category> getAllCategories()
+    {
+        return _itemRepository.getAllCategories();
+    }
 
     public MenuModel GetCategories(MenuModel model)
     {

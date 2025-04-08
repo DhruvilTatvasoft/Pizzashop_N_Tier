@@ -1,0 +1,21 @@
+@{
+     Layout = "~/Views/Shared/_NavbarForOrderApp.cshtml";
+}
+<div class="loadTabBody h-100">
+
+</div>
+<script>
+     $("document").ready(()=>{
+        loadKot();
+     })
+
+    function loadKot(){
+        $.ajax({
+               url:'@Url.Action("getKot","OrderApp")',
+                method: 'GET',
+                success: function (data) {
+                     $('.loadTabBody').html(data);
+                }
+            });
+    }
+</script>

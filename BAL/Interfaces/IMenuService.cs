@@ -7,4 +7,6 @@ public interface IMenuService{
 
     void editCategory(MenuModel model,string email);
     void deleteCategory(int categoryId);
+
+    List<Category> getAllCategories();
 }
