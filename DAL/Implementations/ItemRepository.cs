@@ -181,4 +181,9 @@ public class ItemRepository : IItemRepository
         _context.SaveChanges();
 
     }
+
+    public Category getCategoryById(int categoryId)
+    {
+        return _context.Categories.FirstOrDefault(category=>category.Categoryid == categoryId)!;
+    }
 }

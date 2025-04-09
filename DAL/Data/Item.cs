@@ -47,6 +47,8 @@ public partial class Item
 
     public virtual ICollection<Itemsandmodifier> Itemsandmodifiers { get; } = new List<Itemsandmodifier>();
 
+    public virtual ICollection<OrderItemModifier> OrderItemModifiers { get; } = new List<OrderItemModifier>();
+
     public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
     public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();

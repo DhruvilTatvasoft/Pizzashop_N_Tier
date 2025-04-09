@@ -47,6 +47,8 @@ public partial class Order
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
+    public virtual ICollection<OrderItemModifier> OrderItemModifiers { get; } = new List<OrderItemModifier>();
+
     public virtual ICollection<Orderitem> Orderitems { get; } = new List<Orderitem>();
 
     public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();

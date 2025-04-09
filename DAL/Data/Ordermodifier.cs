@@ -27,6 +27,10 @@ public partial class Ordermodifier
 
     public int? Orderitemquantity { get; set; }
 
+    public bool? IsReady { get; set; }
+
+    public int? OrderItemDetailsId { get; set; }
+
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual Item Item { get; set; } = null!;

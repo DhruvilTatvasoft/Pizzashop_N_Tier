@@ -13,4 +13,5 @@ public interface IOrderRepository{
     int GetTotalOrderCount();
     Dictionary<int, orderItemModifierViewModel> GetOrderByOptionFilterForKot();
     Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId);
+    Dictionary<int, orderItemModifierViewModel> GetOrderDetailsByCategory(int categoryid,bool? IsReady);
 }

@@ -430,6 +430,11 @@ namespace BAL.Implementations
             return _orderRepository.getOrderSectionAndTableDetails(orderId);
         }
 
+        public Dictionary<int, orderItemModifierViewModel> getOrderDetailsByCategory(int categoryid,bool? IsReady)
+        {
+            return _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady);
+        }
+
         // public FileResult OnPostExport(string GridHtml)
         // {
         //     using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(GridHtml)))

@@ -140,12 +140,24 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcTWVudVxfbW9kaWZpZXJzTGlzdEZvck1vZGlmaWVyR3JvdXAuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_category_navbarPartial.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX2NhdGVnb3J5X25hdmJhclBhcnRpYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_kot.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX2tvdC5jc2h0bWw=
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_orderAppHome.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX29yZGVyQXBwSG9tZS5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_orderDetailsCard.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX29yZGVyRGV0YWlsc0NhcmQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_progressBar.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX3Byb2dyZXNzQmFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Order/invoice.cshtml]

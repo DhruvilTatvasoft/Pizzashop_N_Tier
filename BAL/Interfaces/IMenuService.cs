@@ -9,4 +9,6 @@ public interface IMenuService{
     void deleteCategory(int categoryId);
 
     List<Category> getAllCategories();
+
+    Category getCategoryById(int categoryid);
 }

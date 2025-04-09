@@ -7,8 +7,6 @@ public partial class Orderitem
 {
     public int Orderitemid { get; set; }
 
-    public string Orderitemname { get; set; } = null!;
-
     public int Itemid { get; set; }
 
     public int Orderid { get; set; }
@@ -40,6 +38,8 @@ public partial class Orderitem
     public virtual Item Item { get; set; } = null!;
 
     public virtual Order Order { get; set; } = null!;
+
+    public virtual ICollection<OrderItemModifier> OrderItemModifiers { get; } = new List<OrderItemModifier>();
 
     public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }

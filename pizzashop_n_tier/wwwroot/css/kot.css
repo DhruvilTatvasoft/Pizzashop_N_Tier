@@ -34,9 +34,9 @@ h1{
     font-size: 1.5rem;
     font-weight: bold;
 }
-.tab-pane{
+/* .tab-pane{
     border: 1px dotted grey;
-}
+} */
 .ordertimeduration{
     font-size: 14px;
     color: grey;
@@ -49,6 +49,12 @@ h1{
 }
 .inprogressImg{
     display: none;
+}
+.tabDataContainer{
+    height:58%;
+    background-color: white;
+    box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+    border: none;
 }
 @media (max-width: 458px){
     .inprogressText{

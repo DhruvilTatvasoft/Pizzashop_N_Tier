@@ -1,6 +1,7 @@
 
 
 using BAL.Interfaces;
+using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 
 namespace pizzashop_n_tier.Views.OrderApp
@@ -18,18 +19,48 @@ namespace pizzashop_n_tier.Views.OrderApp
             _orderService = orderService;
         }
 
+        public IActionResult loadCategoryNavbar(){
+            KotViewModel model = new KotViewModel();
+            model.categories = _menuService.getAllCategories();
+            return PartialView("_category_navbarPartial",model);
+        }
+
+        public IActionResult getKot(){
+            KotViewModel model = new KotViewModel();
+            return PartialView("_kot",model);
+        }
+
         public IActionResult getOrderAppPage(){
             return PartialView("_orderAppHome");
         }
-        public IActionResult getKot(){
+        public IActionResult loadOrderDetails(){
             KotViewModel model = new KotViewModel();
             model.categories = _menuService.getAllCategories();
             model.orderDetails = _orderService.getAllOrderByOptionFilterForKot();
             foreach(var orderId in model.orderDetails.Keys){
                 model.orderTableSectionDetail = _orderService.getOrderSectionAndTableDetails(orderId);
             }
-            return PartialView("_kot",model);
-            // order.Value.modifiersForItem.Keys.Count
+            model.categoryid = 0;
+            return PartialView("_orderDetailsCard",model);
+        }
+
+        public IActionResult loadOrdersPerCategory(int categoryid,bool? IsReady){
+            KotViewModel model = new KotViewModel();
+            model.categories = _menuService.getAllCategories();
+            model.orderDetails = _orderService.getOrderDetailsByCategory(categoryid,IsReady);
+            foreach(var orderId in model.orderDetails.Keys){
+                model.orderTableSectionDetail = _orderService.getOrderSectionAndTableDetails(orderId);
+            }
+            Category category = _menuService.getCategoryById(categoryid);
+            if(categoryid == 0){
+            model.categoryName = "All";
+            model.categoryid = 0;
+            }
+            else{
+            model.categoryName = category.Categoryname;
+            model.categoryid = category.Categoryid;
+            }
+            return PartialView("_orderDetailsCard",model);
         }
     
     }

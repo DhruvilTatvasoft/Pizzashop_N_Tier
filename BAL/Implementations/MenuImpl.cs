@@ -19,6 +19,10 @@ public class MenuImpl : IMenuService
         return temp;
     }
 
+    public Category getCategoryById(int categoryId){
+        return _itemRepository.getCategoryById(categoryId);
+    }
+
     public void deleteCategory(int categoryId)
     {
         _itemRepository.deleteCategory(categoryId);

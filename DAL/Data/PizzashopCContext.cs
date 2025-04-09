@@ -37,6 +37,8 @@ public partial class PizzashopCContext : DbContext
 
     public virtual DbSet<Order> Orders { get; set; }
 
+    public virtual DbSet<OrderItemModifier> OrderItemModifiers { get; set; }
+
     public virtual DbSet<Orderitem> Orderitems { get; set; }
 
     public virtual DbSet<Ordermodifier> Ordermodifiers { get; set; }
@@ -475,13 +477,51 @@ public partial class PizzashopCContext : DbContext
                 .HasConstraintName("order_tableid_fkey");
         });
 
+        modelBuilder.Entity<OrderItemModifier>(entity =>
+        {
+            entity.HasKey(e => e.Orderitemmodifierid).HasName("orderItemModifier_pkey");
+
+            entity.ToTable("orderItemModifier");
+
+            entity.Property(e => e.Orderitemmodifierid)
+                .UseIdentityAlwaysColumn()
+                .HasIdentityOptions(null, null, 11L, 785465456L, null, null)
+                .HasColumnName("orderitemmodifierid");
+            entity.Property(e => e.IsReady).HasDefaultValueSql("false");
+            entity.Property(e => e.ItemId).HasColumnName("item_id");
+            entity.Property(e => e.Modifierid).HasColumnName("modifierid");
+            entity.Property(e => e.Modifierquantity)
+                .HasDefaultValueSql("8")
+                .HasColumnName("modifierquantity");
+            entity.Property(e => e.Orderid).HasColumnName("orderid");
+            entity.Property(e => e.Orderitemdetailid).HasColumnName("orderitemdetailid");
+
+            entity.HasOne(d => d.Item).WithMany(p => p.OrderItemModifiers)
+                .HasForeignKey(d => d.ItemId)
+                .HasConstraintName("item_fkey");
+
+            entity.HasOne(d => d.Modifier).WithMany(p => p.OrderItemModifiers)
+                .HasForeignKey(d => d.Modifierid)
+                .HasConstraintName("modifier_fkey");
+
+            entity.HasOne(d => d.Order).WithMany(p => p.OrderItemModifiers)
+                .HasForeignKey(d => d.Orderid)
+                .HasConstraintName("orderid_fkey");
+
+            entity.HasOne(d => d.Orderitemdetail).WithMany(p => p.OrderItemModifiers)
+                .HasForeignKey(d => d.Orderitemdetailid)
+                .HasConstraintName("orderitem_fkey");
+        });
+
         modelBuilder.Entity<Orderitem>(entity =>
         {
             entity.HasKey(e => e.Orderitemid).HasName("orderitems_pkey");
 
             entity.ToTable("orderitems");
 
-            entity.Property(e => e.Orderitemid).HasColumnName("orderitemid");
+            entity.Property(e => e.Orderitemid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("orderitemid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
@@ -500,9 +540,6 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnName("modifiedat");
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
-            entity.Property(e => e.Orderitemname)
-                .HasMaxLength(50)
-                .HasColumnName("orderitemname");
             entity.Property(e => e.Orderitemquantity).HasColumnName("orderitemquantity");
             entity.Property(e => e.Orderitemrate)
                 .HasPrecision(10, 2)
@@ -538,6 +575,7 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
+            entity.Property(e => e.IsReady).HasDefaultValueSql("false");
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
@@ -548,6 +586,7 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnName("modifiedat");
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Modifierid).HasColumnName("modifierid");
+            entity.Property(e => e.OrderItemDetailsId).HasColumnName("orderItemDetailsId");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Orderitemquantity).HasColumnName("orderitemquantity");
             entity.Property(e => e.Ordermodifierquantity).HasColumnName("ordermodifierquantity");

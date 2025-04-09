@@ -9,6 +9,10 @@ public class KotViewModel
 
     public Dictionary<int,tableAndsection> orderTableSectionDetail{get;set;}
 
+    public string categoryName{get;set;}
+
+    public int? categoryid{get;set;}
+
 }
 public class tableAndsection{
     public string sectionName{get;set;}

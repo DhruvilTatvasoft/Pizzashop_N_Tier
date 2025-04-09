@@ -31,6 +31,8 @@ public partial class Modifier
 
     public virtual Modifiergroup Modifiergroup { get; set; } = null!;
 
+    public virtual ICollection<OrderItemModifier> OrderItemModifiers { get; } = new List<OrderItemModifier>();
+
     public virtual ICollection<Ordermodifier> Ordermodifiers { get; } = new List<Ordermodifier>();
 
     public virtual Unit Unit { get; set; } = null!;
