@@ -362,128 +362,165 @@ public class OrderRepository : IOrderRepository
         return orderTableAndSectionDetails;
     }
 
-    public Dictionary<int, orderItemModifierViewModel> GetOrderDetailsByCategory(int categoryid,bool? IsReady)
-    {
+   public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
+{
+    var orderIds = _context.Orders
+        .Where(order => order.IsDeleted == false)
+        .Select(order => order.Orderid)
+        .ToList();
 
-        GetOrderDetailsByCategory2(categoryid,IsReady);
-        List<int> orderIds = _context.Orders.Where(order => order.IsDeleted == false).Select(order => order.Orderid).ToList();
-        Dictionary<int, orderItemModifierViewModel> model = new Dictionary<int, orderItemModifierViewModel>();
-        foreach (var id in orderIds)
-        {
-            orderItemModifierViewModel orderItemModifierModel = new orderItemModifierViewModel();
-            List<Item> itemList = new List<Item>();
-            List<int> items = new List<int>();
-            if(IsReady != null){
-                items = _context.Ordermodifiers.Where(orderModifier => orderModifier.Orderid == id && orderModifier.IsReady == IsReady).GroupBy(orderModifier => orderModifier.Itemid).Select(group => group.Key).ToList();
-            }
-            else{
-                items = _context.Ordermodifiers.Where(orderModifier => orderModifier.Orderid == id).GroupBy(orderModifier => orderModifier.Itemid).Select(group => group.Key).ToList();
-            }
-            bool flag = false;
-            foreach (var itemid in items)
-            {
-            Dictionary<Item, List<Modifier>> modifiersForItem = new Dictionary<Item, List<Modifier>>();
-                Item? item = new Item();
-                if(categoryid != 0){
-                    item = _context.Items.FirstOrDefault(item => item.Itemid == itemid && item.Isdeleted == false && item.Categoryid == categoryid);
-                }
-                else{
-                    item = _context.Items.FirstOrDefault(item => item.Itemid == itemid && item.Isdeleted == false);
-                }
-                if (item != null)
-                {
-                
-                    flag = true;
-                    itemList.Add(item);
-                    List<int> modifierIds = _context.Ordermodifiers.Where(orderModifier => orderModifier.Itemid == itemid && orderModifier.Orderid == id && orderModifier.Isdeleted == false).Select(orderModifier => orderModifier.Modifierid).ToList();
-                    List<Modifier> modifiers = new List<Modifier>();
-                    foreach (var modifierid in modifierIds)
-                    {
-                        Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid && modifier.Isdeleted == false)!;
-                        modifiers.Add(modifier);
-                    }
-                    modifiersForItem.Add(LoadQuantitiesForItem(item,id), modifiers);
-                    orderItemModifierModel.modifiersForItem = modifiersForItem;
-                }
-            }
-            if(flag == true){
-            model.Add(id, orderItemModifierModel);
-            }
-        }
-        return model;
-    }
-    public Dictionary<int, orderItemModifierViewModel> GetOrderDetailsByCategory2(int categoryid,bool? IsReady)
-    {
-        List<int> orderIds = _context.Orders.Where(order => order.IsDeleted == false).Select(order => order.Orderid).ToList();
-        Dictionary<int, orderItemModifierViewModel> model = new Dictionary<int, orderItemModifierViewModel>();
-        foreach (var id in orderIds)
-        {
-            orderItemModifierViewModel orderItemModifierModel = new orderItemModifierViewModel();
-            List<Item> itemList = new List<Item>();
-            List<int> items = new List<int>();
-             List<OrderItemModifier> orderedItems = new List<OrderItemModifier>();
-            // if(IsReady != null){
-            //    var  orderedItems1= _context.OrderItemModifiers
-            //     .Where(orderItemModifiers => orderItemModifiers.Orderid == id)
-            //     .GroupBy(orderItemModifiers => new { orderItemModifiers.ItemId, orderItemModifiers.Orderitemdetailid })
-            //     .ToList();            }
-            // else{
-             var orderedItems2 = _context.OrderItemModifiers
-                .Where(orderItemModifiers => orderItemModifiers.Orderid == id)
-                .GroupBy(orderItemModifiers => new { orderItemModifiers.ItemId, orderItemModifiers.Orderitemdetailid })
-                .ToList();
-            // }
+    var model = new Dictionary<int, List<Dictionary<Item, List<Modifier>>>>();
 
-            foreach(var orderditem in orderedItems2){
-                var itemid = orderditem.Key.ItemId;
-                var Orderitemdetailid = orderditem.Key.Orderitemdetailid;
-                var modifiers = _context.OrderItemModifiers.Where(oim => oim.Orderitemdetailid == Orderitemdetailid).Select(oim=>oim.Modifierid).ToList();
-                
-                
-            }
+    foreach (var orderId in orderIds)
+    {
+        var orderedItemsGrouped = _context.OrderItemModifiers
+            .Where(oim => oim.Orderid == orderId)
+            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
+            .ToList();
+
+        bool hasItems = false;
+        var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+
+        foreach (var group in orderedItemsGrouped)
+        {
+            var itemId = group.Key.ItemId;
+            var orderItemDetailId = group.Key.Orderitemdetailid;
+
             
-            bool flag = false;
-            foreach (var itemid in items)
+            var dbItem = categoryid != 0
+                ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
+                : _context.Items.FirstOrDefault(i => i.Itemid == itemId);
+
+            if (dbItem == null)
+                continue;
+
+           
+            var item = new Item
             {
-            Dictionary<Item, List<Modifier>> modifiersForItem = new Dictionary<Item, List<Modifier>>();
-                Item? item = new Item();
-                if(categoryid != 0){
-                    item = _context.Items.FirstOrDefault(item => item.Itemid == itemid && item.Isdeleted == false && item.Categoryid == categoryid);
-                }
-                else{
-                    item = _context.Items.FirstOrDefault(item => item.Itemid == itemid && item.Isdeleted == false);
-                }
-                if (item != null)
-                {
+                Itemid = dbItem.Itemid,
+                Itemname = dbItem.Itemname,
+                Categoryid = dbItem.Categoryid,
                 
-                    flag = true;
-                    itemList.Add(item);
-                    List<int> modifierIds = _context.Ordermodifiers.Where(orderModifier => orderModifier.Itemid == itemid && orderModifier.Orderid == id && orderModifier.Isdeleted == false).Select(orderModifier => orderModifier.Modifierid).ToList();
-                    List<Modifier> modifiers = new List<Modifier>();
-                    foreach (var modifierid in modifierIds)
-                    {
-                        Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid && modifier.Isdeleted == false)!;
-                        modifiers.Add(modifier);
-                    }
-                    modifiersForItem.Add(LoadQuantitiesForItem(item,id), modifiers);
-                    orderItemModifierModel.modifiersForItem = modifiersForItem;
-                }
+            };
+
+            var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
+            if (orderItem == null)
+                continue;
+
+            if (IsReady == null)
+            {
+                item.Itemquantity = orderItem.Orderitemquantity;
             }
-            if(flag == true){
-            model.Add(id, orderItemModifierModel);
+            else if (IsReady == true && orderItem.Readyitemquanitiy > 0)
+            {
+                item.Itemquantity = orderItem.Readyitemquanitiy;
             }
+            else if (IsReady == false && (orderItem.Orderitemquantity - orderItem.Readyitemquanitiy) > 0)
+            {
+                item.Itemquantity = orderItem.Orderitemquantity - orderItem.Readyitemquanitiy;
+            }
+            else
+            {
+                continue; 
+            }
+
+            var modifierIds = _context.OrderItemModifiers
+                .Where(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId)
+                .Select(oim => oim.Modifierid)
+                .ToList();
+
+            var modifiers = _context.Modifiers
+                .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
+                .ToList();
+
+            itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
+            hasItems = true;
         }
-        return model;
+
+        if (hasItems)
+        {
+            model.Add(orderId, itemModifierList);
+        }
     }
 
-    public Item LoadQuantitiesForItem(Item item,int orderid){
-        List<Ordermodifier> items= _context.Ordermodifiers.Where(om => om.Itemid == item.Itemid && om.Orderid == orderid ).ToList();
+
+    return model;
+}
+
+
+    public Item LoadQuantitiesForItem(Item item, int orderid)
+    {
+        List<Ordermodifier> items = _context.Ordermodifiers.Where(om => om.Itemid == item.Itemid && om.Orderid == orderid).ToList();
         int itemQuantity = 0;
-        foreach (var item1 in items){
+        foreach (var item1 in items)
+        {
             itemQuantity += item1.Orderitemquantity ?? 0;
         }
         item.Itemquantity = itemQuantity;
         return item;
     }
 
+    public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid)
+    {
+        SingleOrderDetailModel model = new SingleOrderDetailModel();
+        model.orderid = orderid;
+        var orderedItemsGrouped = _context.OrderItemModifiers
+            .Where(oim => oim.Orderid == orderid)
+            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
+            .ToList();
+        List<Dictionary<Item, List<Modifier>>> itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+        foreach (var group in orderedItemsGrouped)
+        {
+            var itemId = group.Key.ItemId;
+            var orderItemDetailId = group.Key.Orderitemdetailid;
+
+            
+            var dbItem = categoryid != 0
+                ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
+                : _context.Items.FirstOrDefault(i => i.Itemid == itemId);
+
+            if (dbItem == null)
+                continue;
+
+           
+            
+
+            var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
+            if (orderItem == null)
+                continue;
+            
+            var item = new Item
+            {
+                Itemid = orderItem.Orderitemid,
+                Itemname = dbItem.Itemname,
+                Categoryid = dbItem.Categoryid,
+            };
+           
+            var modifierIds = _context.OrderItemModifiers
+                .Where(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId)
+                .Select(oim => oim.Modifierid)
+                .ToList();
+
+            var modifiers = _context.Modifiers
+                .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
+                .ToList();
+
+                
+            item.Itemquantity = orderItem.Orderitemquantity-orderItem.Readyitemquanitiy;
+
+            itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
+        }
+        model.itemAndModifiers = itemModifierList
+            .SelectMany(dict => dict)
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
+            return model;        
+    }
+   public void changeReadyQuantity(Dictionary<int, int> readyItemCount){
+        foreach (var pair in readyItemCount){
+            var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == pair.Key);
+            orderedItem!.Readyitemquanitiy = pair.Value;
+            _context.Orderitems.Update(orderedItem);
+        }
+        _context.SaveChanges();
+    }
 }

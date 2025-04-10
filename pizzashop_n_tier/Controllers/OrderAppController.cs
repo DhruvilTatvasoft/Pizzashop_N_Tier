@@ -33,21 +33,11 @@ namespace pizzashop_n_tier.Views.OrderApp
         public IActionResult getOrderAppPage(){
             return PartialView("_orderAppHome");
         }
-        public IActionResult loadOrderDetails(){
-            KotViewModel model = new KotViewModel();
-            model.categories = _menuService.getAllCategories();
-            model.orderDetails = _orderService.getAllOrderByOptionFilterForKot();
-            foreach(var orderId in model.orderDetails.Keys){
-                model.orderTableSectionDetail = _orderService.getOrderSectionAndTableDetails(orderId);
-            }
-            model.categoryid = 0;
-            return PartialView("_orderDetailsCard",model);
-        }
 
         public IActionResult loadOrdersPerCategory(int categoryid,bool? IsReady){
             KotViewModel model = new KotViewModel();
             model.categories = _menuService.getAllCategories();
-            model.orderDetails = _orderService.getOrderDetailsByCategory(categoryid,IsReady);
+            model.orderDetails = _orderService.GetOrderDetailsByCategory(categoryid,IsReady);
             foreach(var orderId in model.orderDetails.Keys){
                 model.orderTableSectionDetail = _orderService.getOrderSectionAndTableDetails(orderId);
             }
@@ -62,6 +52,17 @@ namespace pizzashop_n_tier.Views.OrderApp
             }
             return PartialView("_orderDetailsCard",model);
         }
-    
+
+        public IActionResult loadSingleOrderDetails(int categoryid,int orderid){
+            SingleOrderDetailModel model = new SingleOrderDetailModel();
+            model = _orderService.getSingleOrderDetail(categoryid,orderid);
+            return PartialView("_orderStatusChangeModal",model);
+        }
+
+        [HttpPost]
+        public IActionResult changeReadyQuantity(SingleOrderDetailModel model){
+            _orderService.changeReadyQuantity(model.readyItemCount);
+            return Json(new {success="Items are marked as Prepared Successfully"});
+         }
     }
 }

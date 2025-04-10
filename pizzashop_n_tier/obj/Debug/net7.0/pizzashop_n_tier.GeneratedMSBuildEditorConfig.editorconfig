@@ -156,6 +156,10 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX29yZGVyRGV0YWlsc0NhcmQuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_orderStatusChangeModal.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX29yZGVyU3RhdHVzQ2hhbmdlTW9kYWwuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/OrderApp/_progressBar.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcT3JkZXJBcHBcX3Byb2dyZXNzQmFyLmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 

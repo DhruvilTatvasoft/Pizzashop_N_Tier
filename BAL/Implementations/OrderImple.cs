@@ -430,23 +430,18 @@ namespace BAL.Implementations
             return _orderRepository.getOrderSectionAndTableDetails(orderId);
         }
 
-        public Dictionary<int, orderItemModifierViewModel> getOrderDetailsByCategory(int categoryid,bool? IsReady)
+        public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
         {
             return _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady);
         }
 
-        // public FileResult OnPostExport(string GridHtml)
-        // {
-        //     using (MemoryStream stream = new MemoryStream(Encoding.ASCII.GetBytes(GridHtml)))
-        //     {
-        //         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-        //         PdfWriter writer = new PdfWriter(byteArrayOutputStream);
-        //         PdfDocument pdfDocument = new PdfDocument(writer);
-        //         pdfDocument.SetDefaultPageSize(PageSize.A4);
-        //         HtmlConverter.ConvertToPdf(stream, pdfDocument);
-        //         pdfDocument.Close();
-        //         return File(byteArrayOutputStream.ToArray(), "application/pdf", "invoice.pdf");
-        //     }
-        // }
+       public SingleOrderDetailModel getSingleOrderDetail(int categoryid,int orderid){
+        return _orderRepository.getSingleOrderDetail(categoryid,orderid);
+       }
+
+        public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
+        {
+             _orderRepository.changeReadyQuantity(readyItemCount);
+        }
     }
 }

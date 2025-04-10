@@ -140,42 +140,6 @@
     $('document').ready(function(){
         loadModifiersForModifierGroup(2,1);
     })
-    @* $("#AddNewModifier").on("submit", function (e) {
-        e.preventDefault();
-        var data = new FormData(this);
-        var Action = $(document.activeElement).data('action');
-        var selectedModifierGroup = $('#modifierGroup').val();
-        let = "";
-        if(Action === "Add"){
-            url = '@Url.Action("AddNewModifier", "Menu")';
-            data.append("modifier.Modifiergroupid",selectedModifierGroup)
-        }
-        else{
-            url = '@Url.Action("EditmodifierPost","Menu")';
-            data.append("modifier.Modifiergroupid",selectedModifierGroup)
-            data.append("modifier.Modifierid",$("#modifierIdForUpdate").val())
-        }
-        for (const pair of data.entries()) {
-            console.log(pair[0], pair[1]);
-        }
-        console.log("url: "+url);
-
-        console.log("value of selected modifier group is "+selectedModifierGroup);
-        $.ajax({
-            url: url,
-            type: 'POST',
-            data: data,
-            processData:false,
-            contentType: false,
-            success: function (result) {
-                if(document.querySelector("#addNewModifier")){
-                    $("#addNewModifier").hide()
-                }
-                console.log("data should load for modifiergroup : "+selectedModifierGroup);
-                loadModifiersForModifierGroup(selectedModifierGroup);
-                removeModalBackdrops();
-            }
-        });
-    }); *@
+   
 </script>
 </div>

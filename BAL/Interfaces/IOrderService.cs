@@ -21,6 +21,10 @@ namespace BAL.Interfaces
         int getTotalOrderCount();
         Dictionary<int, orderItemModifierViewModel> getAllOrderByOptionFilterForKot();
         Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId);
-        Dictionary<int, orderItemModifierViewModel> getOrderDetailsByCategory(int categoryid,bool? IsReady);
+        // Dictionary<int, orderItemModifierViewModel> getOrderDetailsByCategory(int categoryid,bool? IsReady);
+
+        Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady);
+        SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid);
+        void changeReadyQuantity(Dictionary<int, int> readyItemCount);
     }
 }

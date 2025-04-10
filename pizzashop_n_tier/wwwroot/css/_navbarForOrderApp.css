@@ -69,11 +69,7 @@ body {
     border-color: #0066a7;
     border-radius: 2px;
 }
-.orderDetailContainer{
-    border:dotted;
-    border-color: gray;
-    border-radius: 7px;
-}
+
 .ordertimeduration{
     font-size: 14px;
 }

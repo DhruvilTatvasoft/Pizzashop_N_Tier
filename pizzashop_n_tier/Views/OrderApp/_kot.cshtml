@@ -7,20 +7,20 @@
   </div>
   <div class="categoryNavbarContainer"></div>
   <div class="cardContainer w-100 h-100"></div>
-  </div>
-  
- <script>
+</div>
 
-  $('document').ready(()=>{
+<script>
+
+  $('document').ready(() => {
     loadCategoryNavbar();
     loadOrders();
   })
 
-  function loadCategoryNavbar(){
+  function loadCategoryNavbar() {
     $.ajax({
-      url:'@Url.Action("loadCategoryNavbar","OrderApp")',
-      type:'GET',
-      success:function(data){
+      url: '@Url.Action("loadCategoryNavbar", "OrderApp")',
+      type: 'GET',
+      success: function (data) {
         $('.categoryNavbarContainer').html(data);
       }
     });
@@ -28,14 +28,53 @@
 
 
 
-  function loadOrders(){
+  $(document).on('submit', '#readyQuantityChangeForm', function (e) {
+    e.preventDefault();
+    var $form = $(this);
+
+    if ($form.data('submitting')) return;
+    $form.data('submitting', true);
+
+    var data = new FormData(this);
+    for (var pair of data.entries()) {
+      console.log(pair[0] + ', ' + pair[1]);
+    }
+
     $.ajax({
-      url:'@Url.Action("loadOrderDetails","OrderApp")',
-      type:'GET',
-      success:function(data){
+      url: "@Url.Action("changeReadyQuantity", "OrderApp")",
+      type: "POST",
+      data: data,
+      contentType: false,
+      processData: false,
+      complete: function () {
+        $form.data('submitting', false);
+      },
+      success: function (response) {
+        if (response.success) {
+          $('.closeModalBtn').click();
+          toastr.success(response.success);
+          loadOrdersForcategory($('#selectedCategory').val(), false);
+        }
+      },
+      error: function () {
+        toastr.error("An error occurred while processing your request");
+      }
+    });
+  });
+
+
+
+
+
+  function loadOrders() {
+    $.ajax({
+      url: '@Url.Action("loadOrdersPerCategory", "OrderApp")',
+      type: 'GET',
+      data: { categoryid: 0 },
+      success: function (data) {
         $('.cardContainer').html(data);
-        console.log(data);  
+        console.log(data);
       }
     });
   }
-</script> 
+</script>
