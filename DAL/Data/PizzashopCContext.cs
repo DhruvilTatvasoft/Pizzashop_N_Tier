@@ -490,9 +490,6 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.IsReady).HasDefaultValueSql("false");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
             entity.Property(e => e.Modifierid).HasColumnName("modifierid");
-            entity.Property(e => e.Modifierquantity)
-                .HasDefaultValueSql("8")
-                .HasColumnName("modifierquantity");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Orderitemdetailid).HasColumnName("orderitemdetailid");
 
@@ -917,6 +914,9 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Sectionid).HasColumnName("sectionid");
             entity.Property(e => e.Status).HasColumnName("status");
+            entity.Property(e => e.Statusname)
+                .HasColumnType("character varying")
+                .HasColumnName("statusname");
             entity.Property(e => e.Tablename)
                 .HasMaxLength(50)
                 .HasColumnName("tablename");

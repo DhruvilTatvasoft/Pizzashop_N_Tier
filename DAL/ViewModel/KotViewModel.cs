@@ -14,6 +14,11 @@ public class KotViewModel
     public int? categoryid{get;set;}
 
     public SingleOrderDetailModel singleOrderDetail{get;set;}
+    public int pageSize{get;set;}
+    public int pageNumber{get;set;}
+
+    public int totalOrders{get;set;}
+
 
 }
 public class tableAndsection{

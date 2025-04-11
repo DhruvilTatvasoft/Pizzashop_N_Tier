@@ -51,6 +51,8 @@ public class TableRepository : ITableRepository
         return _context.Tables.Where(table=>table.Isdeleted == false).ToList().Count;
     }
 
+   
+
     public Table gettablebyid(int tableid)
     {
        return _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
@@ -95,5 +97,24 @@ public class TableRepository : ITableRepository
         _context.Tables.Update(tableToUpdate);
         _context.SaveChanges();
         return true;
+    }
+
+     public TableViewModel GetAllTablesAndSections()
+    {
+        Dictionary<SectionViewModel,List<Table>> sectionWiseTables = new Dictionary<SectionViewModel, List<Table>>();
+        List<Section> sections = _context.Sections.Where(section=>section.Isdeleted == false).ToList();
+        foreach(var section in sections){
+            List<Table> tablesForSection = _context.Tables.Where(t=>t.Sectionid == section.Sectionid && t.Isdeleted == false).ToList();
+            SectionViewModel sectionModel = new SectionViewModel();
+            sectionModel.section = section;
+            sectionModel.AssignedTablesCount = _context.Tables.Where(table => table.Statusname != null && table.Statusname.ToLower().Trim() == "assigned" && table.Isdeleted == false && table.Sectionid == section.Sectionid).ToList().Count();
+            sectionModel.AvailableTablesCount = _context.Tables.Where(table => table.Statusname != null && table.Statusname.ToLower().Trim() == "available" && table.Isdeleted == false && table.Sectionid == section.Sectionid).ToList().Count();
+            sectionModel.RunningTablesCount = _context.Tables.Where(table => table.Statusname != null && table.Statusname.ToLower().Trim() == "running" && table.Isdeleted == false && table.Sectionid == section.Sectionid).ToList().Count();
+            sectionWiseTables.Add(sectionModel,tablesForSection);
+        }
+        TableViewModel model = new TableViewModel();
+        model.tablesPerSection = sectionWiseTables;
+        return model;
+
     }
 }

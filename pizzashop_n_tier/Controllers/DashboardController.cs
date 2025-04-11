@@ -53,7 +53,6 @@ public class DashboardController : Controller
         var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
         Console.WriteLine("User Roles: " + string.Join(", ", roles));
 
-
         if (!roles.Contains("Admin"))
         {
             return Forbid("User does not have Admin role!");

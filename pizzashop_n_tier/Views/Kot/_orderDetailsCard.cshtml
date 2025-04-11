@@ -9,11 +9,11 @@
                 <label for="" id="category-name">@(Model.categoryName ?? "All")</label>
             </div>
             <div class="p-1">
-                <button class="btn btn-primary btncolour"><label for="" class="inprogressText"
-                        onclick="loadOrdersForcategory(@Model.categoryid,'false')">In progress </label><img
+                <button class="btn btn-primary inprogressbtn" style="background-color: #0066a7;border-radius: 2px;"><label for="" class="inprogressText"
+                        onclick="inprogress(this,@Model.categoryid,'false')">In progress </label><img
                         src="~/images/hourglass-top.svg" class="inprogressImg" alt=""></button>
-                <button class="btn btn-outline-primary btnoutlinecolour"
-                    onclick="loadOrdersForcategory(@Model.categoryid,'true')">Ready</button>
+                <button class="btn btn-outline-primary  readybtn" style="color: #0066a7;border-color: #0066a7;border-radius: 2px;"
+                    onclick="inprogress(this,@Model.categoryid,'true')">Ready</button>
                 <button class="btn btn-outline-primary btnoutlinecolour "><</button>
                         <button class="btn btn-outline-primary btnoutlinecolour">></button>
             </div>
@@ -71,6 +71,15 @@
         <div class="modalContainer"></div>
         <script>
 
+            function inprogress(button,id,IsReady){
+                loadOrdersForcategory(id,IsReady)
+                button.style.backgroundColor = "#39a7ed";
+                button.style.borderColor = "#39a7ed";
+            }
+            function ready(id,IsReady){
+                loadOrdersForcategory(id,'true')
+            }
+
             function increaseValue(maxvalue,id) {
                 
                     var value = document.getElementById(id).value;
@@ -90,13 +99,12 @@
                 }
 
             $('.nav-link').on('click', function (x) {
-                console.log(this.innerHTML);
                 $('#category-name').html(this.innerHTML);
             });
 
             function openModalForStatusChange(orderid) {
                  $.ajax({
-                    url:"@Url.Action("loadSingleOrderDetails","OrderApp")",
+                    url:"@Url.Action("loadSingleOrderDetails","Kot")",
                     type:'GET',
                     data:{categoryid : $('#selectedCategory').val(),orderid:orderid},
                     success:function(data){

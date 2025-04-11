@@ -25,6 +25,8 @@ public partial class Table
 
     public int Modifiedby { get; set; }
 
+    public string? Statusname { get; set; }
+
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 
     public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();

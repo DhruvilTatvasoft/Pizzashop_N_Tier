@@ -6,16 +6,15 @@
 </div>
 <script>
      $("document").ready(()=>{
-        loadKot();
+        @* loadKot(); *@
+        loadTables();
      })
-
     function loadKot(){
         $.ajax({
                url:'@Url.Action("getKot","OrderApp")',
                 method: 'GET',
                 success: function (data) {
                      $('.loadTabBody').html(data);
-
                 }
             });
     }

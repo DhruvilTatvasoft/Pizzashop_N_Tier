@@ -25,6 +25,11 @@ public class TableImpl : ITableService
         return _tableRepository.getAllTables();
     }
 
+    public TableViewModel GetAllTablesAndSections()
+    {
+        return _tableRepository.GetAllTablesAndSections();
+    }
+
     public Table gettablebyid(int tableid)
     {
         return _tableRepository.gettablebyid(tableid);

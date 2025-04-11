@@ -448,18 +448,6 @@ public class OrderRepository : IOrderRepository
 }
 
 
-    public Item LoadQuantitiesForItem(Item item, int orderid)
-    {
-        List<Ordermodifier> items = _context.Ordermodifiers.Where(om => om.Itemid == item.Itemid && om.Orderid == orderid).ToList();
-        int itemQuantity = 0;
-        foreach (var item1 in items)
-        {
-            itemQuantity += item1.Orderitemquantity ?? 0;
-        }
-        item.Itemquantity = itemQuantity;
-        return item;
-    }
-
     public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
@@ -482,8 +470,6 @@ public class OrderRepository : IOrderRepository
             if (dbItem == null)
                 continue;
 
-           
-            
 
             var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
             if (orderItem == null)
@@ -520,6 +506,7 @@ public class OrderRepository : IOrderRepository
             var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == pair.Key);
             orderedItem!.Readyitemquanitiy = pair.Value;
             _context.Orderitems.Update(orderedItem);
+            
         }
         _context.SaveChanges();
     }

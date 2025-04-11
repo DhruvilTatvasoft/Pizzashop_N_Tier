@@ -1,0 +1,147 @@
+@model TableViewModel
+@foreach(var pair in @Model.tablesPerSection){ 
+		<div class="accordion-item mb-2">
+			<h2 class="accordion-header" id="headingOne">
+				<div class="d-flex">
+					<button class="accordion-button ps-3" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+						<div class="ms-2 w-100">
+							<div class="d-flex justify-content-between align-items-center">
+								<label for="">@pair.Key.section.Sectionname</label>
+								<div class="d-flex align-items-center">
+									<li class="me-3  mark-grey">@pair.Key.AvailableTablesCount</li>
+									<ul style="list-style-type: circle;" class="ps-3 mb-0">
+										<li class="me-3 mark-green"></li>
+									</ul>
+									<li class="me-3 mark-green-filled">@pair.Key.AssignedTablesCount</li>
+									<li class="me-2 mark-blue">@pair.Key.RunningTablesCount</li>
+								</div>
+							</div>
+						</div>
+					</button>
+					<div style="width:12%;padding:5px;border-bottom: 1px solid #dee2e6;" class="d-flex justify-content-center align-items-center pe-4">
+						<button class="btn btnoutlinecolour" style="font-size: 14px;height: 100%;">+ Waiting Token</button>
+					</div>
+				</div>
+			</h2>
+			<div id="collapseOne" class="accordion-collapse collapse show" aria-labelledby="headingOne" data-bs-parent="#accordionExample">
+				<div class="accordion-body">
+					<div class="d-flex row ">
+                            @foreach(var table in pair.Values){
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="@table.Statusname-table">
+								<div class="d-flex flex-column">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">@table.Tablename</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+
+							}
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="RunningTable">
+								<div class="d-flex flex-column">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">T1</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="AvailableTable">
+								<div class="d-flex flex-column">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">T1</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="AssignedTable">
+								<div class="d-flex flex-column">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">T1</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="AvailableTable">
+								<div class="d-flex flex-column">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">T1</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class=" p-2 ps-3 col-2 mb-2" style="font-size: 12px;">
+							<div class="RunningTable">
+								<div class="d-flex flex-column ">
+									<div class="d-flex justify-content-between align-items-center">
+										<h6 for="">T1</h6>
+										<label for="">142.00</label>
+									</div>
+									<div class="d-flex justify-content-between align-items-center mb-1">
+										<img src="~/images/icons8-group-30.png" style="width: 15px;" alt="">
+										<img src="~/images/clock-fill copy 2.svg" alt="" class="me-5">
+									</div>
+									<div class="d-flex justify-content-between align-items-center">
+										<label for="">11</label>
+										<label for="" style="font-size: 12px;" class="w-50">4 days 5 hours 23 min 12 sec</label>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+}
+		
+
+	

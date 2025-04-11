@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "7vnDjq9D7paVWCweF11J5wsTsR8RMePYM8eFAJQWp8M=",
+  "Hash": "D/jZrerrx7fkWNI6iHhDreN/I9dMlvRqXDhRiAFQEkE=",
   "Source": "pizzashop_n_tier",
   "BasePath": "_content/pizzashop_n_tier",
   "Mode": "Default",
@@ -355,6 +355,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\css\\showuser.css"
+    },
+    {
+      "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\table.css",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "css/table.css",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\css\\table.css"
     },
     {
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\tableAndSection.css",
@@ -969,6 +986,23 @@
       "OriginalItemSpec": "wwwroot\\images\\icons8-customer-64.png"
     },
     {
+      "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-down-button-50.png",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/icons8-down-button-50.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\icons8-down-button-50.png"
+    },
+    {
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-export-26.png",
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
@@ -1035,6 +1069,23 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\icons8-google-48.png"
+    },
+    {
+      "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-group-30.png",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/icons8-group-30.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\icons8-group-30.png"
     },
     {
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-manager-64.png",

@@ -18,12 +18,12 @@
    
     function loadOrdersForcategory(categoryid,IsReady) {
         $.ajax({
-            url:"@Url.Action("loadOrdersPerCategory","OrderApp")",
+            url:"@Url.Action("loadOrdersPerCategory","Kot")",
             type:'GET',
             data:{categoryid : categoryid,IsReady: IsReady},
             success:function(data){
                 $('.cardContainer').html(data);
-                console.log()
+                
             }
         });
     }

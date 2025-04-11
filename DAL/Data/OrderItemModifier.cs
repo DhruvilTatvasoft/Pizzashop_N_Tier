@@ -11,8 +11,6 @@ public partial class OrderItemModifier
 
     public int? Modifierid { get; set; }
 
-    public int? Modifierquantity { get; set; }
-
     public int? Orderitemdetailid { get; set; }
 
     public int? Orderid { get; set; }

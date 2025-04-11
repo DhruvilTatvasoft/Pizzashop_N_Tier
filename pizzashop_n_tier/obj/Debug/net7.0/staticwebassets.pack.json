@@ -89,6 +89,10 @@
       "PackagePath": "staticwebassets\\css\\showuser.css"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\table.css",
+      "PackagePath": "staticwebassets\\css\\table.css"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\css\\tableAndSection.css",
       "PackagePath": "staticwebassets\\css\\tableAndSection.css"
     },
@@ -253,6 +257,10 @@
       "PackagePath": "staticwebassets\\images\\icons8-customer-64.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-down-button-50.png",
+      "PackagePath": "staticwebassets\\images\\icons8-down-button-50.png"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-export-26.png",
       "PackagePath": "staticwebassets\\images\\icons8-export-26.png"
     },
@@ -267,6 +275,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-google-48.png",
       "PackagePath": "staticwebassets\\images\\icons8-google-48.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-group-30.png",
+      "PackagePath": "staticwebassets\\images\\icons8-group-30.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\icons8-manager-64.png",

@@ -1,0 +1,75 @@
+h1{
+    font-weight: bold;
+    color: #0066A7;
+}
+.mark-grey::marker{
+    color: grey;
+}
+.mark-green::marker{
+    color: rgb(25, 195, 87);
+    list-style-type: circle;
+}
+.mark-green-filled::marker{
+    color: rgb(25, 195, 87);
+}
+.mark-blue::marker{
+    color:rgb(9, 189, 249) ;
+}   
+.accordion-button::after {
+    flex-shrink: 0;
+    width: var(--bs-accordion-btn-icon-width);
+    height: var(--bs-accordion-btn-icon-width);
+    margin-left: 0;
+    order: -1;
+    content: "";
+    background-image: var(--bs-accordion-btn-icon);
+    background-repeat: no-repeat;
+    background-size: var(--bs-accordion-btn-icon-width);
+    transition: var(--bs-accordion-btn-icon-transition);
+}
+h6{
+    color: #0066A7;
+}
+.Running-Table{
+    min-width: 15%;
+    min-height: 111px;
+    background-color: #9ed3ff;
+    border-radius: 4px;
+    padding: 5%;
+   
+}
+.Available-Table{
+    min-width: 15%;
+    min-height: 111px;
+    background-color: rgb(234, 229, 229);
+    border-radius: 4px;
+    padding: 5%;
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+.selectedTable{
+    min-width: 15%;
+    min-height: 111px;
+    background-color: rgb(193, 193, 193);
+    padding: 5%;
+    border-radius: 4px;
+    border:2px solid rgb(25, 195, 87);
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+}
+.Assigned-Table{
+    min-width: 15%;
+    min-height: 111px;
+    background-color: rgb(170, 253, 159);
+    border-radius: 4px;
+    padding: 5%;
+}
+.accordion-button{
+    padding: 5px;
+}
+
+.accordion-button:not(.collapsed) {
+    color: var(--bs-accordion-active-color);
+    background-color: white;
+    box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);
+}

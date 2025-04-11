@@ -18,7 +18,7 @@
 
   function loadCategoryNavbar() {
     $.ajax({
-      url: '@Url.Action("loadCategoryNavbar", "OrderApp")',
+      url: '@Url.Action("loadCategoryNavbar", "Kot")',
       type: 'GET',
       success: function (data) {
         $('.categoryNavbarContainer').html(data);
@@ -41,7 +41,7 @@
     }
 
     $.ajax({
-      url: "@Url.Action("changeReadyQuantity", "OrderApp")",
+      url: "@Url.Action("changeReadyQuantity", "Kot")",
       type: "POST",
       data: data,
       contentType: false,
@@ -68,7 +68,7 @@
 
   function loadOrders() {
     $.ajax({
-      url: '@Url.Action("loadOrdersPerCategory", "OrderApp")',
+      url: '@Url.Action("loadOrdersPerCategory", "Kot")',
       type: 'GET',
       data: { categoryid: 0 },
       success: function (data) {
