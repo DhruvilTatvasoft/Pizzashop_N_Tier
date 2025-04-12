@@ -10,7 +10,7 @@ public class LoginController : Controller
     private readonly ICookieService _CookieService;
 
     private readonly ILogin _log;
-
+    private readonly IJwtTokenGenService _jwtTokenGenService;
     private readonly IConfiguration _configuration;
 
     private readonly IEmailGenService _emailGenService;
@@ -19,7 +19,7 @@ public class LoginController : Controller
 
     private readonly IImagePath _imageService;
 
-    public LoginController(ILogger<LoginController> logger, IImagePath imageService, ICookieService cookieService, IAESService AesService, ILogin log, IEmailGenService emailGenService)
+    public LoginController(ILogger<LoginController> logger, IImagePath imageService, ICookieService cookieService, IAESService AesService, ILogin log, IEmailGenService emailGenService,IJwtTokenGenService jwtTokenGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
@@ -27,20 +27,31 @@ public class LoginController : Controller
         _emailGenService = emailGenService;
         _imageService = imageService;
         _aesservice = AesService;
+        _jwtTokenGenService = jwtTokenGenService;
     }
     [HttpGet]
     public IActionResult Index()
     {
-        var req = HttpContext.Request;
-        if (_CookieService.IsSetCookie(req, "token"))
-        {
-            Console.WriteLine("OK");
+         var request = HttpContext.Request;
+         if (_CookieService.IsSetCookie(request, "token"))
+    {
+        var token = _CookieService.getValueFromCookie("token", request);
 
-            TempData["ToastrMessage"] = "Logged in Successfully";
-            TempData["ToastrType"] = "success";
+        var principal = _jwtTokenGenService.ValidateToken(token);
+
+        if (principal != null)
+        {
             return RedirectToAction("showDashboard", "Dashboard");
         }
-        return View();
+        else
+        {
+            Console.WriteLine("Token is expired or invalid.");
+            Response.Cookies.Delete("token");
+        }
+    }
+
+    // Show login page
+    return View();
     }
     [HttpPost]
     public IActionResult Index(LoginViewModel lgnmdl)

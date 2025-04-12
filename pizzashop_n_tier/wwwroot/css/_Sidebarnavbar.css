@@ -53,9 +53,13 @@ html,
         background-color: transparent;
 
     }
+    .dropdown-menu{
+        --bs-dropdown-min-width: 10rem;
+        width: 18rem;
+    }
     .dropdown-menu[data-bs-popper] {
         top: 100%;
-        left: -227%;
+        left: -182%;
         margin-top: var(--bs-dropdown-spacer);
     }
 

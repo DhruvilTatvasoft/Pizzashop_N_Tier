@@ -18,7 +18,7 @@ public class JwtTokenImple : IJwtTokenGenService
     public JwtTokenImple(IConfiguration configuration, IRoleAndPermissionRepository roleAndPermissionRepository)
     {
         _configuration = configuration;
-        _key = configuration["Jwt:Key"];
+        _key = configuration["Jwt:SecretKey"];
         _issuer = configuration["Jwt:Issuer"];
         _audience = configuration["Jwt:Audience"];
         _roleAndPermissionRepository = roleAndPermissionRepository;

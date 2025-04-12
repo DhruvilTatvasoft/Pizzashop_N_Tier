@@ -120,7 +120,7 @@ public class ModifierRepository : IModifierRepository
 
     public List<Modifier> getSearchedModifier(string searchedModifier)
     {
-        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim())).GroupBy(m => new { ModifierName = m.Modifiername.Trim() })
+        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim()) && m.Isdeleted == false).GroupBy(m => new { ModifierName = m.Modifiername.Trim() })
                     .Select(g => g.First()).ToList();
         modifiers.ForEach(m =>
         {
@@ -324,7 +324,7 @@ public class ModifierRepository : IModifierRepository
         {
             modifierGroupids.Add(modifierModel.ModifiergroupId);
         }
-        List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier => itemModifier.Itemid == itemid).Select(itemModifier => itemModifier.Modifiergroupid).ToList();
+        List<int> modifiergroupIdsForItem = _context.Itemsandmodifiers.Where(itemModifier => itemModifier.Itemid == itemid && itemModifier.Isdeleted == false ).Select(itemModifier => itemModifier.Modifiergroupid).ToList();
         List<int> deleteModifierGroups = modifiergroupIdsForItem.Except(modifierGroupids).ToList();
         List<int> AddModifierGroups = modifierGroupids.Except(modifiergroupIdsForItem).ToList();
         foreach (var item in model)
@@ -343,7 +343,7 @@ public class ModifierRepository : IModifierRepository
                 _context.Itemsandmodifiers.Add(im);
                 _context.SaveChanges();
             }
-            else if (!deleteModifierGroups.Contains(item.ModifiergroupId))
+            else if (!deleteModifierGroups.Contains(item.ModifiergroupId) && !AddModifierGroups.Contains(item.ModifiergroupId))
             {
                 Itemsandmodifier im = _context.Itemsandmodifiers.FirstOrDefault(im => im.Modifiergroupid == item.ModifiergroupId && im.Itemid == itemid);
                 im.Itemid = itemid ?? 1;

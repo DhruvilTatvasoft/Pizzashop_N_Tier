@@ -22,6 +22,13 @@ nav a {
     background-color: #c6c6c6;
     opacity: 1;
 }
+.input-group>.form-control, .input-group>.form-floating, .input-group>.form-select {
+    position: relative;
+    flex: 1 1 auto;
+    width: 1%;
+    min-width: 0;
+    padding: 2%;
+}
 
 
 nav {

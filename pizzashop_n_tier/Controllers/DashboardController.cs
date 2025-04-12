@@ -111,34 +111,45 @@ public class DashboardController : Controller
         return View();
     }
 
-    [HttpPost]
-    public IActionResult ResetPassword(chang_p_model model)
+    public IActionResult loadResetPassView(){
+        chang_p_model model = new chang_p_model();
+        return PartialView("_resetPasswordForm",model);
+    }
+
+   [HttpPost]
+public IActionResult ResetPassword(chang_p_model model)
+{
+    var req = HttpContext.Request;
+    string email = _cookieService.getValueFromCookie("username", req);
+    string password = _cookieService.getValueFromCookie("password", req);
+    
+    if (ModelState.IsValid)
     {
-        var req = HttpContext.Request;
-        string email = _cookieService.getValueFromCookie("username", req);
-        string password = _cookieService.getValueFromCookie("password", req);
-        if (ModelState.IsValid)
+        
+        bool passwordUpdated = _user.changePass(req, model, email, password);
+
+        if (passwordUpdated)
         {
-            if (_user.changePass(req, model, email, password))
-            {
-                var res = HttpContext.Response;
-                TempData["ToastrMessage"] = "Password Changed successfully";
-                TempData["ToastrType"] = "success";
-                return RedirectToAction("Index", "LoginController");
-            }
-            else
-            {
-                ModelState.AddModelError("oldpass", "Please enter correct Password");
-                TempData["ToastrMessage"] = "Incorrect current password";
-                TempData["ToastrType"] = "error";
-                return View(model);
-            }
+            TempData["ToastrMessage"] = "Password Changed successfully";
+            TempData["ToastrType"] = "success";
+            return RedirectToAction("Index", "LoginController");
         }
         else
         {
+            // Adding error if password change fails
+            ModelState.AddModelError("oldpass", "Please enter the correct current password");
+            TempData["ToastrMessage"] = "Incorrect current password";
+            TempData["ToastrType"] = "error";
             return View(model);
         }
     }
+    else
+    {
+        // Return the model with validation errors
+        return View(model);
+    }
+}
+
     public IActionResult Logout()
     {
         HttpContext.Response.Cookies.Delete("token");

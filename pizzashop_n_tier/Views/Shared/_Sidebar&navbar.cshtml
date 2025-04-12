@@ -2,6 +2,7 @@
 @inject IAuthorizationService AuthorizationService
 @{
     string imagepath = Context.Request.Cookies["UserImage"]?? "/images/Default_pfp.svg.png";
+    string username = Context.Request.Cookies["username"];
     var canViewForUser = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
     var canViewForRoleAndPermission = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
     var canViewForCustomers = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
@@ -44,7 +45,7 @@
                 <div class="dropdown me-5 d-flex align-items-center" style="margin-left: auto;">
                     @if(User.IsInRole("Admin")){
                     <a href="@Url.Action("getOrderAppPage", "OrderApp")" class="me-3" >
-                        <img src="~/images/phone.svg" style="width:160%;"alt="">
+                        <img src="~/images/phone.svg" style="width:29px;"alt="">
                     </a>
                     }
                     <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
@@ -52,6 +53,7 @@
                         <a href=""> <img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
                     </button>
                     <ul class="dropdown-menu">
+                        <li><img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;">@username</li>
                         <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile"><img src="~/images/account.png" class="me-2" alt="">My profile</a>
                         </li>
                         <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword"><img src="~/images/reload.png" class="me-2" alt="">Change

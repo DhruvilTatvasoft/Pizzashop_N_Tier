@@ -76,22 +76,33 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                     Console.WriteLine("No token found in cookie!");
                 }
                 return Task.CompletedTask;
+            },
+            OnAuthenticationFailed = context =>
+            {
+                Console.WriteLine("Authentication failed: " + context.Exception.Message);
+                if (context.Exception is SecurityTokenExpiredException)
+                {
+                    context.Response.Redirect("/Login/Index?error=expired");
+                    context.Response.StatusCode = StatusCodes.Status401Unauthorized;
+                    // await context.Response.WriteAsync("Authentication failed: Token expired."); // Write custom response
+                }
+                return Task.CompletedTask;
+            },
+            OnChallenge = context =>
+            {
+                if (!context.Response.HasStarted)
+                {
+                    context.Response.Redirect("/Login/Index?error=unauthorized");
+                    context.HandleResponse(); // prevents default 401 response
+                }
+                return Task.CompletedTask;
             }
-            // OnAuthenticationFailed = context =>
-            // {
-            //     Console.WriteLine("Authentication failed: " + context.Exception.Message);
-            //     return Task.CompletedTask;
-            // },
-            // OnChallenge = context =>
-            // {
-            //     Console.WriteLine("Authorization challenge: Access denied.");
-            //     return Task.CompletedTask;
-            // }
         };
         options.TokenValidationParameters = new TokenValidationParameters
         {
             ValidateIssuerSigningKey = true,
-            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(builder.Configuration["JWT:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured."))),
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
+                builder.Configuration["JWT:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured."))),
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidIssuer = builder.Configuration["JWT:Issuer"],
@@ -100,7 +111,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ClockSkew = TimeSpan.Zero
         };
     });
-
 builder.Services.AddAuthorization(options =>
 {
     var entities = new[] { "Users", "RolesAndPermissions", "Menu", "TableAndSection", "TaxAndFee", "Order", "Customers" };
