@@ -166,3 +166,22 @@ public class ItemViewModel{
     }
 
 }
+
+public class ModifierModel{
+
+    public List<Modifiergroup> modifiergroups{get;set;}
+    public int Modifiergroupid{get;set;}
+
+    public string Modifiername{get;set;}
+
+    public Modifiergroup modifiergroup{get;set;}
+    public int Modifierquantity{get;set;}
+    public int Modifierrate{get;set;}
+    public List<Unit> units{get;set;}
+    public string Description{get;set;}
+    public string payload{get;set;}
+
+    public List<int> ModifierIds{get;set;}
+    public Modifier modifier{get;set;}
+
+}

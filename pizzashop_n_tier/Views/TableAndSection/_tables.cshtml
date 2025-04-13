@@ -71,8 +71,11 @@ Layout = null;
           <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
         </select>
       </div>
-<label for="" class="me-2">Showing 1-5 of 13</label>
-    <div class="d-flex mt-1">
+@{
+    int startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+    int endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalTables);
+}
+<label for="" class="me-2">Showing @startRecord-@endRecord of @Model.TotalTables</label>    <div class="d-flex mt-1">
 
 @if(Model.PageNumber > 1){
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1),@Model.PageSize)"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
@@ -103,39 +106,25 @@ else{
     
 
 <script>
-   document.getElementById('flexCheckDefault').addEventListener('change', function () {
-    const checkboxes = document.querySelectorAll('.checkedTable');
-    checkboxes.forEach(checkbox => {
-        checkbox.checked = this.checked;
-    });
+
+document.getElementById('flexCheckDefault').addEventListener('change', function () {
+    const isChecked = this.checked;
+    document.querySelectorAll('.checkedTable').forEach(cb => cb.checked = isChecked);
 });
 
- $(".pagesize").on("change", function () {
+
+$(document).on('change', '.checkedTable', function () {
+    const all = $('.checkedTable').length;
+    const checked = $('.checkedTable:checked').length;
+
+    $('#flexCheckDefault').prop('checked', all === checked);
+});
+
+$(".pagesize").on("change", function () {
     var sectionId = $("#sectionIdFortables").val() || 1; 
-    loadTableData(sectionId, 1,this.value); 
+    loadTableData(sectionId, 1, this.value); 
 });
-
-
 </script>
 
 
-   
-
-  @* <script>
-   function openEditModal(tableid){
-            $("#EditTableModal").modal('show');
-      $.ajax({
-         url:'@Url.Action("updatetableGet","TableAndSection")',
-         type:'GET',
-         data:{tableid:tableid},
-         success:function(data){
-            $("#EditTableModal").find('#tableName').val(data.table.TableName);
-            $("#EditTableModal").find('#tableSection').val(data.table.Sectionid);
-            $("#EditTableModal").find('#tableCapacity').val(data.table.Capacity);
-            $("#EditTableModal").find('#tableStatus').val(data.table.Status);
-         }
-      })
-   }
-
-  </script> *@
   

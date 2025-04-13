@@ -169,6 +169,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return View(model);
     }
     [HttpPost]
+    [Authorize(Policy="CanEdit_Users")]
     public IActionResult AddUser(UserDetailModel model)
     {
         model.Role = _user.getRoles();
@@ -230,6 +231,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return Json(new SelectList(states, "Stateid", "Statename"));
     }
     [HttpPost]
+    [Authorize(Policy="CanDelete_Users")]
     public IActionResult DeleteUser(int Id)
     {
         _user.deleteUser(Id);
@@ -238,6 +240,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return View("showUsers");
     }
     [HttpGet]
+    [Authorize(Policy="CanEdit_Users")]
     public IActionResult EditUser(int Id)
     {
 
@@ -284,6 +287,7 @@ public IActionResult ResetPassword(chang_p_model model)
         model.Role = _user.getAllRoles();
         return View(model);
     }
+    [Authorize(Policy="CanView_Users")]
     public IActionResult showUsers()
     {
         return View();
@@ -302,6 +306,7 @@ public IActionResult ResetPassword(chang_p_model model)
 
 
     [HttpPost]
+    // [Authorize(Policy="CanEdit_RolesAndPermissions")]
     public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
     {
         _permissionService.UpdatePermissions(model);

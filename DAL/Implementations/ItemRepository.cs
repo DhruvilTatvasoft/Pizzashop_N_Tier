@@ -130,7 +130,7 @@ public class ItemRepository : IItemRepository
 
     public List<Modifiergroup> getAllModifierGroups()
     {
-        List<Modifiergroup> modifiergroups = _context.Modifiergroups.ToList();
+        List<Modifiergroup> modifiergroups = _context.Modifiergroups.Where(mg=>mg.Isdeleted == false).ToList();
         return modifiergroups;
     }
 

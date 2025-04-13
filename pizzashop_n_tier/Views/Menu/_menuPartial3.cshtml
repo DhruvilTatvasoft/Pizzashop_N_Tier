@@ -92,7 +92,11 @@
             </select>
         </div>
     </div>
-    <label for="" class="me-2">Showing 1-5 of 13</label>
+    @{
+    int startRecord = ((Model.pageNumber - 1) * Model.pageSize) + 1;
+    int endRecord = Math.Min(Model.pageNumber * Model.pageSize, Model.totalrecords ?? 0);
+}
+<label for="" class="me-2">Showing @startRecord-@endRecord of @Model.totalrecords</label>
     <div class="d-flex mt-1">
         @if(Model.pageNumber > 1){
         <button type="button" class="btn btn-outline-dark btn2" onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber-1))" style="padding: 6px;"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
@@ -121,4 +125,16 @@
              loadTableData(selectedCategoryId,$(".pageSize").val(),1)
              console.log("page size changed to "+$(".pageSize").val())
 });
+
+
+$(document).on('change', '.checkedItems', function () {
+    let allChecked = $('.checkedItems').length === $('.checkedItems:checked').length;
+    $('#flexCheckDefault').prop('checked', allChecked);
+});
+
+
+$(document).on('change', '#flexCheckDefault', function () {
+    $('.checkedItems').prop('checked', this.checked);
+});
+
 </script>

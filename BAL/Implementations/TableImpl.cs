@@ -30,14 +30,15 @@ public class TableImpl : ITableService
         return _tableRepository.GetAllTablesAndSections();
     }
 
+
     public Table gettablebyid(int tableid)
     {
         return _tableRepository.gettablebyid(tableid);
     }
 
-    public TableAndSectionViewModel getTablesForsection(int sectionid,int pageNumber, int pageSize)
+    public TableAndSectionViewModel getTablesForsection(int sectionid,int pageNumber, int pageSize,string? searchedTable)
     {
-        return _tableRepository.getTablesForSection(sectionid,pageNumber,pageSize);
+        return _tableRepository.getTablesForSection(sectionid,pageNumber,pageSize,searchedTable);
     }
 
     public bool isOccupied(int tableid)

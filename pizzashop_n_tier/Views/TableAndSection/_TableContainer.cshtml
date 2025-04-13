@@ -6,7 +6,7 @@
   <div class="d-flex justify-content-end w-100 m-3 ">
 
     <div class="me-3">
-      <input type="email" class="form-control h-100 " id="searchedTable" placeholder="Search">
+      <input type="email" class="form-control h-100 " onkeyup="loadTableData(@Model.sectionId,1)" id="searchedTable" placeholder="Search">
       <input type="hidden" class="form-control h-100 " id="HiddenSectionId" asp-for="sectionId">
     </div>
     <button class="btn btn-outline-secondary me-2" id="deleteMultipleTables"
@@ -87,6 +87,8 @@
 
 
   <script>
+
+   
 
     $("document").ready(function () {
       loadTableData(@Model.sectionId, @Model.PageNumber);

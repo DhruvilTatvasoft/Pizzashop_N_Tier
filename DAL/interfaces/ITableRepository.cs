@@ -6,7 +6,7 @@ public interface ITableRepository{
     int getAllTables();
     TableViewModel GetAllTablesAndSections();
     Table gettablebyid(int tableid);
-    TableAndSectionViewModel getTablesForSection(int sectionid,int pageNumber, int pageSize);
+    TableAndSectionViewModel getTablesForSection(int sectionid,int pageNumber, int pageSize,string? searchedTable);
     bool isOccupied(int tableid);
     bool updateTable(Table table);
 }

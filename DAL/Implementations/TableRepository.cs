@@ -58,11 +58,22 @@ public class TableRepository : ITableRepository
        return _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
     }
 
-    public TableAndSectionViewModel getTablesForSection(int sectionId, int pageNumber, int pageSize)
+    public TableAndSectionViewModel getTablesForSection(int sectionId, int pageNumber, int pageSize,string? searchedTable)
 {
-    var query = _context.Tables
+    IQueryable<Table> query;
+   if (!string.IsNullOrWhiteSpace(searchedTable))
+{
+    query = _context.Tables
+        .Where(t => t.Sectionid == sectionId 
+                    && t.Isdeleted == false 
+                    && t.Tablename.ToLower().Trim().Contains(searchedTable.ToLower().Trim()));
+}
+    else{
+     query = _context.Tables
                    .Where(t => t.Sectionid == sectionId && t.Isdeleted == false);
+    }
     TableAndSectionViewModel model = new TableAndSectionViewModel();
+    model.sectionId = sectionId;
     model.TotalTables = query.ToList().Count();
     model.PageSize = pageSize;
     model.PageNumber = pageNumber;
@@ -117,4 +128,6 @@ public class TableRepository : ITableRepository
         return model;
 
     }
+
+    
 }

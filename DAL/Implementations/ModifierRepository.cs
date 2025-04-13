@@ -31,7 +31,7 @@ public class ModifierRepository : IModifierRepository
     }
     public Modifiergroup GetModifiergroup(int ModifierGroupId)
     {
-        Modifiergroup m = _context.Modifiergroups.FirstOrDefault(mg => mg.Modifiergroupid == ModifierGroupId) ?? new Modifiergroup();
+        Modifiergroup m = _context.Modifiergroups.FirstOrDefault(mg => mg.Modifiergroupid == ModifierGroupId && mg.Isdeleted == false) ?? new Modifiergroup();
         return m;
     }
 

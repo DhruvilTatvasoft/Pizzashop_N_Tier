@@ -106,7 +106,11 @@
           <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
         </select>
       </div>
-<label for="" class="me-2">Showing 1-5 of 13</label>
+@{
+    int startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+    int endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalOrders);
+}
+<label for="" class="me-2">Showing @startRecord-@endRecord of @Model.TotalOrders</label>
     <div class="d-flex mt-1">
       
     @if(Model.PageNumber > 1){

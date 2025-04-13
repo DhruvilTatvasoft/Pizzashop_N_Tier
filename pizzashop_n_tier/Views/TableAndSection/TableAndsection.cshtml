@@ -40,6 +40,10 @@
                 cache:false,
                 success: function(data){
                     $(".sectionsidebar").html(data);
+                     $(".section").on("click", function () {
+                $(".section").removeClass("active-section");
+                $(this).addClass("active-section");
+            });
                 }
             })
         }
@@ -47,6 +51,7 @@
     function loadTableData (sectionId, pageNumber,pageSize) {
 
     console.log(pageSize);
+    pageSize = $('.pagesize').val()
 
     $.ajax({
         url: '@Url.Action("LoadTableDataForSection", "TableAndSection")',
@@ -55,7 +60,8 @@
         data: {
             sectionId: sectionId,
             pageNumber: pageNumber,
-            pageSize: pageSize
+            pageSize: pageSize,
+            searchTable:$('#searchedTable').val()
         },
         success: function (data) {
             $(".t-contain").html(data);
@@ -73,6 +79,7 @@
                 data:{sectionId : sectionId},
                 success:function(data){
                     $(".tablebody").html(data);
+                    
                 }
             });
         };

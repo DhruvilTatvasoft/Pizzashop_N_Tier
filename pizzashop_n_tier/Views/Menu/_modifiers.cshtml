@@ -6,7 +6,6 @@
             onclick="deleteModifierGroup(@Model.modifiergroup.Modifiergroupid)" alt="">
     </div>
    <input  class="modifiergroupID" value="@Model.modifiergroup.Modifiergroupid" hidden>
-   @* <input type="text" id="modifiergroupid_@Model.mg.Modifiergroupid" asp-for="@Model.ids[@Model.mg.Modifiergroupid]" value="@Model.mg.Modifiergroupid" hidden> *@
     <div class="d-flex">
         <select class="form-select form-select-lg mb-3 w-25 min_value"  style="font-size:0.75rem"
             aria-label=".form-select-lg example">
@@ -33,22 +32,21 @@
         </select>
     </div>
     <ul class="">
-                                              @if(Model.modifiers.Count <= 0){
-                                                    <div class="d-flex align-items-center mt-0 ps-4">
-                                                        <img src="~/images/exclamation-circle-fill.svg" class="pe-3 pt-0" alt="">
-                                                        <label for="" class="pt-0">No records found</label>
-                                                    </div>
-                                                }
-                                                else{
-                                                @foreach (var m in @Model.modifiers)
-                                                {
-                                                    <div class="d-flex justify-content-between">
-                                                        <li class="pb-1 pt-1 w-75" style="list-style-type: circle;">@m.Modifiername</li>
-                                                        <li class="pb-1 pt-1 w-25">@m.Modifierrate</li>
-                                                    </div>
-                                                }
-
-                                                }
+    @if(Model.modifiers.Count <= 0){
+            <div class="d-flex align-items-center mt-0 ps-4">
+                <img src="~/images/exclamation-circle-fill.svg" class="pe-3 pt-0" alt="">
+                <label for="" class="pt-0">No records found</label>
+            </div>
+        }
+    else{
+        @foreach (var m in @Model.modifiers)
+        {
+            <div class="d-flex justify-content-between">
+                    <li class="pb-1 pt-1 w-75" style="list-style-type: circle;">@m.Modifiername</li>
+                    <li class="pb-1 pt-1 w-25">@m.Modifierrate</li>
+            </div>
+        }
+    }
     </ul>
 </div>
 

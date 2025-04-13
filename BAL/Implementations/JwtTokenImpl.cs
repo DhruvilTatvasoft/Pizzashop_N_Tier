@@ -45,15 +45,16 @@ public class JwtTokenImple : IJwtTokenGenService
     };
 
         
-        foreach (var permission in AllPermissions)
-        {
-            if (permission != null && _roleAndPermissionRepository.getPermissionName(permission.Permissionid) != null)
-            {
-                claims.Add(new Claim("CanView_" + _roleAndPermissionRepository.getPermissionName(permission.Permissionid), permission.Canview.ToString()));
-                claims.Add(new Claim("CanEdit_" + _roleAndPermissionRepository.getPermissionName(permission.Permissionid), permission.Canedit.ToString()));
-                claims.Add(new Claim("CanDelete_" + _roleAndPermissionRepository.getPermissionName(permission.Permissionid), permission.Candelete.ToString()));
-            }
-        }
+       foreach (var permission in AllPermissions)
+{
+    var permissionName = _roleAndPermissionRepository.getPermissionName(permission.Permissionid)?.Trim();
+    if (permission != null && !string.IsNullOrWhiteSpace(permissionName))
+    {
+        claims.Add(new Claim("CanView_" + permissionName, permission.Canview.ToString()));
+        claims.Add(new Claim("CanEdit_" + permissionName, permission.Canedit.ToString()));
+        claims.Add(new Claim("CanDelete_" + permissionName, permission.Candelete.ToString()));
+    }
+}
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
