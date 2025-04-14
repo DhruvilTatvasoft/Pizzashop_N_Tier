@@ -5,17 +5,49 @@
 
 </div>
 <script>
-     $("document").ready(()=>{
-        @* loadKot(); *@
-        loadTables();
+     $("document").ready(() => {
+          @* loadKot(); *@
+         loadwaitingList()
      })
-    function loadKot(){
-        $.ajax({
-               url:'@Url.Action("getKot","OrderApp")',
-                method: 'GET',
-                success: function (data) {
-                     $('.loadTabBody').html(data);
-                }
-            });
-    }
+    
+     function loadKot() {
+          $.ajax({
+               url: '@Url.Action("getKot", "OrderApp")',
+               method: 'GET',
+               success: function (data) {
+                    $('.loadTabBody').html(data);
+                    }
+               });
+          }
+     function loadTables() {
+          $.ajax({
+                    url: "@Url.Action("getTables", "OrderApp")",
+                    method: "GET",
+                    success: function (data) {
+                         $(".loadTabBody").html(data);
+                    }
+               });
+          }
+     function loadwaitingList(){
+          $.ajax({
+               url:'@Url.Action("getWaitingTokenPage","OrderApp")',
+               method:"GET",
+               success:function(data){
+                         $(".loadTabBody").html(data);
+               }
+          })
+     }
+     $(document).on('click', '.Available-Table', function () {
+          $(this).removeClass('Available-Table').addClass('selectedTable');
+          setTimeout(1)
+          if ($('.selectedTable').length > 0) {
+               $('#assignBtn').prop('disabled', false)
+          }
+     });
+     $(document).on('click', '.selectedTable', function () {
+          $(this).removeClass('selectedTable').addClass('Available-Table')
+          if ($('.selectedTable').length == 0) {
+               $('#assignBtn').prop('disabled', true)
+          }
+     });
 </script>

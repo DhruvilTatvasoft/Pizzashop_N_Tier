@@ -17,11 +17,10 @@
                     <div class="col-12 col-lg-10">
                         <div class="row overflow-hidden d-flex justify-content-end align-items-center">
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
-                                @* <div class="form-floating "> *@
+                               
                                     <input type="search" class="form-control shadow-none" id="SearchOrder"
                                         onkeyup="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')" placeholder="Search">
-                                    @* <label for="floatingInput">Search </label> *@
-                                @* </div> *@
+                                   
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
@@ -32,7 +31,7 @@
                                             <option value="@status.Orderstatusid">@status.Statusname</option>
                                         }
                                     </select>
-                                    @* <label>Selects Status</label> *@
+                                    
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
@@ -45,7 +44,7 @@
                                         <option value="Last 30 days">Last 30 days</option>
                                         <option value="Current Month">Current Month</option>
                                     </select>
-                                    @* <label>Select Time</label> *@
+                                 
                                 </div>
                             </div>
                             <div class="col-auto my-auto d-flex justify-content-end">

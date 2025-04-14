@@ -269,7 +269,7 @@ public class ModifierRepository : IModifierRepository
         return units;
     }
 
-    public void AddNewModifierGroup(Modifier modifier)
+    public void AddNewModifier(ModifierModel modifier)
     {
         try
         {
@@ -301,7 +301,7 @@ public class ModifierRepository : IModifierRepository
         return modifier;
     }
 
-    public void updateModifier(Modifier modifier, int modifierGroupId)
+    public void updateModifier(ModifierModel modifier, int modifierGroupId)
     {
         Modifier m = _context.Modifiers.FirstOrDefault(oldModifier => oldModifier.Modifierid == modifier.Modifierid);
         m.Modifiername = modifier.Modifiername;
@@ -375,11 +375,12 @@ public class ModifierRepository : IModifierRepository
         List<Modifier> modifiers1 = _context.Modifiers
                 .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid == modifierGroupId)                        
                 .ToList();
+
+                
         List<Modifier> modifiers2 = _context.Modifiers
             .Where(modifier => modifier.Isdeleted == false && modifier.Modifiergroupid != modifierGroupId)
             .ToList();
 
- 
 
         List<Modifier> finalList = new List<Modifier>();
         if (modifiers1.Count() != 0)

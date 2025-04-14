@@ -128,8 +128,8 @@
           <label for="" id="deleteText"></label>
         </div>
         <div class="modal-footer d-flex align-items-center justify-content-center" style="border: none;">
-          <button type="submit" class="btn btn-primary">Yes</button>
-          <button type="button" class="btn btn-outline-primary" data-dismiss="modal">No</button>
+          <button type="button" class="btn btn-primary" onclick="deleteModifierGroup()">Yes</button>
+          <button type="button" class="btn btn-outline-primary closeDeleteModel" data-bs-dismiss="modal">No</button>
         </div>
       </div>
     </div>
@@ -155,7 +155,7 @@
           <label for="" id="deleteModifierText"></label>
         </div>
         <div class="modal-footer d-flex align-items-center justify-content-center" style="border: none;">
-          <button type="submit" class="btn btn-primary">Yes</button>
+          <button type="submit" class="btn btn-primary" >Yes</button>
           <button type="button" class="btn btn-outline-primary" data-dismiss="modal">No</button>
         </div>
       </div>
@@ -368,6 +368,20 @@
     $("#modifierGroupIdTodelete").val(id);
   }
 
+  function deleteModifierGroup(){
+    const modifierGroupId = $("#modifierGroupIdTodelete").val();
+    alert("deleting")
+    $.ajax({
+      url: '/Menu/DeleteModifierGroup',
+      type: 'POST',
+      data: { modifierGroupId: modifierGroupId },
+      success: function () {
+        $(".closeDeleteModel").click();
+        loadModifierGroups();
+      }
+    });
+  }
+@* 
   $("#deleteModifierGroupModal").on('submit', function (e) {
     e.preventDefault();
     const modifierGroupId = $("#modifierGroupIdTodelete").val();
@@ -377,10 +391,11 @@
       type: 'POST',
       data: { modifierGroupId: modifierGroupId },
       success: function () {
+        $(".closeDeleteModel").click();
         loadModifierGroups();
       }
     });
-  });
+  }); *@
 
   function OpenDeleteModifierModal(modifierId, modifiergroupId) {
     const modal = new bootstrap.Modal(document.getElementById('deleteModifierModel'));
@@ -389,6 +404,7 @@
     document.getElementById("modifierIdTodelete").value = modifierId;
     document.getElementById("modifierGroupIdTodelete").value = modifiergroupId;
   }
+
 
   $("#deleteModifierForm").on('submit', function (e) {
     e.preventDefault();
@@ -411,7 +427,7 @@
     $.ajax({
       url: '@Url.Action("EditmodifierGet", "Menu")',
       method: 'GET',
-      data: { modifierid: Modifierid, modifierGroupId: Modifiergroupid },
+      data: { modifierid: Modifierid, modifierGroupId: Modifiergroupid},
       success: function (data) {
         $(".menubody").html(data);
         $('#addNewModifier').modal('show');

@@ -5,7 +5,7 @@
     <div class="me-3">
         <input type="text" class="form-control h-100 " placeholder="Search">
     </div>
-    
+
     <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg" onclick="deleleMultipleModifiers()" style="cursor: pointer;"
             alt=""></button>
 
@@ -32,7 +32,7 @@
 
                             <div class="col-md-6 mb-3">
 
-                                <select class="form-select" id="modifierGroup" asp-for="modifier.Modifiergroupid">
+                                <select class="form-select" id="modifierGroup" asp-for="Modifiergroupid">
                                     <option value="0">Select Modifier Group(s)</option>
                                     @foreach (var modifiergroup in @Model.modifiergroups)
                                     {
@@ -48,7 +48,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mb-3">
-                                <input type="text" class="form-control" asp-for="modifier.Modifiername"
+                                <input type="text" class="form-control" asp-for="Modifiername"
                                     id="modifierName" placeholder="Name*">
 
                                 <input type="number" id="modifierIdForUpdate" hidden>
@@ -59,7 +59,7 @@
 
                             <div class="col-md-4 mb-3">
                                 <input type="number" class="form-control" id="modifierRate"
-                                    asp-for="@Model.modifier.Modifierquantity" placeholder="Rate*">
+                                    asp-for="Modifierquantity" placeholder="Rate*">
                             </div>
 
                             @* @Model.modifier.Modifiergroupid *@
@@ -67,11 +67,11 @@
                             <div class="col-md-4 mb-3">
 
                                 <input type="number" class="form-control" id="modifierQuantity"
-                                    asp-for="@Model.modifier.Modifierrate" placeholder="Quantity*">
+                                    asp-for="Modifierrate" placeholder="Quantity*">
                             </div>
 
                             <div class="col-md-4 mb-3">
-                                <select class="form-control" id="modifierUnit" asp-for="@Model.modifier.Unitid">
+                                <select class="form-control" id="modifierUnit" asp-for="Unitid">
                                     <option>Select a unit</option>
                                     @foreach (var unit in @Model.units)
                                     {
@@ -87,13 +87,13 @@
                         </div>
                         <div class="mb-3">
                             <textarea type="" class="form-control pb-2 pt-3" id="modifierName" placeholder="Description"
-                                style="line-height: 1;" asp-for="@Model.modifier.Description"></textarea>
+                                style="line-height: 1;" asp-for="Description"></textarea>
                         </div>
 
                         <div class="modal-footer" style="border: none;">
                             <button type="submit" class="btn btn-primary" data-action="Add" id="saveNewModifier">Save</button>
                             <button type="submit" class="btn btn-primary" data-action="Update" id="updateModifier" >update</button>
-                            <button type="button" class="btn btn-outline-primary"
+                            <button type="button" class="btn btn-outline-primary cancelBtn"
                                 data-bs-dismiss="modal">Cancel</button>
                         </div>
                     </div>
@@ -101,13 +101,20 @@
             </div>
     </form>
 </div>
-
 <script>
-    function openAddModifierModal() {
-        $('#addNewModifier').modal('show');
-        $("#saveNewModifier").attr("style", "display:block");
-        $("#updateModifier").attr("style", "display:none");
-    }
+    @* function openAddModifierModal() {
+        $.ajax({
+            url:"@Url.Action("LoadModifiersPage","Menu")",
+            type: "GET",
+            success: function (data) {
+
+                $('#addNewModifier').modal('show');
+                $("#saveNewModifier").attr("style", "display:block");
+                $("#updateModifier").attr("style", "display:none");
+            }
+        });
+        
+    } *@
 
     $('document').ready(function(){
         loadModifiersForModifierGroup(2,1);

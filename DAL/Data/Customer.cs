@@ -26,4 +26,6 @@ public partial class Customer
     public int? Totalorders { get; set; }
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
+
+    public virtual ICollection<Waitingtoken> Waitingtokens { get; } = new List<Waitingtoken>();
 }

@@ -1,0 +1,27 @@
+@model WaitingTokenModel
+<link rel="stylesheet" href="~/css/_waitingList.css">
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+      <button class="nav-link active" id="nav-All-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+        role="tab" aria-controls="nav-home" aria-selected="true" onclick="loadWaitingTokensForSection(0)">
+        <div class="d-flex">
+        <label for="">All</label>
+        <div class="tokenCounter">@Model.TotalWaitingTokens</div>
+        </div>
+        </button>   
+      @foreach (var Section in Model.Sections)
+      {
+        <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab" data-bs-target="#nav-home" onclick="loadWaitingTokensForSection(@Section.Key.Sectionid)" type="button" role="tab"
+          aria-controls="nav-home" aria-selected="true">
+          <div class="d-flex">
+          <label for="">@Section.Key.Sectionname</label>
+        <div class="tokenCounter">@Section.Value</div>
+        </div>
+        </button>
+      }
+    </div>
+  </nav>
+
+  <script>
+   
+  </script>

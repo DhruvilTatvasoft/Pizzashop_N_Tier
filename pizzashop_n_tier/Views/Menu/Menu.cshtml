@@ -273,6 +273,21 @@
             });
         }
 
+        function openAddModifierModal() {
+        $.ajax({
+            url:"@Url.Action("getModifiersForModifierGp","Menu")",
+            type: "GET",
+            data: { modifierGroupId: $("#modifierGroupId").val(),pageNumber: $("#pageNumber").val(),pageSize: $('.pagesize').val()},
+            success: function (data) {
+                 $(".table-container").html(data);
+                $('#addNewModifier').modal('show');
+                $("#saveNewModifier").attr("style", "display:block");
+                $("#updateModifier").attr("style", "display:none");
+            }
+        });
+        
+    }
+
         function loadModifiersData(modifierGroupId) {
             $.ajax({
                 url: '/Menu/LoadModifiersPage',
@@ -288,8 +303,11 @@
             });
         }
 
-        $("#AddNewModifier").on("submit", function (e) {
+        $(document).on("submit","#AddNewModifier", function (e) {
             e.preventDefault();
+            var $form = $(this);
+            if ($form.data('submitting')) return;
+            $form.data('submitting', true);
             var data = new FormData(this);
             var Action = $(document.activeElement).data('action');
             var selectedModifierGroup = $('#modifierGroup').val();
@@ -316,12 +334,10 @@
                 processData: false,
                 contentType: false,
                 success: function (result) {
-                    if (document.querySelector("#addNewModifier")) {
-                        $("#addNewModifier").hide()
-                    }
+                   $(".cancelBtn").click();
+                   toastr.success(data.success);
                     console.log("data should load for modifiergroup : " + selectedModifierGroup);
-                    loadModifiersForModifierGroup(selectedModifierGroup,1);
-                    removeModalBackdrops();
+                    loadModifiersForModifierGroup(data.modifierGroupId,1);
                 }
             });
         });

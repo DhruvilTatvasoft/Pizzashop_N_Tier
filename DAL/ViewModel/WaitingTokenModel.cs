@@ -1,0 +1,35 @@
+using System.ComponentModel.DataAnnotations;
+using DAL.Data;
+
+public class WaitingTokenModel
+{
+    public int tokenId{set;get;}
+    public DateTime createdAt{set;get;}
+    public List<Section> sections{get;set;}
+
+    public int personCount{get;set;}
+
+    public int sectionId{get;set;}
+    public Dictionary<Section,int> Sections{get;set;}
+    public List<Waitingtoken> waitingTokens{get;set;}
+    public int pageNumber{get;set;}
+    public int pageSize{get;set;}
+    public int TotalWaitingTokens{get;set;}
+
+    public CustomerModel customer{get;set;}
+}
+public class CustomerModel{
+    
+    [Required(ErrorMessage = "Customer Name is required")]
+    [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]
+    public string name{get;set;}
+
+    [Required(ErrorMessage = "Phone number is required.")]
+    [RegularExpression(@"^\d{10}$", ErrorMessage = "Phone number must be exactly 10 digits.")]
+    public string phone{get;set;}
+
+    [Required(ErrorMessage ="Email is required")]
+    [EmailAddress(ErrorMessage ="Invalid email address")]
+    public string email{get;set;}
+
+} 

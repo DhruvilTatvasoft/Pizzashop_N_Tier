@@ -77,7 +77,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop;User id=postgres;password=Dhruvil@23;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -1112,16 +1112,15 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("waitingtokens");
 
-            entity.Property(e => e.Waitingtokenid).HasColumnName("waitingtokenid");
+            entity.Property(e => e.Waitingtokenid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("waitingtokenid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
             entity.Property(e => e.Customerid).HasColumnName("customerid");
-            entity.Property(e => e.Isassigned)
-                .HasDefaultValueSql("false")
-                .HasColumnName("isassigned");
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
@@ -1131,18 +1130,17 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnName("modifiedat");
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Sectionid).HasColumnName("sectionid");
-            entity.Property(e => e.Tableid).HasColumnName("tableid");
             entity.Property(e => e.Totalpersons).HasColumnName("totalpersons");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Waitingtokens)
+                .HasForeignKey(d => d.Customerid)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("customerid_fkey");
 
             entity.HasOne(d => d.Section).WithMany(p => p.Waitingtokens)
                 .HasForeignKey(d => d.Sectionid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("waitingtokens_sectionid_fkey");
-
-            entity.HasOne(d => d.Table).WithMany(p => p.Waitingtokens)
-                .HasForeignKey(d => d.Tableid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("waitingtokens_tableid_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

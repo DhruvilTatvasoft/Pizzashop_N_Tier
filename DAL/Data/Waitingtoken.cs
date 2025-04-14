@@ -13,11 +13,7 @@ public partial class Waitingtoken
 
     public int Sectionid { get; set; }
 
-    public int Tableid { get; set; }
-
     public bool? Isdeleted { get; set; }
-
-    public bool? Isassigned { get; set; }
 
     public DateTime? Createdat { get; set; }
 
@@ -27,7 +23,7 @@ public partial class Waitingtoken
 
     public int Modifiedby { get; set; }
 
-    public virtual Section Section { get; set; } = null!;
+    public virtual Customer Customer { get; set; } = null!;
 
-    public virtual Table Table { get; set; } = null!;
+    public virtual Section Section { get; set; } = null!;
 }

@@ -41,6 +41,8 @@ builder.Services.AddScoped<IOrderService, OrderImple>();
 builder.Services.AddScoped<IOrderRepository, OrderRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerImpl>();
+builder.Services.AddScoped<IWaitingTokenService, WaitingTokenImpl>();
+builder.Services.AddScoped<IWaitingTokenRepository, WaitingTokenRepository>();
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

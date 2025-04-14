@@ -363,12 +363,11 @@ public class MenuController : Controller
     }
 
     [HttpPost]
-    public IActionResult AddNewModifier(ItemModel model)
+    public IActionResult AddNewModifier(ModifierModel model)
     {
-        _modifierService.AddNewModifier(model.modifier);
-        TempData["ToastrMessage"] = "Modifier Added Successfully";
-        TempData["ToastrType"] = "success";
-        return View("Menu");
+        _modifierService.AddNewModifier(model);
+        
+        return Json(new { success = "Modifier Added successfully ",modifierGroupId = model.Modifiergroupid });
     }
 
 [Authorize(Policy="CanEdit_Menu")]
@@ -377,13 +376,19 @@ public class MenuController : Controller
         ModifierModel model = new ModifierModel();
         model.modifiergroups = _modifierService.getAllModifierGroups();
         model.modifier = _modifierService.getModifier(modifierid, modifierGroupId);
+        model.Modifiername = model.modifier.Modifiername;
+        model.Modifierquantity = model.modifier.Modifierquantity;
+        model.Unitid = model.modifier.Unitid;
+        model.Modifierrate = model.modifier.Modifierrate;
+        model.Modifiergroupid = model.modifier.Modifiergroupid;
+        model.Description = model.modifier.Description;
         model.units = _modifierService.GetAllUnits();
         return PartialView("_modifersContainerPartial", model);
     }
 
-    public IActionResult EditmodifierPost(ItemModel model, int modifierGroupId)
+    public IActionResult EditmodifierPost(ModifierModel model, int modifierGroupId)
     {
-        _modifierService.updateModifier(model.modifier, modifierGroupId);
+        _modifierService.updateModifier(model, modifierGroupId);
         return View("Menu");
     }
     

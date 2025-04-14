@@ -31,5 +31,9 @@ namespace pizzashop_n_tier.Views.OrderApp
         public IActionResult getTables(){
             return PartialView("_tableView");
         }
+
+        public IActionResult getWaitingTokenPage(){
+            return PartialView("_waitingList");
+        }
     }
 }

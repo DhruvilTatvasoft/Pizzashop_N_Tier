@@ -3,7 +3,7 @@
 }
 @model ItemModel
 <input type="hidden" id="modifierGroupId"asp-for="@Model.modifierGroupId">
-@Model.modifierGroupId
+<input type="hidden" id="pageNumber"asp-for="@Model.pageNumber">
 <table class="table">
     <thead>
         <tr>
@@ -31,11 +31,10 @@
         {
             <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders
                 Found</td>
-            <h1>abcd</h1>
+           
         }
         else
         {
-
             @foreach (var modifier in Model.modifiers)
             {
                 <tr>

@@ -1,7 +1,7 @@
 @model KotViewModel
 <link rel="stylesheet" href="~/css/table.css">
 <div class="container-fluid mt-4 ps-4 pe-4 h-100">
-    <div class="mb-3">
+    <div class="mb-4">
         <div class="d-flex justify-content-between">
             <h1>Table View</h1>
             <div class="d-flex">
@@ -22,12 +22,7 @@
 </div>
 
 <script>
-    $(document).on('click','.Available-Table',function (){
-        $(this).removeClass('Available-Table').addClass('selectedTable')
-    });
-    $(document).on('click','.selectedTable',function (){
-        $(this).removeClass('selectedTable').addClass('Available-Table')
-    });
+
 
     $(document).ready(()=>{
         $.ajax({

@@ -1,0 +1,59 @@
+@model WaitingTokenModel
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">
+                <div class="form-check">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        #Token No
+                    </label>
+                </div>
+            </th>
+            <th scope="col">
+                <div class="form-check">
+                    <label class="form-check-label" for="flexCheckDefault">
+                        Created At
+                    </label>
+                </div>
+            </th>
+            <th scope="col">Waiting Time</th>
+            <th scope="col" ><label for="">Name</label></th>
+            <th scope="col" ><label for="">No of Persons</label></th>
+            <th scope="col">Phone Number</th>
+            <th scope="col">Email</th>
+            <th scope="col">Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if(@Model.waitingTokens.Count <= 0){
+            <tr>
+                 <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Waiting Tokens Found</td>
+                </tr>
+        }
+        else{
+        @foreach (var token in Model.waitingTokens)
+        {
+            <tr>
+                <th scope="row">
+                    <label class="form-check-label d-flex justify-content-center align-items-center" for="flexCheckDefault">
+                        <label for="" style="font-size: 14px;">@token.Waitingtokenid</label>
+                    </label>
+                </th>
+                <td>@token.Createdat</td>
+                <td>@token.Createdat</td>
+            <td>@token.Customer.Customername</td>
+            <td>@token.Totalpersons</td>
+            <td>@token.Customer.Phonenumber</td>
+            <td>@token.Customer.Email</td>
+            <td>
+                <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                    <img src="~/images/pencil-square.svg" class="me-3" onclick="updateToken(@token.Waitingtokenid)" style="cursor: pointer;"  alt="">
+                    <img src="~/images/trash-fill.svg" class="me-3" style="cursor: pointer;" alt="">
+                    <img src="~/images/person-check.svg" class="me-3" style="cursor: pointer;" alt="">
+                </div>
+            </td>
+        </tr>
+        }
+        }
+    </tbody>
+</table>

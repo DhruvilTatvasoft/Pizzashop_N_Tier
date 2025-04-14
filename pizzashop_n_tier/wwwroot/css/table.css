@@ -54,8 +54,8 @@ h6{
     padding: 5%;
     border-radius: 4px;
     border:2px solid rgb(25, 195, 87);
-    transition: all 0.3s ease-in-out;
     cursor: pointer;
+    transition: all 0.3s ease-in-out;
 }
 .Assigned-Table{
     min-width: 15%;
