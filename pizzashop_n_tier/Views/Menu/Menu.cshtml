@@ -333,7 +333,7 @@
                 data: data,
                 processData: false,
                 contentType: false,
-                success: function (result) {
+                success: function (data) {
                    $(".cancelBtn").click();
                    toastr.success(data.success);
                     console.log("data should load for modifiergroup : " + selectedModifierGroup);

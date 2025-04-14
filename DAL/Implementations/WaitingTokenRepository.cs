@@ -71,7 +71,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.waitingTokens = query.ToList();
         foreach (var token in model.waitingTokens)
         {
-            token.Customer = _context.Customers.Where(c => c.Customerid == token.Customerid).FirstOrDefault() ?? new Customer();
+            // token.Customer = _context.Customers.Where(c => c.Customerid == token.Customerid).FirstOrDefault() ?? new Customer();
         }
         return model;
     }

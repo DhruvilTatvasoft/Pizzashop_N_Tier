@@ -383,13 +383,14 @@ public class MenuController : Controller
         model.Modifiergroupid = model.modifier.Modifiergroupid;
         model.Description = model.modifier.Description;
         model.units = _modifierService.GetAllUnits();
+        model.Modifierid = model.modifier.Modifierid;
         return PartialView("_modifersContainerPartial", model);
     }
 
     public IActionResult EditmodifierPost(ModifierModel model, int modifierGroupId)
     {
         _modifierService.updateModifier(model, modifierGroupId);
-        return View("Menu");
+        return Json(new {modifierGroupId = modifierGroupId,success = "Modifier added successfully"});
     }
     
     public IActionResult deleteMultipleModifiers(List<int> selectedModifiers,int modifierGroupId){

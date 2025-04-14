@@ -106,19 +106,32 @@
 </div>
 
 <script>
-    const masterCheckbox = document.getElementById("masterCheck");
-    masterCheckbox.addEventListener("change", () => {
-        const subchecks = document.querySelectorAll(".IsModifierChecked");
-        subchecks.forEach((checkbox) => {
-            checkbox.checked = masterCheckbox.checked;
+    function initializeModifierCheckboxes() {
+        const masterCheckbox = document.getElementById("masterCheck");
+
+        if (masterCheckbox) {
+            masterCheckbox.addEventListener("change", () => {
+                const subchecks = document.querySelectorAll(".IsModifierChecked");
+                subchecks.forEach((checkbox) => {
+                    checkbox.checked = masterCheckbox.checked;
+                });
+            });
+        }
+
+        document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
+            checkbox.addEventListener("change", () => {
+                const subchecks = document.querySelectorAll(".IsModifierChecked");
+                const checked = document.querySelectorAll(".IsModifierChecked:checked");
+                const master = document.getElementById("masterCheck");
+                if (master) {
+                    master.checked = (subchecks.length === checked.length);
+                }
+            });
         });
-    });
-    document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
-        checkbox.addEventListener("change", () => {
-            const subchecks = document.querySelectorAll(".IsModifierChecked");
-            const checked = document.querySelectorAll(".IsModifierChecked:checked");
-            masterCheckbox.checked = (subchecks.length === checked.length);
-        });
-    });
+    }
+
+    // Call this function when the DOM is ready
+    document.addEventListener("DOMContentLoaded", initializeModifierCheckboxes);
 </script>
+
 
