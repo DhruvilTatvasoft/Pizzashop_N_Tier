@@ -1,0 +1,77 @@
+@model WaitingTokenModel
+<div class="modal fade" id="assignTableToCustomer" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content w-75">
+            <div class="modal-header d-flex">
+                <h5 class="modal-title">Assign Table</h5>
+                <input type="hidden" asp-for="tokenId" id="TokenId">
+                <button type="button" class="close" data-bs-dismiss="modal"
+                    style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
+                    aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-1 pe-1">
+                <div class="d-flex row w-100  ps-2 pe-2 pb-2">
+                    <div class="col-6 ps-0 form-floating">
+                        <div class="form-floating">
+                            <select class="time-select form-select shadow-none"
+                                style="padding: 3%;min-height: 2.5rem;height:2.5rem;"
+                                aria-label="Floating label select example"  disabled>
+                            @foreach(var Section in Model.sections){
+                                @if(Model.sectionId == Section.Sectionid){
+                                    <option value="@Section.Sectionid" selected >@Section.Sectionname</option>
+                                }
+                                else{
+                                    <option value="@Section.Sectionid" >@Section.Sectionname</option>
+                                }
+                            }
+                            </select>
+
+                        </div>
+                    </div>
+                    <div class="col-6 ps-0 pe-0 form-floating">
+                        <select class="time-select form-select shadow-none"
+                                style="padding: 3%;min-height: 2.5rem;height:2.5rem;"
+                                aria-label="Floating label select example" placeholder="Selects Time" id="selecetedTable">
+                                    <option selected>Table <span class="text-danger">*</span></option>
+                            @foreach(var table in Model.tables){
+                                    <option value="@table.Tableid">@table.Tablename</option>
+                            }
+                            </select>
+                    </div>
+                </div>
+                <div class="d-flex justify-content-end m-3">
+                    <button type="button" class="btn btn-primary me-2" onclick="AssigntableToCustomer(@Model.sectionId)">Assign</button>
+                    <button type="button" class="btn btn-outline-primary closebutton"
+                        data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function AssigntableToCustomer(sectionId){
+        $.ajax({
+            url:"@Url.Action("AssignTable","WaitingList")",
+            method:"POST",
+            data:{tableid : $("#selecetedTable").val(),tokenid : $("#TokenId").val()},
+            success:function(result){
+                if(toastr.success){
+                toastr.success(result.success);
+                loadWaitingTokensForSection();
+                loadSectionsNavbar();
+                $('.closebutton').click();
+                }
+                else{
+                toastr.success(result.error);
+                loadWaitingTokensForSection();
+                loadSectionsNavbar();
+                $('.closebutton').click();
+                }
+            }
+        });
+    }
+</script>

@@ -275,11 +275,10 @@
 
         function openAddModifierModal() {
         $.ajax({
-            url:"@Url.Action("getModifiersForModifierGp","Menu")",
+            url:"@Url.Action("getAddEditModel","Menu")",
             type: "GET",
-            data: { modifierGroupId: $("#modifierGroupId").val(),pageNumber: $("#pageNumber").val(),pageSize: $('.pagesize').val()},
             success: function (data) {
-                 $(".table-container").html(data);
+                 $('.addEditModelContainer').html(data);
                 $('#addNewModifier').modal('show');
                 $("#saveNewModifier").attr("style", "display:block");
                 $("#updateModifier").attr("style", "display:none");
@@ -308,6 +307,7 @@
             var $form = $(this);
             if ($form.data('submitting')) return;
             $form.data('submitting', true);
+            if($(this).valid()){
             var data = new FormData(this);
             var Action = $(document.activeElement).data('action');
             var selectedModifierGroup = $('#modifierGroup').val();
@@ -325,6 +325,7 @@
                 console.log(pair[0], pair[1]);
             }
             console.log("url: " + url);
+            
 
             console.log("value of selected modifier group is " + selectedModifierGroup);
             $.ajax({
@@ -335,11 +336,20 @@
                 contentType: false,
                 success: function (data) {
                    $(".cancelBtn").click();
+                   if(data.success){
                    toastr.success(data.success);
                     console.log("data should load for modifiergroup : " + selectedModifierGroup);
                     loadModifiersForModifierGroup(data.modifierGroupId,1);
+                    
+                   }
+                   else{
+                    toastr.error(data.error);
+                    loadModifiersForModifierGroup(data.modifierGroupId,1);
+                   
+                   }
                 }
             });
+            }
         });
 
 

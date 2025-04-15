@@ -429,7 +429,7 @@
       method: 'GET',
       data: { modifierid: Modifierid, modifierGroupId: Modifiergroupid},
       success: function (data) {
-        $(".menubody").html(data);
+        $(".addEditModelContainer").html(data);
         $('#addNewModifier').modal('show');
         $("#updateModifier").attr("style", "display:block");
         $("#saveNewModifier").attr("style", "display:none");

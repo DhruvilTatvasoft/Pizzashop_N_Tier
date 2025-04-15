@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 using DAL.Data;
@@ -24,13 +25,22 @@ public class ModifierModel
     }
 
     public List<Modifiergroup> modifiergroups { get; set; }
+    
+    [Required(ErrorMessage = "Modifiergroup is required")]
     public int Modifiergroupid { get; set; }
 
+    [Required(ErrorMessage = "Modifier Name is required")]
+    [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]
     public string Modifiername { get; set; }
 
+    [Required(ErrorMessage = "Modifier Name is required")]
     public Modifiergroup modifiergroup { get; set; }
+
+    [Required(ErrorMessage = "Modifier quantity is required")]
     public int Modifierquantity { get; set; }
     public int Unitid{get;set;}
+    [Required(ErrorMessage = "Modifier rate is required")]
+    [Range(0, int.MaxValue, ErrorMessage = "Item rate cannot be less than 0")]
     public decimal Modifierrate { get; set; }
     public List<Unit> units { get; set; }
     public string Description { get; set; }

@@ -86,7 +86,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 {
                     context.Response.Redirect("/Login/Index?error=expired");
                     context.Response.StatusCode = StatusCodes.Status401Unauthorized;
-                    // await context.Response.WriteAsync("Authentication failed: Token expired."); // Write custom response
                 }
                 return Task.CompletedTask;
             },
@@ -95,7 +94,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 if (!context.Response.HasStarted)
                 {
                     context.Response.Redirect("/Login/Index?error=unauthorized");
-                    context.HandleResponse(); // prevents default 401 response
+                    context.HandleResponse();
                 }
                 return Task.CompletedTask;
             }

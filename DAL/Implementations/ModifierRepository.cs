@@ -269,8 +269,14 @@ public class ModifierRepository : IModifierRepository
         return units;
     }
 
-    public void AddNewModifier(ModifierModel modifier)
+    public bool AddNewModifier(ModifierModel modifier)
     {
+        Modifier isExist = _context.Modifiers.FirstOrDefault(Modifier=>Modifier.Modifiername.ToLower().Trim() == modifier.Modifiername.ToLower().Trim() && Modifier.Modifiergroupid == modifier.Modifiergroupid);
+
+        if(isExist != null){
+            return false;
+        }
+        else{
         try
         {
             Modifier newModifier = new Modifier();
@@ -286,10 +292,13 @@ public class ModifierRepository : IModifierRepository
             newModifier.Modifiedat = DateTime.Now;
             _context.Modifiers.Add(newModifier);
             _context.SaveChanges();
+            return true;
         }
         catch (Exception)
         {
             throw;
+        }
+
         }
     }
 

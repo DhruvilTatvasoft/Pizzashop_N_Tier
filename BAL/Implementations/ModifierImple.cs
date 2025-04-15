@@ -86,9 +86,9 @@ public class ModifierImple : IModifierService
         return _modifierRepository.GetAllUnits();
     }
 
-    public void AddNewModifier(ModifierModel modifier)
+    public bool AddNewModifier(ModifierModel modifier)
     {
-        _modifierRepository.AddNewModifier(modifier);
+        return _modifierRepository.AddNewModifier(modifier);
     }
 
     public Modifier getModifier(int modifierid, int modifierGroupId)

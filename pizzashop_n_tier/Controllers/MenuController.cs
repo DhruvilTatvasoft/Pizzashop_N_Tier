@@ -203,14 +203,6 @@ public class MenuController : Controller
         }
     }
 
-    // public IActionResult EditItem(int itemid)
-    // {
-    //     ItemModel model = new ItemModel();
-    //     model.i = _itemService.getItemFromId(itemid);
-    //     model.ModifierModels = _modifierService.getModifiersForItem(itemid);
-    //     return PartialView("_additem", model);
-    // }
-
     [HttpPost]
     public IActionResult PostEditItem(ItemViewModel model)
     {
@@ -227,11 +219,6 @@ public class MenuController : Controller
         return PartialView("_edititem", model);
     }
 
-    // public IActionResult EditItemPost(ItemViewModel model){
-    //      model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
-    //      _itemService.updateItemdetails(model,model.itemid??1);
-    //     return View("Menu");
-    // }
 
     [HttpGet]
     public IActionResult getModifiers(int modifiergroupId)
@@ -249,14 +236,6 @@ public class MenuController : Controller
         model.modifiergroups = _modifierService.getAllModifierGroups();
         return PartialView(partialViewName, model);
     }
-
-    //  [HttpGet]
-    // public IActionResult getModifierGroupsForEdit(string partialViewName)
-    // {
-    //     ItemViewModel model = new ItemViewModel();
-    //     model.modifiergroups = _modifierService.getAllModifierGroups();
-    //     return PartialView(partialViewName, model);
-    // }
 
 
     [HttpGet]
@@ -365,9 +344,15 @@ public class MenuController : Controller
     [HttpPost]
     public IActionResult AddNewModifier(ModifierModel model)
     {
-        _modifierService.AddNewModifier(model);
-        
+        if(_modifierService.AddNewModifier(model)){
         return Json(new { success = "Modifier Added successfully ",modifierGroupId = model.Modifiergroupid });
+        }
+        else{
+
+        return Json(new { error = "Modifier Already Exist in this Modifier group successfully ",modifierGroupId = model.Modifiergroupid });
+        }
+        
+        
     }
 
 [Authorize(Policy="CanEdit_Menu")]
@@ -384,13 +369,20 @@ public class MenuController : Controller
         model.Description = model.modifier.Description;
         model.units = _modifierService.GetAllUnits();
         model.Modifierid = model.modifier.Modifierid;
-        return PartialView("_modifersContainerPartial", model);
+        return PartialView("_addEditModifiers", model);
+    }
+
+    public IActionResult getAddEditModel(){
+        ModifierModel model = new ModifierModel();
+        model.modifiergroups = _modifierService.getAllModifierGroups();
+        model.units = _modifierService.GetAllUnits();
+        return PartialView("_addEditModifiers",model);
     }
 
     public IActionResult EditmodifierPost(ModifierModel model, int modifierGroupId)
     {
         _modifierService.updateModifier(model, modifierGroupId);
-        return Json(new {modifierGroupId = modifierGroupId,success = "Modifier added successfully"});
+        return Json(new {modifierGroupId = modifierGroupId,success = "Modifier Updated successfully"});
     }
     
     public IActionResult deleteMultipleModifiers(List<int> selectedModifiers,int modifierGroupId){

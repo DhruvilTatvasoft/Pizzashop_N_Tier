@@ -20,6 +20,7 @@ public class WaitingListController : Controller
 
     public IActionResult getwaitingTokens(int sectionId = 0){
         WaitingTokenModel model = _waitingTokenService.getAllWaitingTokens(sectionId);
+
         return PartialView("_waitingTokentable", model);
     }
 
@@ -28,13 +29,14 @@ public class WaitingListController : Controller
         model.sections = _sectionService.getAllSections();
         return PartialView("_addEditTokenModel", model);
     }
+    [HttpPost]
     public IActionResult AddNewWaitingToken(WaitingTokenModel model){
         if(_waitingTokenService.AddNewWaitingToken(model)){
             return Json(new { success = "Token Created Successfully",sectionid = model.sectionId });
         }
         else{
 
-            return Json(new { error = "Some Error Occured",sectionid = model.sectionId });
+            return Json(new { error = "Token with this Email Id is Already Created.Use other Email Address",sectionid = model.sectionId });
         }
         
     }
@@ -51,6 +53,39 @@ public class WaitingListController : Controller
         }
         else{
             return Json(new {error = "Some Error occured",sectionid = model.sectionId });
+        }
+    }
+
+    public IActionResult getSuggestions(string name){
+        WaitingTokenModel model = new WaitingTokenModel();
+        model.customerList = _waitingTokenService.getSuggestedCustomerList(name);
+        return PartialView("_SuggessionPartial",model);
+    }
+
+    [HttpPost]
+    public IActionResult deleteWaitingToken(int tokenid){
+            int Sectionid = _waitingTokenService.getSectionIdOfToken(tokenid);
+        if(_waitingTokenService.deleteWaitingToken(tokenid)){
+            return Json(new {success = "Waiting Token Deleted Successfully",sectionid = Sectionid });
+        }
+            return Json(new {error = "Some error Occurred",sectionid = Sectionid });
+        
+    }
+    public IActionResult getAssignTableModel(int tokenid){
+        WaitingTokenModel model = new WaitingTokenModel();
+        model.sections = _sectionService.getAllSections();
+        model.sectionId = _waitingTokenService.getSectionIdOfToken(tokenid);
+        model.tables = _waitingTokenService.getTablesForToken(tokenid);
+        model.tokenId = tokenid;
+        return PartialView("_assignTableModel",model);
+    }
+
+    public IActionResult AssignTable(int tableid,int tokenid){
+        if(_waitingTokenService.AssignTable(tableid,tokenid)){
+            return Json(new {success = "Table Assigned Successfully"});
+        }
+        else{
+            return Json(new {error = "Some Error occured "});
         }
     }
 }

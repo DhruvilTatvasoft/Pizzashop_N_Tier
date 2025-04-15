@@ -27,11 +27,13 @@ public partial class Table
 
     public string? Statusname { get; set; }
 
+    public int? Customerid { get; set; }
+
+    public virtual Customer? Customer { get; set; }
+
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 
     public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
 
     public virtual Section Section { get; set; } = null!;
-
-    public virtual ICollection<Waitingtoken> Waitingtokens { get; } = new List<Waitingtoken>();
 }

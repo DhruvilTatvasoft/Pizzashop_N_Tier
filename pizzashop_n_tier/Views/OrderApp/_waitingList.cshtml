@@ -8,6 +8,7 @@
   <div class="sectionNavbarContainer mb-2"></div>
   <div class="TokensContainer w-100 h-100"></div>
   <div class="addEditModifierModelContainer w-100 h-100"></div>
+  <div class="assignTableModelContainer w-100 h-100"></div>
 </div>
 
 
@@ -26,7 +27,6 @@
             }
         });
     }
-
      function loadWaitingTokensForSection(sectionid){
         $.ajax({
             url:"@Url.Action("getwaitingTokens","WaitingList")",
@@ -54,13 +54,11 @@
         e.preventDefault();
         var tokenid=$("#tokenid").val();
         var url;
-        if(tokenid == null){
+        if(tokenid == null || tokenid == 0){
             url="@Url.Action("AddNewWaitingToken","WaitingList")"
-
         }
         else{
-            url="@Url.Action("UpdateWaitingToken","WaitingList")"
-            
+            url="@Url.Action("UpdateWaitingToken","WaitingList")"   
         }
         var $form = $(this);
 
@@ -71,6 +69,7 @@
             return false;
         }
         else{
+            alert("valid");
             $.ajax({
                 url:url,
                 method:"POST",
@@ -81,6 +80,12 @@
                     if(data.success){
                         $("#closeBtn").click();
                         toastr.success(data.success)
+                        loadWaitingTokensForSection(data.sectionid);
+                        loadSectionsNavbar();
+                    }
+                    else{
+                        $("#closeBtn").click();
+                        toastr.error(data.error)
                         loadWaitingTokensForSection(data.sectionid);
                     }
                 }
@@ -101,4 +106,16 @@
             }
         });
     }
+
+    function assignTableGet(id){
+    $.ajax({
+        url:"@Url.Action("getAssignTableModel","WaitingList")",
+        method:"GET",
+        data: {tokenid:id},
+        success:function(data){
+            $(".assignTableModelContainer").html(data);
+            $("#assignTableToCustomer").modal('show');
+        }
+    });
+}
 </script>

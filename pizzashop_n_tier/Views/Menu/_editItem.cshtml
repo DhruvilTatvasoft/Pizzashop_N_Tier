@@ -52,7 +52,7 @@
                         <div class="col-3 w-25">
                            <div class="form-floating mb-3 col-3 w-100">
                               <input type="number" class="form-control" id="floatingInput"
-                                 placeholder="name@example.com" asp-for="Itemrate" value="">
+                                 placeholder="name@example.com" asp-for="Itemrate" value="@Model.Itemrate">
                               <label for="floatingInput" class="model-label">Rate</label>
                               <span asp-validation-for="Itemrate" class="text-danger pt-2"></span>
                            </div>
@@ -78,22 +78,37 @@
                                  asp-for="Unitid">unit</label>
                            </div>
                         </div>
+                        
                      </div>
                      <div class="row d-flex justify-content-between">
                         <div class="col-3">
                            <div class="form-check form-switch d-flex align-items-center w-100 h-100 pe-0">
+                              @if(Model.Isavailable){
+                              <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
+                                 asp-for="Isavailable"
+                                 style="height:35px;width:65px;margin:0px;" checked>
+                              }
+                              else{
                               <input class="form-check-input me-2" type="checkbox" id="flexSwitchCheckDefault"
                                  asp-for="Isavailable"
                                  style="height:35px;width:65px;margin:0px;">
+                              }
                               <label class="form-check-label model-label "
                                  for="flexSwitchCheckDefault">Available</label>
                            </div>
                         </div>
                         <div class="col-3">
                            <div class="form-check form-switch d-flex align-items-center  w-100 h-100">
+                              @if(Model.Isdefaulttax){
                               <input class="form-check-input m-0 me-2" type="checkbox"
                                  id="flexSwitchCheckDefault" style="height:35px;width:65px;"
-                                 asp-for="Isdefaulttax">
+                                 asp-for="Isdefaulttax" checked>
+                              }
+                              else{
+                              <input class="form-check-input m-0 me-2" type="checkbox"
+                                 id="flexSwitchCheckDefault" style="height:35px;width:65px;"
+                                 asp-for="Isdefaulttax" >
+                              }
                               <label class="form-check-label model-label" for="flexSwitchCheckDefault">Default
                               Tax</label>
                            </div>

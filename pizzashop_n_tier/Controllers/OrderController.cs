@@ -48,12 +48,6 @@ namespace pizzashop_n_tier.Controllers
         public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null,int pageNumber=1,int pageSize=4,string sortBy="orderid",string sortOrder="asc")
         {
             OrderViewModel model = new OrderViewModel();
-            // model.orders = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
-            // model.PageSize = pageSize;
-            // model.PageNumber = pageNumber;
-            // model.TotalOrders = _orderService.getTotalOrderCount();
-            // model.sortBy = sortBy;
-            // model.sortOrder = sortOrder;
             model = _orderService.getOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,pageNumber,pageSize,sortOrder,sortBy);
             return PartialView("_orderTable", model);
         }
@@ -67,10 +61,11 @@ namespace pizzashop_n_tier.Controllers
         public IActionResult showOrderDetailsView(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
-
             model.order = _orderService.getOrderDetails(orderid);
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+           
+            model2.ItemsAndModifiers = _orderService.getModifiersForItems(orderid);
+
             model.orderedItemModifiers = model2;
             return View("orderDetails", model);
         }
@@ -81,7 +76,8 @@ namespace pizzashop_n_tier.Controllers
 
             model.order = _orderService.getOrderDetails(orderid);
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-            model2.modifiersForItem = _orderService.getItemsAndModifiers(orderid);
+
+            model2.ItemsAndModifiers = _orderService.getModifiersForItems(orderid);
             model.orderedItemModifiers = model2;
             model.status = _orderService.getAllStatus();
 

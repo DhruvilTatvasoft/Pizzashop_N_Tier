@@ -16,15 +16,17 @@
                         <div class="row">
                             <input type="hidden" id="tokenid" asp-for="@Model.tokenId">
                            <div class="form-group col-12 mb-3 ">
-                                <input type="email" class="form-control p-2" aria-describedby="emailHelp" asp-for="@Model.customer.email" placeholder="Email*">
-                                 <span asp-validation-for="@Model.customer.email" class="text-danger pt-2"></span>
+                             
+                                <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"  aria-describedby="emailHelp" asp-for="@Model.customer.email" placeholder="Email*">
+                                 <span asp-validation-for="@Model.customer.email" class="text-danger pt-2 emailaddress"></span>
+                                 <div class="suggesion_container"></div>
                             </div>
                            <div class="form-group col-12 mb-3">
-                                <input type="text" class="form-control p-2" aria-describedby="emailHelp" asp-for="@Model.customer.name" placeholder="Name*">
+                                <input type="text" class="form-control p-2" id="customer-name" aria-describedby="emailHelp" asp-for="@Model.customer.name" placeholder="Name*">
                                  <span asp-validation-for="@Model.customer.name" class="text-danger pt-2"></span>
                             </div>
                            <div class="form-group col-12 mb-3">
-                                <input type="tel" class="form-control p-2"  maxlength="10" size="10" asp-for="@Model.customer.phone"  placeholder="Mobile Number*">
+                                <input type="tel" class="form-control p-2" id="customer-phone" maxlength="10" size="10" asp-for="@Model.customer.phone"  placeholder="Mobile Number*">
                                  <span asp-validation-for="@Model.customer.phone" class="text-danger pt-2"></span>
                             </div>
                             <div class="mb-3 col-md-6 mb-3">
@@ -46,8 +48,6 @@
                                     }
                                     </select>
                             </div>
-
-
                         </div>
                         <div class="d-flex justify-content-end">
                             <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken" >Save</button>
@@ -58,3 +58,25 @@
                 </div>
             </div>
     </form>
+
+    <script>
+        function loadSuggesions() {
+            if($('#customer-email').val().length > 2){
+                console.log("searching");   
+                $.ajax({
+                    url:"@Url.Action("getSuggestions","WaitingList")",
+                    method:"GET",
+                    data:{name : $('#customer-email').val()},
+                    success:function(data){
+                        $(".suggesion_container").html(data);
+                    }
+                });
+            }
+            else{
+                if(document.querySelector(".sugg_container")){
+                    document.querySelector(".sugg_container").remove();
+                }
+               
+            }
+        }
+    </script>

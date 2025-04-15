@@ -277,41 +277,61 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    public Dictionary<Item, List<Modifier>> GetItemsAndModifiersForOrder(int orderid)
-    {
-        decimal subtotal = 0;
-        List<int> itemIds = _context.Ordermodifiers
-                                    .Where(orderModifier => orderModifier.Orderid == orderid)
-                                    .Select(orderModifier => orderModifier.Itemid).Distinct()
-                                    .ToList();
-        List<Item> items = new List<Item>();
-        foreach (var id in itemIds)
-        {
-            List<Item> currentItem = _context.Items.Where(item => item.Itemid == id && item.Isdeleted == false).ToList();
-            items.AddRange(currentItem);
-        }
-        Dictionary<Item, List<Modifier>> modifiersForItem = new Dictionary<Item, List<Modifier>>();
+    
 
-        foreach (var item in items)
+    public Dictionary<int,Dictionary<Item,List<Modifier>>> GetItemsAndModifiersForOrder2(int orderid)
+    {
+        Dictionary<int,Dictionary<Item,List<Modifier>>> itemsAndModifiers = new Dictionary<int, Dictionary<Item, List<Modifier>>>();
+        Dictionary<Item,List<Modifier>> itemModifier = new Dictionary<Item, List<Modifier>>();
+       var orderedItemsGrouped = _context.OrderItemModifiers
+            .Where(oim => oim.Orderid == orderid)
+            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
+            .ToList();
+        bool hasItems = false;
+        var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+        int count = 0;
+        foreach (var group in orderedItemsGrouped)
         {
-            List<Modifier> modifierForCurrItem = new List<Modifier>();
-            List<int> modifierIdsForitem = _context.Ordermodifiers.Where(orderModifier => orderModifier.Orderid == orderid && orderModifier.Itemid == item.Itemid).Select(orderModifier => orderModifier.Modifierid).ToList();
-            foreach (var id in modifierIdsForitem)
+            var itemId = group.Key.ItemId;
+            var orderItemDetailId = group.Key.Orderitemdetailid;
+
+            
+            var dbItem = _context.Items.FirstOrDefault(i => i.Itemid == itemId);
+
+            if (dbItem == null)
+                continue;
+
+           
+            var item = new Item
             {
-                List<Modifier> modifierList = _context.Modifiers.Where(modifier => modifier.Modifierid == id && modifier.Isdeleted == false).ToList();
-                foreach (var modifier in modifierList)
-                {
-                    modifier.Modifierquantity = _context.Ordermodifiers.FirstOrDefault(orderModifier => orderModifier.Modifierid == modifier.Modifierid && orderModifier.Orderid == orderid)!.Ordermodifierquantity;
-                    subtotal = subtotal + modifier.Modifierquantity * modifier.Modifierrate;
-                }
-                modifierForCurrItem.AddRange(modifierList);
+                Itemid = dbItem.Itemid,
+                Itemname = dbItem.Itemname,
+                Categoryid = dbItem.Categoryid,
+                Itemrate = dbItem.Itemrate
+                
+            };
+
+            var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
+            if (orderItem == null)
+                continue;
+
+            var modifierIds = _context.OrderItemModifiers
+                .Where(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId)
+                .Select(oim => oim.Modifierid)
+                .ToList();
+
+            var modifiers = _context.Modifiers
+                .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
+                .ToList();
+            foreach(var modifier in modifiers){
+                modifier.Modifierquantity = _context.OrderItemModifiers.FirstOrDefault(oim=>oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId && oim.Modifierid == modifier.Modifierid).ModifierQuantity?? 0;
             }
-            var orderItem = _context.Ordermodifiers.FirstOrDefault(orderItem => orderItem.Itemid == item.Itemid && orderItem.Orderid == orderid);
-            item.Itemquantity = orderItem?.Orderitemquantity ?? 0;
-            subtotal = subtotal + item.Itemquantity * item.Itemrate;
-            modifiersForItem.Add(item, modifierForCurrItem);
+            item.Itemquantity = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == orderItemDetailId).Orderitemquantity;
+            count++;
+            itemsAndModifiers.Add(count,new Dictionary<Item, List<Modifier>> { { item, modifiers } });
+            
         }
-        return modifiersForItem;
+        return itemsAndModifiers;
     }
 
     public int GetTotalOrderCount()
@@ -352,7 +372,7 @@ public class OrderRepository : IOrderRepository
     public Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId)
     {
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
-        string tableName = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid).Tablename!;
+        string tableName = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)?.Tablename ?? string.Empty;
         string sectionName = _context.Sections.FirstOrDefault(section => section.Sectionid == order.Sectionid).Sectionname!;
         tableAndsection tableAndsection = new tableAndsection();
         tableAndsection.tableName = tableName;
@@ -363,7 +383,7 @@ public class OrderRepository : IOrderRepository
     }
 
    public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
-{
+    {
     var orderIds = _context.Orders
         .Where(order => order.IsDeleted == false)
         .Select(order => order.Orderid)
@@ -442,8 +462,6 @@ public class OrderRepository : IOrderRepository
             model.Add(orderId, itemModifierList);
         }
     }
-
-
     return model;
 }
 

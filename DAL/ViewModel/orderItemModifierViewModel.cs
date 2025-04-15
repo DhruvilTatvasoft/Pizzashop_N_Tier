@@ -7,5 +7,9 @@ public class orderItemModifierViewModel
         get;
         set;
     }
+
+    public Dictionary<int,Dictionary<Item,List<Modifier>>> ItemsAndModifiers{
+        get;set;
+    }
     public decimal subtotal{get;set;}
 }

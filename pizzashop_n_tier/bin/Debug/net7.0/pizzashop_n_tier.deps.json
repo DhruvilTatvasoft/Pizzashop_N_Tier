@@ -17,7 +17,6 @@
           "NPOI.DotNetCore.ExcelService": "1.0.5",
           "Newtonsoft.Json": "13.0.3",
           "Select.HtmlToPdf.NetCore": "24.1.0",
-          "Select.Pdf": "24.1.0",
           "System.IdentityModel.Tokens.Jwt": "8.7.0",
           "toastr": "2.1.1"
         },

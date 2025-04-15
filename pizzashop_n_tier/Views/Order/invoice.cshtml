@@ -1,3 +1,4 @@
+@using DAL.Data
 @{
   ViewData["Title"] = "OrderDetails";
   decimal subtotal = 0;
@@ -50,50 +51,47 @@
       </tr>
     </thead>
     <tbody>
-      @foreach (var item in @Model.orderedItemModifiers.modifiersForItem.Keys)
-      {
-        <tr>
-          <td>1</td>
-          <td>@item.Itemname <br />
 
-            @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
-            {
-              <li>@modifier.Modifiername</li>
-            }
+                        @foreach (var item in @Model.orderedItemModifiers.ItemsAndModifiers)
+                        {
+                            Dictionary<Item,List<Modifier>> itemAndModifiers = item.Value;
+                                <tr>
+                                @foreach(var Item in itemAndModifiers.Keys){
+                                    <td>@item.Key</td>
+                                    <td>@Item.Itemname
+                                    
+                                @foreach(var modifier in itemAndModifiers[Item]){
+                                    <li>@modifier.Modifiername</li>
+                                }
+                                    </td>
+                                <td>
+                                    @Item.Itemquantity
+                                    @foreach (var modifier in  itemAndModifiers[Item])
+                                    {
+                                        <br>@modifier.Modifierquantity 
+                                    }
 
-          </td>
-          <td>
-            @item.Itemquantity
-            @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
-            {
-              <br>
-              @modifier.Modifierquantity
-              @* <br /> *@
-            }
-
-          </td>
-          <td>@item.Itemrate
-            @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
-            {
-              <br>
-              @(modifier.Modifierrate)
-
-            }
-          </td>
-          <td class="d-flex justify-content-end"><label style="display: none;">@(item.Itemrate *
-                        item.Itemquantity)</label>
-
-          @(subtotal += item.Itemrate * item.Itemquantity);
-          @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
-            {
-              <br>
-              @(modifier.Modifierrate* modifier.Modifierquantity)
-              <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
-            }
-          </td>
-        </tr>
-      }
-    </tbody>
+                                </td>
+                                <td>@Item.Itemrate
+                                    @foreach (var modifier in  itemAndModifiers[Item])
+                                    {
+                                        <br>@(modifier.Modifierrate)
+                                    }
+                                </td>
+                                 <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate * Item.Itemquantity)</label>   
+                                   @{subtotal += Item.Itemrate * Item.Itemquantity;}
+                                   @( Item.Itemrate * Item.Itemquantity)
+                                    @foreach (var modifier in itemAndModifiers[Item])
+                                    {
+                                        <br>@(modifier.Modifierrate * modifier.Modifierquantity) 
+                                        <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
+                                    }
+                                </td>
+                                
+                                }
+                             </tr>
+                        }
+                    </tbody>
   </table>
 
   <div class="row">
@@ -103,11 +101,11 @@
         <tbody>
           <tr>
             <td class="total-label">Sub Total:</td>
-            <td style="text-align: end;">₹399.00</td>
+            <td style="text-align: end;">₹@subtotal</td>
           </tr>
           <tr>
             <td>CGST:</td>
-            <td style="text-align: end;">₹47.88</td>
+            <td style="text-align: end;">₹@((subtotal * 6)/100)</td>
           </tr>
           <tr>
             <td>SGST:</td>
@@ -123,7 +121,7 @@
           </tr>
           <tr>
             <td class="total-label text-primary">Total Amount Due:</td>
-            <td class="header-text" style="text-align: end;">₹624.81</td>
+            <td class="header-text" style="text-align: end;">₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 + (decimal)7.98 + (decimal)19.95)</td>
           </tr>
         </tbody>
       </table>

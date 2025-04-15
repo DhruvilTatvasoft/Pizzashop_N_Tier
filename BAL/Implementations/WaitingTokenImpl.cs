@@ -19,14 +19,39 @@ namespace BAL.Implementations
             return _waitingTokenRepository.addNewWaitingToken(model);
         }
 
+        public bool AssignTable(int tableid, int tokenid)
+        {
+            return _waitingTokenRepository.assignTable(tableid, tokenid);
+        }
+
+        public bool deleteWaitingToken(int tokenid)
+        {
+           return _waitingTokenRepository.deleteWaitingToken(tokenid);
+        }
+
         public WaitingTokenModel getAllWaitingTokens(int sectionid)
         {
             return _waitingTokenRepository.getAllWaingTokens(sectionid);
         }
 
+        public int getSectionIdOfToken(int tokenid)
+        {
+            return _waitingTokenRepository.getSectionIdOfToken(tokenid);
+        }
+
         public Dictionary<Section,int> getSectionsWithWaitingTokens()
         {
             return _waitingTokenRepository.getSectionsWithWaitingTokens();
+        }
+
+        public List<CustomerModel> getSuggestedCustomerList(string name)
+        {
+            return _waitingTokenRepository.getSuggestedCustomerList(name);
+        }
+
+        public List<Table> getTablesForToken(int tokenid)
+        {
+            return _waitingTokenRepository.getTablesForToken(tokenid);
         }
 
         public WaitingTokenModel getTokenDetails(int waitingTokenId)

@@ -410,10 +410,7 @@ namespace BAL.Implementations
             return _orderRepository.GetOrderDetails(orderid);
         }
 
-        public Dictionary<Item, List<Modifier>> getItemsAndModifiers(int orderid)
-        {
-            return _orderRepository.GetItemsAndModifiersForOrder(orderid);
-        }
+       
 
         public int getTotalOrderCount()
         {
@@ -442,6 +439,11 @@ namespace BAL.Implementations
         public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
         {
              _orderRepository.changeReadyQuantity(readyItemCount);
+        }
+
+        public Dictionary<int, Dictionary<Item, List<Modifier>>> getModifiersForItems(int orderid)
+        {
+            return _orderRepository.GetItemsAndModifiersForOrder2(orderid);
         }
     }
 }

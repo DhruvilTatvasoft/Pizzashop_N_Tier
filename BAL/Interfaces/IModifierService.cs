@@ -22,7 +22,7 @@ namespace BAL.Interfaces
         bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifierGroup(int modifierGroupId);
         List<Unit> GetAllUnits();
-        void AddNewModifier(ModifierModel modifier);
+        bool AddNewModifier(ModifierModel modifier);
         Modifier getModifier(int modifierid, int modifierGroupId);
         void updateModifier(ModifierModel modifier, int modifierGroupId);
         List<Modifier> getModifiersForMGroupForItem(int modifiergroupId);

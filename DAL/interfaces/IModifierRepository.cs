@@ -22,7 +22,7 @@ namespace DAL.interfaces
         bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifierGroup(int modifierGroupId);
  List<Unit> GetAllUnits();
-        void AddNewModifier(ModifierModel modifier);
+        bool AddNewModifier(ModifierModel modifier);
         Modifier getModifierFromDb(int modifierid);
         void updateModifier(ModifierModel modifier, int modifierGroupId);
         void updateModifiersForItem(List<ModifierModel> modifierModels,int? itemid);

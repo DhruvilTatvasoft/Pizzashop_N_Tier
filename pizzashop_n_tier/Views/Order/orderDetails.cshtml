@@ -1,3 +1,4 @@
+@using DAL.Data
 @{
     ViewData["Title"] = "OrderDetails";
     decimal subtotal = 0;
@@ -14,9 +15,12 @@
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4>Order Summary <span class="badge bg-success">@Model.order.Status.Statusname</span></h4>
                         <button class="btn btn-primary add-item-modifier" >
+                            <a href="@Url.Action("generatePdf","Order",new {orderid = @Model.order.Orderid})">
                             <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
-                            <span><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
+                            <span class="text-white"><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
                                     alt="">Export</span>
+                            </a>
+    
                         </button>
                     </div>
                     <div class="row mb-2">
@@ -31,7 +35,11 @@
                                 <strong>Paid on:</strong> - &nbsp; | &nbsp;
                                 <strong>Placed on:</strong>@Model.order.Createdat &nbsp; | &nbsp;
                                 <strong>Modified on:</strong> @Model.order.Modifiedat &nbsp; | &nbsp;
-                                <strong>Order Duration:</strong>
+
+                                @{
+                                    var duration = DateTime.Now - Model.order.Createdat;
+                                }
+                                <strong>Order Duration:</strong> @(duration?.Hours ?? 0) hours @(duration?.Minutes ?? 0) minutes 
                             </p>
                         </div>
                     </div>
@@ -77,44 +85,44 @@
                     </thead>
                     <tbody>
 
-                        @foreach (var item in @Model.orderedItemModifiers.modifiersForItem.Keys)
+                        @foreach (var item in @Model.orderedItemModifiers.ItemsAndModifiers)
                         {
-                            <tr>
-                                <td>1</td>
-                                <td>@item.Itemname <br />
-
-                                    @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
-                                    {
-                                        <li>@modifier.Modifiername</li>
-                                        @* <br /> *@
-                                    }
-
-                                </td>
+                            Dictionary<Item,List<Modifier>> itemAndModifiers = item.Value;
+                                <tr>
+                                @foreach(var Item in itemAndModifiers.Keys){
+                                    <td>@item.Key</td>
+                                    <td>@Item.Itemname
+                                    
+                                @foreach(var modifier in itemAndModifiers[Item]){
+                                    <li>@modifier.Modifiername</li>
+                                }
+                                    </td>
                                 <td>
-                                    @item.Itemquantity
-                                    @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
+                                    @Item.Itemquantity
+                                    @foreach (var modifier in  itemAndModifiers[Item])
                                     {
-                                        <br>@modifier.Modifierquantity
-                                        
+                                        <br>@modifier.Modifierquantity 
                                     }
 
                                 </td>
-                                <td>@item.Itemrate
-                                    @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
+                                <td>@Item.Itemrate
+                                    @foreach (var modifier in  itemAndModifiers[Item])
                                     {
                                         <br>@(modifier.Modifierrate)
                                     }
                                 </td>
-                                <td class="d-flex justify-content-end"><label style="display: none;">@(item.Itemrate * item.Itemquantity)</label>
-
-                                   @(subtotal += item.Itemrate * item.Itemquantity);
-                                    @foreach (var modifier in @Model.orderedItemModifiers.modifiersForItem[item])
+                                 <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate * Item.Itemquantity)</label>   
+                                   @{subtotal += Item.Itemrate * Item.Itemquantity;}
+                                   @( Item.Itemrate * Item.Itemquantity)
+                                    @foreach (var modifier in itemAndModifiers[Item])
                                     {
-                                        <br>@(modifier.Modifierrate * modifier.Modifierquantity)
+                                        <br>@(modifier.Modifierrate * modifier.Modifierquantity) 
                                         <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
                                     }
                                 </td>
-                            </tr>
+                                
+                                }
+                             </tr>
                         }
                     </tbody>
                 </table>
@@ -145,7 +153,7 @@
                         </tr>
                         <tr class="fw-bold">
                             <td>Total:</td>
-                            <td>₹624.81</td>
+                            <td>₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 + (decimal)7.98 + (decimal)19.95)</td>
                         </tr>
                     </tbody>
                 </table>

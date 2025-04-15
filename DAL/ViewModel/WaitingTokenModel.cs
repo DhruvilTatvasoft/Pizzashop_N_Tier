@@ -12,9 +12,13 @@ public class WaitingTokenModel
     public int sectionId{get;set;}
     public Dictionary<Section,int> Sections{get;set;}
     public List<Waitingtoken> waitingTokens{get;set;}
+
+    public List<Table> tables{get;set;}
     public int pageNumber{get;set;}
     public int pageSize{get;set;}
     public int TotalWaitingTokens{get;set;}
+
+    public List<CustomerModel> customerList{get;set;}
 
     public CustomerModel customer{get;set;}
 }

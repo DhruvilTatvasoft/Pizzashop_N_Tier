@@ -77,7 +77,7 @@ public partial class PizzashopCContext : DbContext
 
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop;User id=postgres;password=Dhruvil@23;TrustServerCertificate=True");
+        => optionsBuilder.UseNpgsql("Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True");
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -489,6 +489,9 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnName("orderitemmodifierid");
             entity.Property(e => e.IsReady).HasDefaultValueSql("false");
             entity.Property(e => e.ItemId).HasColumnName("item_id");
+            entity.Property(e => e.ModifierQuantity)
+                .HasDefaultValueSql("8")
+                .HasColumnName("modifierQuantity");
             entity.Property(e => e.Modifierid).HasColumnName("modifierid");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Orderitemdetailid).HasColumnName("orderitemdetailid");
@@ -904,6 +907,7 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
+            entity.Property(e => e.Customerid).HasColumnName("customerid");
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
@@ -920,6 +924,10 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Tablename)
                 .HasMaxLength(50)
                 .HasColumnName("tablename");
+
+            entity.HasOne(d => d.Customer).WithMany(p => p.Tables)
+                .HasForeignKey(d => d.Customerid)
+                .HasConstraintName("customer_fkey");
 
             entity.HasOne(d => d.Section).WithMany(p => p.Tables)
                 .HasForeignKey(d => d.Sectionid)
@@ -1112,16 +1120,15 @@ public partial class PizzashopCContext : DbContext
 
             entity.ToTable("waitingtokens");
 
-            entity.Property(e => e.Waitingtokenid).HasColumnName("waitingtokenid");
+            entity.Property(e => e.Waitingtokenid)
+                .UseIdentityAlwaysColumn()
+                .HasColumnName("waitingtokenid");
             entity.Property(e => e.Createdat)
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
             entity.Property(e => e.Createdby).HasColumnName("createdby");
             entity.Property(e => e.Customerid).HasColumnName("customerid");
-            entity.Property(e => e.Isassigned)
-                .HasDefaultValueSql("false")
-                .HasColumnName("isassigned");
             entity.Property(e => e.Isdeleted)
                 .HasDefaultValueSql("false")
                 .HasColumnName("isdeleted");
@@ -1131,7 +1138,6 @@ public partial class PizzashopCContext : DbContext
                 .HasColumnName("modifiedat");
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Sectionid).HasColumnName("sectionid");
-            entity.Property(e => e.Tableid).HasColumnName("tableid");
             entity.Property(e => e.Totalpersons).HasColumnName("totalpersons");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Waitingtokens)
@@ -1143,11 +1149,6 @@ public partial class PizzashopCContext : DbContext
                 .HasForeignKey(d => d.Sectionid)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("waitingtokens_sectionid_fkey");
-
-            entity.HasOne(d => d.Table).WithMany(p => p.Waitingtokens)
-                .HasForeignKey(d => d.Tableid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("waitingtokens_tableid_fkey");
         });
 
         OnModelCreatingPartial(modelBuilder);

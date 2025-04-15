@@ -12,6 +12,11 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     public bool addNewWaitingToken(WaitingTokenModel model)
     {
         Waitingtoken token = new Waitingtoken();
+        Customer Customer = _context.Customers.FirstOrDefault(Customer=>Customer.Email.ToLower().Trim() == model.customer.email.ToLower().Trim());
+        Waitingtoken isTokenCreated = _context.Waitingtokens.FirstOrDefault(token => token.Customerid == Customer.Customerid && token.Isdeleted == false);
+        if(isTokenCreated != null){
+            return false;
+        }
         token.Createdat = DateTime.Now;
         token.Sectionid = model.sectionId;
         token.Totalpersons = model.personCount;
@@ -71,8 +76,9 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.waitingTokens = query.ToList();
         foreach (var token in model.waitingTokens)
         {
-            // token.Customer = _context.Customers.Where(c => c.Customerid == token.Customerid).FirstOrDefault() ?? new Customer();
+            token.Customer = _context.Customers.Where(c => c.Customerid == token.Customerid).FirstOrDefault() ?? new Customer();
         }
+        model.sectionId = sectionid;
         return model;
     }
 
@@ -131,5 +137,55 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     public int getTotalWaitingTokens()
     {
         return _context.Waitingtokens.Where(token=>token.Isdeleted == false).Count();
+    }
+
+    public List<CustomerModel> getSuggestedCustomerList(string name)
+    {
+       var customer = _context.Customers.Where(customer=>customer.Email.ToLower().Trim().Contains(name.ToLower().Trim())).ToList();
+       List<CustomerModel> customerModel = new List<CustomerModel>();
+       foreach (var item in customer){
+        CustomerModel model = new CustomerModel();
+        model.name = item.Customername;
+        model.email = item.Email;
+        model.phone = item.Phonenumber;
+        customerModel.Add(model);
+       }
+       return customerModel;
+    }
+
+    public bool deleteWaitingToken(int tokenid)
+    {
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
+        token.Isdeleted = true;
+        _context.Waitingtokens.Update(token);
+        _context.SaveChanges();
+        return true;
+        
+    }
+
+    public int getSectionIdOfToken(int tokenid)
+    {
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
+        return token.Sectionid;
+    }
+
+    public List<Table> getTablesForToken(int tokenid)
+    {
+        int sectionId = getSectionIdOfToken(tokenid);
+        List<Table> tables = _context.Tables.Where(table=>table.Sectionid == sectionId && table.Status == true).ToList();
+        return tables;
+    }
+
+    public bool assignTable(int tableid, int tokenid)
+    {
+        Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid)!;
+        table.Status = false;
+        table.Statusname = "Assigned";
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
+        table.Customerid = token.Customerid;
+        _context.Waitingtokens.Remove(token);
+        _context.Tables.Update(table);
+        _context.SaveChanges();
+        return true;
     }
 }
