@@ -29,7 +29,7 @@
     <tbody>
         @if(@Model.items.Count <= 0){
             <tr>
-                 <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
+                 <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Items Found</td>
                 </tr>
         }
         else{
@@ -43,7 +43,7 @@
                         <img src="@item.Itemimage" style="width:30px;height: 30px" alt="">
                         }
                         else{
-                            <img src="~/images/3d24fae1-694f-407f-82ad-ce0d6beaf876_dinner-icon.png"style="width:30px;height: 30px" alt="">
+                            <img src="~/images/dining-menu.png"style="width:30px;height: 30px" alt="">
                         }
                      
                         <label for="" style="font-size: 14px;">@item.Itemname</label>

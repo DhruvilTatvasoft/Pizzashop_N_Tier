@@ -29,7 +29,7 @@
 
         @if (Model.modifiers.Count() <= 0)
         {
-            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders
+            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Modifiers
                 Found</td>
            
         }
@@ -39,7 +39,7 @@
             {
                 <tr>
                     <td scope="row">
-                        <input class="form-check-input IsModifierChecked" type="checkbox" value="@modifier.Modifierid" />
+                        <input class="form-check-input IsModifierChecked" onchange="checkTheMasterCheckbox()" type="checkbox" value="@modifier.Modifierid" />
                         <label class="form-check-label" for="flexCheckDefault">
                             <label for="" style="font-size: 14px;">@modifier.Modifiername</label>
                         </label>
@@ -106,6 +106,22 @@
 </div>
 
 <script>
+
+
+ $(document).on('change', '.checkedItems', function () {
+    $('.IsModifierChecked').prop('checked', this.checked);
+});
+    function checkTheMasterCheckbox(){
+        if($('.IsModifierChecked:checked').length == $('.IsModifierChecked').length)
+        {
+            $('.checkedItems').prop('checked',true)
+        }
+        else{
+            $('.checkedItems').prop('checked',false)
+        }
+        }
+   
+
     function initializeModifierCheckboxes() {
         const masterCheckbox = document.getElementById("masterCheck");
 
@@ -117,6 +133,8 @@
                 });
             });
         }
+
+        
 
         document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
             checkbox.addEventListener("change", () => {

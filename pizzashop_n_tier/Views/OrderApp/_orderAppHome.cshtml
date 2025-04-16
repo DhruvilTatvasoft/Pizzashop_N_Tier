@@ -7,7 +7,8 @@
 <script>
      $("document").ready(() => {
           @* loadKot(); *@
-         loadwaitingList()
+         @* loadwaitingList() *@
+         loadTables()
      })
     
      function loadKot() {
@@ -39,15 +40,21 @@
      }
      $(document).on('click', '.Available-Table', function () {
           $(this).removeClass('Available-Table').addClass('selectedTable');
+          var sectionid = $(this).data('sectionid')
+          var id = "table_"+sectionid;
+          @* alert(id) *@
           setTimeout(1)
-          if ($('.selectedTable').length > 0) {
-               $('#assignBtn').prop('disabled', false)
+          if ($("#"+id+" .selectedTable").length > 0) {
+               @* alert("OK") *@
+               $("#assignBtn_"+sectionid).prop('disabled', false)
           }
      });
      $(document).on('click', '.selectedTable', function () {
           $(this).removeClass('selectedTable').addClass('Available-Table')
-          if ($('.selectedTable').length == 0) {
-               $('#assignBtn').prop('disabled', true)
+          var sectionid = $(this).data('sectionid')
+          var id = "table_"+sectionid;
+          if ($("#"+id+" .selectedTable").length == 0) {
+               $("#assignBtn_"+sectionid).prop('disabled', true)
           }
      });
 </script>

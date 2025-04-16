@@ -34,7 +34,7 @@ public class MenuController : Controller
         _modifierService = modifierService;
     }
 
-[Authorize(Policy="CanView_Menu")]
+    [Authorize(Policy="CanView_Menu")]
     public IActionResult Menu()
     {
         return View();
@@ -51,6 +51,8 @@ public class MenuController : Controller
         _menuService.GetCategories(model);
         return PartialView("_menuPartial1", model);
     }
+
+    
 
     [HttpPost]
     [Authorize(Policy="CanEdit_Menu")]
@@ -253,7 +255,6 @@ public class MenuController : Controller
         model = _modifierService.getAllModifiers(modifierGroupId,pageSize,pageNumber);
         return PartialView("_modifiersListForModifierGroup", model);
     }
-
     [HttpGet]
     public IActionResult getModifiersForModifierGp(int modifierGroupId,int pageSize = 2,int pageNumber = 1)
     {
@@ -279,11 +280,11 @@ public class MenuController : Controller
     }
 
     [HttpGet]
-    public IActionResult SearchModifier(string searchedModifier)
+    public IActionResult SearchModifier(string searchedModifier,int pageSize,int pageNumber)
     {
         ItemModel model = new ItemModel();
-        model.modifiers = _modifierService.getSearchedModifier(searchedModifier);
-        return PartialView("_modifierListPartial", model);
+        model = _modifierService.getSearchedModifier(searchedModifier,pageSize,pageNumber);
+        return PartialView("_modifiersListForModifierGroup", model);
     }
 [Authorize(Policy="CanEdit_Menu")]
     public IActionResult AddNewModifierGroup(ModifierModel model)
@@ -313,8 +314,9 @@ public class MenuController : Controller
     public IActionResult EditModifierGroupGet(int modifiergroupid)
     {
         ItemModel model = new ItemModel();
-        model = _modifierService.getModifiersForMGroup(modifiergroupid,1,1);
+        model = _modifierService.getModifiersForModifierGroup(modifiergroupid);
         model.mg = _modifierService.GetModifiergroup(modifiergroupid);
+        model.modifierGroupId = modifiergroupid;
         return PartialView("_edit_modifierGroup", model);
     }
 

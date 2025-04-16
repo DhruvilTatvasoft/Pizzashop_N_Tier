@@ -468,4 +468,10 @@ public List<users> getUsersForPage(int currentPage, int maxRows, string search, 
     {
         return _context.Users.FirstOrDefault(u=>u.Userid == userid).Profilephoto;
     }
+
+    public string getUserRoleFromDb(string email)
+    {
+        int role = _context.Users.FirstOrDefault(user=>user.Email == email)!.Roleid;
+        return _context.Roles.FirstOrDefault(r=>r.Roleid == role)!.Rolename;
+    }
 }

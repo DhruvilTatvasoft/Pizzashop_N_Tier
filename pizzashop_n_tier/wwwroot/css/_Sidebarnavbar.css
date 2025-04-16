@@ -11,7 +11,9 @@ html,
         position: relative;
         z-index: 4;
     }
-
+    .dropdown-item img{
+        width:8%;
+    }
     nav {
         background-color: #0066A7;
     }

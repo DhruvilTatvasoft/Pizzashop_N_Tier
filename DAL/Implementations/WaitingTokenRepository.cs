@@ -188,4 +188,21 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         _context.SaveChanges();
         return true;
     }
+
+    public List<CustomerModel> getCustomerTokensForSection(int sectionid)
+    {
+        List<CustomerModel> customerViewModels = new List<CustomerModel>();
+        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Isdeleted == false).ToList();
+        foreach (var token in tokens){
+            Customer customer = _context.Customers.FirstOrDefault(Customer=>Customer.Customerid == token.Customerid);
+            CustomerModel model = new CustomerModel();
+            model.name = customer.Customername;
+            model.phone = customer.Phonenumber;
+            model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid);
+            model.PersonCount = token.Totalpersons;
+            model.tokenid = token.Waitingtokenid;
+            customerViewModels.Add(model);
+        }
+        return customerViewModels;
+    }
 }

@@ -273,7 +273,8 @@ public class OrderRepository : IOrderRepository
         order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
         order.Customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == order.Customerid)!;
         order.Section = _context.Sections.FirstOrDefault(section => section.Sectionid == order.Sectionid)!;
-        order.Table = _context.Tables.FirstOrDefault(table => table.Tableid == orderid && table.Sectionid == order.Sectionid)!;
+        
+        order.Table = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)!;
         return order;
     }
 

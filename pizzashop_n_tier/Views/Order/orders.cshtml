@@ -64,6 +64,7 @@
                             <input type="date" class="from-date form-control shadow-none" style="font-size: 13px;"
                                 placeholder="From Date" id="startDate">
                             <label for="floatingPassword" style="font-size: 10px;">From Date</label>
+                            <span id="fromDate" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-3 col-sm-6 col-12 mb-3 mb-md-0">
@@ -71,6 +72,7 @@
                             <input type="date" class="to-date form-control shadow-none" style="font-size: 13px;"
                                 placeholder="To Date" id="endDate">
                             <label for="floatingPassword" style="font-size: 10px;">To Date</label>
+                            <span id="ToDate"></span>
                         </div>
                     </div>
                     <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
@@ -87,6 +89,8 @@
     </div>
 
     <script>
+        
+
         $("document").ready(function () {
             showOrdersBySearch(1,2,'asc','orderId');
               $('.sidebar ul li').removeClass('active-class');
@@ -98,6 +102,11 @@
             var searchedOrder = $("#SearchOrder").val();
             var startDate = $("#startDate").val();
             var endDate = $("#endDate").val();
+            if(startDate > endDate){
+                document.querySelector("#fromDate").innerHTML = "From Date should not be gretter than End Date"
+                @* alert("OK") *@
+                return;
+            }
             pagesize = $(".pagesize").val();
             console.log(sortOrder)
             console.log(sortBy)

@@ -20,16 +20,15 @@
             </th>
             <th scope="col">Rate</th>
             <th scope="col">Quantity</th>
-            <th scope="col">Action</th>
+            <th scope="col" data-lastcolumn="L">Action</th>
         </tr>
     </thead>
     <tbody>
 
         @if (Model.modifiers.Count() <= 0)
         {
-            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders
+            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Modifiers
                 Found</td>
-            <h1>abcd</h1>
         }
         else
         {
@@ -66,14 +65,14 @@
         <label for="" class="me-2">items per page:</label>
         <div class="dropdown mt-2 me-2">
             <select class="form-select form-select-lg mb-3 pagesize2"
-                onchange="loadModifiersForModifierGroup(@Model.modifierGroupId,@Model.pageNumber)"
+                onchange="selectModifiersForModifierGroup(@Model.modifierGroupId,@Model.pageNumber,'','false')"
                 aria-label=".form-select-lg example">
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-                <option value="4">4</option>
-                <option value="5">5</option>
-                <option value="6" selected>6</option>
+                <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)">1</option>
+                <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)">2</option>
+                <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)">3</option>
+                <option value="4" selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
+                <option value="5" selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
+                <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
             </select>
         </div>
     </div>
@@ -81,7 +80,7 @@
     <div class="d-flex mt-1">
         @if (Model.pageNumber > 1)
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber-1))"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber-1),'','false')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
                     style="width:25px" alt=""></button>
         }
         else
@@ -91,7 +90,7 @@
         }
         @if (Model.pageNumber * Model.pageSize < Model.totalrecords)
         {
-            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber+1))"><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px;rotate: 180deg;" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber+1),'','false')"><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px;rotate: 180deg;" alt=""></button>
         }
         else
         {

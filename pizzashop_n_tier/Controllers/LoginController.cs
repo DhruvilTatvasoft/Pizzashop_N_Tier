@@ -90,6 +90,10 @@ public class LoginController : Controller
 
     }
 
+    public IActionResult AccessDenied(){
+        return View();
+    }
+
     [HttpPost]
     public async Task<IActionResult> ForgetPass(string Email)
     {

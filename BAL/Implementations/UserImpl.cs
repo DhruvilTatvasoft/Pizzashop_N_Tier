@@ -185,6 +185,7 @@ public class UserImpl : IUser
         foreach (var r in rp)
         {
             gpermissionid.Add(r.Permissionid);
+
         }
         PermissionsModel2 model = new PermissionsModel2();
         model.plist = plist;
@@ -192,6 +193,16 @@ public class UserImpl : IUser
         model.grantedPermissions = rp;
         model.roleid = roleid;
         model.rolename = _repository.getRolename(roleid);
+        List<PermissionModel3> permissionModel = new List<PermissionModel3>();
+        foreach(var p in plist){
+        PermissionModel3 model2 = new PermissionModel3();
+        model2.can_view = rp.Where(Rp => Rp.Permissionid == p.Permissionid).Select(Rp => Rp.Canview).FirstOrDefault();
+        model2.can_edit = rp.Where(Rp => Rp.Permissionid == p.Permissionid).Select(Rp => Rp.Canedit).FirstOrDefault();
+        model2.can_delete = rp.Where(Rp => Rp.Permissionid == p.Permissionid).Select(Rp => Rp.Candelete).FirstOrDefault();
+        model2.PermissionId = p.Permissionid;
+        permissionModel.Add(model2);
+        }
+        model.permissionModel = permissionModel;
         return model;
     }
 
@@ -216,4 +227,8 @@ public class UserImpl : IUser
         return u.Profilephoto;
     }
 
+    public string getUserRole(string email)
+    {
+        return _repository.getUserRoleFromDb(email);
+    }
 }

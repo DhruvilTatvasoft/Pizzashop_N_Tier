@@ -118,15 +118,21 @@ public class ModifierRepository : IModifierRepository
         return modifiers;
     }
 
-    public List<Modifier> getSearchedModifier(string searchedModifier)
+    public ItemModel getSearchedModifier(string searchedModifier,int pageSize,int pageNumber)
     {
-        List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim()) && m.Isdeleted == false).GroupBy(m => new { ModifierName = m.Modifiername.Trim() })
-                    .Select(g => g.First()).ToList();
+        ItemModel model = new ItemModel();
+        var query = _context.Modifiers.Where(m => m.Modifiername.ToLower().Contains(searchedModifier.ToLower().Trim()) && m.Isdeleted == false).GroupBy(m => new { ModifierName = m.Modifiername.Trim() })
+                    .Select(g => g.First());
+        model.pageNumber = pageNumber;
+        model.pageSize = pageSize;
+        
+        List<Modifier> modifiers = query.ToList();
         modifiers.ForEach(m =>
         {
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
         });
-        return modifiers;
+        model.modifiers = modifiers;
+        return model;
     }
 
     public bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
@@ -411,11 +417,19 @@ public class ModifierRepository : IModifierRepository
                 {
                     m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
                 });
-
-        model.pageNumber = pageNumber;
-        model.pageSize = pageSize;
+        if(pageSize > 0){
+            model.pageSize = pageSize;
+        }
+        if(pageNumber > 0){
+            model.pageNumber = pageNumber;
+        }
         model.totalrecords = finalList.Count();
+        if(pageSize > 0 && pageNumber > 0){
         model.modifiers = finalList.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToList();
+        }
+        else{
+        model.modifiers = finalList.ToList();
+        }
         return model;
     }
 
@@ -427,5 +441,12 @@ public class ModifierRepository : IModifierRepository
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
         });
         return modifiers;
+    }
+
+    public ItemModel getModifiersForModifierGroup(int modifiergroupid)
+    {
+       ItemModel model = new ItemModel();
+       model.modifiers = _context.Modifiers.Where(modifier=>modifier.Modifiergroupid == modifiergroupid && modifier.Isdeleted == false).ToList();
+       return model;
     }
 }

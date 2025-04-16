@@ -1,0 +1,116 @@
+@model TableViewModel
+<link rel="stylesheet" href="~/css/_waitingList.css">
+@* <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
+  <div class="offcanvas-header">
+    <h5 id="offcanvasRightLabel">Waiting List</h5>
+    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body">
+    ...
+  </div>
+</div> *@
+
+<div>
+
+
+  <table class="table">
+    <thead>
+      <tr>
+        <th scope="col" style="width: 20%;">&nbsp;</th>
+        <th scope="col">id</th>
+        <th scope="col">Name</th>
+        <th scope="col">No of Persons</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach (var customer in Model.customers)
+      {
+        <tr>
+          <td>
+            <div id="customerDetails_@customer.tokenid">
+            <input type="radio"  onclick="fillCustomerDetails(@customer.tokenid)">
+          <input type="hidden" class="customer_name" value="@customer.name"></input>
+          <input type="hidden" class="customer_email" value="@customer.email"></input>
+          <input type="hidden" class="customer_personcount" value="@customer.PersonCount"></input>
+          <input type="hidden" class="customer_phone" value="@customer.phone"></input>
+          <input type="hidden" class="customer_personCount" value="@customer.PersonCount"></input>
+          <input type="hidden" class="customer_sectionid" value="@customer.section.Sectionid"></input>
+            </div>
+          </td>
+          <td>@customer.tokenid</td>
+          <td>@customer.name</td>
+          <td>@customer.PersonCount</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+
+  <div class="mt-3">
+    <label for="" class="headerTEXT mb-3" style="font-weight: 600;">Customer Details</label>
+    <form action="">
+      <div class="row">
+        <input type="hidden" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
+        <div class="form-group col-12 mb-3 ">
+
+          <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"
+            aria-describedby="emailHelp" asp-for="@Model.WaitingToken.customer.email" placeholder="Email*">
+          <span asp-validation-for="@Model.WaitingToken.customer.email" class="text-danger pt-2 emailaddress"></span>
+          <div class="suggesion_container"></div>
+        </div>
+        <div class="form-group col-12 mb-3">
+          <input type="text" class="form-control p-2" id="customer-name" aria-describedby="emailHelp"
+            asp-for="@Model.WaitingToken.customer.name" placeholder="Name*">
+          <span asp-validation-for="@Model.WaitingToken.customer.name" class="text-danger pt-2"></span>
+        </div>
+        <div class="form-group col-12 mb-3">
+          <input type="tel" class="form-control p-2" id="customer-phone" maxlength="10" size="10"
+            asp-for="@Model.WaitingToken.customer.phone" placeholder="Mobile Number*">
+          <span asp-validation-for="@Model.WaitingToken.customer.phone" class="text-danger pt-2"></span>
+        </div>
+        <div class="mb-3 col-md-6 mb-3">
+          <div class="form-floating">
+            <label for="" class="form-label" style="font-size: 61%;top: -12px;left: -1px;">No of Person(s)*</label>
+            <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
+              asp-for="@Model.WaitingToken.personCount" min="1">
+            <span asp-validation-for="@Model.WaitingToken.personCount" class="text-danger pt-2"></span>
+          </div>
+          <span class="text-danger"></span>
+        </div>
+        <div class="mb-3 col-md-6 form-floating">
+          <label for="" class="form-label"
+            style="position: absolute;left: 6%;top: -20%;font-size: 64%;">section*</label>
+          <select class="form-select" style="padding: 6%;padding-top: 8%;" id="tableSection"
+            asp-for="@Model.WaitingToken.sectionId">
+            @foreach (var sec in @Model.WaitingToken.sections)
+            {
+              <option value="@sec.Sectionid"
+                selected="@(sec.Sectionid == @Model.WaitingToken.sectionId ? "selected" : null)">
+                @sec.Sectionname</option>
+            }
+          </select>
+        </div>
+      </div>
+      <div class="d-flex justify-content-end mt-4">
+        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken">Save</button>
+        <button class="btn btn-outline-primary btnoutlinecolour" id="closeBtn" data-bs-dismiss="modal">Cancel</button>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<script>
+  function fillCustomerDetails(tokenid){
+    @* alert(tokenid) *@
+    var id = "customerDetails_"+tokenid
+    var Name = $("#"+id+" .customer_name").val()
+    var Phone = $("#"+id+" .customer_phone").val()
+    var Email = $("#"+id+" .customer_email").val()
+    var Email = $("#"+id+" .customer_Pe").val()
+
+    $("#customer-name").val(Name)
+    
+    
+  }
+
+</script>

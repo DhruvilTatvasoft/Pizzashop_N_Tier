@@ -36,4 +36,13 @@ public class CustomerModel{
     [EmailAddress(ErrorMessage ="Invalid email address")]
     public string email{get;set;}
 
+    public int PersonCount{get;set;}
+    public Section section{get;set;}
+
+    public int tokenid{get;set;}
+
+    public List<Section> sections{get;set;}
+
+   
+
 } 

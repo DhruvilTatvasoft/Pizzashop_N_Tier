@@ -127,7 +127,14 @@ public class ItemsImple : IItemService
 
     public void updateItemdetails(ItemViewModel model, int itemid)
     {
-             _itemRepository.updateItemdetails(model);
+        string imagepath;
+        if(model.ImagePath != null){
+         imagepath = _imagePath.getImagePath(model.ImagePath);
+        }
+        else{
+            imagepath = "";
+        }
+             _itemRepository.updateItemdetails(model,imagepath);
         _modifierRepository.updateModifiersForItem(model.ModifierModels, model.itemid);
     }
 }

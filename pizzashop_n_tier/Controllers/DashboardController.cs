@@ -29,7 +29,9 @@ public class DashboardController : Controller
     public readonly IModifierService _modifierService;
 
     public readonly IImagePath _imageService;
-    public DashboardController(ILogin log, IImagePath imagePath, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+
+    public readonly IJwtTokenGenService _jwtService;
+    public DashboardController(ILogin log, IImagePath imagePath,IJwtTokenGenService jwtTokenService, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -39,6 +41,7 @@ public class DashboardController : Controller
         _itemService = itemService;
         _permissionService = permissionService;
         _modifierService = modifierService;
+        _jwtService = jwtTokenService;
     }
 
     [Authorize(Roles = "Admin")]
@@ -306,15 +309,20 @@ public IActionResult ResetPassword(chang_p_model model)
 
 
     [HttpPost]
-    // [Authorize(Policy="CanEdit_RolesAndPermissions")]
+    [Authorize(Policy="CanEdit_RolesAndPermissions")]
     public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
     {
         _permissionService.UpdatePermissions(model);
         model = _user.permissionsForRole(roleid);
         TempData["ToastrMessage"] = "Permissions updated successfully";
         TempData["ToastrType"] = "success";
+         var request = HttpContext.Request;
+         var response = HttpContext.Response;
+        string email = _cookieService.getValueFromCookie("username",request);
+        string role = _user.getUserRole(email);
+        var token = _jwtService.GenerateJwtToken(email,role);
         HttpContext.Response.Cookies.Delete("token");
-        
+        _cookieService.setInCookie(token,response,"token",true);
         return View("permissions", model);
     }
 

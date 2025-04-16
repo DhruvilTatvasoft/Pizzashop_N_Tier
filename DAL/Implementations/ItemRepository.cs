@@ -6,6 +6,7 @@ using Microsoft.IdentityModel.Tokens;
 public class ItemRepository : IItemRepository
 {
     public PizzashopCContext _context;
+
     public ItemRepository(PizzashopCContext context)
     {
         _context = context;
@@ -90,6 +91,9 @@ public class ItemRepository : IItemRepository
         if(imagePath!=null){
         i.Itemimage = imagePath;
         }
+        else{
+            i.Itemimage = "/uploads/dining-menu.png";
+        }
         i.Createdat = DateTime.Now;
         i.Modifiedat = DateTime.Now;
         i.Modifiedby = (int)(_context.Logins.FirstOrDefault(lg => lg.Email == email)?.Id ?? 1);
@@ -155,7 +159,7 @@ public class ItemRepository : IItemRepository
         return item;
     }
 
-    public void updateItemdetails(ItemViewModel model)
+    public void updateItemdetails(ItemViewModel model,string imagepath)
     {
         // Item isItemExist = _context.Items.FirstOrDefault(item=>item.Itemname == model.Itemname && item.Itemid == model.itemid && item.Categoryid != model.Categoryid && item.Isdeleted == false);
 
@@ -171,7 +175,9 @@ public class ItemRepository : IItemRepository
         item.Shortcode = model.Shortcode;
         item.Description = model.Description;
         item.Unitid = model.Unitid;
-        item.Itemimage = model.ItemImagePathString;
+        if(imagepath != null || imagepath != ""){
+        item.Itemimage = imagepath;
+        }
         item.Isdeleted = false;
         item.Createdat = DateTime.Now;
         item.Modifiedat = DateTime.Now;

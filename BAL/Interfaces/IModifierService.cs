@@ -16,7 +16,7 @@ namespace BAL.Interfaces
         void addModifiersForItem(List<ModifierModel> modifierModels, int itemid,string email);
         List<ModifierModel> getModifiersForItem(int itemid);
         List<Modifier> getSelectedModifiers(List<int> modifierIds);
-        List<Modifier> getSearchedModifier(string searchedModifier);
+        ItemModel getSearchedModifier(string searchedModifier,int pageSize,int pageNumber);
         bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds);
         void deleteModifier(int modifierid, int modifiergroupid);
         bool updateModifierGroup(Modifiergroup mg, List<int> modifierIds);
@@ -26,5 +26,6 @@ namespace BAL.Interfaces
         Modifier getModifier(int modifierid, int modifierGroupId);
         void updateModifier(ModifierModel modifier, int modifierGroupId);
         List<Modifier> getModifiersForMGroupForItem(int modifiergroupId);
+        ItemModel getModifiersForModifierGroup(int modifiergroupid);
     }
 }

@@ -44,4 +44,5 @@ public interface IGenericRepository
     int getLoggerUId(string username);
 
     string getUserImagePath(int userid);
+    string getUserRoleFromDb(string email);
 }

@@ -4,6 +4,9 @@ using DAL.Data;
 public class TableViewModel
 {
     public Dictionary<SectionViewModel,List<Table>>? tablesPerSection{get;set;}
+    public List<CustomerModel> customers{get;set;}
+
+    public WaitingTokenModel WaitingToken{get;set;}
 }
 public class SectionViewModel{
     public Section section{get;set;}

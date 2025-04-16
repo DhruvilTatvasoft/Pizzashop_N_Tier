@@ -25,4 +25,5 @@ public interface IUser{
     PermissionsModel2 permissionsForRole(int roleid);
     void updatePermissions(PermissionsModel model);
     string getUserImagePath(int userid);
+    string getUserRole(string email);
 }

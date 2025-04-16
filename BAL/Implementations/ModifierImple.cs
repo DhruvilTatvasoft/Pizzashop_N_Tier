@@ -55,10 +55,9 @@ public class ModifierImple : IModifierService
         return _modifierRepository.getSelectedModifiers(modifierIds);
     }
 
-    public List<Modifier> getSearchedModifier(string searchedModifier)
+    public ItemModel getSearchedModifier(string searchedModifier,int pageSize,int pageNumber)
     {
-        List<Modifier> modifiers = _modifierRepository.getSearchedModifier(searchedModifier);
-        return modifiers;
+            return _modifierRepository.getSearchedModifier(searchedModifier,pageSize,pageNumber);
     }
 
     public bool AddNewModifierGroup(Modifiergroup mg, List<int> modifierIds)
@@ -104,5 +103,10 @@ public class ModifierImple : IModifierService
     public List<Modifier> getModifiersForMGroupForItem(int modifiergroupId)
     {
         return _modifierRepository.getModifiersForMGroupForItem(modifiergroupId);   
+    }
+
+    public ItemModel getModifiersForModifierGroup(int modifiergroupid)
+    {
+        return _modifierRepository.getModifiersForModifierGroup(modifiergroupid);
     }
 }

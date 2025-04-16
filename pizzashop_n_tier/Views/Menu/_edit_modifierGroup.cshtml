@@ -7,7 +7,7 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header" style="border:none;">
-          <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Edit Modifiergroup @Model.modifierGroupId</h5>
           <button type="button" class="close" style="margin-left: auto;border: none;background: none;"
             aria-label="Close" data-bs-dismiss="modal">
             <span aria-hidden="true">&times;</span>
@@ -26,7 +26,7 @@
               id="Modifier-description"></textarea>
           </div>
           <div class="mt-2">
-            <a href="#" data-bs-target="#addExistingModifiers" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,'1','2')"><label
+            <a href="#" data-bs-target="#addExistingModifiers" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,'1','2','true')"><label
                 for="" class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
               @foreach (var modifier in @Model.modifiers)

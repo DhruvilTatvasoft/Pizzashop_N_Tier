@@ -16,6 +16,11 @@
     font-weight: bold;
     
 }
+
+.headerTEXT{
+    font-size: 18px;
+    color: #0066A7;
+}
 @media (min-width: 992px) {
     #addEditWaitingToken .modal-lg, .modal-xl {
         --bs-modal-width: 500px;

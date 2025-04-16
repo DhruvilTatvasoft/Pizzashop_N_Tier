@@ -24,7 +24,7 @@ public class TaxesRepository : ITaxesRepository
         }
         else
         {
-            if (_context.Taxesandfees.FirstOrDefault(t => t.Taxname.ToLower().Trim() == tax.Taxname.ToLower().Trim()) != null)
+            if (_context.Taxesandfees.FirstOrDefault(Tax => Tax.Taxname.ToLower().Trim() == tax.Taxname.ToLower().Trim()) != null && tax.Isdeleted == false)
             {
                 return false;
             }
@@ -70,8 +70,7 @@ public class TaxesRepository : ITaxesRepository
 
     public List<Taxesandfee> getAlltaxes()
     {
-        return _context.Taxesandfees.Where(taxes => taxes.Isdeleted == false)
-                                    .GroupBy(taxes => taxes.Taxname.ToLower().Trim()).Select(taxes => taxes.First()).ToList();
+        return _context.Taxesandfees.Where(taxes => taxes.Isdeleted == false).ToList();
     }
 
     public Taxesandfee getTaxById(int taxid)

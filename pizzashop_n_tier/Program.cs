@@ -5,6 +5,7 @@ using BAL.Interfaces;
 using DAL.Data;
 using DAL.Implementations;
 using DAL.interfaces;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -71,7 +72,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 if (context.Request.Cookies.ContainsKey("token"))
                 {
                     context.Token = context.Request.Cookies["token"];
-                    Console.WriteLine("Token extracted from cookie: " + context.Token);
+                    // Console.WriteLine("Token extracted from cookie: " + context.Token);
                 }
                 else
                 {
@@ -118,7 +119,6 @@ builder.Services.AddAuthorization(options =>
 
     foreach (var entity in entities)
     {
-
         options.AddPolicy($"CanView_{entity}", policy => policy.RequireClaim($"CanView_{entity}", "True"));
         options.AddPolicy($"CanEdit_{entity}", policy => policy.RequireClaim($"CanEdit_{entity}", "True"));
         options.AddPolicy($"CanDelete_{entity}", policy => policy.RequireClaim($"CanDelete_{entity}", "True"));
@@ -128,8 +128,10 @@ builder.Services.AddAuthorization(options =>
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.LoginPath = "/Login/Index";
-    options.AccessDeniedPath = "/Error/NotFound";
+    options.AccessDeniedPath = "/Login/AccessDenied";
 });
+
+
 
 builder.Services.AddAuthorization();
 builder.Services.AddControllers().AddJsonOptions(x =>
@@ -146,10 +148,9 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 app.UseSession();
 app.UseRouting();
-
-app.MapControllers();
 app.UseAuthentication();
 app.UseAuthorization();
+app.MapControllers();
 app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 app.UseDeveloperExceptionPage();
 app.MapControllerRoute(
