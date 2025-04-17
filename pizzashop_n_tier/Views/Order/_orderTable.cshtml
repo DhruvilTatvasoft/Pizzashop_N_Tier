@@ -4,15 +4,21 @@
         <tr>
             <th scope="col">
                 <label for="" class="ps-2">#Order</label>
-                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "orderId" && Model.sortOrder == "asc" ? "desc" : "asc")','orderId')" style="width: 15px;cursor: pointer;" alt="">
+                <img src="~/images/icons8-sorting-arrows-50.png"
+                    onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "orderId" && Model.sortOrder == "asc" ? "desc" : "asc")','orderId')"
+                    style="width: 15px;cursor: pointer;" alt="">
             </th>
             <th scope="col">
                 <label for="">Date</label>
-                
-                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "Date" && Model.sortOrder == "asc" ? "desc" : "asc")','Date')" style="width: 15px;cursor: pointer;" alt="">
+
+                <img src="~/images/icons8-sorting-arrows-50.png"
+                    onclick="showOrdersBySearch(1,@Model.PageSize,'@(Model.sortBy == "Date" && Model.sortOrder == "asc" ? "desc" : "asc")','Date')"
+                    style="width: 15px;cursor: pointer;" alt="">
             </th>
             <th scope="col">Customer
-                <img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "customerName" && Model.sortOrder == "asc" ? "desc" : "asc")','customerName')" style="width: 15px;cursor: pointer;" alt="">
+                <img src="~/images/icons8-sorting-arrows-50.png"
+                    onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "customerName" && Model.sortOrder == "asc" ? "desc" : "asc")','customerName')"
+                    style="width: 15px;cursor: pointer;" alt="">
             </th>
 
             @* onclick="loadOrdersTable('@Model.CurrentPage','@Model.PageSize','','','','orderId', '@(Model.SortBy == "orderId" && Model.SortOrder == "asc" ? "desc" : "asc")')" *@
@@ -21,19 +27,24 @@
             </th>
             <th scope="col"><label for="">Payment Mode</label></th>
             <th scope="col"><label for="">Ratting</label></th>
-            <th scope="col" class="d-flex justify-content-end align-items-center pe-4"><div>
+            <th scope="col" class="d-flex justify-content-end align-items-center pe-4">
+                <div>
 
-                <label for="" class="me-2">Total Amount</label><img src="~/images/icons8-sorting-arrows-50.png" onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "totalAmount" && Model.sortOrder == "asc" ? "desc" : "asc")','totalAmount')" style="width: 15px;cursor: pointer;" alt="">
-            </div>
+                    <label for="" class="me-2">Total Amount</label><img src="~/images/icons8-sorting-arrows-50.png"
+                        onclick="showOrdersBySearch(1,'@Model.PageSize','@(Model.sortBy == "totalAmount" && Model.sortOrder == "asc" ? "desc" : "asc")','totalAmount')"
+                        style="width: 15px;cursor: pointer;" alt="">
+                </div>
             </th>
             <th scope="col"><label for="">Action</label></th>
         </tr>
     </thead>
     <tbody>
 
-        @if(Model.TotalOrders <= 0){
+        @if (Model.TotalOrders <= 0)
+        {
             <tr>
-                <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
+                <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                    Orders Found</td>
             </tr>
         }
         @foreach (var order in @Model.orders)
@@ -68,23 +79,22 @@
                 <td><label for="" class="d-flex justify-content-end pe-4">@order.Totalamount</label></td>
                 <td>
                     <div class="d-flex">
-                        <a href="@Url.Action("generatePdf","Order",new {orderid = order.Orderid})">
+                        <a href="@Url.Action("generatePdf", "Order", new { orderid = order.Orderid })">
 
-                        <i class="bi bi-filetype-pdf me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
-                                <path fill-rule="evenodd"
-                                    d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
-                            </svg></i>
+                            <i class="bi bi-filetype-pdf me-2"><svg xmlns="http://www.w3.org/2000/svg" width="16"
+                                    height="16" fill="currentColor" class="bi bi-filetype-pdf" viewBox="0 0 16 16">
+                                    <path fill-rule="evenodd"
+                                        d="M14 4.5V14a2 2 0 0 1-2 2h-1v-1h1a1 1 0 0 0 1-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.6 11.85H0v3.999h.791v-1.342h.803q.43 0 .732-.173.305-.175.463-.474a1.4 1.4 0 0 0 .161-.677q0-.375-.158-.677a1.2 1.2 0 0 0-.46-.477q-.3-.18-.732-.179m.545 1.333a.8.8 0 0 1-.085.38.57.57 0 0 1-.238.241.8.8 0 0 1-.375.082H.788V12.48h.66q.327 0 .512.181.185.183.185.522m1.217-1.333v3.999h1.46q.602 0 .998-.237a1.45 1.45 0 0 0 .595-.689q.196-.45.196-1.084 0-.63-.196-1.075a1.43 1.43 0 0 0-.589-.68q-.396-.234-1.005-.234zm.791.645h.563q.371 0 .609.152a.9.9 0 0 1 .354.454q.118.302.118.753a2.3 2.3 0 0 1-.068.592 1.1 1.1 0 0 1-.196.422.8.8 0 0 1-.334.252 1.3 1.3 0 0 1-.483.082h-.563zm3.743 1.763v1.591h-.79V11.85h2.548v.653H7.896v1.117h1.606v.638z" />
+                                </svg></i>
                         </a>
-
-                            <a  href="@Url.Action("showOrderDetailsView","Order",new {orderid = order.Orderid})">
-                        <i class="bi bi-eye"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
-                                fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
-                                <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
-                                <path
-                                    d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
-                            </svg></i>
-                            </a>
+                        <a href="@Url.Action("showOrderDetailsView", "Order", new { orderid = order.Orderid })">
+                            <i class="bi bi-eye"><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                    fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0" />
+                                    <path
+                                        d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7" />
+                                </svg></i>
+                        </a>
                     </div>
                 </td>
 
@@ -94,53 +104,55 @@
 </table>
 
 <div class="d-flex justify-content-end align-items-center w-100 pe-3 pt-1" style="background-color: white;">
-      <label for="" class="me-2">items per page:</label>
-      <div class="dropdown mt-2 me-2">
+    <label for="" class="me-2">items per page:</label>
+    <div class="dropdown mt-2 me-2">
         <select class="form-select form-select-lg mb-3 pagesize" aria-label=".form-select-lg example">
-         
-          <option value="1" selected="@(Model.PageSize == 1 ? "selected" : null)">1</option>
-          <option value="2" selected="@(Model.PageSize == 2 ? "selected" : null)">2</option>
-          <option value="3" selected="@(Model.PageSize == 3 ? "selected" : null)">3</option>
-          <option value="4" selected="@(Model.PageSize == 4 ? "selected" : null)">4</option>
-          <option value="5" selected="@(Model.PageSize == 5 ? "selected" : null)">5</option>
-          <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
+            <option value="1" selected="@(Model.PageSize == 1 ? "selected" : null)">1</option>
+            <option value="2" selected="@(Model.PageSize == 2 ? "selected" : null)">2</option>
+            <option value="3" selected="@(Model.PageSize == 3 ? "selected" : null)">3</option>
+            <option value="4" selected="@(Model.PageSize == 4 ? "selected" : null)">4</option>
+            <option value="5" selected="@(Model.PageSize == 5 ? "selected" : null)">5</option>
+            <option value="6" selected="@(Model.PageSize == 6 ? "selected" : null)">6</option>
         </select>
-      </div>
-@{
-    int startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
-    int endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalOrders);
-}
-<label for="" class="me-2">Showing @startRecord-@endRecord of @Model.TotalOrders</label>
-    <div class="d-flex mt-1">
-      
-    @if(Model.PageNumber > 1){
-      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px" alt=""></button>
-    }
-    else{
-      <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="showOrdersBySearch(@(Model.PageNumber-1),@Model.PageSize,'asc','orderid')" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px" alt="" ></button>
-
-    }
-    @if(Model.PageNumber*Model.PageSize < Model.TotalOrders){
-
-      <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')"><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px;rotate: 180deg;" alt=""></button>
-    }
-    else{
-      <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;" onclick="showOrdersBySearch(@(Model.PageNumber+1),@Model.PageSize,'asc','orderid')" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
-          style="width:25px;rotate: 180deg;" alt=""></button>
-    }
     </div>
-      </div>
+    @{
+        int startRecord = ((Model.PageNumber - 1) * Model.PageSize) + 1;
+        int endRecord = Math.Min(Model.PageNumber * Model.PageSize, Model.TotalOrders);
+    }
+    <label for="" class="me-2">Showing @startRecord-@endRecord of @Model.TotalOrders</label>
+    <div class="d-flex mt-1">
+
+        @if (Model.PageNumber > 1)
+        {
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
+                onclick="showOrdersBySearch(@(Model.PageNumber - 1),@Model.PageSize,'asc','orderid')"><img src="" alt=""><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
+                onclick="showOrdersBySearch(@(Model.PageNumber - 1),@Model.PageSize,'asc','orderid')" disabled><img src=""
+                    alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
+
+        }
+        @if (Model.PageNumber * Model.PageSize < Model.TotalOrders)
+        {
+
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;"
+                onclick="showOrdersBySearch(@(Model.PageNumber + 1),@Model.PageSize,'asc','orderid')"><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
+        }
+        else
+        {
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 5.8px;"
+                onclick="showOrdersBySearch(@(Model.PageNumber + 1),@Model.PageSize,'asc','orderid')" disabled><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
+        }
+    </div>
+</div>
 
 <script>
-      $(".pagesize").on("change", function () {
-             showOrdersBySearch(1,$(".pagesize").val(),'asc','orderid'); 
-});
+    $(".pagesize").on("change", function () {
+        showOrdersBySearch(1, $(".pagesize").val(), 'asc', 'orderid');
+    });
 </script>
-
-
- 
-
-

@@ -1,0 +1,16 @@
+@model MenuOrderAppModel
+<div>
+    <h4 class="p-3 pb-1">Category</h4>
+    <ul>
+       <li onclick="loadItemsForCategory(0)">All</li>
+    @foreach(var category in Model.categories)
+    {
+       <li onclick="loadItemsForCategory(@category.Categoryid)">@category.Categoryname</li>
+    }
+    </ul>
+</div>
+
+<script>
+    
+
+</script>

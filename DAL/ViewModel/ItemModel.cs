@@ -106,19 +106,19 @@ public class ItemViewModel{
     public int? itemid{get;set;}
 
     [Required(ErrorMessage = "Item Name is required")]
-    [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]
     public string Itemname{get;set;}
 
     [Required(ErrorMessage = "Item rate is required")]
-    [Range(0, int.MaxValue, ErrorMessage = "Item rate cannot be less than 0")]
+    [Range(1, int.MaxValue, ErrorMessage = "Item rate cannot be less than 1")]
     public int Itemrate{get;set;}
 
     public bool Itemtype{get;set;}
 
     [Required(ErrorMessage = "Item Quantity is required")]
-    [Range(0, int.MaxValue, ErrorMessage = "Item Quantity cannot be less than 0")]
+    [Range(1, int.MaxValue, ErrorMessage = "Item Quantity cannot be less than 1")]
     public int Itemquantity{get;set;}
 
+    [Required(ErrorMessage = "U is required")]
     public int Unitid{get;set;}
 
     public int Categoryid{get;set;}

@@ -1,7 +1,7 @@
 
 
 using BAL.Interfaces;
-using DAL.Data;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace pizzashop_n_tier.Views.OrderApp
@@ -34,6 +34,10 @@ namespace pizzashop_n_tier.Views.OrderApp
 
         public IActionResult getWaitingTokenPage(){
             return PartialView("_waitingList");
+        }
+
+        public IActionResult getMenuPage(){
+            return PartialView("_menu");
         }
     }
 }

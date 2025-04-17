@@ -10,7 +10,7 @@ public class TaxesController : Controller
         _taxService = taxService;
     }
 
-     [Authorize(Policy="CanView_TaxAndFee")]
+    [Authorize(Policy = "CanView_TaxAndFee")]
     public IActionResult showTaxes()
     {
         return View("taxes");
@@ -22,7 +22,7 @@ public class TaxesController : Controller
         return PartialView("_taxesTable", model);
     }
 
-     [Authorize(Policy="CanEdit_TaxAndFee")]
+    [Authorize(Policy = "CanEdit_TaxAndFee")]
     public IActionResult addEditTaxModalGet()
     {
         TaxesViewModel model = new TaxesViewModel();
@@ -38,8 +38,9 @@ public class TaxesController : Controller
         {
             return Json(new { error = "Tax with the updated name already exist !!" });
         }
-        if(!isAdded && model.tax.Taxid == 0){
-            return Json(new {error = "Tax already present !!"});
+        if (!isAdded && model.tax.Taxid == 0)
+        {
+            return Json(new { error = "Tax already present !!" });
         }
         else
         {
@@ -59,14 +60,14 @@ public class TaxesController : Controller
         return PartialView("_taxesTable", model);
     }
 
-[Authorize(Policy="CanDelete_TaxAndFee")]
+    [Authorize(Policy = "CanDelete_TaxAndFee")]
     public IActionResult loadDeleteModal()
     {
         return PartialView("_deleteModel");
     }
 
 
-[Authorize(Policy="CanEdit_TaxAndFee")]
+    [Authorize(Policy = "CanEdit_TaxAndFee")]
     public IActionResult EditModalGet(int taxid)
     {
         Taxesandfee tax = _taxService.getTaxById(taxid);

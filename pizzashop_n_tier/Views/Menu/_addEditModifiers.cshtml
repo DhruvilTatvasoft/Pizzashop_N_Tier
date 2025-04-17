@@ -13,7 +13,6 @@
                     </div>
                     <div class="modal-body">
                         <div class="row">
-
                             <div class="mb-3 col-md-6">
                             <div class="form-floating">
                             <label for="" class="form-label"
@@ -69,43 +68,39 @@
                             <span asp-validation-for="Modifierrate" class="text-danger"></span>
                             </div>
                         </div>
-
-                           
-
                             <div class="mb-3 col-md-4">
-                            <div class="form-floating">
-                            <label for="" class="form-label"
-                                style="font-size: 61%;top: -12px;left: -1px;">Unit*</label>
+                                <div class="form-floating">
+                                <label for="" class="form-label"
+                                    style="font-size: 61%;top: -12px;left: -1px;">Unit*</label>
 
-                            <select class="form-control" id="modifierUnit" style="font-size:85%;" asp-for="Unitid">
-                                    <option>Select a unit</option>
-                                    @foreach (var unit in @Model.units)
-                                    {
-                                     @if(@Model.modifier != null && unit.Unitid == @Model.modifier.Unitid){
-                                        <option value="@unit.Unitid" selected>@unit.Unitname</option>
-                                     }
-                                     else{
-                                        <option value="@unit.Unitid">@unit.Unitname</option>
-                                     }
-                                    }
-                                </select>
-                                <span asp-validation-for="Unitid" class="text-danger"></span>
-                            
+                                <select class="form-control" id="modifierUnit" style="font-size:85%;" asp-for="Unitid">
+                                        <option>Select a unit</option>
+                                        @foreach (var unit in @Model.units)
+                                        {
+                                        @if(@Model.modifier != null && unit.Unitid == @Model.modifier.Unitid){
+                                            <option value="@unit.Unitid" selected>@unit.Unitname</option>
+                                        }
+                                        else{
+                                            <option value="@unit.Unitid">@unit.Unitname</option>
+                                        }
+                                        }
+                                    </select>
+                                    <span asp-validation-for="Unitid" class="text-danger"></span>
+                                
+                                </div>
                             </div>
-                        </div>
                         </div>
                         <div class="mb-3">
                             <textarea type="" class="form-control pb-2 pt-3" id="modifierName" placeholder="Description"
                                 style="line-height: 1;" asp-for="Description"></textarea>
                         </div>
-
-                        <div class="modal-footer" style="border: none;">
-                            <button type="submit" class="btn btn-primary" data-action="Add" id="saveNewModifier">Save</button>
-                            <button type="submit" class="btn btn-primary" data-action="Update" id="updateModifier" >update</button>
-                            <button type="button" class="btn btn-outline-primary cancelBtn"
-                                data-bs-dismiss="modal">Cancel</button>
-                        </div>
-                    </div>
+                    <div class="modal-footer" style="border: none;">
+                        <button type="submit" class="btn btn-primary" data-action="Add" id="saveNewModifier">Save</button>
+                        <button type="submit" class="btn btn-primary" data-action="Update" id="updateModifier" >update</button>
+                        <button type="button" class="btn btn-outline-primary cancelBtn"
+                                    data-bs-dismiss="modal">Cancel</button>
                 </div>
             </div>
-    </form>
+        </div>
+    </div>
+</form>

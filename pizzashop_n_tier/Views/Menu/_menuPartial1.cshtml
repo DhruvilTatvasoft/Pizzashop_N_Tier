@@ -2,23 +2,24 @@
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 ps-4">
     <label class=" c-text">Category</label>
-    @* <button type="submit"  data-bs-toggle="modal" data-bs-target="#exampleModal5" style="width:100%;background: transparent;border: none;margin-left: auto;"><img src="~/images/add_8600182.png" style="width:35%;margin-top: 5px;margin-left: 30%;" alt="">
-    </button> *@
-       <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#exampleModal5" style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square copy.svg" style="width:75%;margin-top: 5px;" alt="">
+    <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target="#exampleModal5"
+        style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square copy.svg"
+            style="width:75%;margin-top: 5px;" alt="">
     </button>
 </div>
 <div class="scrollbar w-100">
     <div class="scrollbox w-100 h-100">
         <ul class="categorylist mt-2 w-100 h-100 ">
-           
             @foreach (var category in Model.menuList)
             {
                 <li class="w-100" id="selectedCat_@category.categoryId" onclick="loadTableData(@category.categoryId)">
-
-                    <label for="" class="ms-0" style="font-size: 13px;"  >≣ @category.categoryName</label>
+                    <label for="" class="ms-0" style="font-size: 13px;">≣ @category.categoryName</label>
                     <div class="d-flex" style="margin-left:auto;">
-                        <img src="~/images/edit.png" class="pe-2" onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')" style="width:25px;cursor:pointer;" alt="">
-                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deleteCategoryGet(@category.categoryId)" alt="">
+                        <img src="~/images/edit.png" class="pe-2"
+                            onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')"
+                            style="width:25px;cursor:pointer;" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;"
+                            onclick="deleteCategoryGet(@category.categoryId)" alt="">
                     </div>
                 </li>
             }
@@ -35,16 +36,18 @@
                 </div>
                 <div class="modal-body pb-0">
                     <div class="mb-3">
-                        
-                        <input type="text" class="form-control" placeholder="Name" asp-for="@Model.m.categoryName" 
-                            style="height:10%;" id="recipient-name" >
-                            <span asp-validation-for="@Model.m.categoryName" class="mb-4 text-danger invalidmsg"></span>
-                        <input type="text" asp-for="@Model.m.categoryId" id="hiddnField" hidden>
+                        <input type="text" class="form-control" placeholder="Name" asp-for="@Model.m.categoryName"
+                            style="height:10%;" id="recipient-name">
+                        <span asp-validation-for="@Model.m.categoryName" class="mb-4 text-danger invalidmsg"></span>
+                        @if (Model.m != null)
+                        {
+                            <input type="text" asp-for="@Model.m.categoryId" id="hiddnField" hidden>
+                        }
                     </div>
                     <div class="mb-3">
                         <textarea class="form-control" placeholder="Description" style="height:100%;"
-                            asp-for="@Model.m.description" id="message-text" >gdhjdg</textarea>
-                            <span asp-validation-for="@Model.m.description" class="mb-4 text-danger invalidmsg"></span>
+                            asp-for="@Model.m.description" id="message-text">gdhjdg</textarea>
+                        <span asp-validation-for="@Model.m.description" class="mb-4 text-danger invalidmsg"></span>
                     </div>
                 </div>
                 <div class="modal-footer pt-0" style="border-top: none;">
@@ -55,73 +58,70 @@
         </div>
     </div>
 </form>
- <form id="addNewCategoryForm">
-            <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel"
-                aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered">
-                    <div class="modal-content">
-                        <div class="modal-header" style="border-bottom: none;">
-                            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body pb-0">
-                            <div class="mb-3">
-                               
-                                <input type="text" class="form-control" placeholder="Name" asp-for="m.categoryName"
-                                    style="height:10%;" id="recipient-name" required>
-                                <span asp-validation-for="@Model.m.categoryName" class="text-danger"></span>
-                            </div>
-                            <div class="mb-3">
-                                <textarea class="form-control" placeholder="Description" style="height:100%;"
-                                    asp-for="m.description" id="message-text"></textarea>
-                                <span asp-validation-for="@Model.m.description" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer pt-0" style="border-top: none;">
-                            <button type="button" class="btn btn-secondary closebutton" data-bs-dismiss="modal">Close</button>
-                            <button type="submit" class="btn btn-primary ">+Add</button>
-                        </div>
+<form id="addNewCategoryForm">
+    <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: none;">
+                    <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pb-0">
+                    <div class="mb-3">
+
+                        <input type="text" class="form-control" placeholder="Name" asp-for="m.categoryName"
+                            style="height:10%;" id="recipient-name" required>
+                        <span asp-validation-for="@Model.m.categoryName" class="text-danger"></span>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" placeholder="Description" style="height:100%;"
+                            asp-for="m.description" id="message-text"></textarea>
+                        <span asp-validation-for="@Model.m.description" class="text-danger"></span>
                     </div>
                 </div>
+                <div class="modal-footer pt-0" style="border-top: none;">
+                    <button type="button" class="btn btn-secondary closebutton" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary ">+Add</button>
+                </div>
             </div>
-        </form>
+        </div>
+    </div>
+</form>
 <script>
 
-    function deleteCategoryGet(categoryid){
+    function deleteCategoryGet(categoryid) {
         $.ajax({
-            url:'@Url.Action("deleteItem", "Menu")',
-            type:'GET',
-            success:function(data){
-                     $('#deletemodel').html(data);
-                     $('#exampleModalCenter8').modal('show');
-                     $('#categoryid_hidden').val(categoryid);
-                     $('.singleItemDelete').css("display","none");
-                    $('.MultipleItemsDelete').css("display","none");
-                    $('.categoryDelete').css("display","block");
+            url: '@Url.Action("deleteItem", "Menu")',
+            type: 'GET',
+            success: function (data) {
+                $('#deletemodel').html(data);
+                $('#exampleModalCenter8').modal('show');
+                $('#categoryid_hidden').val(categoryid);
+                $('.singleItemDelete').css("display", "none");
+                $('.MultipleItemsDelete').css("display", "none");
+                $('.categoryDelete').css("display", "block");
             }
-            });
+        });
     }
-
-
-    $("#addNewCategoryForm").on('submit',function(e){
+    $("#addNewCategoryForm").on('submit', function (e) {
         e.preventDefault();
-        if(!$(this).valid()){
-            e.stopPropagation();  
+        if (!$(this).valid()) {
+            e.stopPropagation();
         }
         var data = new FormData(this);
         $.ajax({
-            url:'@Url.Action("AddCategory","Menu")',
-            type:'POST',
-            data:data,
+            url: '@Url.Action("AddCategory", "Menu")',
+            type: 'POST',
+            data: data,
             processData: false,
             contentType: false,
-            success:function(data){
+            success: function (data) {
                 loadCategories();
                 $(".closebutton").click();
-                if(data.success){
+                if (data.success) {
                     toastr.success(data.success);
                 }
-                else{
+                else {
                     toastr.error(data.error);
                 }
             }
@@ -129,15 +129,15 @@
     })
 
 
-function openEditModal(categoryId,categoryname,description){
-    console.log(categoryId);
-    $('#exampleModal6').modal('show');
-    $('textarea').val(description);
-    $('#recipient-name').val(categoryname);
-    $('#hiddnField').val(categoryId);
-   };
-   function deletecategory() {
-    console.log($("#categoryid_hidden").val());
+    function openEditModal(categoryId, categoryname, description) {
+        console.log(categoryId);
+        $('#exampleModal6').modal('show');
+        $('textarea').val(description);
+        $('#recipient-name').val(categoryname);
+        $('#hiddnField').val(categoryId);
+    };
+    function deletecategory() {
+        console.log($("#categoryid_hidden").val());
         $.ajax({
             url: '@Url.Action("DeleteCategory", "Menu")',
             type: "POST",
@@ -149,4 +149,3 @@ function openEditModal(categoryId,categoryname,description){
         });
     };
 </script>
-

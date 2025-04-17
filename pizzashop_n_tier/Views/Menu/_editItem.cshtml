@@ -179,7 +179,7 @@
                         <div class="modifier-group-item" id="modifiergroup_@modifierModel.ModifiergroupId">
                            <div class="d-flex  pe-3 pt-1 mb-2" >
                               <label class="fw-bold">@modifierModel.mg.Modifiergroupname  </label>
-                              <label>@modifierModel.modifiers.Count</label>
+                              @* <label>@modifierModel.modifiers.Count</label> *@
                               <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
                                  onclick="deleteModifierGroup(@modifierModel.ModifiergroupId)" alt="">
                            </div>
@@ -241,6 +241,7 @@
    </div>
    </div>
 </form>
+
 <script>
    function deleteModifierGroup(id) {
       var temp = "#modifiergroup_" + id;
@@ -266,8 +267,6 @@ function getModifier() {
       }
       }
    } 
-
-    // Initialize form submission handler only once
     if (!window.editItemFormHandlerInitialized) {
         window.editItemFormHandlerInitialized = true;
         
@@ -292,9 +291,7 @@ function getModifier() {
                     });
                 }
             });
-            
             data.append("payload", JSON.stringify(modifierData));
-            
             $.ajax({
                 url: form.attr('action') || '@Url.Action("PostEditItem","Menu")',
                 type: 'POST',
@@ -305,9 +302,8 @@ function getModifier() {
                     if (response.success) {
                         $('#ModelForEditItem').modal('hide');
                         toastr.success(response.success || "Item updated successfully");
-                        if (typeof loadItems === 'function') {
-                            loadItems(response.categoryid);
-                        }
+                        loadTableData(response.categoryid)
+                        
                     } else if (response.error) {
                         toastr.error(response.error);
                     }
@@ -321,7 +317,6 @@ function getModifier() {
                     }
                 }
             });
-            
             return false;
         });
     }

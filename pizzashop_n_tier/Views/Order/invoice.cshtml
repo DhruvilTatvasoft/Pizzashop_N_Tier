@@ -9,132 +9,143 @@
 <link rel="stylesheet" href="@Url.Content("~/css/invoice.css")">
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
 <body>
   <div class="container my-5">
-  <div class="invoice-header w-100">
-    <div>
-    <img src="~/images/pizzashop_logo.png" alt="PizzaShop Logo" class="logo m-2" width="80" />
+    <div class="invoice-header w-100">
+      <div>
+        <img src="~/images/pizzashop_logo.png" alt="PizzaShop Logo" class="logo m-2" width="80" />
+      </div>
+      <div>
+        <h2 class="text-center header-text">PIZZASHOP</h2>
+      </div>
+
     </div>
-    <div>
-    <h2 class="text-center header-text">PIZZASHOP</h2>
+    <div class="row mt-4 mb-4">
+      <div class="col-md-6">
+        <h6 class="header-text">Customer Details</h6>
+        <p><strong>Name:</strong>@Model.order.Customer.Customername</p>
+        <p><strong>Mobile:</strong> @Model.order.Customer.Phonenumber</p>
+      </div>
+      <div class="col-md-6">
+        <h6 class="header-text">Order Details</h6>
+        <p><strong>Invoice Number:</strong> #DOM202500229</p>
+        <p><strong>Date:</strong> @Model.order.Modifiedat </p>
+        <p><strong>Section:</strong>@Model.order.Section.Sectionname</p>
+        <p><strong>Table:</strong> @Model.order.Table.Tablename</p>
+      </div>
     </div>
 
+    <table class="table">
+      <thead class="bg-primary">
+        <tr>
+          <th>Sr. No.</th>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>Unit Price</th>
+          <th>Total Amount</th>
+        </tr>
+      </thead>
+      <tbody>
+
+        @foreach (var item in @Model.orderedItemModifiers.ItemsAndModifiers)
+        {
+          Dictionary<Item, List<Modifier>> itemAndModifiers = item.Value;
+          <tr>
+            @foreach (var Item in itemAndModifiers.Keys)
+            {
+              <td>@item.Key</td>
+              <td>@Item.Itemname
+
+                @foreach (var modifier in itemAndModifiers[Item])
+                {
+                  <li>@modifier.Modifiername</li>
+                }
+              </td>
+              <td>
+                @Item.Itemquantity
+                @foreach (var modifier in itemAndModifiers[Item])
+                {
+                  <br>
+                  @modifier.Modifierquantity
+                }
+
+              </td>
+              <td>@Item.Itemrate
+                @foreach (var modifier in itemAndModifiers[Item])
+                {
+                  <br>
+                  @(modifier.Modifierrate)
+                }
+              </td>
+              <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate *
+                              Item.Itemquantity)</label>
+            @{
+                  subtotal += Item.Itemrate * Item.Itemquantity;
+                }
+                @( Item.Itemrate * Item.Itemquantity)
+                @foreach (var modifier in itemAndModifiers[Item])
+                {
+                  <br>
+                  @(modifier.Modifierrate* modifier.Modifierquantity)
+                  <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
+                }
+              </td>
+
+            }
+          </tr>
+        }
+      </tbody>
+    </table>
+
+    <div class="row">
+
+      <div class="col-md-12">
+        <table class="table table-borderless w-100 mb-5 float-end">
+          <tbody>
+            <tr>
+              <td class="total-label">Sub Total:</td>
+              <td style="text-align: end;">₹@subtotal</td>
+            </tr>
+            <tr>
+              <td>CGST:</td>
+              <td style="text-align: end;">₹@((subtotal * 6) / 100)</td>
+            </tr>
+            <tr>
+              <td>SGST:</td>
+              <td style="text-align: end;">₹150.00</td>
+            </tr>
+            <tr>
+              <td>GST:</td>
+              <td style="text-align: end;">₹7.98</td>
+            </tr>
+            <tr style="border-bottom: 1px solid #0d6efd;">
+              <td>Other:</td>
+              <td style="text-align: end;">₹19.95</td>
+            </tr>
+            <tr>
+              <td class="total-label text-primary">Total Amount Due:</td>
+              <td class="header-text" style="text-align: end;">₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 +
+                                (decimal)7.98 + (decimal)19.95)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div class="col-md-12"></div>
+    <h6 class="payment-info"><strong>Payment Information</strong></h6>
+    <p><strong>Payment information:</strong>@Model.order.Status.Statusname</p>
   </div>
-  <div class="row mt-4 mb-4">
-    <div class="col-md-6">
-      <h6 class="header-text">Customer Details</h6>
-      <p><strong>Name:</strong>@Model.order.Customer.Customername</p>
-      <p><strong>Mobile:</strong> @Model.order.Customer.Phonenumber</p>
-    </div>
-    <div class="col-md-6">
-      <h6 class="header-text">Order Details</h6>
-      <p><strong>Invoice Number:</strong> #DOM202500229</p>
-      <p><strong>Date:</strong> @Model.order.Modifiedat </p>
-      <p><strong>Section:</strong>@Model.order.Section.Sectionname</p>
-      <p><strong>Table:</strong> @Model.order.Table.Tablename</p>
-    </div>
-  </div>
-
-  <table class="table">
-    <thead class="bg-primary">
-      <tr>
-        <th>Sr. No.</th>
-        <th>Item</th>
-        <th>Quantity</th>
-        <th>Unit Price</th>
-        <th>Total Amount</th>
-      </tr>
-    </thead>
-    <tbody>
-
-                        @foreach (var item in @Model.orderedItemModifiers.ItemsAndModifiers)
-                        {
-                            Dictionary<Item,List<Modifier>> itemAndModifiers = item.Value;
-                                <tr>
-                                @foreach(var Item in itemAndModifiers.Keys){
-                                    <td>@item.Key</td>
-                                    <td>@Item.Itemname
-                                    
-                                @foreach(var modifier in itemAndModifiers[Item]){
-                                    <li>@modifier.Modifiername</li>
-                                }
-                                    </td>
-                                <td>
-                                    @Item.Itemquantity
-                                    @foreach (var modifier in  itemAndModifiers[Item])
-                                    {
-                                        <br>@modifier.Modifierquantity 
-                                    }
-
-                                </td>
-                                <td>@Item.Itemrate
-                                    @foreach (var modifier in  itemAndModifiers[Item])
-                                    {
-                                        <br>@(modifier.Modifierrate)
-                                    }
-                                </td>
-                                 <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate * Item.Itemquantity)</label>   
-                                   @{subtotal += Item.Itemrate * Item.Itemquantity;}
-                                   @( Item.Itemrate * Item.Itemquantity)
-                                    @foreach (var modifier in itemAndModifiers[Item])
-                                    {
-                                        <br>@(modifier.Modifierrate * modifier.Modifierquantity) 
-                                        <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
-                                    }
-                                </td>
-                                
-                                }
-                             </tr>
-                        }
-                    </tbody>
-  </table>
-
-  <div class="row">
-   
-    <div class="col-md-12">
-      <table class="table table-borderless w-100 mb-5 float-end">
-        <tbody>
-          <tr>
-            <td class="total-label">Sub Total:</td>
-            <td style="text-align: end;">₹@subtotal</td>
-          </tr>
-          <tr>
-            <td>CGST:</td>
-            <td style="text-align: end;">₹@((subtotal * 6)/100)</td>
-          </tr>
-          <tr>
-            <td>SGST:</td>
-            <td style="text-align: end;">₹150.00</td>
-          </tr>
-          <tr>
-            <td>GST:</td>
-            <td style="text-align: end;">₹7.98</td>
-          </tr>
-          <tr style="border-bottom: 1px solid #0d6efd;">
-            <td>Other:</td>
-            <td style="text-align: end;">₹19.95</td>
-          </tr>
-          <tr>
-            <td class="total-label text-primary">Total Amount Due:</td>
-            <td class="header-text" style="text-align: end;">₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 + (decimal)7.98 + (decimal)19.95)</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
-  </div>
-   <div class="col-md-12"></div>
-      <h6 class="payment-info"><strong>Payment Information</strong></h6>
-      <p><strong >Payment information:</strong>@Model.order.Status.Statusname</p>
-    </div>
   <p class="thank-you mt-5">THANK YOU!</p>
-</div>
+  </div>
 
-  
+
 </body>
-</html>
 
+</html>

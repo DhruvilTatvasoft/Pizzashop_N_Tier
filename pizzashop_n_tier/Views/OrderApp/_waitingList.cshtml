@@ -1,89 +1,90 @@
 @model WaitingTokenModel
 <link rel="stylesheet" href="~/css/_waitingList.css">
 <div class="container-fluid mt-4 ps-4 pe-4 h-100">
-  <div class="mb-4 d-flex align-items-center justify-content-between">
-    <h1>Waiting List</h1>
-    <button class="btn btn-outline-primary btnoutlinecolour ps-3 pe-4 pt-2 pb-2 " onclick="loadAddTokenModel()" style="font-size: 14px;height: 100%;">+ Waiting Token</button>
-  </div>
-  <div class="sectionNavbarContainer mb-2"></div>
-  <div class="TokensContainer w-100 h-100"></div>
-  <div class="addEditModifierModelContainer w-100 h-100"></div>
-  <div class="assignTableModelContainer w-100 h-100"></div>
+    <div class="mb-4 d-flex align-items-center justify-content-between">
+        <h1>Waiting List</h1>
+        <button class="btn btn-outline-primary btnoutlinecolour ps-3 pe-4 pt-2 pb-2 " onclick="loadAddTokenModel()"
+            style="font-size: 14px;height: 100%;">+ Waiting Token</button>
+    </div>
+    <div class="sectionNavbarContainer mb-2"></div>
+    <div class="TokensContainer w-100 h-100"></div>
+    <div class="addEditModifierModelContainer w-100 h-100"></div>
+    <div class="assignTableModelContainer w-100 h-100"></div>
 </div>
 
 
 
 <script>
-    $(document).ready(()=>{
+    $(document).ready(() => {
         loadSectionsNavbar();
         loadWaitingTokensForSection(0);
     });
-    function loadSectionsNavbar(){
+    function loadSectionsNavbar() {
         $.ajax({
-            url:"@Url.Action("getSectionNavbar","WaitingList")",
-            method:"GET",
-            success:function(data){
+            url: "@Url.Action("getSectionNavbar", "WaitingList")",
+            method: "GET",
+            success: function (data) {
                 $('.sectionNavbarContainer').html(data);
             }
         });
     }
-     function loadWaitingTokensForSection(sectionid){
+    function loadWaitingTokensForSection(sectionid) {
         $.ajax({
-            url:"@Url.Action("getwaitingTokens","WaitingList")",
-            method:"GET",
-            data:{sectionid:sectionid},
-            success:function(data){
-                $(".TokensContainer").html(data);   
+            url: "@Url.Action("getwaitingTokens", "WaitingList")",
+            method: "GET",
+            data: { sectionid: sectionid },
+            success: function (data) {
+                $(".TokensContainer").html(data);
             }
         });
     }
 
-    function loadAddTokenModel(){
+    function loadAddTokenModel() {
         $.ajax({
-            url:"@Url.Action("getAddEditTokenModel","WaitingList")",
-            method:"GET",
-            success:function(data){
+            url: "@Url.Action("getAddEditTokenModel", "WaitingList")",
+            method: "GET",
+            success: function (data) {
                 $(".addEditModifierModelContainer").html(data);
                 $("#addEditWaitingToken").modal('show');
-                $("#updateToken").css("display","none");
+                $("#updateToken").css("display", "none");
             }
         });
     }
 
-    $(document).on("submit","#AddEditWaitingTokenForm",function(e){
+    $(document).on("submit", "#AddEditWaitingTokenForm", function (e) {
         e.preventDefault();
-        var tokenid=$("#tokenid").val();
+        var tokenid = $("#tokenid").val();
         var url;
-        if(tokenid == null || tokenid == 0){
-            url="@Url.Action("AddNewWaitingToken","WaitingList")"
+        if (tokenid == null || tokenid == 0) {
+            url = "@Url.Action("AddNewWaitingToken", "WaitingList")"
         }
-        else{
-            url="@Url.Action("UpdateWaitingToken","WaitingList")"   
+        else {
+            url = "@Url.Action("UpdateWaitingToken", "WaitingList")"
         }
         var $form = $(this);
 
         if ($form.data('submitting')) return;
-         $form.data('submitting', true);
+        $form.data('submitting', true);
         var data = new FormData(this);
-        if(!$(this).valid()){
+        if (!$(this).valid()) {
             return false;
         }
-        else{
+        else {
             alert("valid");
             $.ajax({
-                url:url,
-                method:"POST",
-                data:data,
-                processData:false,
-                contentType:false,
-                success:function(data){
-                    if(data.success){
+                url: url,
+                method: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.success) {
                         $("#closeBtn").click();
                         toastr.success(data.success)
                         loadWaitingTokensForSection(data.sectionid);
                         loadSectionsNavbar();
                     }
-                    else{
+                    else {
                         $("#closeBtn").click();
                         toastr.error(data.error)
                         loadWaitingTokensForSection(data.sectionid);
@@ -93,29 +94,29 @@
         }
     });
 
-    function updateToken(tokenid){
+    function updateToken(tokenid) {
         $.ajax({
-            url:"@Url.Action("GetEditTokenModel","WaitingList")",
-            method:"GET",
-            data:{WaitingTokenId : tokenid},
-            success:function(data){
-                 $(".addEditModifierModelContainer").html(data);
-                  $("#addEditWaitingToken").modal('show');
-                   $("#updateToken").css("display","block");
-                   $("#AddNewToken").css("display","none");
+            url: "@Url.Action("GetEditTokenModel", "WaitingList")",
+            method: "GET",
+            data: { WaitingTokenId: tokenid },
+            success: function (data) {
+                $(".addEditModifierModelContainer").html(data);
+                $("#addEditWaitingToken").modal('show');
+                $("#updateToken").css("display", "block");
+                $("#AddNewToken").css("display", "none");
             }
         });
     }
 
-    function assignTableGet(id){
-    $.ajax({
-        url:"@Url.Action("getAssignTableModel","WaitingList")",
-        method:"GET",
-        data: {tokenid:id},
-        success:function(data){
-            $(".assignTableModelContainer").html(data);
-            $("#assignTableToCustomer").modal('show');
-        }
-    });
-}
+    function assignTableGet(id) {
+        $.ajax({
+            url: "@Url.Action("getAssignTableModel", "WaitingList")",
+            method: "GET",
+            data: { tokenid: id },
+            success: function (data) {
+                $(".assignTableModelContainer").html(data);
+                $("#assignTableToCustomer").modal('show');
+            }
+        });
+    }
 </script>

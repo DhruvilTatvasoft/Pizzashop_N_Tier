@@ -1,7 +1,3 @@
-
-
-using DAL.Data;
-
 namespace DAL.interfaces
 {
     public interface ICustomerRepository 

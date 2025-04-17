@@ -7,7 +7,7 @@
         <tr>
             <th scope="col">
                 <div class="form-check">
-                    <input class="form-check-input col1 ms-0 me-3"  type="checkbox" value="" id="flexCheckDefault">
+                    <input class="form-check-input col1 ms-0 me-3" type="checkbox" value="" id="flexCheckDefault">
                     <label class="form-check-label" for="flexCheckDefault">
                         Name
                     </label>
@@ -21,61 +21,67 @@
                 </div>
             </th>
             <th scope="col">Rate</th>
-            <th scope="col" ><label for="">Quantity</label></th>
+            <th scope="col"><label for="">Quantity</label></th>
             <th scope="col">Available</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
-        @if(@Model.items.Count <= 0){
-            <tr>
-                 <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Items Found</td>
-                </tr>
-        }
-        else{
-        @foreach (var item in Model.items)
+        @if (@Model.items.Count <= 0)
         {
             <tr>
-                <th scope="row">
-                    <input class="form-check-input checkedItems" type="checkbox" value="@item.Itemid" />
-                    <label class="form-check-label" for="flexCheckDefault">
-                        @if(item.Itemimage != null){
-                        <img src="@item.Itemimage" style="width:30px;height: 30px" alt="">
-                        }
-                        else{
-                            <img src="~/images/dining-menu.png"style="width:30px;height: 30px" alt="">
-                        }
-                     
-                        <label for="" style="font-size: 14px;">@item.Itemname</label>
-                    </label>
+                <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                    Items Found</td>
+            </tr>
+        }
+        else
+        {
+            @foreach (var item in Model.items)
+            {
+                <tr>
+                    <th scope="row">
+                        <input class="form-check-input checkedItems" type="checkbox" value="@item.Itemid" />
+                        <label class="form-check-label" for="flexCheckDefault">
+                            @if (item.Itemimage != null)
+                            {
+                                <img src="@item.Itemimage" style="width:30px;height: 30px" alt="">
+                            }
+                            else
+                            {
+                                <img src="~/images/dining-menu.png" style="width:30px;height: 30px" alt="">
+                            }
 
-                </th>
-                <td>@if(item.Itemtype){
-                    <img src="~/images/veg-icon.svg" style="width:25px" alt="">
-                }else
-                {
-                    <img src="~/images/non-veg-icon.svg" style="width:25px" alt="">
-                }
-            </td>
-            <td>@item.Itemrate</td>
-            <td>@item.Itemquantity</td>
-            <td>
-                <div class="form-check form-switch">
-                    <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ?
-                                                                                                                        "checked" : "unchecked")>
+                            <label for="" style="font-size: 14px;">@item.Itemname</label>
+                        </label>
+
+                    </th>
+                    <td>@if(item.Itemtype){
+                        <img src="~/images/veg-icon.svg" style="width:25px" alt="">
+                    }else
+                    {
+                        <img src="~/images/non-veg-icon.svg" style="width:25px" alt="">
+                    }
+                </td>
+                <td>@item.Itemrate</td>
+                <td>@item.Itemquantity</td>
+                <td>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ?
+                                                                                                                            "checked" : "unchecked")>
                 </div>
             </td>
             <td>
                 <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                    <img src="~/images/pencil-square.svg" class="me-2" style="cursor: pointer;" onclick="EditItemGet(@item.Itemid)" alt="">
+                    <img src="~/images/pencil-square.svg" class="me-2" style="cursor: pointer;"
+                        onclick="EditItemGet(@item.Itemid)" alt="">
                     <img src="~/images/trash-fill.svg" onclick="deleteItemGet(@item.Itemid,@item.Categoryid)"
                         style="cursor: pointer;" alt="">
 
-                </div>
-            </td>
-        </tr>
-        }
-        }
+                    </div>
+                </td>
+            </tr>
+                }
+                }
     </tbody>
 </table>
 <div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
@@ -83,58 +89,69 @@
         <label for="" class="me-2">items per page:</label>
         <div class="dropdown mt-2 me-2">
             <select class="form-select form-select-lg mb-3 pageSize" aria-label=".form-select-lg example">
-                <option value="1"  selected="@(Model.pageSize == 1 ? "selected" : null)">1</option>
-                <option value="2"  selected="@(Model.pageSize == 2 ? "selected" : null)">2</option>
-                <option value="3"  selected="@(Model.pageSize == 3 ? "selected" : null)">3</option>
-                <option value="4"  selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
-                <option value="5"  selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
-                <option value="6"  selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
+                <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)">1</option>
+                <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)">2</option>
+                <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)">3</option>
+                <option value="4" selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
+                <option value="5" selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
+                <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
             </select>
         </div>
     </div>
     @{
-    int startRecord = ((Model.pageNumber - 1) * Model.pageSize) + 1;
-    int endRecord = Math.Min(Model.pageNumber * Model.pageSize, Model.totalrecords ?? 0);
-}
-<label for="" class="me-2">Showing @startRecord-@endRecord of @Model.totalrecords</label>
+        int startRecord = ((Model.pageNumber - 1) * Model.pageSize) + 1;
+        int endRecord = Math.Min(Model.pageNumber * Model.pageSize, Model.totalrecords ?? 0);
+    }
+    <label for="" class="me-2">Showing @startRecord-@endRecord of @Model.totalrecords</label>
     <div class="d-flex mt-1">
-        @if(Model.pageNumber > 1){
-        <button type="button" class="btn btn-outline-dark btn2" onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber-1))" style="padding: 6px;"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-                style="width:25px" alt=""></button>
+        @if (Model.pageNumber > 1)
+        {
+            <button type="button" class="btn btn-outline-dark btn2"
+                onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber - 1))" style="padding: 6px;"><img
+                    src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
         }
-        else{
-        <button type="button" class="btn btn-outline-dark btn2" onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber-1))" style="padding: 6px;" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-                style="width:25px" alt="" ></button>
+        else
+        {
+            <button type="button" class="btn btn-outline-dark btn2"
+                onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber - 1))" style="padding: 6px;"
+                disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px"
+                    alt=""></button>
 
         }
-        @if(Model.pageNumber*Model.pageSize < Model.totalrecords){
-        <button type="button" class="btn btn-outline-dark btn2 mb-2"  onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber+1))" style="padding: 5.8px;"><img src="~/images/left-chevron-svgrepo-com.svg"
-                style="width:25px;rotate: 180deg;" alt=""></button>
+        @if (Model.pageNumber * Model.pageSize < Model.totalrecords)
+        {
+            <button type="button" class="btn btn-outline-dark btn2 mb-2"
+                onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber + 1))"
+                style="padding: 5.8px;"><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;"
+                    alt=""></button>
         }
-        else{
+        else
+        {
 
-        <button type="button" class="btn btn-outline-dark btn2 mb-2"  onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber+1))" style="padding: 5.8px;" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
-                style="width:25px;rotate: 180deg;" alt="" ></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2"
+                onclick="loadTableData(selectedCategoryId,@Model.pageSize,@(Model.pageNumber + 1))" style="padding: 5.8px;"
+                disabled><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;"
+                    alt=""></button>
         }
     </div>
 </div>
- 
+
 <script>
-   
-        $(".pageSize").on("change", function () {
-             loadTableData(selectedCategoryId,$(".pageSize").val(),1)
-             console.log("page size changed to "+$(".pageSize").val())
-});
+
+    $(".pageSize").on("change", function () {
+        loadTableData(selectedCategoryId, $(".pageSize").val(), 1)
+        console.log("page size changed to " + $(".pageSize").val())
+    });
 
 
-$(document).on('change', '.checkedItems', function () {
-    let allChecked = $('.checkedItems').length === $('.checkedItems:checked').length;
-    $('#flexCheckDefault').prop('checked', allChecked);
-});
+    $(document).on('change', '.checkedItems', function () {
+        let allChecked = $('.checkedItems').length === $('.checkedItems:checked').length;
+        $('#flexCheckDefault').prop('checked', allChecked);
+    });
 
 
-$(document).on('change', '#flexCheckDefault', function () {
-    $('.checkedItems').prop('checked', this.checked);
-});
+    $(document).on('change', '#flexCheckDefault', function () {
+        $('.checkedItems').prop('checked', this.checked);
+    });
 
 </script>

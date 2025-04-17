@@ -11,94 +11,6 @@ public class OrderRepository : IOrderRepository
     {
         _context = context;
     }
-
-    public List<Order> getAllOrderByDateFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-    {
-        List<Order> orders = _context.Orders.Where(order => order.Createdat >= startDate && order.Createdat <= endDate).ToList();
-        foreach (var order in orders)
-        {
-            order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
-        }
-        foreach (var CurrentOrder in orders)
-        {
-            CurrentOrder.Customer = _context.Customers.FirstOrDefault(order => order.Customerid == CurrentOrder.Customerid) ?? new Customer();
-        }
-        return orders;
-    }
-
-    public List<Order> getAllOrderByOptionFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-    {
-        DateTime currentDate = DateTime.Now;
-        IQueryable<Order> query = _context.Orders.AsQueryable();
-        List<Order> orders = new List<Order>();
-        switch (filterBy)
-        {
-            case "Last 7 days":
-                query = query.Where(o => o.Createdat >= currentDate.AddDays(-7));
-                break;
-
-            case "Last 30 days":
-                query = query.Where(o => o.Createdat != null && o.Createdat >= currentDate.AddDays(-30));
-                break;
-
-            case "Current Month":
-                query = query.Where(o => o.Createdat.HasValue &&
-                                          o.Createdat.Value.Month == currentDate.Month &&
-                                          o.Createdat.Value.Year == currentDate.Year);
-                break;
-
-            default:
-                break;
-        }
-
-        orders = query.ToList();
-        foreach (var order in orders)
-        {
-            order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
-        }
-        foreach (var CurrentOrder in orders)
-        {
-            CurrentOrder.Customer = _context.Customers.FirstOrDefault(order => order.Customerid == CurrentOrder.Customerid) ?? new Customer();
-        }
-        return orders;
-    }
-
-
-    public List<Order> getAllorders(int pageNumber, int pageSize)
-    {
-
-        List<Order> orders = _context.Orders.Where(order => order.IsDeleted == false)
-                   .Skip((pageNumber - 1) * pageSize)
-                   .Take(pageSize)
-                   .ToList();
-
-        foreach (var order in orders)
-        {
-            order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
-        }
-        foreach (var CurrentOrder in orders)
-        {
-            CurrentOrder.Customer = _context.Customers.FirstOrDefault(order => order.Customerid == CurrentOrder.Customerid) ?? new Customer();
-        }
-        return orders;
-    }
-
-    public List<Order>? getAllordersBySearch(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-    {
-        List<Order> orders = _context.Orders.Where(order =>
-        order.Orderid == int.Parse(searchedOrder)).ToList();
-        foreach (var order in orders)
-        {
-            order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
-        }
-        foreach (var CurrentOrder in orders)
-        {
-            CurrentOrder.Customer = _context.Customers.FirstOrDefault(order => order.Customerid == CurrentOrder.Customerid) ?? new Customer();
-        }
-        return orders;
-    }
-
-
     public OrderViewModel GetAllOrdersByFilters(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate, int pageNumber, int pageSize, string sortOrder, string sortBy, bool fromExport)
     {
         IQueryable<Order> query = _context.Orders.AsQueryable();
@@ -168,9 +80,6 @@ public class OrderRepository : IOrderRepository
                     break;
             }
         }
-
-
-
 
         var statusIds = query.Select(o => o.Statusid).Distinct().ToList();
         var customerIds = query.Select(o => o.Customerid).Distinct().ToList();
@@ -244,24 +153,6 @@ public class OrderRepository : IOrderRepository
         model.orders = orders;
         return model;
     }
-
-
-    public List<Order> getAllOrdersFromStatus(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-    {
-
-
-        List<Order> orders = _context.Orders.Where(order => order.Statusid == status && order.IsDeleted == false).ToList();
-        foreach (var order in orders)
-        {
-            order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
-        }
-        foreach (var CurrentOrder in orders)
-        {
-            CurrentOrder.Customer = _context.Customers.FirstOrDefault(order => order.Customerid == CurrentOrder.Customerid) ?? new Customer();
-        }
-        return orders;
-    }
-
     public List<Orderstatus> getAllStatus()
     {
         return _context.Orderstatuses.ToList();

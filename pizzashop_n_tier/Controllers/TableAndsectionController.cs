@@ -1,12 +1,7 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
+
 using DAL.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 
 
 public class TableAndSection : Controller
@@ -20,7 +15,7 @@ public class TableAndSection : Controller
         _tableService = tableService;
     }
 
-    [Authorize(Policy="CanView_TableAndSection")]
+    [Authorize(Policy = "CanView_TableAndSection")]
     public IActionResult TableSection()
     {
         return View("TableAndsection");
@@ -32,30 +27,12 @@ public class TableAndSection : Controller
         return PartialView("_section", model);
     }
 
-    
-    public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 2,string? searchTable = "")
-{
-  
-    // if(pageNumber <= 0){
-    //     pageNumber = 1;
-    // }
-    // if(pageNumber > _tableService.getAllTables()/pageSize){
-    //     pageNumber = (int)Math.Ceiling((double) _tableService.getAllTables()/pageSize);
-    // }
-    // TableAndSectionViewModel model1 = new TableAndSectionViewModel
-    // {
-    //     tables = _tableService.getTablesForsection(sectionId, pageNumber, pageSize),
-    //     PageNumber = pageNumber,
-    //     PageSize = pageSize,
-    //     sectionId = sectionId,
-    //     TotalTables = _tableService.getAllTables()
-    // };
-    TableAndSectionViewModel model = _tableService.getTablesForsection(sectionId,pageNumber, pageSize,searchTable);
-    return PartialView("_tables", model);
-}
 
-
-   
+    public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 2, string? searchTable = "")
+    {
+        TableAndSectionViewModel model = _tableService.getTablesForsection(sectionId, pageNumber, pageSize, searchTable);
+        return PartialView("_tables", model);
+    }
     public IActionResult loadTablePage(int sectionId)
     {
         TableAndSectionViewModel model = new TableAndSectionViewModel();
@@ -64,14 +41,15 @@ public class TableAndSection : Controller
         model.sections = _sectionService.getAllSections();
         return PartialView("_TableContainer", model);
     }
-    [Authorize(Policy="CanEdit_TableAndSection")]
+    [Authorize(Policy = "CanEdit_TableAndSection")]
     public IActionResult AddNewSection(TableAndSectionViewModel model)
     {
         if (!_sectionService.addNewSection(model))
         {
             return Json(new { error = "An error occurred" });
         }
-        else if(model.section.Sectionid == 0){
+        else if (model.section.Sectionid == 0)
+        {
 
             return Json(new { success = "Section Added Successfully" });
         }
@@ -80,7 +58,7 @@ public class TableAndSection : Controller
             return Json(new { success = "Section Updated Successfully" });
         }
     }
- [Authorize(Policy="CanEdit_TableAndSection")]
+    [Authorize(Policy = "CanEdit_TableAndSection")]
     public IActionResult updateSectionGet(int sectionId)
     {
         var section = _sectionService.getSection(sectionId);
@@ -95,7 +73,7 @@ public class TableAndSection : Controller
     public IActionResult UpdateSection(TableAndSectionViewModel model)
     {
         model.section.Sectionid = model.sectionId;
-        
+
         return PartialView("_section", model);
     }
     [HttpPost]
@@ -110,65 +88,75 @@ public class TableAndSection : Controller
             return RedirectToAction("SectionData");
         }
     }
- [Authorize(Policy="CanDelete_TableAndSection")]
-    public IActionResult deleteModalGet(int? tableid,List<int>? selectedTables,int? sectionid)
+    [Authorize(Policy = "CanDelete_TableAndSection")]
+    public IActionResult deleteModalGet(int? tableid, List<int>? selectedTables, int? sectionid)
     {
-        if(sectionid.HasValue && selectedTables.Count>0){
-            foreach(var Tableid in selectedTables){
-                if(_tableService.isOccupied(Tableid)){
-                    return Json(new {error = "Ocuppied tables can not be deleted"});
+        if (sectionid.HasValue && selectedTables.Count > 0)
+        {
+            foreach (var Tableid in selectedTables)
+            {
+                if (_tableService.isOccupied(Tableid))
+                {
+                    return Json(new { error = "Ocuppied tables can not be deleted" });
                 }
             }
         }
 
-        if(tableid.HasValue && _tableService.isOccupied(tableid.Value)){
-            return Json(new {error = "Ocuppied table can not be deleted"});
+        if (tableid.HasValue && _tableService.isOccupied(tableid.Value))
+        {
+            return Json(new { error = "Ocuppied table can not be deleted" });
         }
-        
-        else{
-        return PartialView("_deleteModal");
+
+        else
+        {
+            return PartialView("_deleteModal");
         }
     }
 
- [Authorize(Policy="CanEdit_TableAndSection")]
+    [Authorize(Policy = "CanEdit_TableAndSection")]
     public IActionResult AddNewTable(TableAndSectionViewModel model)
     {
         if (!_tableService.addNewTable(model.table))
         {
-            return Json(new { table = model.table,Error = "Table Already Exist" });
+            return Json(new { table = model.table, Error = "Table Already Exist" });
         }
         else
         {
-        return Json(new { table = model.table, success= "Table created successfully" });
+            return Json(new { table = model.table, success = "Table created successfully" });
         }
     }
 
     [HttpPost]
-    public IActionResult deleteTable(List<int>? selectedTables,int? sectionid,int? tableid){
-        if(selectedTables != null){
+    public IActionResult deleteTable(List<int>? selectedTables, int? sectionid, int? tableid)
+    {
+        if (selectedTables != null)
+        {
             _tableService.deleteTables(selectedTables);
         }
-        if(tableid != null){
+        if (tableid != null)
+        {
             selectedTables.Add(tableid.Value);
             _tableService.deleteTables(selectedTables);
         }
         return Json(new { sectionid });
     }
     [HttpGet]
-     [Authorize(Policy="CanEdit_TableAndSection")]
-    public IActionResult updatetableGet(int tableid){
+    [Authorize(Policy = "CanEdit_TableAndSection")]
+    public IActionResult updatetableGet(int tableid)
+    {
         Table table = _tableService.gettablebyid(tableid);
         Section section = _sectionService.getSectionbyId(table.Sectionid);
         TableAndSectionViewModel model = new TableAndSectionViewModel();
         model.table = table;
         model.section = section;
         model.sections = _sectionService.getAllSections();
-        return PartialView("_editTable",model);
+        return PartialView("_editTable", model);
     }
 
-    public IActionResult updatetablePost(TableAndSectionViewModel model){
+    public IActionResult updatetablePost(TableAndSectionViewModel model)
+    {
         _tableService.updateTable(model.table);
-            return Json(new {model.table.Sectionid});
+        return Json(new { model.table.Sectionid });
     }
-    
 }
+

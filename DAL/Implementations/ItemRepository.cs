@@ -161,8 +161,6 @@ public class ItemRepository : IItemRepository
 
     public void updateItemdetails(ItemViewModel model,string imagepath)
     {
-        // Item isItemExist = _context.Items.FirstOrDefault(item=>item.Itemname == model.Itemname && item.Itemid == model.itemid && item.Categoryid != model.Categoryid && item.Isdeleted == false);
-
         Item item = _context.Items.FirstOrDefault(item=>item.Itemid == model.itemid)!;
         item.Itemname = model.Itemname;
         item.Categoryid = model.Categoryid;
@@ -175,7 +173,7 @@ public class ItemRepository : IItemRepository
         item.Shortcode = model.Shortcode;
         item.Description = model.Description;
         item.Unitid = model.Unitid;
-        if(imagepath != null || imagepath != ""){
+        if(imagepath != null && imagepath != ""){
         item.Itemimage = imagepath;
         }
         item.Isdeleted = false;

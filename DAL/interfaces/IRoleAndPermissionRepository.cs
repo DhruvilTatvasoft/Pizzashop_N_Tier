@@ -1,4 +1,3 @@
-// IRolePermissionRepository.cs (Interface)
 using DAL.Data;
 
 public interface IRoleAndPermissionRepository

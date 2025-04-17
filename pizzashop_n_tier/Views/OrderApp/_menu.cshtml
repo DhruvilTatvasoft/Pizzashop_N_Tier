@@ -1,0 +1,68 @@
+@model MenuOrderAppModel
+<style>
+    .MenuSidebarContainer{
+        width: 15%;
+        background-color: #f2f2f2;
+        position: fixed;
+        margin-top: 4%;
+        
+    }
+    .MenuBodyContainer{
+        padding-left: 17%;
+        padding-top: 4.5%;
+    }
+    .navbar{
+        position: fixed;
+        width:100%;
+    }
+    ul{
+        list-style-type: none;
+        padding: 0px;
+    }
+    .MenuSidebarContainer ul li{
+        padding: 5%;
+        padding-left: 8%;
+        font-weight: 700;
+        color: grey;
+    } 
+    .MenuSidebarContainer ul li:hover{
+        background-color: #0066A7;
+        border-top-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        color: white;
+    } 
+
+</style>
+<div class="container-fluid w-100 h-100 p-0">
+    <div class="d-flex w-100 h-100">
+
+    <div class="MenuSidebarContainer h-100"></div>
+    <div class="MenuBodyContainer w-100 h-100"></div>
+    </div>
+</div>
+
+<script>
+    $("document").ready(()=>{
+        loadSideBar();
+        loadItemsForCategory(0);
+    });
+    function loadSideBar(){
+        $.ajax({
+            url:'@Url.Action("getMenuSidebar","MenuOrderApp")',
+            type:'GET',
+            success:function (data) {
+                $('.MenuSidebarContainer').html(data);
+            }
+        });
+    }
+    function loadItemsForCategory(id){
+        $.ajax({
+            url:"@Url.Action("getItemsForCategory","MenuOrderApp")",
+            method:"GET",
+            data:{categoryid:id},
+            success:function(data){
+                $(".MenuBodyContainer").html(data);
+            }
+        });
+    }
+</script>

@@ -99,10 +99,11 @@
         };
 
         function deleteItemsGet() {
+
+            if([...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10)))
             $.ajax({
                 url: '@Url.Action("deleteItem", "Menu")',
                 type: "GET",
-                @* data: { itemid: itemid }, *@
                 success: function (data) {
                     $('#deletemodel').html(data);
                     $('#exampleModalCenter8').modal('show');
@@ -182,7 +183,7 @@
             });
         }
 
-        
+
 
         function EditItemGet(itemid) {
             $.ajax({
@@ -195,42 +196,8 @@
                 }
             });
         }
-        @* $(document).on('submit', "#EditItemForm", function (e) {
-            alert('edit item form submitted');
-            e.preventDefault();
 
-            var data = new FormData(this);
-            var modifierData = [];
-            $(".modifier-group-item").each(function (index) {
-                let modifierGroupId = $(this).find(".modifiergroupID").val();
-                let minValue = $(this).find(".min_value").val();
-                let maxValue = $(this).find(".max_value").val();
-
-                if (modifierGroupId) {
-                    modifierData.push({
-                        ModifiergroupId: modifierGroupId,
-                        min_value: minValue || 0,
-                        max_value: maxValue || 0
-                    });
-                }
-            });
-            data.append("payload", JSON.stringify(modifierData));
-            $.ajax({
-                url: '@Url.Action("PostEditItem", "Menu")',
-                type: 'POST',
-                data: data,
-                contentType: false, 
-                processData: false,
-                success: function (response) {
-                    $('.closeBTN').click();
-                    loadItemData(response.categoryid);
-                    toastr.success(response.success);
-                }
-            });
-            return false;
-        }); *@
-        
-        @* -------------------------------------ModifierPage-------------------------------------------- *@
+    @* -------------------------------------ModifierPage-------------------------------------------- *@
 
             function loadModifierPage() {
                 loadModifierGroups();
@@ -257,12 +224,12 @@
             });
         }
 
-        function loadModifiersForModifierGroup(modifierGroupId,pageNumber) {
-            var pageSize = $('.pagesize').val(); 
+        function loadModifiersForModifierGroup(modifierGroupId, pageNumber) {
+            var pageSize = $('.pagesize').val();
             $.ajax({
                 url: '/Menu/getModifiersForModifierGp',
                 type: 'GET',
-                data: { modifierGroupId: modifierGroupId,pageNumber:pageNumber,pageSize:pageSize},
+                data: { modifierGroupId: modifierGroupId, pageNumber: pageNumber, pageSize: pageSize },
                 success: function (response) {
                     $(".table-container").html(response);
                 },
@@ -273,18 +240,18 @@
         }
 
         function openAddModifierModal() {
-        $.ajax({
-            url:"@Url.Action("getAddEditModel","Menu")",
-            type: "GET",
-            success: function (data) {
-                 $('.addEditModelContainer').html(data);
-                $('#addNewModifier').modal('show');
-                $("#saveNewModifier").attr("style", "display:block");
-                $("#updateModifier").attr("style", "display:none");
-            }
-        });
-        
-    }
+            $.ajax({
+                url: "@Url.Action("getAddEditModel", "Menu")",
+                type: "GET",
+                success: function (data) {
+                    $('.addEditModelContainer').html(data);
+                    $('#addNewModifier').modal('show');
+                    $("#saveNewModifier").attr("style", "display:block");
+                    $("#updateModifier").attr("style", "display:none");
+                }
+            });
+
+        }
 
         function loadModifiersData(modifierGroupId) {
             $.ajax({
@@ -301,53 +268,56 @@
             });
         }
 
-        $(document).on("submit","#AddNewModifier", function (e) {
+        $(document).on("submit", "#AddNewModifier", function (e) {
             e.preventDefault();
             var $form = $(this);
             if ($form.data('submitting')) return;
             $form.data('submitting', true);
-            if($(this).valid()){
-            var data = new FormData(this);
-            var Action = $(document.activeElement).data('action');
-            var selectedModifierGroup = $('#modifierGroup').val();
-            let = "";
-            if (Action === "Add") {
-                url = '@Url.Action("AddNewModifier", "Menu")';
-                data.append("modifier.Modifiergroupid", selectedModifierGroup)
-            }
-            else {
-                url = '@Url.Action("EditmodifierPost", "Menu")';
-                data.append("modifier.Modifiergroupid", selectedModifierGroup)
-                data.append("modifier.Modifierid", $("#modifierIdForUpdate").val())
-            }
-            for (const pair of data.entries()) {
-                console.log(pair[0], pair[1]);
-            }
-            console.log("url: " + url);
+            if ($(this).valid()) {
+                var data = new FormData(this);
+                var Action = $(document.activeElement).data('action');
+                var selectedModifierGroup = $('#modifierGroup').val();
+
             
 
-            console.log("value of selected modifier group is " + selectedModifierGroup);
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: data,
-                processData: false,
-                contentType: false,
-                success: function (data) {
-                   $(".cancelBtn").click();
-                   if(data.success){
-                   toastr.success(data.success);
-                    console.log("data should load for modifiergroup : " + selectedModifierGroup);
-                    loadModifiersForModifierGroup(data.modifierGroupId,1);
-                    
-                   }
-                   else{
-                    toastr.error(data.error);
-                    loadModifiersForModifierGroup(data.modifierGroupId,1);
-                   
-                   }
+                let = "";
+                if (Action === "Add") {
+                    url = '@Url.Action("AddNewModifier", "Menu")';
+                    data.append("modifier.Modifiergroupid", selectedModifierGroup)
                 }
-            });
+                else {
+                    url = '@Url.Action("EditmodifierPost", "Menu")';
+                    data.append("modifier.Modifiergroupid", selectedModifierGroup)
+                    data.append("modifier.Modifierid", $("#modifierIdForUpdate").val())
+                }
+                for (const pair of data.entries()) {
+                    console.log(pair[0], pair[1]);
+                }
+                console.log("url: " + url);
+
+
+                console.log("value of selected modifier group is " + selectedModifierGroup);
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: data,
+                    processData: false,
+                    contentType: false,
+                    success: function (data) {
+                        $(".cancelBtn").click();
+                        if (data.success) {
+                            toastr.success(data.success);
+                            console.log("data should load for modifiergroup : " + selectedModifierGroup);
+                            loadModifiersForModifierGroup(data.modifierGroupId, 1);
+
+                        }
+                        else {
+                            toastr.error(data.error);
+                            loadModifiersForModifierGroup(data.modifierGroupId, 1);
+
+                        }
+                    }
+                });
             }
         });
 

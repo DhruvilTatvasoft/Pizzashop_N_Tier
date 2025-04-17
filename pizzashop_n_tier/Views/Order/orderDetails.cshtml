@@ -14,13 +14,13 @@
                 <div class="card p-3">
                     <div class="d-flex justify-content-between align-items-center mb-3">
                         <h4>Order Summary <span class="badge bg-success">@Model.order.Status.Statusname</span></h4>
-                        <button class="btn btn-primary add-item-modifier" >
-                            <a href="@Url.Action("generatePdf","Order",new {orderid = @Model.order.Orderid})">
-                            <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
-                            <span class="text-white"><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
-                                    alt="">Export</span>
+                        <button class="btn btn-primary add-item-modifier">
+                            <a href="@Url.Action("generatePdf", "Order", new { orderid = @Model.order.Orderid })">
+                                <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
+                                <span class="text-white"><img src="~/images/export (1).svg"
+                                        style="filter: brightness(0) invert(1);" alt="">Export</span>
                             </a>
-    
+
                         </button>
                     </div>
                     <div class="row mb-2">
@@ -39,7 +39,8 @@
                                 @{
                                     var duration = DateTime.Now - Model.order.Createdat;
                                 }
-                                <strong>Order Duration:</strong> @(duration?.Hours ?? 0) hours @(duration?.Minutes ?? 0) minutes 
+                                <strong>Order Duration:</strong> @(duration?.Hours ?? 0) hours @(duration?.Minutes ?? 0)
+                                minutes
                             </p>
                         </div>
                     </div>
@@ -69,7 +70,6 @@
                 </div>
             </div>
         </div>
-
         <div class="card p-4 mb-4">
             <h3 class="mb-3">Order Items</h3>
             <div class="table-responsive">
@@ -80,49 +80,58 @@
                             <th>Item</th>
                             <th>Quantity</th>
                             <th>Price</th>
-                            <th  class="d-flex justify-content-end">Total Amount</th>
+                            <th class="d-flex justify-content-end">Total Amount</th>
                         </tr>
                     </thead>
                     <tbody>
 
                         @foreach (var item in @Model.orderedItemModifiers.ItemsAndModifiers)
                         {
-                            Dictionary<Item,List<Modifier>> itemAndModifiers = item.Value;
-                                <tr>
-                                @foreach(var Item in itemAndModifiers.Keys){
+                            Dictionary<Item, List<Modifier>> itemAndModifiers = item.Value;
+                            <tr>
+                                @foreach (var Item in itemAndModifiers.Keys)
+                                {
                                     <td>@item.Key</td>
                                     <td>@Item.Itemname
-                                    
-                                @foreach(var modifier in itemAndModifiers[Item]){
-                                    <li>@modifier.Modifiername</li>
-                                }
-                                    </td>
-                                <td>
-                                    @Item.Itemquantity
-                                    @foreach (var modifier in  itemAndModifiers[Item])
-                                    {
-                                        <br>@modifier.Modifierquantity 
-                                    }
 
-                                </td>
-                                <td>@Item.Itemrate
-                                    @foreach (var modifier in  itemAndModifiers[Item])
-                                    {
-                                        <br>@(modifier.Modifierrate)
-                                    }
-                                </td>
-                                 <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate * Item.Itemquantity)</label>   
-                                   @{subtotal += Item.Itemrate * Item.Itemquantity;}
-                                   @( Item.Itemrate * Item.Itemquantity)
-                                    @foreach (var modifier in itemAndModifiers[Item])
-                                    {
-                                        <br>@(modifier.Modifierrate * modifier.Modifierquantity) 
-                                        <label style="display: none;">@(subtotal += modifier.Modifierrate * modifier.Modifierquantity)</label>
-                                    }
-                                </td>
-                                
+                                        @foreach (var modifier in itemAndModifiers[Item])
+                                        {
+                                            <li>@modifier.Modifiername</li>
+                                        }
+                                    </td>
+                                    <td>
+                                        @Item.Itemquantity
+                                        @foreach (var modifier in itemAndModifiers[Item])
+                                        {
+                                            <br>
+                                            @modifier.Modifierquantity
+                                        }
+
+                                    </td>
+                                    <td>@Item.Itemrate
+                                        @foreach (var modifier in itemAndModifiers[Item])
+                                        {
+                                            <br>
+                                            @(modifier.Modifierrate)
+                                        }
+                                    </td>
+                                    <td class="d-flex justify-content-end"><label style="display: none;">@(Item.Itemrate *
+                                                                            Item.Itemquantity)</label>
+                                @{
+                                            subtotal += Item.Itemrate * Item.Itemquantity;
+                                        }
+                                        @( Item.Itemrate * Item.Itemquantity)
+                                        @foreach (var modifier in itemAndModifiers[Item])
+                                        {
+                                            <br>
+                                            @(modifier.Modifierrate* modifier.Modifierquantity)
+                                            <label style="display: none;">@(subtotal += modifier.Modifierrate *
+                                                                                    modifier.Modifierquantity)</label>
+                                                                }
+                                    </td>
+
                                 }
-                             </tr>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -137,7 +146,7 @@
                         </tr>
                         <tr>
                             <td>CGST:</td>
-                            <td>₹@((subtotal * 6)/100)</td>
+                            <td>₹@((subtotal * 6) / 100)</td>
                         </tr>
                         <tr>
                             <td>SGST:</td>
@@ -153,7 +162,8 @@
                         </tr>
                         <tr class="fw-bold">
                             <td>Total:</td>
-                            <td>₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 + (decimal)7.98 + (decimal)19.95)</td>
+                            <td>₹@(subtotal + ((subtotal * 6) / 100) + (decimal)150.00 + (decimal)7.98 + (decimal)19.95)
+                            </td>
                         </tr>
                     </tbody>
                 </table>

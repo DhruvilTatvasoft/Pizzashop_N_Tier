@@ -44,6 +44,8 @@ builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICustomerService, CustomerImpl>();
 builder.Services.AddScoped<IWaitingTokenService, WaitingTokenImpl>();
 builder.Services.AddScoped<IWaitingTokenRepository, WaitingTokenRepository>();
+builder.Services.AddScoped<IMenuOrderAppService, MenuOrderAppImple>();
+builder.Services.AddScoped<IMenuOrderAppRepository, MenuOrderAppRepository>();
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -72,7 +74,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 if (context.Request.Cookies.ContainsKey("token"))
                 {
                     context.Token = context.Request.Cookies["token"];
-                    // Console.WriteLine("Token extracted from cookie: " + context.Token);
                 }
                 else
                 {
@@ -104,7 +105,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         {
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.ASCII.GetBytes(
-                builder.Configuration["JWT:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured."))),
+            builder.Configuration["JWT:SecretKey"] ?? throw new InvalidOperationException("JWT SecretKey is not configured."))),
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidIssuer = builder.Configuration["JWT:Issuer"],

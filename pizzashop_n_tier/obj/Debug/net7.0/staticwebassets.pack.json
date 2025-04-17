@@ -237,6 +237,18 @@
       "PackagePath": "staticwebassets\\images\\group.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\heart (1).svg",
+      "PackagePath": "staticwebassets\\images\\heart (1).svg"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\heart-fill.svg",
+      "PackagePath": "staticwebassets\\images\\heart-fill.svg"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\heart.svg",
+      "PackagePath": "staticwebassets\\images\\heart.svg"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\hourglass-top.svg",
       "PackagePath": "staticwebassets\\images\\hourglass-top.svg"
     },
@@ -737,12 +749,24 @@
       "PackagePath": "staticwebassets\\uploads\\0d9fe659-a85e-4dff-b734-8f57acb24a22_dining-menu.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\135a45f0-4359-47a4-9f6b-cb39c32fd596_error.png",
+      "PackagePath": "staticwebassets\\uploads\\135a45f0-4359-47a4-9f6b-cb39c32fd596_error.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\1440b261-a6b6-47a0-b1e9-0be47053d7e0_4587323.png",
+      "PackagePath": "staticwebassets\\uploads\\1440b261-a6b6-47a0-b1e9-0be47053d7e0_4587323.png"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\1533a633-279b-42d6-9362-b205713d70c7_icons8-compact-camera-50.png",
       "PackagePath": "staticwebassets\\uploads\\1533a633-279b-42d6-9362-b205713d70c7_icons8-compact-camera-50.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\2008e7af-09b6-4b50-b46b-013d99f4bc03_icons8-compact-camera-50.png",
       "PackagePath": "staticwebassets\\uploads\\2008e7af-09b6-4b50-b46b-013d99f4bc03_icons8-compact-camera-50.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\20a2ebc6-cac9-4301-a97e-0c790bd007d3_icons8-administrator-male-48.png",
+      "PackagePath": "staticwebassets\\uploads\\20a2ebc6-cac9-4301-a97e-0c790bd007d3_icons8-administrator-male-48.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\25ad42ca-bb7f-45b6-bcee-7f2553017421_dinner-icon.png",
@@ -755,6 +779,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\29c38696-3110-4239-8216-0088a309f4ad_05e234cbe962b82029914d3104daad11.jpg",
       "PackagePath": "staticwebassets\\uploads\\29c38696-3110-4239-8216-0088a309f4ad_05e234cbe962b82029914d3104daad11.jpg"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\2daf2448-4ec7-4da4-96a1-e26d2fe253e1_invoice (12).pdf",
+      "PackagePath": "staticwebassets\\uploads\\2daf2448-4ec7-4da4-96a1-e26d2fe253e1_invoice (12).pdf"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\2fb0e875-b877-4da7-be40-b742501ae464_add_8600182.png",
@@ -781,6 +809,10 @@
       "PackagePath": "staticwebassets\\uploads\\3a76b0d9-6124-4907-948d-5be0b9a6e69f_dining-menu.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\3b821837-c274-4cf6-b93a-9a5208911e10_account.png",
+      "PackagePath": "staticwebassets\\uploads\\3b821837-c274-4cf6-b93a-9a5208911e10_account.png"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\3d24fae1-694f-407f-82ad-ce0d6beaf876_dinner-icon.png",
       "PackagePath": "staticwebassets\\uploads\\3d24fae1-694f-407f-82ad-ce0d6beaf876_dinner-icon.png"
     },
@@ -791,6 +823,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\4441df05-0f21-4e92-969a-b5991ea4ffe7_dining-menu.png",
       "PackagePath": "staticwebassets\\uploads\\4441df05-0f21-4e92-969a-b5991ea4ffe7_dining-menu.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\4449b017-d10a-41a4-9201-fda25d7153db_dinner-icon.png",
+      "PackagePath": "staticwebassets\\uploads\\4449b017-d10a-41a4-9201-fda25d7153db_dinner-icon.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\45815033-6560-40be-961e-4d9ed9ebf0e1_error.png",
@@ -815,6 +851,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\50340608-d8b2-4416-bca3-47a2c534f967_account.png",
       "PackagePath": "staticwebassets\\uploads\\50340608-d8b2-4416-bca3-47a2c534f967_account.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\5042b005-976f-468b-9264-330ef328313d_close.png",
+      "PackagePath": "staticwebassets\\uploads\\5042b005-976f-468b-9264-330ef328313d_close.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\51d83776-1d33-4024-b232-570bff12b3f9_Default_pfp.svg.png",
@@ -917,6 +957,10 @@
       "PackagePath": "staticwebassets\\uploads\\8d707797-e029-4f07-9e70-9cba604fcb81_dashboard-interface.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\8e844202-9e2a-4976-8a40-6c67dfd75d8b_add_8600182.png",
+      "PackagePath": "staticwebassets\\uploads\\8e844202-9e2a-4976-8a40-6c67dfd75d8b_add_8600182.png"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\93843682-979a-4c4c-8634-d4a8bd5be991_dining-menu.png",
       "PackagePath": "staticwebassets\\uploads\\93843682-979a-4c4c-8634-d4a8bd5be991_dining-menu.png"
     },
@@ -973,6 +1017,10 @@
       "PackagePath": "staticwebassets\\uploads\\bd34d22c-afc2-4689-9ab9-e5db9791e8e8_Default_pfp.svg.png"
     },
     {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\c163bc3a-5a90-4dee-b7b6-c18a34b8165e_dominos_background.jpg",
+      "PackagePath": "staticwebassets\\uploads\\c163bc3a-5a90-4dee-b7b6-c18a34b8165e_dominos_background.jpg"
+    },
+    {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\c5fa3ce3-7dd8-43fb-b961-515d02746b9f_dining-menu.png",
       "PackagePath": "staticwebassets\\uploads\\c5fa3ce3-7dd8-43fb-b961-515d02746b9f_dining-menu.png"
     },
@@ -991,6 +1039,10 @@
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\d44a27fd-8f90-4ad3-ab29-f8346eeede6b_add_8600182.png",
       "PackagePath": "staticwebassets\\uploads\\d44a27fd-8f90-4ad3-ab29-f8346eeede6b_add_8600182.png"
+    },
+    {
+      "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\d461f22c-abd5-46ea-8af9-726f1f43ac57_export_87484.png",
+      "PackagePath": "staticwebassets\\uploads\\d461f22c-abd5-46ea-8af9-726f1f43ac57_export_87484.png"
     },
     {
       "Id": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\uploads\\dc39102b-e0d1-4a86-a343-10e73972134b_icons8-facebook-48.png",

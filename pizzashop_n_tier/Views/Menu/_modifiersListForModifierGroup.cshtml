@@ -27,7 +27,8 @@
 
         @if (Model.modifiers.Count() <= 0)
         {
-            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Modifiers
+            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                Modifiers
                 Found</td>
         }
         else
@@ -80,23 +81,27 @@
     <div class="d-flex mt-1">
         @if (Model.pageNumber > 1)
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber-1),'','false')"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-                    style="width:25px" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
+                onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1),'','false')"><img
+                    src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
         }
         else
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img src="" alt=""><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
 
         }
         @if (Model.pageNumber * Model.pageSize < Model.totalrecords)
         {
-            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber+1),'','false')"><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px;rotate: 180deg;" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;"
+                onclick="selectModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber + 1),'','false')"><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
         }
         else
         {
-            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
-                    style="width:25px;rotate: 180deg;" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" disabled><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
         }
-        
+
     </div>
 </div>

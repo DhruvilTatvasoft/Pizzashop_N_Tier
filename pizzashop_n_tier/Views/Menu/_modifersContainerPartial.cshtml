@@ -5,36 +5,36 @@
     <div class="me-3">
         <input type="text" class="form-control h-100 " placeholder="Search">
     </div>
-    <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg" onclick="deleleMultipleModifiers()" style="cursor: pointer;"
-            alt=""></button>
+    <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg"
+            onclick="deleleMultipleModifiers()" style="cursor: pointer;" alt=""></button>
 
     <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="openAddModifierModal()">+ New
         Modfifier</button>
     <input type="text" value="" hidden>
 </div>
 <div class="tbl m-3 table-container"></div>
-<div class="addEditModelContainer"></div>    
+<div class="addEditModelContainer"></div>
 </div>
 <script>
-    $('document').ready(function(){
-        loadModifiersForModifierGroup(2,1);
+    $('document').ready(function () {
+        loadModifiersForModifierGroup(2, 1);
     })
-   
-    function deleleMultipleModifiers(){
+
+    function deleleMultipleModifiers() {
         var modifierGroupId = $('#modifierGroupId').val();
         var selectedModifiers = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
 
-        if($('IsModifierChecked').length < 0){
+        if ($('IsModifierChecked').length < 0) {
             toastr.error("please select modifiers to delete");
         }
-        else{
+        else {
             $.ajax({
-                url:'@Url.Action("deleteMultipleModifiers","Menu")',
-                method:'POST',
-                data:{selectedModifiers : selectedModifiers,modifierGroupId : modifierGroupId},
-                success:function(data){
+                url: '@Url.Action("deleteMultipleModifiers", "Menu")',
+                method: 'POST',
+                data: { selectedModifiers: selectedModifiers, modifierGroupId: modifierGroupId },
+                success: function (data) {
                     toastr.success("Modifiers Deleted Successfully");
-                    loadModifiersForModifierGroup(data.modifierGroupId,1);
+                    loadModifiersForModifierGroup(data.modifierGroupId, 1);
                 }
             });
         }

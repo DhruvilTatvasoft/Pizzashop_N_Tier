@@ -8,13 +8,8 @@ namespace BAL.Interfaces
 {
     public interface IOrderService
     {
-        List<Order> getAllOrders(int pageNumber,int pageSize);
-        List<Order> getAllOrdersBySearch(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
-        List<Order> getAllOrdersByStatus(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         List<Orderstatus> getAllStatus();
         OrderViewModel getOrdersByFilters(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy);
-        List<Order> getAllOrderByOptionFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
-        List<Order> getAllOrderByDateFilter(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         void createExcelSheet(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         Order? getOrderDetails(int orderid);
       

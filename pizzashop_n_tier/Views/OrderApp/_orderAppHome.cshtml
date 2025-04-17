@@ -6,55 +6,64 @@
 </div>
 <script>
      $("document").ready(() => {
-          @* loadKot(); *@
-         @* loadwaitingList() *@
-         loadTables()
+               @* loadKot(); *@
+               loadwaitingList()
+               @* loadMenuPage() *@
      })
-    
+
      function loadKot() {
           $.ajax({
                url: '@Url.Action("getKot", "OrderApp")',
                method: 'GET',
                success: function (data) {
                     $('.loadTabBody').html(data);
-                    }
-               });
-          }
+               }
+          });
+     }
      function loadTables() {
           $.ajax({
-                    url: "@Url.Action("getTables", "OrderApp")",
-                    method: "GET",
-                    success: function (data) {
-                         $(".loadTabBody").html(data);
-                    }
-               });
-          }
-     function loadwaitingList(){
+               url: "@Url.Action("getTables", "OrderApp")",
+               method: "GET",
+               success: function (data) {
+                    $(".loadTabBody").html(data);
+               }
+          });
+     }
+     function loadwaitingList() {
           $.ajax({
-               url:'@Url.Action("getWaitingTokenPage","OrderApp")',
-               method:"GET",
-               success:function(data){
-                         $(".loadTabBody").html(data);
+               url: '@Url.Action("getWaitingTokenPage", "OrderApp")',
+               method: "GET",
+               success: function (data) {
+                    $(".loadTabBody").html(data);
                }
           })
+     }
+     function loadMenuPage(){
+          $.ajax({
+               url:"@Url.Action("getMenuPage","OrderApp")",
+               method:"GET",
+               success:function(data){
+                    $(".loadTabBody").html(data);
+               }
+          });
      }
      $(document).on('click', '.Available-Table', function () {
           $(this).removeClass('Available-Table').addClass('selectedTable');
           var sectionid = $(this).data('sectionid')
-          var id = "table_"+sectionid;
+          var id = "table_" + sectionid;
           @* alert(id) *@
-          setTimeout(1)
-          if ($("#"+id+" .selectedTable").length > 0) {
+               setTimeout(1)
+          if ($("#" + id + " .selectedTable").length > 0) {
                @* alert("OK") *@
-               $("#assignBtn_"+sectionid).prop('disabled', false)
+                    $("#assignBtn_" + sectionid).prop('disabled', false)
           }
      });
      $(document).on('click', '.selectedTable', function () {
           $(this).removeClass('selectedTable').addClass('Available-Table')
           var sectionid = $(this).data('sectionid')
-          var id = "table_"+sectionid;
-          if ($("#"+id+" .selectedTable").length == 0) {
-               $("#assignBtn_"+sectionid).prop('disabled', true)
+          var id = "table_" + sectionid;
+          if ($("#" + id + " .selectedTable").length == 0) {
+               $("#assignBtn_" + sectionid).prop('disabled', true)
           }
      });
 </script>

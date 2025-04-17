@@ -17,34 +17,39 @@
                     <div class="col-12 col-lg-10">
                         <div class="row overflow-hidden d-flex justify-content-end align-items-center">
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
-                               
-                                    <input type="search" class="form-control shadow-none" id="SearchOrder"
-                                        onkeyup="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')" placeholder="Search">
-                                   
+
+                                <input type="search" class="form-control shadow-none" id="SearchOrder"
+                                    onkeyup="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')"
+                                    placeholder="Search">
+
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="status-select form-select shadow-none" id="selectStatus" style="padding: 3%;" aria-label="Floating label select example" onchange="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')" placeholder="Selects Status">
+                                    <select class="status-select form-select shadow-none" id="selectStatus"
+                                        style="padding: 3%;" aria-label="Floating label select example"
+                                        onchange="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')"
+                                        placeholder="Selects Status">
                                         <option selected value="0">All Status</option>
                                         @foreach (var status in Model.status)
                                         {
                                             <option value="@status.Orderstatusid">@status.Statusname</option>
                                         }
                                     </select>
-                                    
+
                                 </div>
                             </div>
                             <div class="col-md-3 col-sm-4 col-12 mb-3 mb-md-0">
                                 <div class="form-floating">
-                                    <select class="time-select form-select shadow-none timePeriodFilter" style="padding: 3%;"
-                                        aria-label="Floating label select example" placeholder="Selects Time"
+                                    <select class="time-select form-select shadow-none timePeriodFilter"
+                                        style="padding: 3%;" aria-label="Floating label select example"
+                                        placeholder="Selects Time"
                                         onchange="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')">
                                         <option selected value="All Time">All Time</option>
                                         <option value="Last 7 days">Last 7 days</option>
                                         <option value="Last 30 days">Last 30 days</option>
                                         <option value="Current Month">Current Month</option>
                                     </select>
-                                 
+
                                 </div>
                             </div>
                             <div class="col-auto my-auto d-flex justify-content-end">
@@ -77,7 +82,8 @@
                     </div>
                     <div class="col-md-auto d-flex justify-content-md-end justify-content-end gap-2">
                         <button type="submit" class="btn btn-primary p-md-2 fw-semibold add-item-modifier"
-                            id="searchByDate" onclick="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')">Search</button>
+                            id="searchByDate"
+                            onclick="showOrdersBySearch(1,@Model.PageSize,'asc','orderid')">Search</button>
                         <button type="reset" class="btn btn-outline-primary fw-semibold" id="Reset"
                             onclick="resetDropDowns()">Clear</button>
                     </div>
@@ -89,20 +95,20 @@
     </div>
 
     <script>
-        
+
 
         $("document").ready(function () {
-            showOrdersBySearch(1,2,'asc','orderId');
-              $('.sidebar ul li').removeClass('active-class');
-             $('.orders').addClass('active-class')
+            showOrdersBySearch(1, 2, 'asc', 'orderId');
+            $('.sidebar ul li').removeClass('active-class');
+            $('.orders').addClass('active-class')
         });
-        function showOrdersBySearch(pageNumber,pagesize,sortOrder,sortBy) {
-              var selectedStatus = $("#selectStatus").val()
+        function showOrdersBySearch(pageNumber, pagesize, sortOrder, sortBy) {
+            var selectedStatus = $("#selectStatus").val()
             var selectedOption = $(".timePeriodFilter").val();
             var searchedOrder = $("#SearchOrder").val();
             var startDate = $("#startDate").val();
             var endDate = $("#endDate").val();
-            if(startDate > endDate){
+            if (startDate > endDate) {
                 document.querySelector("#fromDate").innerHTML = "From Date should not be gretter than End Date"
                 @* alert("OK") *@
                 return;
@@ -110,23 +116,23 @@
             pagesize = $(".pagesize").val();
             console.log(sortOrder)
             console.log(sortBy)
-                $.ajax({
-                    url: '@Url.Action("showOrderDetailsByFilter", "order")',
-                    type: 'GET',
-                    data: {status: selectedStatus,filterBy : selectedOption,pageNumber:parseInt(pageNumber),pagesize:parseInt(pagesize),searchedOrder : searchedOrder,startDate:startDate,endDate:endDate,sortOrder:sortOrder,sortBy:sortBy},
-                    success: function (data) {
-                        $(".loadOrderTable").html(data);
-                    }
-                });
+            $.ajax({
+                url: '@Url.Action("showOrderDetailsByFilter", "order")',
+                type: 'GET',
+                data: { status: selectedStatus, filterBy: selectedOption, pageNumber: parseInt(pageNumber), pagesize: parseInt(pagesize), searchedOrder: searchedOrder, startDate: startDate, endDate: endDate, sortOrder: sortOrder, sortBy: sortBy },
+                success: function (data) {
+                    $(".loadOrderTable").html(data);
+                }
+            });
         }
         function resetDropDowns() {
             $("#SearchOrder").val('');
             $('option[value="All Time"]').attr('selected', 'selected');
             $('option[value=0]').attr('selected', 'selected');
             $('input[type=date]').val('');
-            showOrdersBySearch(1,$(".pagesize").val(),'asc','orderid')
+            showOrdersBySearch(1, $(".pagesize").val(), 'asc', 'orderid')
         }
-        function exportExcelSheet(){
+        function exportExcelSheet() {
             var searchedOrder = $("#SearchOrder").val();
             var searchByPeriod = $(".timePeriodFilter").val();
             var startDate = $("#startDate").val();
@@ -134,16 +140,16 @@
             var searchbystatus = $("#selectStatus").val();
 
             $.ajax({
-                url:'@Url.Action("ExportData","Order")',
+                url: '@Url.Action("ExportData", "Order")',
                 type: 'POST',
-                data:{
+                data: {
                     searchedOrder: searchedOrder,
                     searchByPeriod: searchByPeriod,
                     startDate: startDate,
                     endDate: endDate,
                     searchbystatus: searchbystatus
                 },
-                success:function(data){
+                success: function (data) {
                     toastr.success(data.success);
                     showOrdersBySearch();
                 }

@@ -4,13 +4,6 @@ using NPOI.HSSF.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.SS.UserModel;
 using NPOI.SS.Util;
-using iText.IO.Source;
-using iText.Kernel.Geom;
-using iText.Kernel.Pdf;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc;
-using System.Text;
-using Microsoft.AspNetCore.Mvc.Razor;
 
 namespace BAL.Implementations
 {
@@ -20,34 +13,6 @@ namespace BAL.Implementations
         public OrderImple(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
-        }
-
-        public List<Order> getAllOrderByDateFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-        {
-            return _orderRepository.getAllOrderByDateFilter(status, searchedOrder, filterBy, startDate, endDate);
-        }
-
-        public List<Order> getAllOrderByOptionFilter(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-        {
-
-            return _orderRepository.getAllOrderByOptionFilter(status, searchedOrder, filterBy, startDate, endDate);
-
-        }
-
-        public List<Order> getAllOrders(int pageNumber,int pageSize)
-        {
-            return _orderRepository.getAllorders(pageNumber,pageSize);
-        }
-
-        public List<Order> getAllOrdersBySearch(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-        {
-            return _orderRepository.getAllordersBySearch(status, searchedOrder, filterBy, startDate, endDate);
-        }
-
-
-        public List<Order> getAllOrdersByStatus(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
-        {
-            return _orderRepository.getAllOrdersFromStatus(status, searchedOrder, filterBy, startDate, endDate);
         }
 
         public List<Orderstatus> getAllStatus()
@@ -217,12 +182,6 @@ namespace BAL.Implementations
                 sheet.AddMergedRegion(new CellRangeAddress(1, 2, 2, 5));
                 ApplyMergedCellStyle(sheet, new CellRangeAddress(1, 2, 2, 5), Data);
 
-
-                // cell = row.CreateCell(7);
-                // cell.SetCellValue(searchedOrder);
-                // cell.CellStyle = Header;
-                // sheet.AddMergedRegion(new CellRangeAddress(4, 5, 7, 8));
-
                 rowIndex = 4;
                 row = sheet.CreateRow(rowIndex);
                 cell = row.CreateCell(0);
@@ -378,7 +337,7 @@ namespace BAL.Implementations
                 {
                     AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
                 };
-                //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
+
                 HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
                 picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;

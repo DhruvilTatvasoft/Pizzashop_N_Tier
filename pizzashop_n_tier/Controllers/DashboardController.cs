@@ -31,7 +31,7 @@ public class DashboardController : Controller
     public readonly IImagePath _imageService;
 
     public readonly IJwtTokenGenService _jwtService;
-    public DashboardController(ILogin log, IImagePath imagePath,IJwtTokenGenService jwtTokenService, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+    public DashboardController(ILogin log, IImagePath imagePath, IJwtTokenGenService jwtTokenService, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -114,44 +114,45 @@ public class DashboardController : Controller
         return View();
     }
 
-    public IActionResult loadResetPassView(){
+    public IActionResult loadResetPassView()
+    {
         chang_p_model model = new chang_p_model();
-        return PartialView("_resetPasswordForm",model);
+        return PartialView("_resetPasswordForm", model);
     }
 
-   [HttpPost]
-public IActionResult ResetPassword(chang_p_model model)
-{
-    var req = HttpContext.Request;
-    string email = _cookieService.getValueFromCookie("username", req);
-    string password = _cookieService.getValueFromCookie("password", req);
-    
-    if (ModelState.IsValid)
+    [HttpPost]
+    public IActionResult ResetPassword(chang_p_model model)
     {
-        
-        bool passwordUpdated = _user.changePass(req, model, email, password);
+        var req = HttpContext.Request;
+        string email = _cookieService.getValueFromCookie("username", req);
+        string password = _cookieService.getValueFromCookie("password", req);
 
-        if (passwordUpdated)
+        if (ModelState.IsValid)
         {
-            TempData["ToastrMessage"] = "Password Changed successfully";
-            TempData["ToastrType"] = "success";
-            return RedirectToAction("Index", "LoginController");
+
+            bool passwordUpdated = _user.changePass(req, model, email, password);
+
+            if (passwordUpdated)
+            {
+                TempData["ToastrMessage"] = "Password Changed successfully";
+                TempData["ToastrType"] = "success";
+                return RedirectToAction("Index", "LoginController");
+            }
+            else
+            {
+                // Adding error if password change fails
+                ModelState.AddModelError("oldpass", "Please enter the correct current password");
+                TempData["ToastrMessage"] = "Incorrect current password";
+                TempData["ToastrType"] = "error";
+                return View(model);
+            }
         }
         else
         {
-            // Adding error if password change fails
-            ModelState.AddModelError("oldpass", "Please enter the correct current password");
-            TempData["ToastrMessage"] = "Incorrect current password";
-            TempData["ToastrType"] = "error";
+            // Return the model with validation errors
             return View(model);
         }
     }
-    else
-    {
-        // Return the model with validation errors
-        return View(model);
-    }
-}
 
     public IActionResult Logout()
     {
@@ -163,7 +164,7 @@ public IActionResult ResetPassword(chang_p_model model)
     }
 
     [HttpGet]
-    [Authorize(Policy="CanEdit_Users")]
+    [Authorize(Policy = "CanEdit_Users")]
     public IActionResult AddUser()
     {
         UserDetailModel model = new UserDetailModel();
@@ -172,7 +173,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return View(model);
     }
     [HttpPost]
-    [Authorize(Policy="CanEdit_Users")]
+    [Authorize(Policy = "CanEdit_Users")]
     public IActionResult AddUser(UserDetailModel model)
     {
         model.Role = _user.getRoles();
@@ -234,7 +235,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return Json(new SelectList(states, "Stateid", "Statename"));
     }
     [HttpPost]
-    [Authorize(Policy="CanDelete_Users")]
+    [Authorize(Policy = "CanDelete_Users")]
     public IActionResult DeleteUser(int Id)
     {
         _user.deleteUser(Id);
@@ -243,7 +244,7 @@ public IActionResult ResetPassword(chang_p_model model)
         return View("showUsers");
     }
     [HttpGet]
-    [Authorize(Policy="CanEdit_Users")]
+    [Authorize(Policy = "CanEdit_Users")]
     public IActionResult EditUser(int Id)
     {
 
@@ -290,7 +291,7 @@ public IActionResult ResetPassword(chang_p_model model)
         model.Role = _user.getAllRoles();
         return View(model);
     }
-    [Authorize(Policy="CanView_Users")]
+    [Authorize(Policy = "CanView_Users")]
     public IActionResult showUsers()
     {
         return View();
@@ -303,27 +304,27 @@ public IActionResult ResetPassword(chang_p_model model)
         PermissionsModel2 model = new PermissionsModel2();
         model.roleid = Id;
         model = _user.permissionsForRole(Id);
-        
+
         return View("permissions", model);
     }
 
 
     [HttpPost]
-    [Authorize(Policy="CanEdit_RolesAndPermissions")]
+    [Authorize(Policy = "CanEdit_RolesAndPermissions")]
     public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
     {
         _permissionService.UpdatePermissions(model);
         model = _user.permissionsForRole(roleid);
         TempData["ToastrMessage"] = "Permissions updated successfully";
         TempData["ToastrType"] = "success";
-         var request = HttpContext.Request;
-         var response = HttpContext.Response;
-        string email = _cookieService.getValueFromCookie("username",request);
+        var request = HttpContext.Request;
+        var response = HttpContext.Response;
+        string email = _cookieService.getValueFromCookie("username", request);
         string role = _user.getUserRole(email);
-        var token = _jwtService.GenerateJwtToken(email,role);
+        var token = _jwtService.GenerateJwtToken(email, role);
         HttpContext.Response.Cookies.Delete("token");
-        _cookieService.setInCookie(token,response,"token",true);
-        return View("permissions", model);
+        _cookieService.setInCookie(token, response, "token", true);
+        return RedirectToAction("Roles");
     }
 
 }

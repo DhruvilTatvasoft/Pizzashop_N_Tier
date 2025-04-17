@@ -29,7 +29,10 @@ public class CustomerRepository : ICustomerRepository
         }
         IQueryable<Customer> query;
         query = _context.Customers.Where(customer => customer.Isdeleted == false);
-        query = query.Where(customer => search == "" || customer.Customername.ToLower().Trim().Contains(search.ToLower().Trim()));
+
+        if(!string.IsNullOrEmpty(search)){
+        query = query.Where(customer => customer.Customername.ToLower().Trim().Contains(search.ToLower().Trim()));
+        }
         var a = query.ToList();
         if (!string.IsNullOrEmpty(filterBy) && startDate == null && endDate == null)
         {

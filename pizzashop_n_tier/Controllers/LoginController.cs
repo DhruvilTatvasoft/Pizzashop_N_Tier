@@ -1,4 +1,4 @@
-using BAL.Interfaces;
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace pizzashop_n_tier.Controllers;
@@ -11,47 +11,37 @@ public class LoginController : Controller
 
     private readonly ILogin _log;
     private readonly IJwtTokenGenService _jwtTokenGenService;
-    private readonly IConfiguration _configuration;
-
     private readonly IEmailGenService _emailGenService;
 
-    private readonly IAESService _aesservice;
-
-    private readonly IImagePath _imageService;
-
-    public LoginController(ILogger<LoginController> logger, IImagePath imageService, ICookieService cookieService, IAESService AesService, ILogin log, IEmailGenService emailGenService,IJwtTokenGenService jwtTokenGenService)
+    public LoginController(ILogger<LoginController> logger, ICookieService cookieService,  ILogin log, IEmailGenService emailGenService, IJwtTokenGenService jwtTokenGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
         _log = log;
         _emailGenService = emailGenService;
-        _imageService = imageService;
-        _aesservice = AesService;
         _jwtTokenGenService = jwtTokenGenService;
     }
     [HttpGet]
     public IActionResult Index()
     {
-         var request = HttpContext.Request;
-         if (_CookieService.IsSetCookie(request, "token"))
-    {
-        var token = _CookieService.getValueFromCookie("token", request);
-
-        var principal = _jwtTokenGenService.ValidateToken(token);
-
-        if (principal != null)
+        var request = HttpContext.Request;
+        if (_CookieService.IsSetCookie(request, "token"))
         {
-            return RedirectToAction("showDashboard", "Dashboard");
-        }
-        else
-        {
-            Console.WriteLine("Token is expired or invalid.");
-            Response.Cookies.Delete("token");
-        }
-    }
+            var token = _CookieService.getValueFromCookie("token", request);
 
-    // Show login page
-    return View();
+            var principal = _jwtTokenGenService.ValidateToken(token);
+
+            if (principal != null)
+            {
+                return RedirectToAction("showDashboard", "Dashboard");
+            }
+            else
+            {
+                Console.WriteLine("Token is expired or invalid.");
+                Response.Cookies.Delete("token");
+            }
+        }
+        return View();
     }
     [HttpPost]
     public IActionResult Index(LoginViewModel lgnmdl)
@@ -72,8 +62,6 @@ public class LoginController : Controller
             int userid = _log.getLoggerUId(lgnmdl.username);
             _CookieService.setInCookie(lgnmdl.password, res, "password", true);
             _CookieService.setInCookie(userid.ToString(), res, "userid", true);
-            // string imagePath = _imageService.getImagePathFromUid(userid);
-            // _CookieService.setInCookie(imagePath,res,"userImage",true);
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
             TempData["ToastrType"] = "success";
@@ -90,7 +78,8 @@ public class LoginController : Controller
 
     }
 
-    public IActionResult AccessDenied(){
+    public IActionResult AccessDenied()
+    {
         return View();
     }
 

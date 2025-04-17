@@ -68,7 +68,9 @@
     </div>
   </div>
 </form>
+
 <div id="LoadPartialOfmodifiergroup"></div>
+
 <div class="modal fade" style="--bs-modal-width: 60%;" id="addExistingModifiers" tabindex="-1" role="dialog"
   aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered " role="document">
@@ -379,21 +381,6 @@
       }
     });
   }
-  @* 
-  $("#deleteModifierGroupModal").on('submit', function (e) {
-    e.preventDefault();
-    const modifierGroupId = $("#modifierGroupIdTodelete").val();
-
-    $.ajax({
-      url: '/Menu/DeleteModifierGroup',
-      type: 'POST',
-      data: { modifierGroupId: modifierGroupId },
-      success: function () {
-        $(".closeDeleteModel").click();
-        loadModifierGroups();
-      }
-    });
-  }); *@
 
     function OpenDeleteModifierModal(modifierId, modifiergroupId) {
       const modal = new bootstrap.Modal(document.getElementById('deleteModifierModel'));
@@ -435,7 +422,7 @@
         console.log(Modifierid);
         document.querySelector("#addNewModifier h5").innerHTML = 'Edit Modifier';
       }
-    })
+    });
   }
 
 </script>

@@ -107,7 +107,7 @@ public class ModifierRepository : IModifierRepository
         List<Modifier> modifiers = new List<Modifier>();
         foreach (var id in modifierIds)
         {
-            Modifier m = _context.Modifiers.FirstOrDefault(m => m.Modifierid == id) ?? new Modifier();
+            Modifier m = _context.Modifiers.FirstOrDefault(m => m.Modifierid == id && m.Isdeleted == false) ?? new Modifier();
             m.Unit = _context.Units.FirstOrDefault(u => u.Unitid == m.Unitid) ?? new Unit();
             if (m != null)
             {
@@ -212,7 +212,7 @@ public class ModifierRepository : IModifierRepository
             modifierGroup.Description = mg.Description;
             _context.Modifiergroups.Update(modifierGroup);
         }
-        // _context.Modifiergroups.Update(modifierGroup!);
+       
         List<int> modifiersIdFromDb = _context.Modifiers
             .Where(modifier => modifier.Modifiergroupid == mg.Modifiergroupid && modifier.Isdeleted == false)
             .Select(modifier => modifier.Modifierid)

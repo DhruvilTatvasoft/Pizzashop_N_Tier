@@ -2,8 +2,8 @@
     Layout = "";
 }
 @model ItemModel
-<input type="hidden" id="modifierGroupId"asp-for="@Model.modifierGroupId">
-<input type="hidden" id="pageNumber"asp-for="@Model.pageNumber">
+<input type="hidden" id="modifierGroupId" asp-for="@Model.modifierGroupId">
+<input type="hidden" id="pageNumber" asp-for="@Model.pageNumber">
 <table class="table">
     <thead>
         <tr>
@@ -29,9 +29,10 @@
 
         @if (Model.modifiers.Count() <= 0)
         {
-            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Modifiers
+            <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                Modifiers
                 Found</td>
-           
+
         }
         else
         {
@@ -39,7 +40,8 @@
             {
                 <tr>
                     <td scope="row">
-                        <input class="form-check-input IsModifierChecked" onchange="checkTheMasterCheckbox()" type="checkbox" value="@modifier.Modifierid" />
+                        <input class="form-check-input IsModifierChecked" onchange="checkTheMasterCheckbox()" type="checkbox"
+                            value="@modifier.Modifierid" />
                         <label class="form-check-label" for="flexCheckDefault">
                             <label for="" style="font-size: 14px;">@modifier.Modifiername</label>
                         </label>
@@ -71,9 +73,9 @@
             <select class="form-select form-select-lg mb-3 pagesize"
                 onchange="loadModifiersForModifierGroup(@Model.modifierGroupId,@Model.pageNumber)"
                 aria-label=".form-select-lg example">
-                <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)" >1</option>
-                <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)" >2</option>
-                <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)" >3</option>
+                <option value="1" selected="@(Model.pageSize == 1 ? "selected" : null)">1</option>
+                <option value="2" selected="@(Model.pageSize == 2 ? "selected" : null)">2</option>
+                <option value="3" selected="@(Model.pageSize == 3 ? "selected" : null)">3</option>
                 <option value="4" selected="@(Model.pageSize == 4 ? "selected" : null)">4</option>
                 <option value="5" selected="@(Model.pageSize == 5 ? "selected" : null)">5</option>
                 <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
@@ -84,43 +86,45 @@
     <div class="d-flex mt-1">
         @if (Model.pageNumber > 1)
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber-1))"><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
-                    style="width:25px" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
+                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1))"><img src=""
+                    alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
         }
         else
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img src="" alt=""><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
 
         }
         @if (Model.pageNumber * Model.pageSize < Model.totalrecords)
         {
-            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber+1))"><img src="~/images/left-chevron-svgrepo-com.svg"style="width:25px;rotate: 180deg;" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;"
+                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber + 1))"><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
         }
         else
         {
-            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" disabled><img src="~/images/left-chevron-svgrepo-com.svg"
-                    style="width:25px;rotate: 180deg;" alt=""></button>
+            <button type="button" class="btn btn-outline-dark btn2 mb-2" style="padding: 5.8px;" disabled><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px;rotate: 180deg;" alt=""></button>
         }
-        
+
     </div>
 </div>
 
 <script>
 
 
- $(document).on('change', '.checkedItems', function () {
-    $('.IsModifierChecked').prop('checked', this.checked);
-});
-    function checkTheMasterCheckbox(){
-        if($('.IsModifierChecked:checked').length == $('.IsModifierChecked').length)
-        {
-            $('.checkedItems').prop('checked',true)
+    $(document).on('change', '.checkedItems', function () {
+        $('.IsModifierChecked').prop('checked', this.checked);
+    });
+    function checkTheMasterCheckbox() {
+        if ($('.IsModifierChecked:checked').length == $('.IsModifierChecked').length) {
+            $('.checkedItems').prop('checked', true)
         }
-        else{
-            $('.checkedItems').prop('checked',false)
+        else {
+            $('.checkedItems').prop('checked', false)
         }
-        }
-   
+    }
 
     function initializeModifierCheckboxes() {
         const masterCheckbox = document.getElementById("masterCheck");
@@ -134,8 +138,6 @@
             });
         }
 
-        
-
         document.querySelectorAll(".IsModifierChecked").forEach((checkbox) => {
             checkbox.addEventListener("change", () => {
                 const subchecks = document.querySelectorAll(".IsModifierChecked");
@@ -147,9 +149,5 @@
             });
         });
     }
-
-    // Call this function when the DOM is ready
     document.addEventListener("DOMContentLoaded", initializeModifierCheckboxes);
 </script>
-
-

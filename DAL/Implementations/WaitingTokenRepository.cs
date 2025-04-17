@@ -198,6 +198,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
             CustomerModel model = new CustomerModel();
             model.name = customer.Customername;
             model.phone = customer.Phonenumber;
+            model.email = customer.Email;
             model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid);
             model.PersonCount = token.Totalpersons;
             model.tokenid = token.Waitingtokenid;

@@ -71,7 +71,7 @@
           <div class="form-floating">
             <label for="" class="form-label" style="font-size: 61%;top: -12px;left: -1px;">No of Person(s)*</label>
             <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
-              asp-for="@Model.WaitingToken.personCount" min="1">
+              asp-for="@Model.WaitingToken.personCount" id="customer_PersonCount" min="1">
             <span asp-validation-for="@Model.WaitingToken.personCount" class="text-danger pt-2"></span>
           </div>
           <span class="text-danger"></span>
@@ -79,7 +79,7 @@
         <div class="mb-3 col-md-6 form-floating">
           <label for="" class="form-label"
             style="position: absolute;left: 6%;top: -20%;font-size: 64%;">section*</label>
-          <select class="form-select" style="padding: 6%;padding-top: 8%;" id="tableSection"
+          <select class="form-select" style="padding: 6%;padding-top: 8%;" id="customer_tableSection"
             asp-for="@Model.WaitingToken.sectionId">
             @foreach (var sec in @Model.WaitingToken.sections)
             {
@@ -106,11 +106,14 @@
     var Name = $("#"+id+" .customer_name").val()
     var Phone = $("#"+id+" .customer_phone").val()
     var Email = $("#"+id+" .customer_email").val()
-    var Email = $("#"+id+" .customer_Pe").val()
-
+    var PersonCount = $("#"+id+" .customer_personCount").val()
+    var sectionId = $("#"+id+" .customer_sectionid").val()
+    @* alert(PersonCount) *@
     $("#customer-name").val(Name)
-    
-    
+    $("#customer-email").val(Email)
+    $("#customer_PersonCount").val(PersonCount)
+    $("#customer-phone").val(Phone)
+    $("#customer_tableSection").val(Phone)
   }
 
 </script>

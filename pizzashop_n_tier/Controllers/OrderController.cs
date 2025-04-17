@@ -1,15 +1,12 @@
-using Microsoft.AspNetCore.Routing;
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.AspNetCore.Mvc.ViewEngines;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
-using Microsoft.AspNetCore.Mvc.Infrastructure;
 using SelectPdf;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 
 
 
@@ -27,7 +24,6 @@ namespace pizzashop_n_tier.Controllers
 
         private LinkGenerator _linkGenerator;
 
-
         public OrderController(IRazorViewEngine RazorViewEngine, LinkGenerator linkGenerator, IOrderService orderService, ITempDataProvider tempDataProvider, IServiceProvider serviceProvider)
         {
             _orderService = orderService;
@@ -36,15 +32,13 @@ namespace pizzashop_n_tier.Controllers
             _serviceProvider = serviceProvider;
             _linkGenerator = linkGenerator;
         }
-
+        [Authorize(policy:"CanView_Order")]
         public IActionResult showOrders()
         {
             OrderViewModel model = new OrderViewModel();
             model.status = _orderService.getAllStatus();
             return View("orders", model);
         }
-        
-
         public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null,int pageNumber=1,int pageSize=4,string sortBy="orderid",string sortOrder="asc")
         {
             OrderViewModel model = new OrderViewModel();
@@ -57,7 +51,6 @@ namespace pizzashop_n_tier.Controllers
             _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
             return Json(new {success = "Exported successfully !!"});
         }
-
         public IActionResult showOrderDetailsView(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
@@ -69,7 +62,6 @@ namespace pizzashop_n_tier.Controllers
             model.orderedItemModifiers = model2;
             return View("orderDetails", model);
         }
-    
         public async Task<IActionResult> generatePdf(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
@@ -98,6 +90,8 @@ namespace pizzashop_n_tier.Controllers
                 {
                     doc.Save(memoryStream);
                     doc.Close();
+                    TempData["ToastrMessage"] = "Pdf Genereated Successfully";
+                    TempData["ToastrType"] = "success"; 
                     return File(memoryStream.ToArray(), "application/pdf", $"invoice.pdf");
                 }
             }
