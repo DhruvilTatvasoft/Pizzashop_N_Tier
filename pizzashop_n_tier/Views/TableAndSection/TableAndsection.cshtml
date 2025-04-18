@@ -29,7 +29,7 @@
     <script>
         $("document").ready(function(){
             loadSections();
-            loadTablePage(1);
+            loadTablePage();
               $('.sidebar ul li').removeClass('active-class');
              $('.tableandsection').addClass('active-class')
         })
@@ -69,8 +69,6 @@
         }
     });
 }
-
-
         function loadTablePage(sectionId){
             $.ajax({
                 url:'@Url.Action("loadTablePage","TableAndSection")',
@@ -78,8 +76,7 @@
                 cache:false,
                 data:{sectionId : sectionId},
                 success:function(data){
-                    $(".tablebody").html(data);
-                    
+                    $(".tablebody").html(data);   
                 }
             });
         };

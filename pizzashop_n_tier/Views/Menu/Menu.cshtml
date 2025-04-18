@@ -45,7 +45,7 @@
 
         $("document").ready(function () {
             loadCategories();
-            loadItemData(11);
+            loadItemData();
             $('.item').addClass('active');
             $('.sidebar ul li').removeClass('active-class');
             $('.menu').addClass('active-class')
@@ -58,7 +58,7 @@
             $('.item img').attr("src", "/images/list-ul copy.svg")
             $('.mod img').attr("src", "/images/ui-radios-grid.svg")
             loadCategories();
-            loadItemData(10);
+            loadItemData();
         }
 
         function loadCategories() {
@@ -100,7 +100,10 @@
 
         function deleteItemsGet() {
 
-            if([...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10)))
+            if([...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10)).length < 1) {
+                toastr.error("Please select items to delete");
+                return;
+            }
             $.ajax({
                 url: '@Url.Action("deleteItem", "Menu")',
                 type: "GET",
@@ -225,6 +228,8 @@
         }
 
         function loadModifiersForModifierGroup(modifierGroupId, pageNumber) {
+            $("#ModifierGroupList li").removeClass("active2");
+            $("#selectedModifierGroup_" + modifierGroupId).addClass("active2");
             var pageSize = $('.pagesize').val();
             $.ajax({
                 url: '/Menu/getModifiersForModifierGp',
@@ -250,9 +255,7 @@
                     $("#updateModifier").attr("style", "display:none");
                 }
             });
-
         }
-
         function loadModifiersData(modifierGroupId) {
             $.ajax({
                 url: '/Menu/LoadModifiersPage',
@@ -277,9 +280,6 @@
                 var data = new FormData(this);
                 var Action = $(document.activeElement).data('action');
                 var selectedModifierGroup = $('#modifierGroup').val();
-
-            
-
                 let = "";
                 if (Action === "Add") {
                     url = '@Url.Action("AddNewModifier", "Menu")';

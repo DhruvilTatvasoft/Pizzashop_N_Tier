@@ -67,8 +67,8 @@
                 <label for="" class="form-label"
                   style="position: absolute;left: 6%;top: -17%;font-size: 64%;">Status*</label>
                 <select class="form-select" style="padding: 6%;padding-top: 8%;" placeholder="status" id="tableStatus">
-                  <option value="true">Available</option>
-                  <option value="false">Occupied</option>
+                  <option value="true" selected>Available</option>
+                  <option value="false" disabled>Occupied</option>
                 </select>
               </div>
             </div>
@@ -81,17 +81,13 @@
       </div>
     </div>
   </form>
-
-
-  
-
-
   <script>
-
-   
-
     $("document").ready(function () {
-      loadTableData(@Model.sectionId, @Model.PageNumber);
+      loadTableData(@Model.sections[0].Sectionid, @Model.PageNumber);
+      $(".section").removeClass("active-section");
+      var id = "#selectedSection_"+@Model.sections[0].Sectionid;
+      console.log(id)
+      $(id).addClass("active-section")
     })
 
     $(".pagesize").on("change", function () {
@@ -119,6 +115,7 @@
         success: function (data) {
           console.log(data);
           $("#addTableModal").modal('hide');
+
           loadTableData(data.table.sectionid,1);
           $(".closebtn").click();
             $('#addNewTableForm')[0].reset();
@@ -156,6 +153,10 @@
     function OpenDeleteMultipleModal(sectionId) {
       var selectedTables = [...document.querySelectorAll(".checkedTable:checked")].map(x => parseInt(x.value, 10));
       var sectionid = document.querySelector("#sectionIdFortables").value;
+      if (selectedTables.length == 0) {
+        toastr.error("Please select at least one table to delete");
+        return;
+      }
       console.log("multiple deletes get");
       $.ajax({
         url: '@Url.Action("deleteModalGet", "TableAndSection")',

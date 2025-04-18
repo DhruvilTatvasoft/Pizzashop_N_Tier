@@ -6,7 +6,7 @@
         <input type="text" class="form-control h-100 " placeholder="Search">
     </div>
     <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg"
-            onclick="deleleMultipleModifiers()" style="cursor: pointer;" alt=""></button>
+            onclick="deleleMultipleModifiersGet()" style="cursor: pointer;" alt=""></button>
 
     <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="openAddModifierModal()">+ New
         Modfifier</button>
@@ -19,6 +19,30 @@
     $('document').ready(function () {
         loadModifiersForModifierGroup(2, 1);
     })
+
+    function deleleMultipleModifiersGet(){
+        @* alert("ok") *@
+        var selectedModifiersToDelete = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
+        if(selectedModifiersToDelete.length < 1){
+            toastr.error("please select modifiers to delete");
+            return;
+        }
+        $.ajax({
+            url:"@Url.Action("deleteItem","Menu")",
+            method: 'GET',
+            success:function(data){
+                $(".addEditModelContainer").html(data);
+                $("#exampleModalCenter8").modal("show");
+                $(".deleteText").text( "Are you sure you want to delete this modifiers?");
+            $(".deleteText").css('font-size', '17px');
+            $(".singleItemDelete").css("display", "none");
+            $(".modifierGroupDelete").css("display", "none");
+            $(".multipleModifiersDelete").css("display", "block");
+            $("#modifiersid_hidden").val(selectedModifiers);
+
+            }
+        });
+    }
 
     function deleleMultipleModifiers() {
         var modifierGroupId = $('#modifierGroupId').val();

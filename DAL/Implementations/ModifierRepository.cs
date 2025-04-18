@@ -204,6 +204,10 @@ public class ModifierRepository : IModifierRepository
         else{
 
         Modifiergroup modifierGroup = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupid == mg.Modifiergroupid) ?? new Modifiergroup();
+        List<int> modifiersIdFromDb = _context.Modifiers
+            .Where(modifier => modifier.Modifiergroupid == mg.Modifiergroupid && modifier.Isdeleted == false)
+            .Select(modifier => modifier.Modifierid)
+            .ToList();
         if (modifierGroup != null)
         {
             modifierGroup.Modifiergroupname = mg.Modifiergroupname;
@@ -213,10 +217,6 @@ public class ModifierRepository : IModifierRepository
             _context.Modifiergroups.Update(modifierGroup);
         }
        
-        List<int> modifiersIdFromDb = _context.Modifiers
-            .Where(modifier => modifier.Modifiergroupid == mg.Modifiergroupid && modifier.Isdeleted == false)
-            .Select(modifier => modifier.Modifierid)
-            .ToList();
 
         List<int> modifiersToDelete = modifiersIdFromDb.Except(modifierIds).ToList();
         List<int> modifiersToAdd = modifierIds.Except(modifiersIdFromDb).ToList();
@@ -232,6 +232,8 @@ public class ModifierRepository : IModifierRepository
         foreach (int modifierid in modifiersToDelete)
         {
             Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid && modifier.Modifiergroupid == modifiergroupid);
+            modifier.Isdeleted = true;
+            _context.Modifiers.Update(modifier);
             _context.SaveChanges();
         }
     }
@@ -277,7 +279,7 @@ public class ModifierRepository : IModifierRepository
 
     public bool AddNewModifier(ModifierModel modifier)
     {
-        Modifier isExist = _context.Modifiers.FirstOrDefault(Modifier=>Modifier.Modifiername.ToLower().Trim() == modifier.Modifiername.ToLower().Trim() && Modifier.Modifiergroupid == modifier.Modifiergroupid);
+        Modifier isExist = _context.Modifiers.FirstOrDefault(Modifier=>Modifier.Modifiername.ToLower().Trim() == modifier.Modifiername.ToLower().Trim() && Modifier.Modifiergroupid == modifier.Modifiergroupid && Modifier.Isdeleted == false);
 
         if(isExist != null){
             return false;

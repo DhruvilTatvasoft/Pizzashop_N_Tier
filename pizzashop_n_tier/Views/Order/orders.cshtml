@@ -102,17 +102,69 @@
             $('.sidebar ul li').removeClass('active-class');
             $('.orders').addClass('active-class')
         });
+
+        function formatDate(date) {
+            const d = new Date(date);
+                    const Month = '' + (d.getMonth() + 1);
+                    const Day = '' + d.getDate();
+                    const Year = d.getFullYear();
+                    return [Year,Month.padStart(2,'0'),Day.padStart(2,'0')].join('-');
+        }
+
+
         function showOrdersBySearch(pageNumber, pagesize, sortOrder, sortBy) {
             var selectedStatus = $("#selectStatus").val()
             var selectedOption = $(".timePeriodFilter").val();
             var searchedOrder = $("#SearchOrder").val();
             var startDate = $("#startDate").val();
             var endDate = $("#endDate").val();
-            if (startDate > endDate) {
-                document.querySelector("#fromDate").innerHTML = "From Date should not be gretter than End Date"
-                @* alert("OK") *@
+            var date = new Date();
+            var checkDate = formatDate(date);
+           if(startDate > checkDate){
+                toastr.error("Please enter a valid date");
                 return;
             }
+            if(endDate < startDate){
+                toastr.error("From date should not be greatter than To date");
+                return;
+            }
+        
+            if(selectedOption == "Last 7 days"){
+                var date = new Date();
+                var date2 = new Date();
+                var startdate = date.setDate(date2.getDate() - 6);
+                var enddate = date.setDate(date2.getDate());
+                startDate = "";
+                endDate = "";
+                $("#startDate").val(formatDate(startdate));
+                $("#endDate").val(formatDate(enddate));
+            }
+            if(selectedOption == "Current Month"){
+                var date = new Date();
+                var date2 = new Date();
+                startDate = "";
+                endDate = "";
+                var startdate = new Date(date.getFullYear(),date.getMonth(),1);
+                var enddate = date.setDate(date2.getDate());
+                $("#startDate").val(formatDate(startdate));
+                $("#endDate").val(formatDate(enddate));
+            }
+            if(selectedOption == "Last 30 days"){
+                var today = new Date();
+                var before30days = new Date();
+                before30days.setDate(today.getDate() - 29);
+                startDate = "";
+                endDate = "";
+                $("#startDate").val(formatDate(before30days));
+                $("#endDate").val(formatDate(today));
+            }
+            if(selectedOption == "All Time"){
+                startDate = "";
+                endDate = "";
+                $("#startDate").val('');
+                $("#endDate").val('');
+            }
+            
             pagesize = $(".pagesize").val();
             console.log(sortOrder)
             console.log(sortBy)
@@ -126,6 +178,7 @@
             });
         }
         function resetDropDowns() {
+            alert("click")
             $("#SearchOrder").val('');
             $('option[value="All Time"]').attr('selected', 'selected');
             $('option[value=0]').attr('selected', 'selected');

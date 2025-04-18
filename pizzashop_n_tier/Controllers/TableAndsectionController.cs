@@ -28,7 +28,7 @@ public class TableAndSection : Controller
     }
 
 
-    public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 2, string? searchTable = "")
+    public IActionResult LoadTableDataForSection(int sectionId, int pageNumber = 1, int pageSize = 4, string? searchTable = "")
     {
         TableAndSectionViewModel model = _tableService.getTablesForsection(sectionId, pageNumber, pageSize, searchTable);
         return PartialView("_tables", model);
@@ -55,7 +55,8 @@ public class TableAndSection : Controller
         }
         else
         {
-            return Json(new { success = "Section Updated Successfully" });
+            model.sections = _sectionService.getAllSections();
+            return Json(new { success = "Section Updated Successfully",sectionid = model.sections[0].Sectionid });
         }
     }
     [Authorize(Policy = "CanEdit_TableAndSection")]
@@ -79,13 +80,16 @@ public class TableAndSection : Controller
     [HttpPost]
     public IActionResult deleteSection(int sectionId)
     {
+            // return RedirectToAction("SectionData");
+            TableAndSectionViewModel model = new TableAndSectionViewModel();
+            model.sections = _sectionService.getAllSections();
         if (_sectionService.deleteSection(sectionId))
         {
-            return RedirectToAction("SectionData");
+            return Json(new { success = "Section Deleted Successfully",sectionId =  model.sections[0].Sectionid });
         }
         else
         {
-            return RedirectToAction("SectionData");
+            return Json(new { error = "Section cannot be deleted",sectionId =  model.sections[0].Sectionid });
         }
     }
     [Authorize(Policy = "CanDelete_TableAndSection")]

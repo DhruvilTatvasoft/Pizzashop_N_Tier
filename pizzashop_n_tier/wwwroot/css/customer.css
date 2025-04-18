@@ -14,6 +14,24 @@ body{
         margin-right: 2%;
         border-color: transparent;
     }
+    .part-1 div{
+        border:1px solid #c6c3c3;
+        border-radius: 5px;
+        padding:2%;
+        margin:2%;
+    }
+    .part-1{
+        box-shadow:1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+    }
+    .part-2 div{
+         height: 30%; 
+        background-color: #ffff;    
+       box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+    }
+    .table-contatiner{
+
+       box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
+    }
 
    .active{
     color : #0066A7;

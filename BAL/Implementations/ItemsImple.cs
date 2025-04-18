@@ -117,6 +117,7 @@ public class ItemsImple : IItemService
         model.modifiergroups = _itemRepository.getAllModifierGroups();
         List<ModifierModel> modifierModels = _modifierRepository.getModifiersForItem(itemId);
         model.itemid = itemId;
+        // model.ImagePath = item.Itemimage;
 
         foreach(var modifiergroup in modifierModels){
             modifiergroup.mg = _modifierRepository.GetModifiergroup(modifiergroup.ModifiergroupId);

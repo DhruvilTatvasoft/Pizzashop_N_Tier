@@ -143,9 +143,8 @@
                         <div class="col-12">
                            <div class="form-floating">
                               <div class="container-fluid"
-                                 style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;">
-                                 <input type="file" asp-for="ImagePath" id="fileUpload1"
-                                    hidden>
+                                 style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;"> 
+                                 <input type="file" asp-for="ImagePath" id="ItemImage">
                                  <div class="d-flex justify-content-center p-4 align-items-center">
                                     <label for="fileUpload1" class="fileUploadLabel">
                                     <img src="/images/icons8-cloud-upload-50.png"
@@ -266,18 +265,27 @@ function getModifier() {
           });
       }
       }
-   } 
-    if (!window.editItemFormHandlerInitialized) {
-        window.editItemFormHandlerInitialized = true;
+   }
         
         $(document).on('submit', '#EditItemForm', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-
-            var form = $(this);
+            var $form = $(this);
+            if ($form.data('submitting')) return;
+            $form.data('submitting', true);
             var data = new FormData(this);
             var modifierData = [];
-            
+            var filePath = $("#ItemImage")[0].value;
+                if(filePath) {
+                alert(filePath);
+                var extension = filePath.substring(filePath.lastIndexOf(".") + 1, filePath.length).toLowerCase();
+                var validFilesTypes = ["jpg","png","svg","jpeg"];
+                var isValidFile = validFilesTypes.includes(extension);
+                if (!isValidFile) {
+                toastr.error("Please select a valid image file type");
+                return ;
+                }
+                }
             $(".modifier-group-item").each(function(index) {
                 let modifierGroupId = $(this).find(".modifiergroupID").val();
                 let minValue = $(this).find(".min_value").val();
@@ -293,7 +301,7 @@ function getModifier() {
             });
             data.append("payload", JSON.stringify(modifierData));
             $.ajax({
-                url: form.attr('action') || '@Url.Action("PostEditItem","Menu")',
+                url: '@Url.Action("PostEditItem","Menu")',
                 type: 'POST',
                 data: data,
                 processData: false,
@@ -302,7 +310,7 @@ function getModifier() {
                     if (response.success) {
                         $('#ModelForEditItem').modal('hide');
                         toastr.success(response.success || "Item updated successfully");
-                        loadTableData(response.categoryid)
+                        loadTableData(response.categoryid,response.pageSize,response.pageNumber)
                         
                     } else if (response.error) {
                         toastr.error(response.error);
@@ -319,5 +327,5 @@ function getModifier() {
             });
             return false;
         });
-    }
+    
 </script>

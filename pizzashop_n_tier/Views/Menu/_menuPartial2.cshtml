@@ -6,7 +6,7 @@
         <input type="email" class="form-control h-100 " onkeyup="searchItem()" asp-for="searchItemName"
             id="searchedItem" placeholder="Search">
     </div>
-
+    <input type="hidden"  id="categoryId" value="@Model.categories[0].Categoryid" />
     <button class="btn btn-outline-secondary me-2" onclick='deleteItemsGet(@Model.categoryId)'><img
             src="~/images/trash-fill.svg" style="cursor: pointer;" alt=""></button>
 
@@ -17,8 +17,10 @@
 <div class="tbl m-3 table-container"></div>
 <script>
     $("document").ready(() => {
-        loadTableData(10, $(".pageSize").val(), 1);
-        console.log("page size is : " + $(".pageSize").val())
+        loadTableData($("#categoryId").val(), $(".pageSize").val(), 1);
+        $('[id^="selectedCat_"]').removeClass("active2");
+        @* alert($("#categoryId").val()) *@
+        $("#selectedCat_" + $("#categoryId").val()).addClass("active2");
     });
     function searchItem() {
         var SearchedItem = $('#searchedItem').val();

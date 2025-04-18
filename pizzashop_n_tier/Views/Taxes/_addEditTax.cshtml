@@ -27,7 +27,7 @@
                                 style="font-size: 61%;top: -12px;left: -1px;">Type*</label>
 
                             <select class="form-select" style="padding: 6%;padding-top: 8%;" asp-for="@Model.tax.Taxtype">
-                                @foreach (var tax in @Model.taxes)
+                                @foreach (var tax in @Model.taxes.GroupBy(tax=>tax.Taxtype).Select(tax=>tax.First()))
                                 {
                                     <option value="@tax.Taxtype">@tax.Taxtype</option>
                                 }
@@ -42,7 +42,7 @@
                             <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;"
                                 placeholder="capacity" min="0"  asp-for="@Model.tax.Taxpercentage">
                                 </div>
-                            <span asp-validation-for="@Model.tax.Taxpercentage" class="text-danger"></span>
+                            <span asp-validation-for="@Model.tax.Taxpercentage"  class="text-danger"></span>
                         </div>
                         <input type="checkbox" id="isUpdated" value="false" hidden>
                         <div class="row d-flex" style="padding-left: 17%;">

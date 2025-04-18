@@ -14,7 +14,14 @@ body{
         margin-right: 2%;
         border-color: transparent;
     }
-
+    .Modifiergrouplist{
+        text-decoration: none;
+        list-style: none;
+        padding-left: 0;
+        padding-right: 0;
+        width: 100%;
+        height: 100%;
+    }
    .active{
     color : #0066A7;
     border-bottom: 2px solid;

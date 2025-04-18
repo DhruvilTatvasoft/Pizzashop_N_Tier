@@ -6,6 +6,8 @@ using NPOI.SS.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.Util;
+using System.Reflection.Metadata;
+using Microsoft.AspNetCore.Mvc;
 // using NPOI.HSSF.UserModel;
 // using NPOI.HSSF.Util;
 // using NPOI.SS.UserModel;
@@ -31,7 +33,7 @@ namespace BAL.Implementations
             _customerRepository = customerRepository;
         }
 
-        public void exportCustomerDetails(int pageSize,int pageNumber,string sortBy,string sortOrder,string search,string filterBy,DateTime? startDate,DateTime? endDate,bool? isExport)
+        public FileContentResult exportCustomerDetails(int pageSize,int pageNumber,string sortBy,string sortOrder,string search,string filterBy,DateTime? startDate,DateTime? endDate,bool? isExport)
         {
            try
             {
@@ -310,16 +312,28 @@ namespace BAL.Implementations
 
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
-                using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
-                {
-                    workbook.Write(file);
-                    file.Close();
-                    Console.WriteLine("File Created Successfully...");
+                // using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
+                // {
+                //     workbook.Write(file);
+                //     file.Close();
+                //     Console.WriteLine("File Created Successfully...");
+                // }
+                using (var memoryStream = new MemoryStream()){
+                    workbook.Write(memoryStream);
+                    return new FileContentResult(memoryStream.ToArray(), "application/xlsx")
+                    {
+                        FileDownloadName = "customerDetail.xlsx"
+                    };
                 }
+
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return new FileContentResult(new byte[0], "application/xlsx")
+                {
+                    FileDownloadName = "error.xlsx"
+                };
             }
         }
 

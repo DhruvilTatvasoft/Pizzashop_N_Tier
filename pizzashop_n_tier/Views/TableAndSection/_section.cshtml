@@ -109,10 +109,7 @@
 
 
   $("#addNewSectionForm").on('submit', function (e) {
-
-
     e.preventDefault();
-
     if($(this).valid()){
     var data = new FormData(this);
     $(".saveNewSection, .updateSection").attr("disabled", true);
@@ -135,6 +132,7 @@
         $('#addNewSectionModal').modal('hide');
                 $(".closebtn").click();
         loadSections();
+        loadTablePage(data.sectionid)
          toastr.success(data.success);
         }
       },
@@ -173,6 +171,8 @@ $(document).on('submit', '#deleteFormForSectionAndTable', function (e) {
     success: function (data) {
       $('#deleteForTableSAndSectionModel').modal('hide');
       loadSections();
+      loadTablePage(data.sectionid)
+
       toastr.success("Section Deleted successfully");
     },
     error: function () {

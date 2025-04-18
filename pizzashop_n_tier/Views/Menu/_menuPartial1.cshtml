@@ -117,6 +117,7 @@
             contentType: false,
             success: function (data) {
                 loadCategories();
+
                 $(".closebutton").click();
                 if (data.success) {
                     toastr.success(data.success);
@@ -144,6 +145,8 @@
             data: { categoryId: parseInt($("#categoryid_hidden").val()) },
             cache: false,
             success: function (data) {
+                loadCategories();
+                loadItemData();
                 $(".menubody").html(data);
             }
         });

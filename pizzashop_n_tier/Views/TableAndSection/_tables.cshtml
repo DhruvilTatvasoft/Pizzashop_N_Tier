@@ -12,7 +12,7 @@ Layout = null;
          <div class="form-check ps-4">
             <input class="form-check-input col1" type="checkbox" style="width:1em;height:1em;" value="" id="flexCheckDefault">
             <label class="form-check-label" for="flexCheckDefault">
-            Name
+            Name 
             </label>
          </div>
       </th>
@@ -30,6 +30,13 @@ Layout = null;
 <input type="hidden" id="sectionIdFortables" asp-for="@Model.sectionId">
 
 <tbody>
+
+   @if(Model.tables.Count() == 0){
+      <tr>
+         <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                    Tables Found</td>
+      </tr>
+   }
    @foreach (var table in Model.tables)
    {
    <tr>
@@ -85,7 +92,6 @@ else{
       <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" onclick="loadTableData(@Model.sectionId, @(Model.PageNumber-1),@Model.PageSize)" disabled><img src="" alt=""><img src="~/images/left-chevron-svgrepo-com.svg"
           style="width:25px" alt=""></button>
 }
-          <!-- Debugger removed as it is not valid Razor syntax -->
 
           
       @if(Model.PageNumber*Model.PageSize < Model.TotalTables){

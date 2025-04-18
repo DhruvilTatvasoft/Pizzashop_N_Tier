@@ -125,7 +125,8 @@ public class ItemViewModel{
     public bool Isavailable{get;set;}
 
     public bool Isdefaulttax{get;set;}
-    [Range(0, 100, ErrorMessage = "Tax percentage cannot be less than 0 or greater than 100")]
+    [Required(ErrorMessage = "Tax Percentage is required")]
+    [Range(1, 100, ErrorMessage = "Tax percentage cannot be less than 1 or greater than 100")]
     public int Taxpercentage{get;set;}
 
     public string? Shortcode{get;set;}

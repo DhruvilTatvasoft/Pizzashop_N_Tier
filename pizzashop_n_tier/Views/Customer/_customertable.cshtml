@@ -3,14 +3,14 @@
     <thead>
         <tr>
             <th scope="col">
-               <img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""> <label for="" >Name</label>
+                <label for="" class="me-2" >Name</label><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt="">
             </th>
             <th scope="col"><label for="" class="ps-4"><label for="" >Email</label></th>
             <th scope="col"><label for="" >Phone Number</label></th>
             <th scope="col">
-                <label for=""><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('date','@(Model.sortBy == "date" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""><label for="" ><label for="">Date</label></label>
+                <label for=""><label for="" ><label for="" class="me-2">Date</label><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('date','@(Model.sortBy == "date" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""></label>
             </th>
-            <th scope="col"><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('totalOrders','@(Model.sortBy == "totalOrders" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""><label for="" ><label for="" >Total Order</label></th>
+            <th scope="col"><label for="" ><label for="" class="me-2" >Total Order</label><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('totalOrders','@(Model.sortBy == "totalOrders" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt=""></th>
 
         </tr>
     </thead>

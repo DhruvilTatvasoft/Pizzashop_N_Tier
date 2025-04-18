@@ -20,12 +20,10 @@ public class CustomerRepository : ICustomerRepository
 
         foreach (var customer in allCustomers)
         {
-            if (customer.Totalorders == null)
-            {
+            
                 customer.Totalorders = _context.Orders.Where(order => order.Customerid == customer.Customerid && order.IsDeleted == false).Count();
                 _context.Customers.Update(customer);
                 _context.SaveChanges();
-            }
         }
         IQueryable<Customer> query;
         query = _context.Customers.Where(customer => customer.Isdeleted == false);

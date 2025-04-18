@@ -1,5 +1,6 @@
 using BAL.Interfaces;
 using DAL.Data;
+using iText.Kernel.Geom;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
@@ -76,7 +77,6 @@ public class MenuController : Controller
     {
         Console.WriteLine(categoryId);
         ItemModel model = new ItemModel();
-
         _itemService.getItemsForcategory(categoryId, model, pageSize, pageNumber);
         return PartialView("_menuPartial3", model);
     }
@@ -85,6 +85,7 @@ public class MenuController : Controller
     {
         ItemModel model = new ItemModel();
         model.categoryId = categoryId;
+        model.categories = _itemService.getAllCategories();
         // _itemService.getItemsForcategory(categoryId, model);
         return PartialView("_menuPartial2", model);
     }
@@ -114,18 +115,12 @@ public class MenuController : Controller
     [Authorize(Policy = "CanDelete_Menu")]
     public IActionResult DeleteCategory(int categoryId)
     {
-        if (ModelState.IsValid)
-        {
-            _menuService.deleteCategory(categoryId);
-            TempData["ToastrMessage"] = "category deleted Successfully";
-            TempData["ToastrType"] = "success";
-        }
-        else
-        {
-            TempData["ToastrMessage"] = "Error occured while deleting category";
-            TempData["ToastrType"] = "error";
-        }
-        return View("Menu");
+         _menuService.deleteCategory(categoryId);      
+        ItemModel model = new ItemModel();
+        model.categoryId = categoryId;
+        model.categories = _itemService.getAllCategories();
+        // _itemService.getItemsForcategory(categoryId, model);
+        return PartialView("_menuPartial2", model);
     }
 
     [HttpPost]
@@ -209,7 +204,7 @@ public class MenuController : Controller
     {
         model.ModifierModels = JsonConvert.DeserializeObject<List<ModifierModel>>(model.payload);
         _itemService.updateItemdetails(model, model.itemid ?? 1);
-        return Json(new { success = "Item Updated successfully", categoryid = model.Categoryid });
+        return Json(new { success = "Item Updated successfully", categoryid = model.Categoryid,PageSize = model.pageSize, PageNumber = model.pageNumber });
     }
 
     [Authorize(Policy = "CanEdit_Menu")]
@@ -240,7 +235,7 @@ public class MenuController : Controller
 
 
     [HttpGet]
-    public IActionResult LoadAllModifiers(int? modifierGroupId, int pageSize = 2, int pageNumber = 1, string search = "")
+    public IActionResult LoadAllModifiers(int? modifierGroupId, int pageSize = 4, int pageNumber = 1, string search = "")
     {
         ItemModel model = new ItemModel();
         model = _modifierService.getAllModifiers(modifierGroupId, pageSize, pageNumber);
@@ -255,7 +250,7 @@ public class MenuController : Controller
         return PartialView("_modifiersListForModifierGroup", model);
     }
     [HttpGet]
-    public IActionResult getModifiersForModifierGp(int modifierGroupId, int pageSize = 2, int pageNumber = 1)
+    public IActionResult getModifiersForModifierGp(int modifierGroupId, int pageSize = 4, int pageNumber = 1)
     {
         ItemModel model = new ItemModel();
         model = _modifierService.getModifiersForMGroup(modifierGroupId, pageSize, pageNumber);
