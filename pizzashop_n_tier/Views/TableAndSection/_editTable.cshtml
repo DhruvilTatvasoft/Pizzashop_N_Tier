@@ -32,9 +32,9 @@
             <div class="row">
               <div class="col-md-6 mb-3 form-floating">
               <label for="" class="form-label"
-                style="position: absolute;left: 5%;top: -19%;font-size: 64%;">capacity*</label>
+                style="position: absolute;left: 5%;top: -19%;font-size: 64%;">capacity* </label>
                 <input type="number" class="form-control" style="padding: 6%;padding-top: 8%;" id="tableCapacity"
-                  asp-for="@Model.table.Capacity" placeholder="capacity" value="0" min="0">
+                  asp-for="@Model.table.Capacity" placeholder="capacity" value="@Model.table.Capacity" min="0">
                 <span asp-validation-for="@Model.table.Capacity" class="text-danger" style="font-size: 10px;"></span>
               </div>
               <div class="col-md-6 mb-3 form-floating">

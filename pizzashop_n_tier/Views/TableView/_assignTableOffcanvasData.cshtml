@@ -28,7 +28,7 @@
         <tr>
           <td>
             <div id="customerDetails_@customer.tokenid">
-            <input type="radio"  onclick="fillCustomerDetails(@customer.tokenid)">
+            <input type="radio"  onclick="fillCustomerDetails(@customer.tokenid)" name="selectedToken">
           <input type="hidden" class="customer_name" value="@customer.name"></input>
           <input type="hidden" class="customer_email" value="@customer.email"></input>
           <input type="hidden" class="customer_personcount" value="@customer.PersonCount"></input>
@@ -46,17 +46,17 @@
   </table>
 
   <div class="mt-3">
-    <label for="" class="headerTEXT mb-3" style="font-weight: 600;">Customer Details</label>
-    <form action="">
+    <label for="" class="headerTEXT mb-3" style="font-weight: 600;">Customer Details </label>
+    <form id="assigntableForm">
       <div class="row">
         <input type="hidden" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
         <div class="form-group col-12 mb-3 ">
-
           <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"
             aria-describedby="emailHelp" asp-for="@Model.WaitingToken.customer.email" placeholder="Email*">
           <span asp-validation-for="@Model.WaitingToken.customer.email" class="text-danger pt-2 emailaddress"></span>
           <div class="suggesion_container"></div>
         </div>
+        <input type="hidden" id="tokenid">
         <div class="form-group col-12 mb-3">
           <input type="text" class="form-control p-2" id="customer-name" aria-describedby="emailHelp"
             asp-for="@Model.WaitingToken.customer.name" placeholder="Name*">
@@ -91,7 +91,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken">Save</button>
+        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken" >Save</button>
         <button class="btn btn-outline-primary btnoutlinecolour" id="closeBtn" data-bs-dismiss="modal">Cancel</button>
       </div>
     </form>
@@ -101,19 +101,38 @@
 
 <script>
   function fillCustomerDetails(tokenid){
-    @* alert(tokenid) *@
+  
     var id = "customerDetails_"+tokenid
     var Name = $("#"+id+" .customer_name").val()
     var Phone = $("#"+id+" .customer_phone").val()
     var Email = $("#"+id+" .customer_email").val()
     var PersonCount = $("#"+id+" .customer_personCount").val()
     var sectionId = $("#"+id+" .customer_sectionid").val()
-    @* alert(PersonCount) *@
     $("#customer-name").val(Name)
     $("#customer-email").val(Email)
     $("#customer_PersonCount").val(PersonCount)
     $("#customer-phone").val(Phone)
-    $("#customer_tableSection").val(Phone)
+    $("#customer_tableSection").val(sectionId)
+    $("#tokenid").val(tokenid)
   }
-
+  $(document).on('submit',"#assigntableForm",function(e){
+          e.preventDefaults();
+          var tokenid = parseInt($("#tokenid").val())
+          var tableid = parseInt($(".selectedTable").data("tableid"));
+         
+               $.ajax({
+                    url: "@Url.Action("assignTable", "TableView")",
+                    method: 'POST',
+                    @* processData: false,
+                    contentType: false, *@
+                    data: { tableid: tableid, tokenid: tokenid},
+                    success: function (response) {
+                         alert("ok");
+                         $(".loadTabBody").html(response);
+                    },
+                    error: function (xhr, status, error) {
+                         alert("Error: " + error);
+                    }
+               });
+     });
 </script>

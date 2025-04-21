@@ -39,6 +39,8 @@ public class CustomerModel{
     public int PersonCount{get;set;}
     public Section section{get;set;}
 
+    public Table table{get;set;}
+
     public int tokenid{get;set;}
 
     public List<Section> sections{get;set;}

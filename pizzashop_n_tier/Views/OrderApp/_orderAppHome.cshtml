@@ -2,14 +2,13 @@
      Layout = "~/Views/Shared/_NavbarForOrderApp.cshtml";
 }
 <div class="loadTabBody h-100">
-
 </div>
 <script>
      $("document").ready(() => {
-               @* loadKot(); *@
-               loadwaitingList()
-               @* loadMenuPage() *@
-     })
+          @* loadwaitingList() *@
+               loadMenuPage()
+
+     });
 
      function loadKot() {
           $.ajax({
@@ -38,15 +37,18 @@
                }
           })
      }
-     function loadMenuPage(){
+     function loadMenuPage() {
           $.ajax({
-               url:"@Url.Action("getMenuPage","OrderApp")",
-               method:"GET",
-               success:function(data){
+               url: "@Url.Action("getMenuPage", "OrderApp")",
+               method: "GET",
+               success: function (data) {
+
+                    console.log(data)
                     $(".loadTabBody").html(data);
                }
           });
      }
+
      $(document).on('click', '.Available-Table', function () {
           $(this).removeClass('Available-Table').addClass('selectedTable');
           var sectionid = $(this).data('sectionid')
@@ -66,4 +68,23 @@
                $("#assignBtn_" + sectionid).prop('disabled', true)
           }
      });
+
+     
+
+     @* function assignTable() {
+          
+          var tokenid = $("#tokenid").val()
+          alert(tokenid)
+          
+          
+               $.ajax({
+                    url: "@Url.Action("assignTable", "TableView")",
+                    method: 'POST',
+                    data: { tableid: $(".selectedTable").data("tableid"), tokenid: tokenid },
+                    success: function (response) {
+                         console.log(response)
+                         $(".loadTabBody").html(response);
+                    }
+               });
+     } *@
 </script>

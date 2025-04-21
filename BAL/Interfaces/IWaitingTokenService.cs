@@ -12,7 +12,8 @@ namespace BAL.Interfaces
         bool AssignTable(int tableid, int tokenid);
         bool deleteWaitingToken(int tokenid);
         WaitingTokenModel getAllWaitingTokens(int sectionid);
-        List<CustomerModel> getCustomerTokensForSection(int sectionid);
+        CustomerModel getCustomerForWaitingToken(int tokenid, int tableid);
+        List<CustomerModel> getCustomerTokensForSection(int sectionid,int tableid);
         int getSectionIdOfToken(int tokenid);
         Dictionary<Section,int> getSectionsWithWaitingTokens();
         List<CustomerModel> getSuggestedCustomerList(string name);

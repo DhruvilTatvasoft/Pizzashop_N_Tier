@@ -12,8 +12,10 @@
                 <div class="header d-flex align-items-center justify-content-start mb-4 d-flex">
                     <h1>Taxes/Fees</h1>
                     <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
-                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;" id="taxSearch" onkeyup="searchtax()" placeholder="Search">
-                        <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;" onclick="openModelForAddTax()">+ New Tax</button>
+                        <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;"
+                            id="taxSearch" onkeyup="searchtax()" placeholder="Search">
+                        <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;"
+                            onclick="openModelForAddTax()">+ New Tax</button>
                     </div>
                 </div>
                 <div class="form-container shadow taxTableContainer" id="t-container"></div>
@@ -23,10 +25,10 @@
         <script>
             $("document").ready(function () {
                 loadTaxes();
-                 $("document").ready(function(){
-      $('.sidebar ul li').removeClass('active-class');
-             $('.tax').addClass('active-class')
-  })
+                $("document").ready(function () {
+                    $('.sidebar ul li').removeClass('active-class');
+                    $('.tax').addClass('active-class')
+                })
 
             });
 
@@ -40,51 +42,51 @@
                 });
             }
 
-            function searchtax(){
+            function searchtax() {
                 var search = document.getElementById("taxSearch").value;
                 console.log("searching")
-                if(search == ""){
-                     loadTaxes();
+                if (search == "") {
+                    loadTaxes();
                 }
-                else{
-                $.ajax({
-                    url:'@Url.Action("searchTax","Taxes")',
-                    type: 'GET',
-                    data: {search:search},
-                    success: function (data) {
-                        $(".taxTableContainer").html(data);
-                    }
-                });
+                else {
+                    $.ajax({
+                        url: '@Url.Action("searchTax", "Taxes")',
+                        type: 'GET',
+                        data: { search: search },
+                        success: function (data) {
+                            $(".taxTableContainer").html(data);
+                        }
+                    });
                 }
             }
-            function openModelForAddTax(){
+            function openModelForAddTax() {
                 $.ajax({
-                    url:'@Url.Action("addEditTaxModalGet","Taxes")',
+                    url: '@Url.Action("addEditTaxModalGet", "Taxes")',
                     type: 'GET',
                     success: function (data) {
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
                         console.log("no errors");
-                        $("#isUpdated").val('false') 
+                        $("#isUpdated").val('false')
                     }
                 });
             }
-            function openModelForEditTax(TaxId){
+            function openModelForEditTax(TaxId) {
                 $.ajax({
-                    url:'@Url.Action("EditModalGet","Taxes")',
+                    url: '@Url.Action("EditModalGet", "Taxes")',
                     type: 'GET',
-                    data:{taxid :TaxId},
+                    data: { taxid: TaxId },
                     success: function (data) {
                         console.log("edit clicked");
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
                         document.getElementById("deleteText").innerHTML = "Edit Tax";
-                        $("#isUpdated").val('true') 
+                        $("#isUpdated").val('true')
                         console.log(data);
                         @* $("#editTaxButtton").css() *@
                     }
                 });
             }
 
-          
+
         </script>

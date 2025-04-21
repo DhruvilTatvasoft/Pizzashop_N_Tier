@@ -1,57 +1,61 @@
 @model WaitingTokenModel
 <style>
-    .sugg_container{
-            border: 1px solid #d4d4d4;
-    border-radius: 7px;
-    position: absolute;
-    z-index: 3;
-    background-color: white;
+    .sugg_container {
+        border: 1px solid #d4d4d4;
+        border-radius: 7px;
+        position: absolute;
+        z-index: 3;
+        background-color: white;
     }
-    .suggestionlabel{
+
+    .suggestionlabel {
         color: grey;
     }
-    .customer_list{
+
+    .customer_list {
         border-bottom: 1px solid #cecece;
     }
 </style>
-@if(Model.customerList.Count > 0){
+@if (Model.customerList.Count > 0)
+{
 
-<div class="sugg_container mt-2">
-    <div class="d-flex justify-content-between p-2">
-        <label for="" class="suggestionlabel">Type '/' to search from your saved</label>
-        <button class="btn-close closeSuggestion" type="button"></button>
+    <div class="sugg_container mt-2">
+        <div class="d-flex justify-content-between p-2">
+            <label for="" class="suggestionlabel">Type '/' to search from your saved</label>
+            <button class="btn-close closeSuggestion" type="button"></button>
         </div>
         <div class="customer_list">
-    @foreach(var customer in Model.customerList){
-        <div class="row m-2"  onclick="fillDataInForm('@customer.email','@customer.phone','@customer.name')">
-        <label for="" data-email="@customer.email">@customer.email</label>
-        <label for="" data-phone="@customer.phone">@customer.phone</label>
-        <label for="" data-name="@customer.name">@customer.name</label>
-        </div>
-    }
+            @foreach (var customer in Model.customerList)
+            {
+                <div class="row m-2" onclick="fillDataInForm('@customer.email','@customer.phone','@customer.name')">
+                    <label for="" data-email="@customer.email">@customer.email</label>
+                    <label for="" data-phone="@customer.phone">@customer.phone</label>
+                    <label for="" data-name="@customer.name">@customer.name</label>
+                </div>
+            }
 
         </div>
-    <div>
-        <div class="m-2">
-        <div class="d-flex p-2" onclick="clearForm()">
-            <button class="btn-close me-2" type="button"></button>
-            <label for="">Clear form</label>
-        </div>
-        <div class="d-flex p-2">
-           <img src="~/images/person-lines-fill.svg" class="me-2" alt="">
-            <label for="">Manage personal info </label>
-        </div>
+        <div>
+            <div class="m-2">
+                <div class="d-flex p-2" onclick="clearForm()">
+                    <button class="btn-close me-2" type="button"></button>
+                    <label for="">Clear form</label>
+                </div>
+                <div class="d-flex p-2">
+                    <img src="~/images/person-lines-fill.svg" class="me-2" alt="">
+                    <label for="">Manage personal info </label>
+                </div>
 
+            </div>
         </div>
     </div>
-</div>
 }
 <script>
-    $(".closeSuggestion").on("click",function(){
+    $(".closeSuggestion").on("click", function () {
         $(".sugg_container").hide();
     })
 
-    function fillDataInForm(email,phone,name){
+    function fillDataInForm(email, phone, name) {
         $("#customer-name").val(name);
         $("#customer-email").val(email);
         $("#customer-phone").val(phone);
@@ -61,8 +65,8 @@
         document.querySelector(".sugg_container").remove();
     }
 
-    function clearForm(){
-            $("#customer-name").val("");
+    function clearForm() {
+        $("#customer-name").val("");
         $("#customer-email").val("");
         $("#customer-email").valid();
         $("#customer-phone").val("");

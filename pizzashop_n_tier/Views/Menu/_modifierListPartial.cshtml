@@ -87,12 +87,11 @@
         @if (Model.pageNumber > 1)
         {
             <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
-                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1))"><img src=""
-                    alt=""><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
+                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1))"><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
         }
         else
         {
-            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img src="" alt=""><img
+            <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;" disabled><img
                     src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
 
         }

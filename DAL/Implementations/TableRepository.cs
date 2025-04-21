@@ -23,6 +23,7 @@ public class TableRepository : ITableRepository
         newTable.Modifiedat = DateTime.Now;
         newTable.Createdby = 1;
         newTable.Modifiedby = 1;
+        newTable.Statusname = "Available";
         newTable.Isdeleted = false;
         try{
         _context.Tables.Add(newTable);
@@ -104,6 +105,12 @@ public class TableRepository : ITableRepository
         tableToUpdate.Modifiedat = DateTime.Now;
         tableToUpdate.Modifiedby = 1;
         tableToUpdate.Status = table.Status;
+        if(tableToUpdate.Status){
+            tableToUpdate.Statusname = "Available";
+        }
+        else{
+            tableToUpdate.Statusname = "Assigned";
+        }
         
         _context.Tables.Update(tableToUpdate);
         _context.SaveChanges();
@@ -113,7 +120,7 @@ public class TableRepository : ITableRepository
      public TableViewModel GetAllTablesAndSections()
     {
         Dictionary<SectionViewModel,List<Table>> sectionWiseTables = new Dictionary<SectionViewModel, List<Table>>();
-        List<Section> sections = _context.Sections.Where(section=>section.Isdeleted == false).ToList();
+        List<Section> sections = _context.Sections.Where(section=>section.Isdeleted == false).OrderBy(section=>section.Sectionid).ToList();
         foreach(var section in sections){
             List<Table> tablesForSection = _context.Tables.Where(t=>t.Sectionid == section.Sectionid && t.Isdeleted == false).ToList();
             SectionViewModel sectionModel = new SectionViewModel();

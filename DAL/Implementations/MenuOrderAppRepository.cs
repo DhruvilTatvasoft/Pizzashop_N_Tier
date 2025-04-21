@@ -12,7 +12,14 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     {
         if (categoryid == 0)
         {
-            return _context.Items.Where(item => item.Isdeleted == false).ToList();
+            List<Category> categories = _context.Categories.Where(category=>category.Isdeleted == false).ToList();
+            List<Item>  items = new List<Item>();
+            foreach (var category in categories)
+            {
+                var itemsInCategory = _context.Items.Where(item => item.Categoryid == category.Categoryid && item.Isdeleted == false).ToList();
+                items.AddRange(itemsInCategory);
+            }
+            return items;
         }
         else
         {

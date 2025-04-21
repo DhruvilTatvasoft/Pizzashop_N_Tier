@@ -30,7 +30,6 @@
                 method: 'POST',
                 data: { searchedItem: SearchedItem, categoryId: selectedCategoryId },
                 success: function (data) {
-                    console.log(data);
                     $(".table-container").html(data);
                 }
             });

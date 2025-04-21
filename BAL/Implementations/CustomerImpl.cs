@@ -1,17 +1,12 @@
 using DAL.interfaces;
-// using iText.Layout.Properties;
 using BAL.Interfaces;
-using DAL.Data;
 using NPOI.SS.UserModel;
 using NPOI.HSSF.Util;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.Util;
-using System.Reflection.Metadata;
 using Microsoft.AspNetCore.Mvc;
-// using NPOI.HSSF.UserModel;
-// using NPOI.HSSF.Util;
-// using NPOI.SS.UserModel;
-// using NPOI.SS.Util;
+using Azure;
+
 namespace BAL.Implementations
 {
     public class CustomerImpl : ICustomerService
@@ -312,6 +307,7 @@ namespace BAL.Implementations
 
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
+                
                 // using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
                 // {
                 //     workbook.Write(file);
@@ -320,20 +316,16 @@ namespace BAL.Implementations
                 // }
                 using (var memoryStream = new MemoryStream()){
                     workbook.Write(memoryStream);
-                    return new FileContentResult(memoryStream.ToArray(), "application/xlsx")
-                    {
-                        FileDownloadName = "customerDetail.xlsx"
-                    };
+                    var result = new FileContentResult(memoryStream.ToArray(), "application/vnd.ms-excel");
+                    result.FileDownloadName = FileName;
+                    return result;
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new FileContentResult(new byte[0], "application/xlsx")
-                {
-                    FileDownloadName = "error.xlsx"
-                };
+                return new FileContentResult(new byte[0], "application/vnd.ms-excel");
             }
         }
 

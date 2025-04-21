@@ -36,7 +36,8 @@ namespace pizzashop_n_tier.Views.OrderApp
             return PartialView("_waitingList");
         }
 
-        public IActionResult getMenuPage(){
+        public IActionResult getMenuPage(int? tokenid,int? tableid){
+            Console.WriteLine("Ok");
             return PartialView("_menu");
         }
     }

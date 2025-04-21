@@ -19,59 +19,67 @@
                 </div>
             </th>
             <th scope="col">Waiting Time</th>
-            <th scope="col" ><label for="">Name</label></th>
-            <th scope="col" ><label for="">No of Persons</label></th>
+            <th scope="col"><label for="">Name</label></th>
+            <th scope="col"><label for="">No of Persons</label></th>
             <th scope="col">Phone Number</th>
             <th scope="col">Email</th>
             <th scope="col">Action</th>
         </tr>
     </thead>
     <tbody>
-        @if(@Model.waitingTokens.Count <= 0){
-            <tr>
-                 <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Waiting Tokens Found</td>
-                </tr>
-        }
-        else{
-        @foreach (var token in Model.waitingTokens)
+        @if (@Model.waitingTokens.Count <= 0)
         {
             <tr>
-                <th scope="row">
-                    <label class="form-check-label d-flex justify-content-center align-items-center" for="flexCheckDefault">
-                        <label for="" style="font-size: 14px;">@token.Waitingtokenid</label>
-                    </label>
-                </th>
-                <td>@token.Createdat</td>
-                <td><label for="" id="duration-timerWaitingToken-@(token.Waitingtokenid)" data-createdatWaitingToken="@((token.Createdat as DateTime?)?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "")"></label></td>
-            <td>@token.Customer.Customername</td>
-            <td>@token.Totalpersons</td>
-            <td>@token.Customer.Phonenumber</td>
-            <td>@token.Customer.Email</td>
-            <td>
-                <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                    <img src="~/images/pencil-square.svg" class="me-3" onclick="updateToken(@token.Waitingtokenid)" style="cursor: pointer;"  alt="">
-                    <img src="~/images/trash-fill.svg" class="me-3" onclick="deleteToken(@token.Waitingtokenid)"style="cursor: pointer;" alt="">
-                    <img src="~/images/person-check.svg" class="me-3" style="cursor: pointer;" onclick="assignTableGet(@token.Waitingtokenid)" alt="">
-                </div>
-            </td>
-        </tr>
+                <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
+                    Waiting Tokens Found</td>
+            </tr>
         }
+        else
+        {
+            @foreach (var token in Model.waitingTokens)
+            {
+                <tr>
+                    <th scope="row">
+                        <label class="form-check-label d-flex justify-content-center align-items-center" for="flexCheckDefault">
+                            <label for="" style="font-size: 14px;">@token.Waitingtokenid</label>
+                        </label>
+                    </th>
+                    <td>@token.Createdat</td>
+                    <td><label for="" id="duration-timerWaitingToken-@(token.Waitingtokenid)"
+                            data-createdatWaitingToken="@((token.Createdat as DateTime?)?.ToString("yyyy-MM-ddTHH:mm:ss") ?? "")"></label>
+                    </td>
+                    <td>@token.Customer.Customername</td>
+                    <td>@token.Totalpersons</td>
+                    <td>@token.Customer.Phonenumber</td>
+                    <td>@token.Customer.Email</td>
+                    <td>
+                        <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                            <img src="~/images/pencil-square.svg" class="me-3" onclick="updateToken(@token.Waitingtokenid)"
+                                style="cursor: pointer;" alt="">
+                            <img src="~/images/trash-fill.svg" class="me-3" onclick="deleteToken(@token.Waitingtokenid)"
+                                style="cursor: pointer;" alt="">
+                            <img src="~/images/person-check.svg" class="me-3" style="cursor: pointer;"
+                                onclick="assignTableGet(@token.Waitingtokenid)" alt="">
+                        </div>
+                    </td>
+                </tr>
+            }
         }
     </tbody>
 </table>
 
-<div class="modal fade" id="deleteWaitingTokenModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-    aria-hidden="false">
+<div class="modal fade" id="deleteWaitingTokenModal" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-body d-flex flex-column align-items-center justify-content-center">
                 <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
                 <h5 class="mb-3">Are you sure you want to delete this Token?</h5>
-                <input type="text" name="tokenid"  id="WaitingTokenId" hidden>
+                <input type="text" name="tokenid" id="WaitingTokenId" hidden>
                 <div class="d-flex">
                     <button type="button" onclick="DeleteWaitingTokenPost()" class="btn btn-primary me-2"
                         data-bs-dismiss="modal">Yes</button>
-                    
+
                     <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
                 </div>
             </div>
@@ -79,72 +87,72 @@
     </div>
 </div>
 
-        
+
 
 <script>
 
     function updateTimers() {
-    const now = new Date();
-    document.querySelectorAll("[id^='duration-timerWaitingToken-']").forEach(timerEl => {
-        const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
-        const createdAt = new Date(createdAtStr);
+        const now = new Date();
+        document.querySelectorAll("[id^='duration-timerWaitingToken-']").forEach(timerEl => {
+            const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
+            const createdAt = new Date(createdAtStr);
 
-        const diffMs = now - createdAt;
+            const diffMs = now - createdAt;
 
-        if (!isNaN(diffMs)) {
-            let totalSeconds = Math.floor(diffMs / 1000);
+            if (!isNaN(diffMs)) {
+                let totalSeconds = Math.floor(diffMs / 1000);
 
-            const hours = Math.floor(totalSeconds / 3600);
-            totalSeconds %= 3600;
+                const hours = Math.floor(totalSeconds / 3600);
+                totalSeconds %= 3600;
 
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
 
-            const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
-            timerEl.textContent = formatted;
-        }
-    });
-}
-
-function pad(num) {
-    return num.toString().padStart(2, '0');
-}
-
-function deleteToken(id){
-    $("#deleteWaitingTokenModal").modal('show')
-    document.getElementById("WaitingTokenId").value = id;
-}
-
-
-
-function DeleteWaitingTokenPost(){
-    $.ajax({
-        url:"@Url.Action("deleteWaitingToken","WaitingList")",
-        method:"POST",
-        data:{tokenid : $("#WaitingTokenId").val() },
-        success:function(data){
-            if(toastr.success){
-            $("#deleteWaitingTokenModal").modal('hide')
-            toastr.success(data.success);
-            loadWaitingTokensForSection();
-            loadSectionsNavbar();
-
+                const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
+                timerEl.textContent = formatted;
             }
-            else{
-            $("#deleteWaitingTokenModal").modal('hide')
-            toastr.error(data.error);
-            loadWaitingTokensForSection($(".sectionid").val());
-            loadSectionsNavbar();
-            }
-        }
-    });
-}
+        });
+    }
 
-$(document).ready(() => {
-    updateTimers();
-    setInterval(updateTimers, 1000);
-});
-    $(document).ready(()=>{
+    function pad(num) {
+        return num.toString().padStart(2, '0');
+    }
+
+    function deleteToken(id) {
+        $("#deleteWaitingTokenModal").modal('show')
+        document.getElementById("WaitingTokenId").value = id;
+    }
+
+
+
+    function DeleteWaitingTokenPost() {
+        $.ajax({
+            url: "@Url.Action("deleteWaitingToken", "WaitingList")",
+            method: "POST",
+            data: { tokenid: $("#WaitingTokenId").val() },
+            success: function (data) {
+                if (toastr.success) {
+                    $("#deleteWaitingTokenModal").modal('hide')
+                    toastr.success(data.success);
+                    loadWaitingTokensForSection();
+                    loadSectionsNavbar();
+
+                }
+                else {
+                    $("#deleteWaitingTokenModal").modal('hide')
+                    toastr.error(data.error);
+                    loadWaitingTokensForSection($(".sectionid").val());
+                    loadSectionsNavbar();
+                }
+            }
+        });
+    }
+
+    $(document).ready(() => {
+        updateTimers();
+        setInterval(updateTimers, 1000);
+    });
+    $(document).ready(() => {
         updateTimers();
         setInterval(updateTimers, 1000);
     })

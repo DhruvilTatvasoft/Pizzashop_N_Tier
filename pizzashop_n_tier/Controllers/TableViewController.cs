@@ -18,13 +18,23 @@ public class TableViewController : Controller
         model = _tableService.GetAllTablesAndSections();
         return PartialView("_tableDetails", model);
     }
-    public IActionResult getOffCanvas(int sectionid)
+    public IActionResult getOffCanvas(int sectionid,int tableid)
     {
         TableViewModel model = new TableViewModel();
-        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid);
+        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid,tableid);
         WaitingTokenModel model2 = new WaitingTokenModel();
         model2.sections = _sectionService.getAllSections();
         model.WaitingToken = model2;
         return PartialView("_assignTableOffcanvasData", model);
     }
+
+    [HttpPost]
+    public IActionResult assignTable(int tableid,int tokenid)
+    {
+        // _waitingTokenService.AssignTable(tableid, tokenid);
+        MenuOrderAppModel model = new MenuOrderAppModel();
+        model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid,tableid);
+        // return RedirectToAction("getMenuPage", "OrderApp", new { tableid = tableid, tokenid = tokenid });
+        return PartialView("_menu",model);
+    }   
 }

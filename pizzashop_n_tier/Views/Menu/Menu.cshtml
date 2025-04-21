@@ -7,8 +7,6 @@
 @model MenuModel
 
 <link rel="stylesheet" href="~/css/menu.css">
-
-
 <div class="container-fluid w-100 h-100 p-0">
     <div id="nav-sidebar"></div>
     <div class="row p-0 h-100 d-flex">
@@ -40,9 +38,6 @@
     </div>
     <script>
         var selectedCategoryId = 0;
-
-
-
         $("document").ready(function () {
             loadCategories();
             loadItemData();
@@ -50,8 +45,6 @@
             $('.sidebar ul li').removeClass('active-class');
             $('.menu').addClass('active-class')
         });
-
-
         function loadcategoryItemPage() {
             $('.mod').removeClass('active');
             $('.item').addClass('active');
@@ -60,7 +53,6 @@
             loadCategories();
             loadItemData();
         }
-
         function loadCategories() {
             $.ajax({
                 url: '@Url.Action("CategoriesData", "Menu")',

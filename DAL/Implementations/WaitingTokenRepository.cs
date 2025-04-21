@@ -13,9 +13,11 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     {
         Waitingtoken token = new Waitingtoken();
         Customer Customer = _context.Customers.FirstOrDefault(Customer=>Customer.Email.ToLower().Trim() == model.customer.email.ToLower().Trim());
+        if(Customer != null){
         Waitingtoken isTokenCreated = _context.Waitingtokens.FirstOrDefault(token => token.Customerid == Customer.Customerid && token.Isdeleted == false);
         if(isTokenCreated != null){
             return false;
+        }
         }
         token.Createdat = DateTime.Now;
         token.Sectionid = model.sectionId;
@@ -84,7 +86,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public Dictionary<Section,int> getSectionsWithWaitingTokens()
     {
-        List<Section> sections = _context.Sections.Where(section=>section.Isdeleted == false).ToList();
+        List<Section> sections = _context.Sections.Where(section=>section.Isdeleted == false).OrderBy(section=>section.Sectionid).ToList();
         Dictionary<Section,int> SectionAndTokenCount = new Dictionary<Section, int>();
         foreach(var section in sections){
             int tokenCount = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Sectionid == section.Sectionid).Count();
@@ -172,7 +174,8 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     public List<Table> getTablesForToken(int tokenid)
     {
         int sectionId = getSectionIdOfToken(tokenid);
-        List<Table> tables = _context.Tables.Where(table=>table.Sectionid == sectionId && table.Status == true).ToList();
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
+        List<Table> tables = _context.Tables.Where(table=>table.Sectionid == sectionId && table.Statusname == "Available" && table.Capacity >= token.Totalpersons).ToList();
         return tables;
     }
 
@@ -183,16 +186,18 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         table.Statusname = "Assigned";
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
         table.Customerid = token.Customerid;
-        _context.Waitingtokens.Remove(token);
+        token.Isdeleted = true;
+        _context.Waitingtokens.Update(token);
         _context.Tables.Update(table);
         _context.SaveChanges();
         return true;
     }
 
-    public List<CustomerModel> getCustomerTokensForSection(int sectionid)
+    public List<CustomerModel> getCustomerTokensForSection(int sectionid,int tableid)
     {
         List<CustomerModel> customerViewModels = new List<CustomerModel>();
-        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Isdeleted == false).ToList();
+        Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false);
+        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Totalpersons <= table.Capacity && token.Isdeleted == false).ToList();
         foreach (var token in tokens){
             Customer customer = _context.Customers.FirstOrDefault(Customer=>Customer.Customerid == token.Customerid);
             CustomerModel model = new CustomerModel();
@@ -205,5 +210,19 @@ public class WaitingTokenRepository : IWaitingTokenRepository
             customerViewModels.Add(model);
         }
         return customerViewModels;
+    }
+
+    public CustomerModel getCustomerForWaitingToken(int tokenid, int tableid)
+    {
+        CustomerModel model = new CustomerModel();
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
+        Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
+        model.name = customer.Customername;
+        model.phone = customer.Phonenumber;
+        model.email = customer.Email;
+        model.table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
+        model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == token.Sectionid && section.Isdeleted == false)!;
+        model.PersonCount = token!.Totalpersons;
+        return model;
     }
 }

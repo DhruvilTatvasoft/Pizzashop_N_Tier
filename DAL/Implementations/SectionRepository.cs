@@ -33,7 +33,7 @@ public class SectionRepository : ISectionRepository
 
     public List<Section> getAllSections()
     {
-        return _context.Sections.Where(section=>section.Isdeleted == false).ToList();
+        return _context.Sections.Where(section=>section.Isdeleted == false).OrderBy(section=>section.Sectionid).ToList();
     }
 
     public Section getAllSections(int sectionId)

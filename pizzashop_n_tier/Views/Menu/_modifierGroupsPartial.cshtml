@@ -286,17 +286,13 @@
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     document.body.classList.remove('modal-open');
   }
-
-
+  
   function cancelfromExistingModifiers() {
     const editModalEl = document.getElementById('EditModifierGroup');
     const addModalEl = document.getElementById('addModifierGroup1');
     const targetModal = editModalEl ? new bootstrap.Modal(editModalEl) : new bootstrap.Modal(addModalEl);
     targetModal.show();
   }
-
-
-
 
   function searchModifier() {
     const searchValue = $('#searchModifier').val();

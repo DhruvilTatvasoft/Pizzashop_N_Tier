@@ -1,92 +1,125 @@
 @model MenuOrderAppModel
 <style>
-    .itemCard{ 
-       background-color:white;
-       @* clip-path: polygon(0% 0%, 100% 100%, 100% 0%) !important; *@
-       border-radius: 7px !important;
-       box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.3), 0 0px 11px 0 rgba(0, 0, 0, 0);
-       @* clip-path: polygon(0% 0%, 100% 100%, 100% 0%) !important; *@
+    .itemCard {
+        background-color: white;
+        border-radius: 7px !important;
+        box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.3), 0 0px 11px 0 rgba(0, 0, 0, 0);
     }
-    .itemimage{
-    height: 100%;
-    border-radius: 7px;
-    width: 100%;
-   box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.3), 0 0px 11px 0 rgba(0, 0, 0, 0);
-    display: flex;
-    align-items: center;
+
+    .itemimage {
+        height: 100%;
+        border-radius: 7px;
+        width: 100%;
+        box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.3), 0 0px 11px 0 rgba(0, 0, 0, 0);
+        display: flex;
+        align-items: center;
     }
-    .imageContainer{
+
+    .imageContainer {
         width: 34%;
         height: 100%;
         @* border: 1px solid ; *@
     }
-    .itemDetailContainer{
+
+    .itemDetailContainer {
         width: 100%;
+        @* max-width: 157px; *@
     }
-    .typeIndicator{
+
+    .typeIndicator {
         width: 28px !important;
-    height: 20px;
-     clip-path: polygon(0% 0%, 100% 100%, 100% 0%) !important;
-     border-top-right-radius: 7px !important;
-     
+        height: 20px;
+        clip-path: polygon(0% 0%, 100% 100%, 100% 0%) !important;
+        border-top-right-radius: 7px !important;
+
     }
 
-</style>
-<div class="w-100 mt-3">
-    <div class="row" style="gap:20px;">
-        @foreach(var item in Model.items){
-        <div class="col-3 p-0 d-flex itemCard" onclick="" style="width:20%; background-color:white">
-            <div class="imageContainer">
-                <div class="w-100 h-100">
-                    @if(item.Itemimage != null){
-                    <img src="@item.Itemimage" class="itemimage" alt="">
-                    }
-                    else{
-                    <img src="~/images/dining-menu.png" class="itemimage" alt="">
-                    }
-                </div>
-            </div>
-            <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2">
-                <div class="d-flex flex-column">
-                <label for="">@item.Itemname</label>
-                <label for="">@item.Itemrate</label>
-                </div>
-                @if(item.Itemtype){
-                <div class="d-flex justify-content-between flex-column" >
-                    <div class="typeIndicator p-2" style="background-color: green;">
-                </div>
-                <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"  onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;"  alt="">
-                </div>
+    .itemDetailContainer label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        font-size: 14px;
+        max-width: 100px;
 
-                }
-                else{
-                   <div class="d-flex justify-content-between flex-column" >
-                    <div class="typeIndicator p-2" style="background-color: red ;">
+    }
+
+    .order-details {
+        width: 45%;
+        height: 90%;
+        margin-left: 4%;
+        margin-right: 3%;
+        background-color: rgb(139, 205, 240);
+        border-radius: 7px;
+    }
+</style>
+<div class="w-100 h-100 mt-3 d-flex">
+
+    <div class="row pe-3" style="@(Model.customer != null ? "width:100%;" : "width : 55%;")">
+        @foreach (var item in Model.items)
+        {
+            <div class="@(Model.customer != null ? "col-3  pe-2 pb-3" : "col-4  pe-2 pb-3")">
+                <div class="itemCard d-flex" style="width: 100%;">
+                    <div style="width:25%;">
+                        @if (item.Itemimage != null)
+                        {
+                            <img src="@item.Itemimage" style="width: 50px;" class="itemimage" alt="">
+                        }
+                        else
+                        {
+                            <img src="~/images/dining-menu.png" style="width: 50px;" class="" alt="">
+                        }
                     </div>
-                <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;" alt="">
-                </div> 
-                }
+                    <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2"
+                        style="@(Model.customer != null ? "max-width: 357px;" : "max-width: 157px;")">
+                        <div class="d-flex flex-column">
+                            <label for="">@item.Itemname </label>
+                            <label for="">@item.Itemrate</label>
+                        </div>
+                        @if (item.Itemtype)
+                        {
+                            <div class="d-flex justify-content-between flex-column">
+                                <div class="typeIndicator p-2" style="background-color: green;">
+                                </div>
+                                <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
+                                    onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;" alt="">
+                            </div>
+
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-content-between flex-column">
+                                <div class="typeIndicator p-2" style="background-color: red ;">
+                                </div>
+                                <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
+                                    style="width: 15px;" alt="">
+                            </div>
+                        }
+                    </div>
+                </div>
             </div>
-        </div>
 
         }
+    </div>
+    <div class="order-details">
+        bacd
     </div>
 </div>
 
 <script>
-    var favorites = []; 
-    function AddToFavorite(x,id){
+    var favorites = [];
+    function AddToFavorite(x, id) {
         @* alert("clicked") *@
-        @* $(this).prop("src","~/images/heart-fill.svg"); *@
-        console.log(x)
-        if($(x).attr("src") == "/images/heart-fill.svg"){
-            $(x).attr("src","/images/heart.svg");
-            if(!favorites.includes(id)){
-            favorites.pop(id);
+            @* $(this).prop("src","~/images/heart-fill.svg"); *@
+            console.log(x)
+        if ($(x).attr("src") == "/images/heart-fill.svg") {
+            $(x).attr("src", "/images/heart.svg");
+            if (!favorites.includes(id)) {
+                favorites.pop(id);
             }
         }
-        else{
-            $(x).attr("src","/images/heart-fill.svg");
+        else {
+            $(x).attr("src", "/images/heart-fill.svg");
             favorites.push(id);
         }
 

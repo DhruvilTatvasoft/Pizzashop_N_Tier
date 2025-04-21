@@ -392,5 +392,4 @@ public class MenuController : Controller
         }
         return Json(new { modifierGroupId = modifierGroupId });
     }
-
 }

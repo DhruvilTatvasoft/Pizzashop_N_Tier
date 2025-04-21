@@ -132,7 +132,7 @@
     })
 
     function deleteMultipleTables() {
-      var selectedTables = [...document.querySelectorAll(".checkedTable:checked")].map(x => parseInt(x.value, 10));
+      var selectedTables = [...document.querySelectorAll(".checkedTable:checked")].map(x => parseInt(x.value, 10)); 
       var sectionid = document.querySelector("#sectionIdFortables").value;
       selectedTables.forEach((t) => {
         console.log(t);
