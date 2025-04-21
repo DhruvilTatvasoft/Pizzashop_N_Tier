@@ -208,4 +208,39 @@
                 }
             })
         }
+
+        function exportProductExcelSheet() {
+     var searchedOrder = $("#SearchOrder").val();
+            var searchByPeriod = $(".timePeriodFilter").val();
+            var startDate = $("#startDate").val();
+            var endDate = $("#endDate").val();
+            var searchbystatus = $("#selectStatus").val();
+
+    $.ajax({
+        url: '@Url.Action("ExportData", "Order")',
+        type: 'POST',
+        data: {
+             searchedOrder: searchedOrder,
+                    searchByPeriod: searchByPeriod,
+                    startDate: startDate,
+                    endDate: endDate,
+                    searchbystatus: searchbystatus
+        },
+        success: function (data) {
+            if (data.success) {
+                // Create a download link and trigger the download
+                var link = document.createElement('a');
+                link.href = data.fileUrl; // The URL returned from the server (the file location)
+                link.download = "Products_Data.xlsx"; // You can give the file any name
+                link.click();
+                toastr.success("Excel file generated and downloaded successfully!");
+            } else {
+                toastr.error("Error while generating file.");
+            }
+        },
+        error: function () {
+            toastr.error("There was an error during the export.");
+        }
+    });
+}
     </script>

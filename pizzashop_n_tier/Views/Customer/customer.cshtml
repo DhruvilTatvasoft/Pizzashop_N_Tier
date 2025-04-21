@@ -241,19 +241,24 @@
                 });
             }
 
-            function ExportTheCustomerDetails(){
-                var startDate = $('#startDate').val();
-                var endDate = $('#endDate').val();
-                pageSize = $(".pagesize").val()
-                $.ajax({
-                    url:'@Url.Action("ExportCustomerDetails", "Customer")',
-                    type:'GET',
-                    data: { pageNumber: 1, pageSize: pageSize, sortBy: 'asc', sortOrder: 'name', filterBy: $('.timePeriodFilter').val(), startDate: startDate, endDate: endDate  },
-                    success: function (data) {
-                        toastr.success("Exported Successfully");
-                        }
-                });
-            }
+           function ExportTheCustomerDetails(){
+    var startDate = $('#startDate').val();
+    var endDate = $('#endDate').val();
+    var pageSize = $(".pagesize").val();
+    var filterBy = $('.timePeriodFilter').val();
+
+    var url = '@Url.Action("ExportCustomerDetails", "Customer")' +
+        '?pageNumber=1' +
+        '&pageSize=' + pageSize +
+        '&sortBy=asc' +
+        '&sortOrder=name' +
+        '&filterBy=' + encodeURIComponent(filterBy) +
+        '&startDate=' + encodeURIComponent(startDate) +
+        '&endDate=' + encodeURIComponent(endDate);
+    toastr.success("Exported Data successfully ")
+    window.location.href = url; // ✅ This triggers the browser to download the file
+}
+
 
             
 

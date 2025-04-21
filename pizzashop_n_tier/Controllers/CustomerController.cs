@@ -29,10 +29,15 @@ namespace pizzashop_n_tier.Controllers
             return PartialView("_customerHistory", model);
         }
 
-        public IActionResult ExportCustomerDetails(int pageSize = 4, int pageNumber = 1, string sortBy = "name", string sortOrder = "desc", string? search = "", string filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null, bool isExport = true)
-        {
-            _customerService.exportCustomerDetails(pageSize, pageNumber, sortBy, sortOrder, search, filterBy, startDate, endDate, true);
-            return Json(new { success = "Exported successfully !!" });
-        }
+   public IActionResult ExportCustomerDetails(int pageSize = 4, int pageNumber = 1, string sortBy = "name", string sortOrder = "desc", string? search = "", string filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null, bool isExport = true)
+{
+    var fileBytes = _customerService.exportCustomerDetails(pageSize, pageNumber, sortBy, sortOrder, search, filterBy, startDate, endDate, true);
+    
+   if (fileBytes == null || fileBytes.Length == 0)
+        return BadRequest("Failed to generate Excel file");
+
+    string fileName = $"CustomerDetails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.xls";
+    return File(fileBytes, "application/vnd.ms-excel", fileName);
+}
     }
 }

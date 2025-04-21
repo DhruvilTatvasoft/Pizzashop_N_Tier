@@ -49,7 +49,7 @@ namespace pizzashop_n_tier.Controllers
         {
             OrderViewModel model = new OrderViewModel();
             _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
-            return Json(new {success = "Exported successfully !!"});
+            return Json(new { success = true, fileUrl = "//Products_Data.xlsx" });
         }
         public IActionResult showOrderDetailsView(int orderid)
         {

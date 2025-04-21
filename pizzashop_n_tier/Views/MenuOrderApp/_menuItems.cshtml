@@ -46,11 +46,18 @@
 
     .order-details {
         width: 45%;
-        height: 90%;
+        height: auto;
         margin-left: 4%;
+        max-height: 70%;
+        @* overflow-y: auto; *@
         margin-right: 3%;
         background-color: rgb(139, 205, 240);
         border-radius: 7px;
+    }
+
+    .parentDivForAccordians {
+        max-height: 80%;
+        overflow-y: auto;
     }
 </style>
 <div class="w-100 h-100 mt-3 d-flex">
@@ -101,9 +108,223 @@
 
         }
     </div>
-    <div class="order-details">
-        bacd
+    @* < class="order-details"> *@
+    <div class="p-3 bg-white rounded d-flex flex-column  order-details">
+        <div>
+            <h6><b>First Floor</b></h6>
+            <p>Table: T2, T6</p>
+        </div>
+
+        <!-- Accordion for Items -->
+        <div class="parentDivForAccordians">
+            <div class="accordion mb-3" id="orderItemsAccordion">
+                @* Margherita *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingMargherita">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseMargherita" aria-expanded="false"
+                            aria-controls="collapseMargherita">
+                            Margherita
+                        </button>
+                    </h2>
+                    <div id="collapseMargherita" class="accordion-collapse collapse" aria-labelledby="headingMargherita"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹20.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @* Aaloo Sandwich *@
+                <div class="accordion-item">
+                    <h2 class="accordion-header" id="headingAaloo">
+                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
+                            Aaloo Sandwich
+                        </button>
+                    </h2>
+                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
+                        data-bs-parent="#orderItemsAccordion">
+                        <div class="accordion-body">
+                            <div class="d-flex justify-content-between align-items-center mb-2">
+                                <small>Price per unit: ₹50.00</small>
+                                <div class="d-flex align-items-center">
+                                    <button class="btn btn-sm btn-outline-secondary">-</button>
+                                    <span class="mx-2">1</span>
+                                    <button class="btn btn-sm btn-outline-secondary">+</button>
+                                </div>
+                                <div><b>₹120</b></div>
+                                <button class="btn btn-sm btn-link text-danger">🗑</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Subtotal and Tax -->
+        <div>
+            <div class="d-flex justify-content-between"><span>Subtotal</span><span>₹310.00</span></div>
+            <div class="d-flex justify-content-between"><span>CGST</span><span>₹37.20</span></div>
+            <div class="d-flex justify-content-between"><span>GST</span><span>₹6.20</span></div>
+            <div class="d-flex justify-content-between"><span>Other</span><span>₹15.50</span></div>
+            <div class="d-flex justify-content-between fw-bold mt-2 border-top pt-2">
+                <span>Total</span><span>₹368.90</span>
+            </div>
+        </div>
+
+        <!-- Payment Method -->
+        <div class="mt-3 d-flex justify-content-between ">
+            <label class="mb-1 fw-bold">Payment Method</label>
+            <div class="d-flex gap-3 mb-3">
+                <div><input type="radio" name="payment" /> Cash</div>
+                <div><input type="radio" name="payment" /> Card</div>
+                <div><input type="radio" name="payment" /> UPI</div>
+            </div>
+        </div>  
+        <div>
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-end gap-2">
+                <button class="btn btn-primary">Save</button>
+                <button class="btn btn-secondary">Complete</button>
+                <button class="btn btn-outline-info">Generate Invoice</button>
+            </div>
+            <div class="d-flex justify-content-end mt-3">
+                <button class="btn btn-outline-danger">Cancel</button>
+
+            </div>
+        </div>
     </div>
+
 </div>
 
 <script>

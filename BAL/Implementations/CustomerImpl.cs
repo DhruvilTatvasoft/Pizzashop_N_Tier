@@ -28,7 +28,7 @@ namespace BAL.Implementations
             _customerRepository = customerRepository;
         }
 
-        public FileContentResult exportCustomerDetails(int pageSize,int pageNumber,string sortBy,string sortOrder,string search,string filterBy,DateTime? startDate,DateTime? endDate,bool? isExport)
+        public byte[] exportCustomerDetails(int pageSize,int pageNumber,string sortBy,string sortOrder,string search,string filterBy,DateTime? startDate,DateTime? endDate,bool? isExport)
         {
            try
             {
@@ -301,7 +301,7 @@ namespace BAL.Implementations
                     AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
                 };
                 //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
-                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
                 picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
@@ -309,23 +309,23 @@ namespace BAL.Implementations
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
                 
                 // using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
-                // {
+                // {    
                 //     workbook.Write(file);
                 //     file.Close();
                 //     Console.WriteLine("File Created Successfully...");
                 // }
                 using (var memoryStream = new MemoryStream()){
                     workbook.Write(memoryStream);
-                    var result = new FileContentResult(memoryStream.ToArray(), "application/vnd.ms-excel");
-                    result.FileDownloadName = FileName;
-                    return result;
+                    // var result = new FileContentResult(memoryStream.ToArray(), "application/vnd.ms-excel");
+                     memoryStream.Position = 0;
+                    return memoryStream.ToArray();
                 }
 
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
-                return new FileContentResult(new byte[0], "application/vnd.ms-excel");
+                return new MemoryStream().ToArray();
             }
         }
 

@@ -297,3 +297,4 @@ C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.MvcApplicationPartsAssemblyInfo.cs
