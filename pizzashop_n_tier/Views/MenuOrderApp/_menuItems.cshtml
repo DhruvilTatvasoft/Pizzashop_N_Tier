@@ -330,8 +330,6 @@
 <script>
     var favorites = [];
     function AddToFavorite(x, id) {
-        @* alert("clicked") *@
-            @* $(this).prop("src","~/images/heart-fill.svg"); *@
             console.log(x)
         if ($(x).attr("src") == "/images/heart-fill.svg") {
             $(x).attr("src", "/images/heart.svg");

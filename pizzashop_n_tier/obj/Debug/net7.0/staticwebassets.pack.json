@@ -153,6 +153,10 @@
       "PackagePath": "staticwebassets\\images\\bell-fill.svg"
     },
     {
+      "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chat-left-text.svg",
+      "PackagePath": "staticwebassets\\images\\chat-left-text.svg"
+    },
+    {
       "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chevron-compact-left.svg",
       "PackagePath": "staticwebassets\\images\\chevron-compact-left.svg"
     },
@@ -401,6 +405,10 @@
       "PackagePath": "staticwebassets\\images\\person-circle.svg"
     },
     {
+      "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill (1).svg",
+      "PackagePath": "staticwebassets\\images\\person-lines-fill (1).svg"
+    },
+    {
       "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill.svg",
       "PackagePath": "staticwebassets\\images\\person-lines-fill.svg"
     },
@@ -427,6 +435,10 @@
     {
       "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\profile_div_bg.jpg",
       "PackagePath": "staticwebassets\\images\\profile_div_bg.jpg"
+    },
+    {
+      "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code-scan.svg",
+      "PackagePath": "staticwebassets\\images\\qr-code-scan.svg"
     },
     {
       "Id": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code.png",

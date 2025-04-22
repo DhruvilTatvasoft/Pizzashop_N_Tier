@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "OQlgioIauObie9x3wX6zMghZxyo1UT+xJfH7k1PLjvI=",
+  "Hash": "3y8l/CbA83Wo9aJjSaVvHQipDe0nDmu8jHOaFOEOip4=",
   "Source": "pizzashop_n_tier",
   "BasePath": "_content/pizzashop_n_tier",
   "Mode": "Default",
@@ -585,6 +585,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\bell-fill.svg"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chat-left-text.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/chat-left-text.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\chat-left-text.svg"
     },
     {
       "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chevron-compact-left.svg",
@@ -1879,6 +1898,25 @@
       "OriginalItemSpec": "wwwroot\\images\\person-circle.svg"
     },
     {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill (1).svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/person-lines-fill (1).svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\person-lines-fill (1).svg"
+    },
+    {
       "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill.svg",
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
@@ -2010,6 +2048,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\profile_div_bg.jpg"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code-scan.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/qr-code-scan.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\qr-code-scan.svg"
     },
     {
       "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code.png",

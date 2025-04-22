@@ -381,12 +381,12 @@ namespace BAL.Implementations
             return _orderRepository.GetOrderByOptionFilterForKot();
         }
 
-        public Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId)
+        public tableAndsection getOrderSectionAndTableDetails(int orderId)
         {
             return _orderRepository.getOrderSectionAndTableDetails(orderId);
         }
 
-        public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
+        public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
         {
             return _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady);
         }

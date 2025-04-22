@@ -32,10 +32,13 @@ public class KotController : Controller
         KotViewModel model = new KotViewModel();
         model.categories = _menuService.getAllCategories();
         model.orderDetails = _orderService.GetOrderDetailsByCategory(categoryid, IsReady);
-        foreach (var orderId in model.orderDetails.Keys)
+        Dictionary<int, tableAndsection> orderTableSectionDetail = new Dictionary<int, tableAndsection>();
+        foreach (var order in model.orderDetails.Keys)
         {
-            model.orderTableSectionDetail = _orderService.getOrderSectionAndTableDetails(orderId);
+            tableAndsection tableAndsection = _orderService.getOrderSectionAndTableDetails(order.Orderid);
+           orderTableSectionDetail.Add(order.Orderid,tableAndsection);
         }
+        model.orderTableSectionDetail = orderTableSectionDetail;
         Category category = _menuService.getCategoryById(categoryid);
         if (categoryid == 0)
         {
