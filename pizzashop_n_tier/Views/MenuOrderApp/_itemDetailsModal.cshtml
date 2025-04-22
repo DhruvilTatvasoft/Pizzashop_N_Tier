@@ -1,0 +1,89 @@
+@model MenuOrderAppModel
+
+<style>
+    .modifierGroupName {
+        color: gray;
+        font-weight: 600;
+    }
+      .modifierDetailContainer label {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        font-size: 14px;
+        max-width: 100px;
+    }
+    .modifierDetailContainer {
+        @* width: 100%; *@
+        border: 1px solid grey;
+        border-radius: 7px !important;
+        @* max-width: 157px; *@
+    }
+    .typeIndicatorForModifier{
+        width: 28px !important;
+        height: 20px;
+        clip-path: polygon(0% 0%, 100% 100%, 100% 0%) !important;
+        border-top-right-radius: 7px !important;
+    }
+    .modifierCard{
+          background-color: white;
+
+    }
+</style>
+<div class="modal fade" id="itemDetailsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true" style="--bs-modal-width: 592px;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">@Model.item.Itemname </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body">
+                @if (Model.modifiersForItem.Count > 0)
+                {
+                    @foreach (var item in Model.modifiersForItem)
+                    {
+                        <label><span class="modifierGroupName">@item.modifiergroup.Modifiergroupname options :</span> (You can
+                            choose Minimum - @item.min_value &
+                            Maximum - @item.max_value options)</label>
+                        if (item.modifiers.Count > 0)
+                        {
+                            <div class="row w-100 g-2 mt-2 mb-2" style="gap: 2%;">
+                            @foreach (var modifier in item.modifiers)
+                            {
+                                @* <label>@modifier.Modifiername - @modifier.Modifierrate</label> *@
+                          
+                                <div class="modifierDetailContainer pt-0 pe-0 d-flex justify-content-between p-2 col-3" id="modifier_@modifier.Modifierid" style="width: 23%;">
+                                    <div class="d-flex flex-column">
+                                        <label for="">@modifier.Modifiername </label>
+                                        <label for="">₹ @modifier.Modifierrate </label>
+                                    </div>
+                                    <div class="d-flex justify-content-between flex-column">
+                                        <div class="typeIndicatorForModifier p-2" style="background-color: rgb(244 182 32);">
+                                        </div>
+                                    </div>
+                                </div>
+                 
+
+                            }
+                            </div>
+                        }
+                    }
+                }
+                else{
+                <div>
+                    <label class="d-flex align-items-center justify-content-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</label>
+                </div>
+                }
+            </div>
+                @if( @Model.isTableAssigned ){
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-primary btnoutlinecolour"
+                    data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-primary btncolour">Add</button>
+            </div>
+            }
+        </div>
+    </div>
+</div>

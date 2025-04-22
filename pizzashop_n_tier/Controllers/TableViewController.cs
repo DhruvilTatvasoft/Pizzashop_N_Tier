@@ -35,6 +35,8 @@ public class TableViewController : Controller
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid,tableid);
         // return RedirectToAction("getMenuPage", "OrderApp", new { tableid = tableid, tokenid = tokenid });
+        model.tableid = tableid;
+        model.isTableAssigned = true;
         return PartialView("_menu",model);
     }   
 }

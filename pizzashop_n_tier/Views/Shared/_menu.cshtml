@@ -1,67 +1,84 @@
 @model MenuOrderAppModel
 <style>
-    .MenuSidebarContainer{
+    .MenuSidebarContainer {
         width: 15%;
         background-color: #f2f2f2;
         position: fixed;
         margin-top: 4%;
-        
+
     }
-    .MenuBodyContainer{
-        padding-left: 17%;
+
+    .MenuBodyContainer {
+        padding-left: 12%;
         padding-top: 4.5%;
     }
-    .navbar{
+
+    .navbar {
         position: fixed;
-        width:100%;
+        width: 100%;
     }
-    ul{
+
+    ul {
         list-style-type: none;
         padding: 0px;
     }
-    .MenuSidebarContainer ul li{
+    .MenuSidebarContainer ul li {
         padding: 5%;
         padding-left: 8%;
         font-weight: 700;
         color: grey;
-    } 
-    .MenuSidebarContainer ul li:hover{
+    }
+    .MenuSidebarContainer ul li:hover {
         background-color: #0066A7;
         border-top-right-radius: 20px;
         border-bottom-right-radius: 20px;
         color: white;
-    } 
-
+    }
 </style>
 <div class="container-fluid w-100 h-100 p-0">
     <div class="d-flex w-100 h-100">
-
-    <div class="MenuSidebarContainer h-100"></div>
-    <div class="MenuBodyContainer w-100 h-100"></div>
+        <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
+        <input type="hidden" id="tokenid" asp-for="tokenid" />
+        <input type="hidden" id="tableid" asp-for="tableid" />
+        <h1>@Model.isTableAssigned</h1>
+        <div class="MenuSidebarContainer d-none d-sm-none d-md-block h-100"></div>
+        <div class="MenuBodyContainer w-100 h-100"></div>
     </div>
 </div>
-
 <script>
-    $("document").ready(()=>{
+    $("document").ready(() => {
         loadSideBar();
         loadItemsForCategory(0);
+        @* showItemDetailsModal(54); *@
     });
-    function loadSideBar(){
+    function loadSideBar() {
         $.ajax({
-            url:'@Url.Action("getMenuSidebar","MenuOrderApp")',
-            type:'GET',
-            success:function (data) {
+            url: '@Url.Action("getMenuSidebar", "MenuOrderApp")',
+            type: 'GET',
+            success: function (data) {
                 $('.MenuSidebarContainer').html(data);
             }
         });
     }
-    function loadItemsForCategory(id){
+    function loadItemsForCategory(id) {
+        var searchedItem = $("#searchItemForCategory").val();
         $.ajax({
-            url:"@Url.Action("getItemsForCategory","MenuOrderApp")",
-            method:"GET",
-            data:{categoryid:id},
-            success:function(data){
+            url: "@Url.Action("getItemsForCategory", "MenuOrderApp")",
+            method: "GET",
+            data: { categoryid: id,tokenid : $('#tokenid').val(), tableid: $('#tableid').val(),searchedItem: searchedItem },
+            success: function (data) {
                 $(".MenuBodyContainer").html(data);
+            }
+        });
+    }
+    function showItemDetailsModal(itemid){
+        $.ajax({
+            url:"@Url.Action("getItemDetails","MenuOrderApp")",
+            type:"GET",
+            data:{itemid: itemid},
+            success:function(data){
+                $("#itemDetailsModalContainer").html(data);
+                $("#itemDetailsModal").modal("show");
             }
         });
     }

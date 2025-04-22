@@ -13,6 +13,7 @@ public class ModifierModel
     public int min_value;
     public int ModifiergroupId;
 
+
     public Modifiergroup mg
     {
         get;

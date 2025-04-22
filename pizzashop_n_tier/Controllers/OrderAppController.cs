@@ -38,7 +38,9 @@ namespace pizzashop_n_tier.Views.OrderApp
 
         public IActionResult getMenuPage(int? tokenid,int? tableid){
             Console.WriteLine("Ok");
-            return PartialView("_menu");
+            MenuOrderAppModel model = new MenuOrderAppModel();
+            model.isTableAssigned = false;
+            return PartialView("_menu",model);
         }
     }
 }

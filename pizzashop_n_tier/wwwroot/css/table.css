@@ -27,6 +27,7 @@ h1{
     background-size: var(--bs-accordion-btn-icon-width);
     transition: var(--bs-accordion-btn-icon-transition);
 }
+
 h6{
     color: #0066A7;
 }

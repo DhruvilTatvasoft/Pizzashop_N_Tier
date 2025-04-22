@@ -2,5 +2,7 @@ using DAL.Data;
 
 public interface IMenuOrderAppService
 {
-    List<Item> getItemsForcategory(int categoryid);
+    Item getItem(int itemid);
+    List<Item> getItemsForcategory(int categoryid,string searchedItem);
+    List<ModifierModel> getModifiersForItem(int itemid);
 }

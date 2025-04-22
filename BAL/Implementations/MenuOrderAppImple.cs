@@ -8,8 +8,19 @@ public class MenuOrderAppImple : IMenuOrderAppService
     {
         _menuOrderAppRepository = menuOrderAppRepository;
     }
-    public List<Item> getItemsForcategory(int categoryid)
+
+    public Item getItem(int itemid)
     {
-        return _menuOrderAppRepository.getItemsForcategory(categoryid);
+        return _menuOrderAppRepository.getItem(itemid);
+    }
+
+    public List<Item> getItemsForcategory(int categoryid,string searchedItem="")
+    {
+        return _menuOrderAppRepository.getItemsForcategory(categoryid,searchedItem);
+    }
+
+    public List<ModifierModel> getModifiersForItem(int itemid)
+    {
+       return _menuOrderAppRepository.getModifiersForItem(itemid);
     }
 }

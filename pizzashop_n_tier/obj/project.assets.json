@@ -1034,6 +1034,43 @@
           }
         }
       },
+      "NPOI/2.5.6": {
+        "type": "package",
+        "dependencies": {
+          "Portable.BouncyCastle": "1.8.9",
+          "SharpZipLib": "1.3.3",
+          "System.Configuration.ConfigurationManager": "4.5.0",
+          "System.Drawing.Common": "4.5.0"
+        },
+        "compile": {
+          "lib/netstandard2.1/NPOI.OOXML.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/netstandard2.1/NPOI.OpenXml4Net.dll": {
+            "related": ".pdb"
+          },
+          "lib/netstandard2.1/NPOI.OpenXmlFormats.dll": {
+            "related": ".pdb"
+          },
+          "lib/netstandard2.1/NPOI.dll": {
+            "related": ".OOXML.pdb;.OOXML.xml;.OpenXml4Net.pdb;.OpenXmlFormats.pdb;.pdb;.xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.1/NPOI.OOXML.dll": {
+            "related": ".pdb;.xml"
+          },
+          "lib/netstandard2.1/NPOI.OpenXml4Net.dll": {
+            "related": ".pdb"
+          },
+          "lib/netstandard2.1/NPOI.OpenXmlFormats.dll": {
+            "related": ".pdb"
+          },
+          "lib/netstandard2.1/NPOI.dll": {
+            "related": ".OOXML.pdb;.OOXML.xml;.OpenXml4Net.pdb;.OpenXmlFormats.pdb;.pdb;.xml"
+          }
+        }
+      },
       "NPOI.DotNetCore.ExcelService/1.0.5": {
         "type": "package",
         "dependencies": {
@@ -1044,6 +1081,19 @@
         },
         "runtime": {
           "lib/netcoreapp2.2/NPOI.DotNetCore.ExcelService.dll": {}
+        }
+      },
+      "Portable.BouncyCastle/1.8.9": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/netstandard2.0/BouncyCastle.Crypto.dll": {
+            "related": ".xml"
+          }
         }
       },
       "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -1258,16 +1308,16 @@
           }
         }
       },
-      "SharpZipLib/1.0.0": {
+      "SharpZipLib/1.3.3": {
         "type": "package",
         "compile": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {
-            "related": ".xml"
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {
+            "related": ".pdb;.xml"
           }
         },
         "runtime": {
-          "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll": {
-            "related": ".xml"
+          "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll": {
+            "related": ".pdb;.xml"
           }
         }
       },
@@ -1367,7 +1417,7 @@
           "System.Security.Permissions": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {
+          "ref/netstandard2.0/System.Configuration.ConfigurationManager.dll": {
             "related": ".xml"
           }
         },
@@ -2241,7 +2291,7 @@
           "System.Security.Principal.Windows": "5.0.0"
         },
         "compile": {
-          "ref/netstandard2.0/_._": {
+          "ref/netstandard2.0/System.Security.AccessControl.dll": {
             "related": ".xml"
           }
         },
@@ -2497,7 +2547,7 @@
           "System.Windows.Extensions": "5.0.0"
         },
         "compile": {
-          "ref/net5.0/_._": {
+          "ref/net5.0/System.Security.Permissions.dll": {
             "related": ".xml"
           }
         },
@@ -2717,7 +2767,7 @@
           "System.Drawing.Common": "5.0.0"
         },
         "compile": {
-          "ref/netcoreapp3.0/_._": {
+          "ref/netcoreapp3.0/System.Windows.Extensions.dll": {
             "related": ".xml"
           }
         },
@@ -4182,6 +4232,54 @@
         "postgresql.png"
       ]
     },
+    "NPOI/2.5.6": {
+      "sha512": "xQfr09LZN3fr4rjSuV3li+WJUo2LiSg00IUtnomzrKO51zhhavyIgvbZ1f8c8zwHXvRbFc1JB4PNZpxqyxizWw==",
+      "type": "package",
+      "path": "npoi/2.5.6",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE",
+        "Read Me.txt",
+        "lib/net45/NPOI.OOXML.XML",
+        "lib/net45/NPOI.OOXML.dll",
+        "lib/net45/NPOI.OOXML.pdb",
+        "lib/net45/NPOI.OpenXml4Net.XML",
+        "lib/net45/NPOI.OpenXml4Net.dll",
+        "lib/net45/NPOI.OpenXml4Net.pdb",
+        "lib/net45/NPOI.OpenXmlFormats.dll",
+        "lib/net45/NPOI.OpenXmlFormats.pdb",
+        "lib/net45/NPOI.XML",
+        "lib/net45/NPOI.dll",
+        "lib/net45/NPOI.pdb",
+        "lib/netstandard2.0/NPOI.OOXML.dll",
+        "lib/netstandard2.0/NPOI.OOXML.pdb",
+        "lib/netstandard2.0/NPOI.OOXML.xml",
+        "lib/netstandard2.0/NPOI.OpenXml4Net.dll",
+        "lib/netstandard2.0/NPOI.OpenXml4Net.pdb",
+        "lib/netstandard2.0/NPOI.OpenXmlFormats.dll",
+        "lib/netstandard2.0/NPOI.OpenXmlFormats.pdb",
+        "lib/netstandard2.0/NPOI.dll",
+        "lib/netstandard2.0/NPOI.pdb",
+        "lib/netstandard2.0/NPOI.xml",
+        "lib/netstandard2.1/NPOI.OOXML.dll",
+        "lib/netstandard2.1/NPOI.OOXML.pdb",
+        "lib/netstandard2.1/NPOI.OOXML.xml",
+        "lib/netstandard2.1/NPOI.OpenXml4Net.dll",
+        "lib/netstandard2.1/NPOI.OpenXml4Net.pdb",
+        "lib/netstandard2.1/NPOI.OpenXmlFormats.dll",
+        "lib/netstandard2.1/NPOI.OpenXmlFormats.pdb",
+        "lib/netstandard2.1/NPOI.dll",
+        "lib/netstandard2.1/NPOI.pdb",
+        "lib/netstandard2.1/NPOI.xml",
+        "logo/120_120.jpg",
+        "logo/240_240.png",
+        "logo/32_32.jpg",
+        "logo/60_60.jpg",
+        "npoi.2.5.6.nupkg.sha512",
+        "npoi.nuspec"
+      ]
+    },
     "NPOI.DotNetCore.ExcelService/1.0.5": {
       "sha512": "TpstWDn1nYNG05XMNTNv3E3SrfAvwPVEL3wxzdz+rIkaGqAFUnVz+TUJPLCxOG1bJCbwNlktlpyMxlw6U1wsyg==",
       "type": "package",
@@ -4192,6 +4290,21 @@
         "lib/netcoreapp2.2/NPOI.DotNetCore.ExcelService.dll",
         "npoi.dotnetcore.excelservice.1.0.5.nupkg.sha512",
         "npoi.dotnetcore.excelservice.nuspec"
+      ]
+    },
+    "Portable.BouncyCastle/1.8.9": {
+      "sha512": "wlJo8aFoeyl+W93iFXTK5ShzDYk5WBqoUPjTNEM0Xv9kn1H+4hmuCjF0/n8HLm9Nnp1aY6KNndWqQTNk+NGgRQ==",
+      "type": "package",
+      "path": "portable.bouncycastle/1.8.9",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/net40/BouncyCastle.Crypto.dll",
+        "lib/net40/BouncyCastle.Crypto.xml",
+        "lib/netstandard2.0/BouncyCastle.Crypto.dll",
+        "lib/netstandard2.0/BouncyCastle.Crypto.xml",
+        "portable.bouncycastle.1.8.9.nupkg.sha512",
+        "portable.bouncycastle.nuspec"
       ]
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
@@ -4464,18 +4577,24 @@
         "select.pdf.nuspec"
       ]
     },
-    "SharpZipLib/1.0.0": {
-      "sha512": "YuYztmY3jEb21F6e5LIPHJjApdtzdCPQ284UzsCKNfkgW71bukFHJES6RbKi+wm053XzFg0LX5/2vj/9gl8F/g==",
+    "SharpZipLib/1.3.3": {
+      "sha512": "N8+hwhsKZm25tDJfWpBSW7EGhH/R7EMuiX+KJ4C4u+fCWVc1lJ5zg1u3S1RPPVYgTqhx/C3hxrqUpi6RwK5+Tg==",
       "type": "package",
-      "path": "sharpziplib/1.0.0",
+      "path": "sharpziplib/1.3.3",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
+        "images/sharpziplib-nuget-256x256.png",
         "lib/net45/ICSharpCode.SharpZipLib.dll",
+        "lib/net45/ICSharpCode.SharpZipLib.pdb",
         "lib/net45/ICSharpCode.SharpZipLib.xml",
         "lib/netstandard2.0/ICSharpCode.SharpZipLib.dll",
+        "lib/netstandard2.0/ICSharpCode.SharpZipLib.pdb",
         "lib/netstandard2.0/ICSharpCode.SharpZipLib.xml",
-        "sharpziplib.1.0.0.nupkg.sha512",
+        "lib/netstandard2.1/ICSharpCode.SharpZipLib.dll",
+        "lib/netstandard2.1/ICSharpCode.SharpZipLib.pdb",
+        "lib/netstandard2.1/ICSharpCode.SharpZipLib.xml",
+        "sharpziplib.1.3.3.nupkg.sha512",
         "sharpziplib.nuspec"
       ]
     },
@@ -8661,6 +8780,7 @@
       "Microsoft.AspNetCore.Http >= 2.3.0",
       "Microsoft.AspNetCore.Http.Abstractions >= 2.3.0",
       "Microsoft.EntityFrameworkCore.Design >= 7.0.0",
+      "NPOI >= 2.5.6",
       "NPOI.DotNetCore.ExcelService >= 1.0.5",
       "Newtonsoft.Json >= 13.0.3",
       "Select.HtmlToPdf.NetCore >= 24.1.0",
@@ -8669,38 +8789,35 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\Admin\\.nuget\\packages\\": {}
+    "C:\\Users\\pct78\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "projectName": "pizzashop_n_tier",
-      "projectPath": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
-      "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\obj\\",
+      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net7.0"
       ],
       "sources": {
-        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-        "C:\\Program Files\\dotnet\\library-packs": {},
         "https://api.nuget.org/v3/index.json": {}
       },
       "frameworks": {
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\BAL\\BAL.csproj": {
-              "projectPath": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\BAL\\BAL.csproj"
+            "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
+              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
             },
-            "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\DAL\\DAL.csproj": {
-              "projectPath": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\DAL\\DAL.csproj"
+            "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
+              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"
             }
           }
         }
@@ -8709,11 +8826,6 @@
         "warnAsError": [
           "NU1605"
         ]
-      },
-      "restoreAuditProperties": {
-        "enableAudit": "true",
-        "auditLevel": "low",
-        "auditMode": "direct"
       }
     },
     "frameworks": {
@@ -8735,6 +8847,10 @@
           "Microsoft.EntityFrameworkCore.Design": {
             "target": "Package",
             "version": "[7.0.0, )"
+          },
+          "NPOI": {
+            "target": "Package",
+            "version": "[2.5.6, )"
           },
           "NPOI.DotNetCore.ExcelService": {
             "target": "Package",
@@ -8776,7 +8892,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.302\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\7.0.410\\RuntimeIdentifierGraph.json"
       }
     }
   }

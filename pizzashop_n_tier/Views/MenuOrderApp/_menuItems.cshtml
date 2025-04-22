@@ -1,5 +1,6 @@
 @model MenuOrderAppModel
 <style>
+    
     .itemCard {
         background-color: white;
         border-radius: 7px !important;
@@ -48,25 +49,77 @@
         width: 45%;
         height: auto;
         margin-left: 4%;
-        max-height: 70%;
+        max-height: 90%;
         @* overflow-y: auto; *@
-        margin-right: 3%;
+        margin-right: 1%;
         background-color: rgb(139, 205, 240);
         border-radius: 7px;
     }
-
     .parentDivForAccordians {
-        max-height: 80%;
+        max-height: 60%;
+        min-height: 30%;
         overflow-y: auto;
     }
+    .searchInput{
+        width: 40%;
+        position: relative;
+    }
+    #veg::marker{
+        color: green;
+    }
+    #non-veg::marker{
+        color: red;
+    }
+    #vegan::marker{
+        color: rgb(232, 168, 31);
+    }
+    #search-icon{
+        position: absolute;
+    top: 29.5%;
+    right: 4%;
+    transform: translateY(-50%);
+    }
+        .accordion-button::after {
+        flex-shrink: 0;
+        width: var(--bs-accordion-btn-icon-width);
+        height: var(--bs-accordion-btn-icon-width);
+        margin-left: 0;
+        order: -1;
+        content: "";
+        margin-right: 3%;
+        padding-left: 1%;
+        background-image: var(--bs-accordion-btn-icon);
+        background-repeat: no-repeat;
+        background-size: var(--bs-accordion-btn-icon-width);
+        transition: var(--bs-accordion-btn-icon-transition);
+    }
+    .accordion-button:not(.collapsed) {
+    color: black;
+    background-color: #ffffff;
+    box-shadow: inset 0 calc(-1* var(--bs-accordion-border-width)) 0 var(--bs-accordion-border-color);
+}
 </style>
 <div class="w-100 h-100 mt-3 d-flex">
+    <div class="row pe-3" style="@(Model.customer == null ? "width:100%;height:80%;" : "width : 55%;height:80%;")">
+        <div class="d-flex justify-content-between " style="height: 9%;">
+            <div class="form-group searchInput">
+            <input type="text" class="form-control" onkeyup="loadItemsForCategory(@Model.categoryId)" id="searchItemForCategory" aria-describedby="emailHelp" placeholder="Search">
+              <span id="search-icon">
+              <img src="~/images/icons8-search-30.png" style="width: 20px;" alt="">
+            </span>
+            </div>
+            <div class="d-flex flex-sm-column flex-lg-row">
+                <li id="veg" class="me-3">Veg</li>
+                <li id="non-veg" class="me-3">Non-veg</li>
+                <li id="vegan" class="me-3">Vegan </li>
+            </div>
+        </div>
+        <div class="row mt-3">
 
-    <div class="row pe-3" style="@(Model.customer != null ? "width:100%;" : "width : 55%;")">
         @foreach (var item in Model.items)
         {
-            <div class="@(Model.customer != null ? "col-3  pe-2 pb-3" : "col-4  pe-2 pb-3")">
-                <div class="itemCard d-flex" style="width: 100%;">
+            <div class="@(Model.customer == null ? "col-lg-3  pe-2 pb-3" : "col-lg-4  pe-2 pb-3") col-sm-6" >
+                <div class="itemCard d-flex" style="@(Model.customer == null ? "width:70%;" : "width : 100%;")cursor:pointer;" onclick="showItemDetailsModal(@item.Itemid)">
                     <div style="width:25%;">
                         @if (item.Itemimage != null)
                         {
@@ -78,7 +131,7 @@
                         }
                     </div>
                     <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2"
-                        style="@(Model.customer != null ? "max-width: 357px;" : "max-width: 157px;")">
+                        style="@(Model.customer == null ? "max-width: 357px;" : "max-width: 157px;")">
                         <div class="d-flex flex-column">
                             <label for="">@item.Itemname </label>
                             <label for="">@item.Itemrate</label>
@@ -107,196 +160,71 @@
             </div>
 
         }
+        </div>
     </div>
-    @* < class="order-details"> *@
+
+    @if(Model.customer != null){
+
     <div class="p-3 bg-white rounded d-flex flex-column  order-details">
+        <div class="d-flex justify-content-between">
         <div>
-            <h6><b>First Floor</b></h6>
-            <p>Table: T2, T6</p>
+            <h6><b>Ground Floor</b></h6>
+            <p>Table: T1</p>
+        </div>
+        <div>
+            <button class="btn btn-outline-primary btnoutlinecolour pt-1"><img src="~/images/qr-code-scan.svg" alt=""></button>
+            <button class="btn btn-outline-primary btnoutlinecolour pt-1"><img src="~/images/person-lines-fill (1).svg" alt=""></button>
+            <button class="btn btn-outline-primary btnoutlinecolour pt-1"><img src="~/images/chat-text.svg" alt=""></button>
+        </div>
         </div>
 
-        <!-- Accordion for Items -->
-        <div class="parentDivForAccordians">
-            <div class="accordion mb-3" id="orderItemsAccordion">
-                @* Margherita *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingMargherita">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseMargherita" aria-expanded="false"
-                            aria-controls="collapseMargherita">
-                            Margherita
-                        </button>
-                    </h2>
-                    <div id="collapseMargherita" class="accordion-collapse collapse" aria-labelledby="headingMargherita"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹20.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
+<div class="parentDivForAccordians m-1 mt-0">
+        <div class="accordion" id="accordionPanelsStayOpenExample">
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingOne">
+                <button class="accordion-button ps-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseOne" aria-expanded="true" aria-controls="panelsStayOpen-collapseOne">
+                    Accordion Item #1
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapseOne" class="accordion-collapse collapse show" aria-labelledby="panelsStayOpen-headingOne">
+                <div class="accordion-body">
+                    <strong>This is the first item's accordion body.</strong> 
                 </div>
-
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @* Aaloo Sandwich *@
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="headingAaloo">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                            data-bs-target="#collapseAaloo" aria-expanded="false" aria-controls="collapseAaloo">
-                            Aaloo Sandwich
-                        </button>
-                    </h2>
-                    <div id="collapseAaloo" class="accordion-collapse collapse" aria-labelledby="headingAaloo"
-                        data-bs-parent="#orderItemsAccordion">
-                        <div class="accordion-body">
-                            <div class="d-flex justify-content-between align-items-center mb-2">
-                                <small>Price per unit: ₹50.00</small>
-                                <div class="d-flex align-items-center">
-                                    <button class="btn btn-sm btn-outline-secondary">-</button>
-                                    <span class="mx-2">1</span>
-                                    <button class="btn btn-sm btn-outline-secondary">+</button>
-                                </div>
-                                <div><b>₹120</b></div>
-                                <button class="btn btn-sm btn-link text-danger">🗑</button>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
-        </div>
-
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingTwo">
+                <button class="accordion-button collapsed ps-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseTwo" aria-expanded="false" aria-controls="panelsStayOpen-collapseTwo">
+                    Accordion Item #2
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapseTwo" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingTwo">
+                <div class="accordion-body">
+                    <strong>This is the second item's accordion body.</strong>  
+                </div>
+                </div>
+            </div>
+            <div class="accordion-item">
+                <h2 class="accordion-header" id="panelsStayOpen-headingThree">
+                <button class="accordion-button collapsed ps-2" type="button" data-bs-toggle="collapse" data-bs-target="#panelsStayOpen-collapseThree" aria-expanded="false" aria-controls="panelsStayOpen-collapseThree">
+                    Accordion Item #3
+                </button>
+                </h2>
+                <div id="panelsStayOpen-collapseThree" class="accordion-collapse collapse" aria-labelledby="panelsStayOpen-headingThree">
+                <div class="accordion-body">
+                    <strong>This is the third item's accordion body.</strong>  
+                </div>
+                </div>
+            </div>
+            </div>
+ </div> 
         <!-- Subtotal and Tax -->
         <div>
             <div class="d-flex justify-content-between"><span>Subtotal</span><span>₹310.00</span></div>
             <div class="d-flex justify-content-between"><span>CGST</span><span>₹37.20</span></div>
             <div class="d-flex justify-content-between"><span>GST</span><span>₹6.20</span></div>
             <div class="d-flex justify-content-between"><span>Other</span><span>₹15.50</span></div>
+            <div class="d-flex justify-content-between"><span><input type="checkbox" class="me-1">SGST</span></div>
             <div class="d-flex justify-content-between fw-bold mt-2 border-top pt-2">
                 <span>Total</span><span>₹368.90</span>
             </div>
@@ -314,25 +242,25 @@
         <div>
             <!-- Action Buttons -->
             <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-primary">Save</button>
-                <button class="btn btn-secondary">Complete</button>
-                <button class="btn btn-outline-info">Generate Invoice</button>
+                <button class="btn btn-primary btncolour" style="width: 20%;">Save</button>
+                <button class="btn btn-outline-primary btnoutlinecolourLight" >Complete</button>
+                <button class="btn btn-outline-primary btnoutlinecolourLight">Generate Invoice</button>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-outline-danger">Cancel</button>
+                <button class="btn btn-outline-primary btnoutlinecolour">Cancel</button>
 
             </div>
         </div>
     </div>
+    }
 
 </div>
-
-<script>
-    var favorites = [];
+<div id="itemDetailsModalContainer"></div>
+   
+   <script>
+     var favorites = [];
     function AddToFavorite(x, id) {
-        @* alert("clicked") *@
-            @* $(this).prop("src","~/images/heart-fill.svg"); *@
-            console.log(x)
+        console.log(x)
         if ($(x).attr("src") == "/images/heart-fill.svg") {
             $(x).attr("src", "/images/heart.svg");
             if (!favorites.includes(id)) {
@@ -345,4 +273,7 @@
         }
 
     }
-</script>
+
+    
+   </script>
+

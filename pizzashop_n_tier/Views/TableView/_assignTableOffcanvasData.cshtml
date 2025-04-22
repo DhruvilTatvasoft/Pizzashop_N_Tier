@@ -115,19 +115,33 @@
     $("#customer_tableSection").val(sectionId)
     $("#tokenid").val(tokenid)
   }
-  $(document).on('submit',"#assigntableForm",function(e){
+  @* $(document).on('submit',"#assigntableForm",function(e){
           e.preventDefaults();
           var tokenid = parseInt($("#tokenid").val())
           var tableid = parseInt($(".selectedTable").data("tableid"));
-         
+         alert(tokenid + "" + tableid)
                $.ajax({
                     url: "@Url.Action("assignTable", "TableView")",
-                    method: 'POST',
-                    @* processData: false,
-                    contentType: false, *@
+                    method: "POST",
                     data: { tableid: tableid, tokenid: tokenid},
                     success: function (response) {
                          alert("ok");
+                         $(".loadTabBody").html(response);
+                    },
+                    error: function (xhr, status, error) {
+                         alert("Error: " + error);
+                    }
+               });
+     }); *@
+  $("#assigntableForm").on("submit",function(e){
+          e.preventDefault();
+          var tokenid = parseInt($("#tokenid").val())
+          var tableid = parseInt($(".selectedTable").data("tableid"));
+               $.ajax({
+                    url: "@Url.Action("assignTable", "TableView")",
+                    method: "POST",
+                    data: { tableid: tableid, tokenid: tokenid},
+                    success: function (response) {
                          $(".loadTabBody").html(response);
                     },
                     error: function (xhr, status, error) {
