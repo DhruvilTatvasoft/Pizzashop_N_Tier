@@ -25,15 +25,18 @@
             {
 
                 <div class="mt-2 orderDetailContainer me-3 d-flex flex-column p-0"
-                    onclick="openModalForStatusChange(@order.Key)">
+                    onclick="openModalForStatusChange(@order.Key.Orderid)">
                     <div class="p-1" style="background-color: #efefef;">
                         <div class="d-flex justify-content-between align-items-center">
-                            <label for="" class="text-color" style="font-weight: 600;"># @order.Key</label>
-                            <label for="" class="ordertimeduration d-flex align-items-center"><img
-                                    src="~/images/clock-fill copy 2.svg" alt="" class="me-1"><label for="" id="duration-waitingtime-@order.Key" ></label></label>
+                            <label for="" class="text-color" style="font-weight: 600;"># @order.Key.Orderid</label>
+                            <label for="" id="duration-waitingtime-@order.Key.Orderid" data-createdatWaitingToken="@((order.Key.Createdat as DateTime?)?.ToString("o") ?? "")">
+                                                                    </label>
+                            <script>
+                                updateTimers();
+                            </script>                                       
                         </div>
                         <div class="d-flex">
-                            <label for="" class="me-4">ground floor</label>
+                            <label for="" class="me-4">@Model.orderTableSectionDetail[order.Key.Orderid].sectionName</label>
                             <li>T2</li>
                         </div>
                     </div>
@@ -112,27 +115,34 @@
                 });
             }
 
-            function updateTimers() {
+            function pad(num) {
+    return num < 10 ? "0" + num : num;
+}
+
+function updateTimers() {
         const now = new Date();
         document.querySelectorAll("[id^='duration-waitingtime-']").forEach(timerEl => {
-        const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
-        const createdAt = new Date(createdAtStr);
+            const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
+            const createdAt = new Date(createdAtStr);
 
-        const diffMs = now - createdAt;
+            const diffMs = now - createdAt;
 
-        if (!isNaN(diffMs)) {
-            let totalSeconds = Math.floor(diffMs / 1000);
+            if (!isNaN(diffMs)) {
+                let totalSeconds = Math.floor(diffMs / 1000);
 
-            const hours = Math.floor(totalSeconds / 3600);
-            totalSeconds %= 3600;
+                const hours = Math.floor(totalSeconds / 3600);
+                totalSeconds %= 3600;
 
-            const minutes = Math.floor(totalSeconds / 60);
-            const seconds = totalSeconds % 60;
+                const minutes = Math.floor(totalSeconds / 60);
+                const seconds = totalSeconds % 60;
 
-            const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
-            timerEl.textContent = formatted;
+                const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
+                timerEl.textContent = formatted;
         }
     });
 }
+
+setInterval(updateTimers, 1000);
+
 
         </script>

@@ -6,8 +6,8 @@ public interface IOrderRepository{
     Order? GetOrderDetails(int orderid);
     int GetTotalOrderCount();
     Dictionary<int, orderItemModifierViewModel> GetOrderByOptionFilterForKot();
-    Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId);
-    Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady);
+    tableAndsection getOrderSectionAndTableDetails(int orderId);
+    Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady);
     SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid);
     void changeReadyQuantity(Dictionary<int, int> readyItemCount);
 

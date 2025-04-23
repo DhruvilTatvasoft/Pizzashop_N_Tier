@@ -261,7 +261,7 @@ public class OrderRepository : IOrderRepository
         return model;
     }
 
-    public Dictionary<int, tableAndsection> getOrderSectionAndTableDetails(int orderId)
+    public tableAndsection getOrderSectionAndTableDetails(int orderId)
     {
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
         string tableName = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)?.Tablename ?? string.Empty;
@@ -269,19 +269,20 @@ public class OrderRepository : IOrderRepository
         tableAndsection tableAndsection = new tableAndsection();
         tableAndsection.tableName = tableName;
         tableAndsection.sectionName = sectionName;
-        Dictionary<int, tableAndsection> orderTableAndSectionDetails = new Dictionary<int, tableAndsection>();
-        orderTableAndSectionDetails.Add(orderId, tableAndsection);
-        return orderTableAndSectionDetails;
+        tableAndsection tableAndSectionNames = new tableAndsection();
+        tableAndSectionNames.sectionName = sectionName;
+        tableAndSectionNames.tableName = tableName;
+        return tableAndSectionNames;
     }
 
-   public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
+   public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
     {
     var orderIds = _context.Orders
         .Where(order => order.IsDeleted == false)
         .Select(order => order.Orderid)
         .ToList();
 
-    var model = new Dictionary<int, List<Dictionary<Item, List<Modifier>>>>();
+    var model = new Dictionary<Order, List<Dictionary<Item, List<Modifier>>>>();
 
     foreach (var orderId in orderIds)
     {
@@ -351,7 +352,8 @@ public class OrderRepository : IOrderRepository
 
         if (hasItems)
         {
-            model.Add(orderId, itemModifierList);
+            Order order = _context.Orders.FirstOrDefault(o => o.Orderid == orderId)!;
+            model.Add(order, itemModifierList);
         }
     }
     return model;

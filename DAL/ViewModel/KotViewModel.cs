@@ -5,7 +5,7 @@ public class KotViewModel
     public List<Category> categories { get; set; } = new List<Category>();
     // public orderItemModifierViewModel orderedItemModifiers { get; set; } = new orderItemModifierViewModel();
 
-    public Dictionary<int, List<Dictionary<Item, List<Modifier>>>> orderDetails{get;set;}
+    public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> orderDetails{get;set;}
 
     public Dictionary<int,tableAndsection> orderTableSectionDetail{get;set;}
 

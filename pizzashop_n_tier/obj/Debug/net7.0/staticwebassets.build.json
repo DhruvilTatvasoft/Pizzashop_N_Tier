@@ -1,6 +1,10 @@
 {
   "Version": 1,
+<<<<<<< HEAD
   "Hash": "KNx3WLmvaBgSxnv1osdQwywtv4U/YNOzG4quPJ7hzew=",
+=======
+  "Hash": "3y8l/CbA83Wo9aJjSaVvHQipDe0nDmu8jHOaFOEOip4=",
+>>>>>>> b4a15a42810bf3071e3085a6dd8962b4450ca068
   "Source": "pizzashop_n_tier",
   "BasePath": "_content/pizzashop_n_tier",
   "Mode": "Default",
@@ -527,7 +531,30 @@
       "OriginalItemSpec": "wwwroot\\images\\bell-fill.svg"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\chat-text.svg",
+=======
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chat-left-text.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/chat-left-text.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\chat-left-text.svg"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\chevron-compact-left.svg",
+>>>>>>> b4a15a42810bf3071e3085a6dd8962b4450ca068
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
@@ -1700,7 +1727,30 @@
       "OriginalItemSpec": "wwwroot\\images\\person-circle.svg"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill (1) copy.svg",
+=======
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill (1).svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/person-lines-fill (1).svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\person-lines-fill (1).svg"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\person-lines-fill.svg",
+>>>>>>> b4a15a42810bf3071e3085a6dd8962b4450ca068
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
@@ -1853,7 +1903,30 @@
       "OriginalItemSpec": "wwwroot\\images\\profile_div_bg.jpg"
     },
     {
+<<<<<<< HEAD
       "Identity": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code-scan.svg",
+=======
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code-scan.svg",
+      "SourceId": "pizzashop_n_tier",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\",
+      "BasePath": "_content/pizzashop_n_tier",
+      "RelativePath": "images/qr-code-scan.svg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\qr-code-scan.svg"
+    },
+    {
+      "Identity": "C:\\Users\\Admin\\pizzashop1\\Pizzashop_N_Tier\\pizzashop_n_tier\\wwwroot\\images\\qr-code.png",
+>>>>>>> b4a15a42810bf3071e3085a6dd8962b4450ca068
       "SourceId": "pizzashop_n_tier",
       "SourceType": "Discovered",
       "ContentRoot": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\wwwroot\\",
