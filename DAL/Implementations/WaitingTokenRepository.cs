@@ -217,11 +217,14 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         CustomerModel model = new CustomerModel();
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
         Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
+        model.customerId = customer.Customerid;
         model.name = customer.Customername;
         model.phone = customer.Phonenumber;
         model.email = customer.Email;
+        if(tableid != 0){
         model.table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
         model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == token.Sectionid && section.Isdeleted == false)!;
+        }
         model.PersonCount = token!.Totalpersons;
         return model;
     }

@@ -1,0 +1,77 @@
+@model MenuOrderAppModel
+ <partial name="_ValidationScriptsPartial" />
+<form id="customer-details">
+    <div class="modal fade" id="customerDetailModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle" style="color: grey;">customer Details</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-floating mb-2">
+                        <label for="name" class="form-label" style="font-size: 61%;top: -12px;left: -1px;">Name<span
+                                class="text-danger">*</span></label>
+                        <input type="hidden" asp-for="@Model.customer.customerId" />
+                        <input type="text" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
+                            asp-for="@Model.customer.name">
+                        <span class="text-danger pt-2" asp-validation-for="@Model.customer.name"></span>
+                    </div>
+                    <div class="d-flex mb-2 justify-content-between">
+                        <div class="form-floating w-50 pe-2">
+                            <label for="mobile number" class="form-label"
+                                style="font-size: 61%;top: -12px;left: -1px;">Mobile
+                                Number<span class="text-danger">*</span></label>
+                            <input type="tel" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
+                                asp-for="@Model.customer.phone">
+                            <span class="text-danger pt-2" asp-validation-for="@Model.customer.phone"></span>
+                        </div>
+                        <div class="form-floating w-50">
+                            <label for="no of persons" class="form-label"
+                                style="font-size: 61%;top: -12px;left: -1px;">No of
+                                Person(s)<span class="text-danger">*</span></label>
+                            <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
+                                asp-for="@Model.customer.PersonCount">
+                            <span class="text-danger pt-2"  asp-validation-for="@Model.customer.PersonCount"></span>
+                        </div>
+                    </div>
+                    <div class="form-floating mb-2">
+                        <label for="email" class="form-label" style="font-size: 61%;top: -12px;left: -1px;">Email<span
+                                class="text-danger">*</span></label>
+                        <input type="email" class="form-control p-2" style="padding: 6%;padding-top: 8%;"  asp-for="@Model.customer.email">
+                        <span class="text-danger pt-2" asp-validation-for="@Model.customer.email" ></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btncolour">Save</button>
+                    <button type="button" class="btn btn-outline-primary btnoutlinecolour" id="closeCustomerDetailsModal"
+                        data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script>
+     $("#customer-details").on('submit',function(e){
+            alert("submitted")
+            e.preventDefault();
+            if(!$(this).valid()){
+                return;
+            }
+            var data = new FormData(this);
+            $.ajax({
+                url: "@Url.Action("editCustomerDetails","MenuOrderApp")",
+                type: "POST",
+                data: data,
+                contentType: false,
+                processData: false,
+                success: function(response) {
+                    toastr.success(response.success);
+                    $("#closeCustomerDetailsModal").click();
+                }
+            });
+        })
+</script>

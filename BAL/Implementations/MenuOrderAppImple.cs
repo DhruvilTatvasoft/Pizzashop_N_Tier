@@ -23,4 +23,9 @@ public class MenuOrderAppImple : IMenuOrderAppService
     {
        return _menuOrderAppRepository.getModifiersForItem(itemid);
     }
+
+    public void saveCustomerDetails(CustomerModel customer)
+    {
+         _menuOrderAppRepository.saveCustomerDetails(customer);
+    }
 }

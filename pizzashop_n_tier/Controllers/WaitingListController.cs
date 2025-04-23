@@ -102,4 +102,6 @@ public class WaitingListController : Controller
             return Json(new { error = "Some Error occured " });
         }
     }
+
+   
 }

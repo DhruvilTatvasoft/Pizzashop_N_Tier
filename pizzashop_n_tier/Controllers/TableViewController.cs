@@ -31,10 +31,8 @@ public class TableViewController : Controller
     [HttpPost]
     public IActionResult assignTable(int tableid,int tokenid)
     {
-        // _waitingTokenService.AssignTable(tableid, tokenid);
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid,tableid);
-        // return RedirectToAction("getMenuPage", "OrderApp", new { tableid = tableid, tokenid = tokenid });
         model.tableid = tableid;
         model.isTableAssigned = true;
         return PartialView("_menu",model);
