@@ -451,4 +451,9 @@ public class ModifierRepository : IModifierRepository
        model.modifiers = _context.Modifiers.Where(modifier=>modifier.Modifiergroupid == modifiergroupid && modifier.Isdeleted == false).ToList();
        return model;
     }
+
+    public Modifier getModifierFromId(int modifierid)
+    {
+        return _context.Modifiers.FirstOrDefault(modifier=>modifier.Modifierid == modifierid)!;
+    }
 }

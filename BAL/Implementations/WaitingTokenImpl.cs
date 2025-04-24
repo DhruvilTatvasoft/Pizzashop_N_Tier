@@ -34,12 +34,12 @@ namespace BAL.Implementations
             return _waitingTokenRepository.getAllWaingTokens(sectionid);
         }
 
-        public CustomerModel getCustomerForWaitingToken(int tokenid, int tableid)
+        public CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid)
         {
             return _waitingTokenRepository.getCustomerForWaitingToken(tokenid, tableid);
         }
 
-        public List<CustomerModel> getCustomerTokensForSection(int sectionid,int tableid)
+        public List<CustomerModel> getCustomerTokensForSection(int sectionid,List<int> tableid)
         {
             return _waitingTokenRepository.getCustomerTokensForSection(sectionid,tableid);
         }

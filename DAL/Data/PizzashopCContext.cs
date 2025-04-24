@@ -468,7 +468,6 @@ public partial class PizzashopCContext : DbContext
 
             entity.HasOne(d => d.Status).WithMany(p => p.Orders)
                 .HasForeignKey(d => d.Statusid)
-                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("order_orderstatusid_fkey");
 
             entity.HasOne(d => d.Table).WithMany(p => p.Orders)

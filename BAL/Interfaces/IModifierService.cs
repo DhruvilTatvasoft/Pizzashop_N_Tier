@@ -27,5 +27,6 @@ namespace BAL.Interfaces
         void updateModifier(ModifierModel modifier, int modifierGroupId);
         List<Modifier> getModifiersForMGroupForItem(int modifiergroupId);
         ItemModel getModifiersForModifierGroup(int modifiergroupid);
+        Modifier getModifierFromId(int modifierid);
     }
 }

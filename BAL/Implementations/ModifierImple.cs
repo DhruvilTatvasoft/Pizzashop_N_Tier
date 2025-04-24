@@ -109,4 +109,9 @@ public class ModifierImple : IModifierService
     {
         return _modifierRepository.getModifiersForModifierGroup(modifiergroupid);
     }
+
+    public Modifier getModifierFromId(int modifierid)
+    {
+        return _modifierRepository.getModifierFromId(modifierid);
+    }
 }

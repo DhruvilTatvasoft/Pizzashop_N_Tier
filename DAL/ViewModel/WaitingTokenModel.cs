@@ -42,7 +42,11 @@ public class CustomerModel{
 
     public Table table{get;set;}
 
+    public List<Table> tables{get;set;}
+
     public int tokenid{get;set;}
+
+    public List<int> tableids{get;set;}
 
     public List<Section> sections{get;set;}
 

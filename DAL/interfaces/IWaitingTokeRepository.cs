@@ -6,8 +6,8 @@ public interface IWaitingTokenRepository
     bool assignTable(int tableid, int tokenid);
     bool deleteWaitingToken(int tokenid);
     WaitingTokenModel getAllWaingTokens(int sectionid);
-    CustomerModel getCustomerForWaitingToken(int tokenid, int tableid);
-    List<CustomerModel> getCustomerTokensForSection(int sectionid,int tableid);
+    CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid);
+    List<CustomerModel> getCustomerTokensForSection(int sectionid,List<int> tableid);
     int getSectionIdOfToken(int tokenid);
     Dictionary<Section,int> getSectionsWithWaitingTokens();
     List<CustomerModel> getSuggestedCustomerList(string name);

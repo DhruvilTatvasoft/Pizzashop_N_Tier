@@ -42,7 +42,7 @@ h6{
 .Available-Table{
     min-width: 15%;
     min-height: 111px;
-    background-color: rgb(234, 229, 229);
+    background-color: rgb(208, 208, 208);
     border-radius: 4px;
     padding: 5%;
     transition: all 0.3s ease-in-out;
@@ -51,7 +51,7 @@ h6{
 .selectedTable{
     min-width: 15%;
     min-height: 111px;
-    background-color: rgb(193, 193, 193);
+    background-color: rgb(243, 243, 243);
     padding: 5%;
     border-radius: 4px;
     border:2px solid rgb(25, 195, 87);

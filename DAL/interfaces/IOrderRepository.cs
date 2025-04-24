@@ -12,4 +12,6 @@ public interface IOrderRepository{
     void changeReadyQuantity(Dictionary<int, int> readyItemCount);
 
     Dictionary<int,Dictionary<Item,List<Modifier>>> GetItemsAndModifiersForOrder2(int orderid);
+    int CreateOrder(int tokenid, int tableid);
+    void addItemInOrder(int itemid, List<int> modifiers);
 }

@@ -1,4 +1,7 @@
 @model TableViewModel
+@{
+  var tableIDS = Json.Serialize(Model.tables);
+}
 <link rel="stylesheet" href="~/css/_waitingList.css">
 @* <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
   <div class="offcanvas-header">
@@ -12,7 +15,7 @@
 
 <div>
 
-
+  <input type="hidden" asp-for="tables" id="tableids">
   <table class="table">
     <thead>
       <tr>
@@ -101,7 +104,7 @@
 
 <script>
   function fillCustomerDetails(tokenid){
-  
+
     var id = "customerDetails_"+tokenid
     var Name = $("#"+id+" .customer_name").val()
     var Phone = $("#"+id+" .customer_phone").val()
@@ -137,10 +140,19 @@
           e.preventDefault();
           var tokenid = parseInt($("#tokenid").val())
           var tableid = parseInt($(".selectedTable").data("tableid"));
+          var assignedtableIds = @Html.Raw(tableIDS);
+          var requestedData = {
+                tokenid: tokenid,
+                tableids: assignedtableIds
+            };
+            var data = JSON.stringify(requestedData)
+            console.log(requestedData)
                $.ajax({
                     url: "@Url.Action("assignTable", "TableView")",
                     method: "POST",
-                    data: { tableid: tableid, tokenid: tokenid},
+                    dataType: "html",
+                    contentType: "application/json",
+                    data: data,
                     success: function (response) {
                          $(".loadTabBody").html(response);
                     },

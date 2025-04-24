@@ -1,11 +1,20 @@
 @model MenuOrderAppModel
 <link rel="stylesheet" href="~/css/_menu.css">
+<link rel="stylesheet" href="~/css/_menu.css">
+@{
+    Microsoft.AspNetCore.Html.IHtmlContent Tableids = new Microsoft.AspNetCore.Html.HtmlString("[]");
+    if (Model.customer != null && Model.customer.tableids != null && Model.customer.tableids.Count > 0)
+    {
+        Tableids = Json.Serialize(Model.customer.tableids);
+    }
+}
+
 
 <div class="container-fluid w-100 h-100 p-0" style="overflow-y: auto; overflow-x: hidden;">
     <div class="d-flex w-100 h-100">
         <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
-        <input type="hidden" id="tokenid" asp-for="tokenid" />
         <input type="hidden" id="tableid" asp-for="tableid" />
+        <input type="hidden" id="tokenid" asp-for="tokenid" />
         <h1>@Model.isTableAssigned</h1>
         <div class="MenuSidebarContainer h-100"></div>
         <div class="MenuBodyContainer w-100 h-100"></div>
@@ -15,7 +24,7 @@
     $("document").ready(() => {
         loadSideBar();
         @* loadItemsForCategory(0); *@
-        loadMenuDataContainer();
+            loadMenuDataContainer();
         @* showItemDetailsModal(54); *@
     });
     function loadSideBar() {
@@ -27,7 +36,7 @@
             }
         });
     }
-    function loadMenuDataContainer(){
+    function loadMenuDataContainer() {
         $.ajax({
             url: '@Url.Action("getMenuDataContainer", "MenuOrderApp")',
             type: 'GET',
@@ -37,28 +46,60 @@
         });
     }
     function loadItemsForCategory(id) {
-        var searchedItem = $("#searchItemForCategory").val();
-        
-        if(searchedItem != ""){
-            id =   $("#selectedCategory").val()
-        }
-        $.ajax({
-            url: "@Url.Action("getItemsForCategory", "MenuOrderApp")",
-            method: "GET",
-            data: { categoryid: id,tokenid : $('#tokenid').val(), tableid: $('#tableid').val(),searchedItem: searchedItem },
-            success: function (data) {
-                $(".menuDataContainer").html(data);
-                $("#selectedCategory").val(id)
-            }
-        });
+    
+    var searchedItem = $("#searchItemForCategory").val();
+
+    @* id = $("#selectedCategory").val(); *@
+    @* id = 2; *@
+    var tokenId = $('#tokenid').val();
+    var tableIds = @Html.Raw(Tableids);
+    
+    console.log('CategoryId:', id);   
+    console.log('TokenId:', tokenId);  
+    console.log('TableIds:', tableIds); 
+    console.log('SearchedItem:', searchedItem); 
+    if(searchedItem) {
+       id = $("#selectedCategory").val();
+       alert(searchedItem)
     }
-    function showItemDetailsModal(itemid){
-     
+   
+    var requestedData = {
+        CategoryId: id,  
+        TokenId: tokenId, 
+        TableIds: tableIds, 
+        SearchedItem: searchedItem
+    };
+    
+    @* console.log('Request Payload:', requestedData);  *@
+    var data = JSON.stringify(requestedData);
+    
+    console.log('Request Payload:', data); 
+
+    
+    $.ajax({
+        url: "@Url.Action("getItemsForCategory","MenuOrderApp")",
+        method: "POST",
+        dataType: "html", 
+        contentType: "application/json", 
+        data: data,
+        success: function (data) {
+            $(".menuDataContainer").html(data);
+            $("#selectedCategory").val(id);
+        },
+        error: function (error) {
+            console.log('Error:', error); 
+        }
+    });
+}
+
+
+    function showItemDetailsModal(itemid) {
+
         $.ajax({
-            url:"@Url.Action("getItemDetails","MenuOrderApp")",
-            type:"GET",
-            data:{itemid: itemid,isTableAssigned : $('#IsTableAssigned').val()},
-            success:function(data){
+            url: "@Url.Action("getItemDetails", "MenuOrderApp")",
+            type: "GET",
+            data: { itemid: itemid, isTableAssigned: $('#IsTableAssigned').val() },
+            success: function (data) {
                 $("#itemDetailsModalContainer").html(data);
                 $("#itemDetailsModal").modal("show");
             }

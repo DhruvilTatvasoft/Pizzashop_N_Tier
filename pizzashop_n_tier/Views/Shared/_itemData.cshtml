@@ -5,26 +5,25 @@
     }
 </style>
 
-
 <div class="row" style="@(Model.customer == null ? "width:100%;height:80%;" : "width : 55%;height:10%;")">
     <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
     @foreach (var item in Model.items)
     {
-        <div class="@(Model.customer == null ? "col-lg-3  pe-2 pb-3" : "col-lg-4  pe-2 pb-3") col-sm-6">
+        <div class="@(Model.customer == null ? "col-lg-3  pe-2 pb-3" : "col-lg-6  pe-2 pb-3") col-sm-6">
             <div class="itemCard d-flex" style="@(Model.customer == null ? "width:100%;" : "width : 100%;")cursor:pointer;"
                 onclick="showItemDetailsModal(@item.Itemid)">
                 <div style="width:25%;">
                     @if (item.Itemimage != null)
                     {
                         <img src="@item.Itemimage" style="width: 50px;" class="itemimage" alt="">
+  
                     }
                     else
                     {
                         <img src="~/images/dining-menu.png" style="width: 50px;" class="" alt="">
                     }
                 </div>
-                <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2"
-                    style="@(Model.customer == null ? "max-width: 357px;" : "max-width: 157px;")">
+                <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2">
                     <div class="d-flex flex-column">
                         <label for="">@item.Itemname </label>
                         <label for="">@item.Itemrate</label>
@@ -55,16 +54,15 @@
     }
 </div>
 </div>
-
 @if (Model.customer != null)
 {
-    <div style="position: relative;width:45%;" class="p-2 pt-0">
+    <div style="position: relative;width:45%;margin-top: -4.8%;" class="p-2 pt-0">
 
         <div class="p-3 bg-white rounded d-flex flex-column  order-details" style="position: absolute;width:100%;">
             <div class="d-flex justify-content-between">
                 <div>
-                    <h6><b>Ground Floor</b></h6>
-                    <p>Table: T1</p>
+                    <h6><b>@Model.customer.section.Sectionname</b></h6>
+                    <p>Table: @string.Join(",", Model.customer.tables.Select(table => table.Tablename))</p>
                 </div>
                 <div>
                     <button class="btn btn-outline-primary btnoutlinecolour pt-1"><img src="~/images/qr-code-scan.svg"
@@ -84,10 +82,9 @@
                         <div class="w-25 me-5 text-center">Quantity</div>
                         <div class="w-25 me-4">Amount</div>
                     </div>
-                   <div class="loadAddedItemData"></div>
                 </div>
             </div>
-            <!-- Subtotal and Tax -->
+    
             <div>
                 <div class="d-flex justify-content-between"><span>Subtotal</span><span>₹310.00</span></div>
                 <div class="d-flex justify-content-between"><span>CGST</span><span>₹37.20</span></div>
@@ -98,8 +95,6 @@
                     <span>Total</span><span>₹368.90</span>
                 </div>
             </div>
-
-            <!-- Payment Method -->
             <div class="mt-3 d-flex justify-content-between ">
                 <label class="mb-1 fw-bold">Payment Method</label>
                 <div class="d-flex gap-3 mb-3">

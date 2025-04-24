@@ -184,35 +184,54 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid)!;
         table.Status = false;
         table.Statusname = "Assigned";
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
-        table.Customerid = token.Customerid;
-        token.Isdeleted = true;
-        _context.Waitingtokens.Update(token);
+        // Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
+        // table.Customerid = token.Customerid;
+        // _context.Waitingtokens.Update(token);
         _context.Tables.Update(table);
         _context.SaveChanges();
         return true;
     }
 
-    public List<CustomerModel> getCustomerTokensForSection(int sectionid,int tableid)
+    public List<CustomerModel> getCustomerTokensForSection(int sectionid,List<int> tableid)
     {
         List<CustomerModel> customerViewModels = new List<CustomerModel>();
-        Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false);
-        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Totalpersons <= table.Capacity && token.Isdeleted == false).ToList();
-        foreach (var token in tokens){
-            Customer customer = _context.Customers.FirstOrDefault(Customer=>Customer.Customerid == token.Customerid);
+        List<Table> tables = new List<Table>();
+        int tableCapacity = 0;
+        foreach(var id in tableid){
+            Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == id)!;
+            tables.Add(table);
+            tableCapacity += table.Capacity;
+        }
+        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Totalpersons >= tableCapacity && token.Sectionid == sectionid).ToList();
+        foreach (var token in tokens)
+        {
+            Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
             CustomerModel model = new CustomerModel();
             model.name = customer.Customername;
             model.phone = customer.Phonenumber;
             model.email = customer.Email;
-            model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid);
+            model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid && section.Isdeleted == false)!;
             model.PersonCount = token.Totalpersons;
             model.tokenid = token.Waitingtokenid;
             customerViewModels.Add(model);
         }
+        // Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false);
+        // List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Totalpersons <= table.Capacity && token.Isdeleted == false).ToList();
+        // foreach (var token in tokens){
+        //     Customer customer = _context.Customers.FirstOrDefault(Customer=>Customer.Customerid == token.Customerid);
+        //     CustomerModel model = new CustomerModel();
+        //     model.name = customer.Customername;
+        //     model.phone = customer.Phonenumber;
+        //     model.email = customer.Email;
+        //     model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid);
+        //     model.PersonCount = token.Totalpersons;
+        //     model.tokenid = token.Waitingtokenid;
+        //     customerViewModels.Add(model);
+        // }
         return customerViewModels;
     }
 
-    public CustomerModel getCustomerForWaitingToken(int tokenid, int tableid)
+    public CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid)
     {
         CustomerModel model = new CustomerModel();
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
@@ -221,11 +240,23 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.name = customer.Customername;
         model.phone = customer.Phonenumber;
         model.email = customer.Email;
-        if(tableid != 0){
-        model.table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false)!;
-        model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == token.Sectionid && section.Isdeleted == false)!;
+        List<Table> tables = new List<Table>();
+        List<int> tableids = new List<int>();
+        int sectionid = 0;
+        foreach(var id in tableid){
+            if(id != 0){
+            Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == id)!;
+            tableids.Add(table.Tableid);
+            sectionid = table.Sectionid;
+            tables.Add(table);
+            }
+        }
+        if(sectionid != 0){
+            model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid && section.Isdeleted == false)!;
         }
         model.PersonCount = token!.Totalpersons;
+        model.tableids = tableids;
+        model.tables = tables;
         return model;
     }
 }

@@ -5,10 +5,12 @@ public class WaitingListController : Controller
 {
     public ISectionService _sectionService;
     public IWaitingTokenService _waitingTokenService;
-    public WaitingListController(ISectionService sectionService, IWaitingTokenService waitingTokenService)
+    public IOrderService _orderService;
+    public WaitingListController(ISectionService sectionService, IWaitingTokenService waitingTokenService,IOrderService orderService)
     {
         _sectionService = sectionService;
         _waitingTokenService = waitingTokenService;
+        _orderService = orderService;
     }
     public IActionResult getSectionNavbar()
     {
@@ -95,6 +97,7 @@ public class WaitingListController : Controller
     {
         if (_waitingTokenService.AssignTable(tableid, tokenid))
         {
+            _orderService.CreateOrder(tokenid, tableid);
             return Json(new { success = "Table Assigned Successfully" });
         }
         else

@@ -28,5 +28,6 @@ namespace DAL.interfaces
         ItemModel getAllMOdifiersForModifierGroup(int? modifierGroupId,int pageSize,int pageNumber);
         List<Modifier> getModifiersForMGroupForItem(int modifiergroupId);
         ItemModel getModifiersForModifierGroup(int modifiergroupid);
+        Modifier getModifierFromId(int modifierid);
     }
 }

@@ -314,7 +314,7 @@ namespace BAL.Implementations
 
                     cellindex = cellindex + 2;
                     gridcell = gridrow.CreateCell(cellindex);
-                    gridcell.SetCellValue(order.Rattings);
+                    gridcell.SetCellValue(order.Rattings.HasValue ? (double)order.Rattings.Value : 0.0);
                     gridcell.CellStyle = Data;
                     sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
                     ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);
@@ -403,6 +403,16 @@ namespace BAL.Implementations
         public Dictionary<int, Dictionary<Item, List<Modifier>>> getModifiersForItems(int orderid)
         {
             return _orderRepository.GetItemsAndModifiersForOrder2(orderid);
+        }
+
+        public int CreateOrder(int tokenid, int tableid)
+        {
+           return _orderRepository.CreateOrder(tokenid, tableid);
+        }
+
+        public void addItemInOrder(int itemid, List<int> modifiers)
+        {
+            _orderRepository.addItemInOrder(itemid, modifiers);
         }
     }
 }

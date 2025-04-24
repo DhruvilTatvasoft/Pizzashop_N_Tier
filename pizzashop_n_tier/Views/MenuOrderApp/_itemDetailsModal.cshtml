@@ -14,7 +14,7 @@
                 {
                     @foreach (var item in Model.modifiersForItem)
                     {
-                        <div class="modifierGroup_@item.modifiergroup.Modifiergroupid" data-modifierGroupid="@item." data-min-value=" @item.min_value" data-max-value="@item.max_value">
+                        <div id="modifierGroup_@item.modifiergroup.Modifiergroupid" data-modifierGroupid="@item.modifiergroup.Modifiergroupid" data-min-value="@item.min_value" data-max-value="@item.max_value">
                         <label><span class="modifierGroupName">@item.modifiergroup.Modifiergroupname options :</span> (You can
                             choose Minimum - @item.min_value &
                             Maximum - @item.max_value options)</label>
@@ -55,9 +55,9 @@
                 @if (Model.isTableAssigned && Model.modifiersForItem.Count > 0)
                 {
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-outline-primary btnoutlinecolour"
-                            data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary btncolour">Add</button>
+                        <button type="button" class="btn btn-outline-primary btnoutlinecolour cancelButton"
+                            data-bs-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary btncolour" onclick="addItemsInOrder(@Model.item.Itemid)">Add</button>
                     </div>
                 }
             </div>
@@ -66,9 +66,58 @@
 </div>
 
 <script>
+    var modifiers = [];
+    function addItemsInOrder(itemid){
+         var modifiergroups = $('[id^="modifierGroup_"]');
+        var isValid = true;
+        modifiers = [];
+
+        modifiergroups.each(function (index, group) {
+            var minValue = parseInt($(group).data('min-value'));
+            var maxValue = parseInt($(group).data('max-value'));
+            var selected = $(group).find('.selectedModifierDetailContainer');
+
+            if (selected.length < minValue || selected.length > maxValue) {
+                isValid = false;
+                if(selected.length < minValue){
+                    toastr.error("Please select minimum " + minValue + " modifiers");
+                    }
+                    else{
+                    toastr.error("Please select Maximum " + maxValue + " modifiers");
+                    }
+                return false; 
+            }
+
+            selected.each(function () {
+                modifiers.push($(this).data('modifierid'));
+            });
+        });
+
+        if (!isValid) return;
+        $.ajax({
+            url:"@Url.Action("addItemInOrder","MenuOrderApp")",
+            type: "POST",
+            data:{itemid : itemid, modifiers: modifiers},
+            success:function(response){
+                $("#orderSummaryContainer").append(response);
+                $(".cancelButton").click()
+            }
+        });
+
+        console.log("Item ID: " + itemid);
+        console.log("Selected Modifiers: ", modifiers);
+    }
+
+
     function addItemInOrder(element, modifierid) {
-        var modifiergroups = document.querySelector("[class=^modifierGroup_]");
-        modifiergroups.foreach
+        var modifiergroups = $('[id^="modifierGroup_"]');
+
+        modifiergroups.each((group)=>{
+            var minValue = parseInt($(group).data('min-value'));
+            var maxValue =parseInt($(group).data('max-value'));
+            var selectedModifiers = $(group).find('.selectedModifierDetailContainer').length;
+        })
+
        if ($(element).hasClass("modifierDetailContainer")) {
             $(element).removeClass("modifierDetailContainer")
             $(element).addClass("selectedModifierDetailContainer")
@@ -79,4 +128,5 @@
         }
     }
 
+    
 </script>

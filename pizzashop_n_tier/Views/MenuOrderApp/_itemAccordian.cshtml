@@ -1,0 +1,53 @@
+@model MenuOrderAppModel
+
+
+
+@{
+    var collapseId = $"collapse-{Model.item.Itemid}";
+    var headingId = $"heading-{Model.item.Itemid}";
+}
+<div class="accordion-item item-row border-bottom" data-rate="@Model.item.Itemrate "
+    data-taxpercentage="@Model.item.Taxpercentage">
+    <div class="accordion-header" id="@headingId">
+        <div class="d-flex align-items-center justify-content-between px-3 py-2" style="cursor: pointer;"
+            data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
+            <div class="w-50">
+                <i class="bi bi-chevron-right toggle-icon" data-bs-toggle="collapse" data-bs-target="#@collapseId"
+                    aria-expanded="false" aria-controls="@collapseId" style="cursor: pointer;"></i>
+                <strong>@Model.item.Itemname</strong>
+            </div>
+            <div class="w-25 border border-secondary rounded me-5 d-flex justify-content-center">
+                <button type="button"
+                    class="btn nobutn bg-white btn-sm d-flex align-items-center justify-content-between px-2"
+                    style="min-width: 115px;">
+                    <span class="minus text-dark me-2" style="cursor: pointer; font-size: 1.5rem;">-</span>
+                    <div class="d-flex align-items-center justify-content-center">
+                        <input type="number" class="text-dark item-quantity border border-0 "
+                            id="item-quantity-@Model.item.Itemid" min="1" value="1" max="@Model.item.Itemquantity"  style="text-align: center;"/>
+                    </div>
+                    <span class="plus text-dark " style="cursor: pointer; font-size: 1.5rem;">+</span>
+                </button>
+            </div>
+            <div class="w-25 d-flex justify-content-between align-items-center">
+                <div class="text-end me-auto">
+                    <span class="item-amount">₹@Model.item.Itemrate</span>
+                </div>
+                <img src='~/images/trash-fill.svg' alt='delete-icon' class='img-fluid delOrder ms-3'
+                    style="width: 20px; cursor: pointer;" />
+            </div>
+        </div>
+    </div>
+    <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId"
+        data-bs-parent="#orderSummaryAccordion">
+        <div class="accordion-body pt-2">
+
+            <ul class="mb-0 ps-3 modifier-list"></ul>
+            @foreach (var mod in Model.modifiers)
+            {
+                <li>@mod.Modifiername ₹@mod.Modifierrate</li>
+            }
+            </ul>
+
+        </div>
+    </div>
+</div>

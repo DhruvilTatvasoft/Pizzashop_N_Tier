@@ -78,9 +78,9 @@ ul {
 
 }
 .selectedModifierDetailContainer{
-    border: 1px solid black;
+    border: 1.5px solid rgb(10 157 201);
     border-radius: 7px !important;
-    background-color: rgb(214, 214, 214);
+    background-color: rgb(164 234 255);
 }
 .selectedModifierDetailContainer label {
     white-space: nowrap;
@@ -102,10 +102,21 @@ ul {
     border-radius: 7px;
 }
 .parentDivForAccordians {
-    max-height: 60%;
-    min-height: 30%;
+    max-height: 250px;
+    /* min-height: 160px; */
     overflow-y: auto;
 }
+.accordion-button::after {
+    content: "";
+    /* background-image: url('data:image/svg+xml,...'); optional custom arrow */
+    transform: rotate(0deg);
+    transition: transform 0.3s;
+}
+
+.accordion-button:not(.collapsed)::after {
+    transform: rotate(90deg); /* or whatever suits your design */
+}
+
 .searchInput{
     width: 40%;
     position: relative;

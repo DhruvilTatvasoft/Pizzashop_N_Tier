@@ -6,11 +6,13 @@ public class TableViewController : Controller
     private readonly ITableService _tableService;
     private readonly ISectionService _sectionService;
     private readonly IWaitingTokenService _waitingTokenService;
-    public TableViewController(ITableService tableService, IWaitingTokenService waitingTokenService, ISectionService sectionService)
+    private readonly IOrderService _orderService;
+    public TableViewController(ITableService tableService, IWaitingTokenService waitingTokenService, ISectionService sectionService,IOrderService orderService)
     {
         _tableService = tableService;
         _waitingTokenService = waitingTokenService;
         _sectionService = sectionService;
+        _orderService = orderService;
     }
     public IActionResult getAllTablesAndSections()
     {
@@ -18,23 +20,28 @@ public class TableViewController : Controller
         model = _tableService.GetAllTablesAndSections();
         return PartialView("_tableDetails", model);
     }
-    public IActionResult getOffCanvas(int sectionid,int tableid)
+    [HttpPost]
+    public IActionResult getOffCanvas(int sectionid,List<int> tableids)
     {
         TableViewModel model = new TableViewModel();
-        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid,tableid);
+        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid,tableids);
         WaitingTokenModel model2 = new WaitingTokenModel();
         model2.sections = _sectionService.getAllSections();
         model.WaitingToken = model2;
+        model.tables = tableids;
         return PartialView("_assignTableOffcanvasData", model);
     }
 
     [HttpPost]
-    public IActionResult assignTable(int tableid,int tokenid)
+    public IActionResult assignTable([FromBody]assignTableDetails Model)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
-        model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid,tableid);
-        model.tableid = tableid;
+        model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid,Model.tableids);
+        
         model.isTableAssigned = true;
+
+        model.tokenid = Model.tokenid;
+        model.categoryId = 0;    
         return PartialView("_menu",model);
     }   
 }

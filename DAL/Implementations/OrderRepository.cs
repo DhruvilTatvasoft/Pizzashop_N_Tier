@@ -54,7 +54,7 @@ public class OrderRepository : IOrderRepository
 
             foreach (var order in query)
             {
-                order.Status = StatusDict.ContainsKey(order.Statusid) ? StatusDict[order.Statusid] : null!;
+                order.Status = StatusDict.ContainsKey(order.Statusid ?? 0) ? StatusDict[order.Statusid ?? 0] : null!;
                 order.Customer = CustomerDict.ContainsKey(order.Customerid) ? CustomerDict[order.Customerid] : new Customer();
             }
             model.orders = query.ToList();
@@ -94,7 +94,7 @@ public class OrderRepository : IOrderRepository
 
         foreach (var order in query)
         {
-            order.Status = statusDict.ContainsKey(order.Statusid) ? statusDict[order.Statusid] : null!;
+            order.Status = statusDict.ContainsKey(order.Statusid ?? 0) ? statusDict[order.Statusid ?? 0] : null!;
             order.Customer = customerDict.ContainsKey(order.Customerid) ? customerDict[order.Customerid] : new Customer();
         }
 
@@ -418,8 +418,27 @@ public class OrderRepository : IOrderRepository
             var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == pair.Key);
             orderedItem!.Readyitemquanitiy = pair.Value;
             _context.Orderitems.Update(orderedItem);
-            
         }
         _context.SaveChanges();
+    }
+
+    public int CreateOrder(int tokenid, int tableid)
+    {
+        Order newOrder = new Order();
+        newOrder.Tableid = tableid;
+        newOrder.Sectionid = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid).Sectionid;
+        newOrder.Customerid = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid).Customerid;
+        newOrder.Totalpersons = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid).Totalpersons;
+        newOrder.Createdat = DateTime.Now;
+        newOrder.Createdby = 1;
+        newOrder.Modifiedby = 1;
+        _context.Orders.Add(newOrder);
+        _context.SaveChanges();
+        return newOrder.Orderid;
+    }
+
+    public void addItemInOrder(int itemid, List<int> modifiers)
+    {
+        
     }
 }
