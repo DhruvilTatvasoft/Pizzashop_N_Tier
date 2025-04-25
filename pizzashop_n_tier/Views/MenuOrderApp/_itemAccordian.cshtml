@@ -1,53 +1,124 @@
 @model MenuOrderAppModel
-
-
-
 @{
-    var collapseId = $"collapse-{Model.item.Itemid}";
-    var headingId = $"heading-{Model.item.Itemid}";
+    decimal totalModifierPrice = 0;
 }
-<div class="accordion-item item-row border-bottom" data-rate="@Model.item.Itemrate "
-    data-taxpercentage="@Model.item.Taxpercentage">
-    <div class="accordion-header" id="@headingId">
-        <div class="d-flex align-items-center justify-content-between px-3 py-2" style="cursor: pointer;"
-            data-bs-toggle="collapse" data-bs-target="#@collapseId" aria-expanded="false" aria-controls="@collapseId">
-            <div class="w-50">
-                <i class="bi bi-chevron-right toggle-icon" data-bs-toggle="collapse" data-bs-target="#@collapseId"
-                    aria-expanded="false" aria-controls="@collapseId" style="cursor: pointer;"></i>
-                <strong>@Model.item.Itemname</strong>
-            </div>
-            <div class="w-25 border border-secondary rounded me-5 d-flex justify-content-center">
-                <button type="button"
-                    class="btn nobutn bg-white btn-sm d-flex align-items-center justify-content-between px-2"
-                    style="min-width: 115px;">
-                    <span class="minus text-dark me-2" style="cursor: pointer; font-size: 1.5rem;">-</span>
-                    <div class="d-flex align-items-center justify-content-center">
-                        <input type="number" class="text-dark item-quantity border border-0 "
-                            id="item-quantity-@Model.item.Itemid" min="1" value="1" max="@Model.item.Itemquantity"  style="text-align: center;"/>
+<div class="accordion-item mb-1" id="@Model.uniqueId" data-itemrate="@Model.item.Itemrate">
+    <span class="accordion-header">
+        <div class="container-fluid d-flex p-0 pe-sm-2 pt-2 align-items-center justify-content-between pb-2">
+            <div class="row" style="width: 100%;">
+                <div class="col-8">
+                    <div class="container-fluid p-0 d-flex align-items-center justify-content-between">
+                        <div>
+                            <button class="accordion-image-buttonForMenuKOT" type="button" data-bs-toggle="collapse"
+                                style="width: 100%;border:none;background-color: white;" data-bs-target="#collapse-@Model.item.Itemid" aria-expanded="false"
+                                aria-controls="collapseOne">
+                                <div class="container-fluid ps-2 pe-0 justify-content-between d-flex">
+                                    <div class="d-flex align-items-center ps-1">
+                                        <img src="/images/chevron-right.svg" class="accordion-toggle-imgForMenuKOT pe-1"
+                                            alt="accordion icon">
+                                        <span
+                                            class="item_@Model.item.Itemid fontWeight600" data-itemrate="@Model.item.Itemrate">@Model.item.Itemname</span>
+                                    </div>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="numberForOrderItemDetailsKOT d-flex">
+                            <button type="button" class="btn pt-1 minus"
+                                onclick="minusTheNumber(this,@Model.item.Itemrate)">
+                                <span class="fontWeight500">-</span>
+                            </button>
+                            <input type="text" name="ItemCounts[]" id="count_@Model.item.Itemid" value="1"
+                                class="fontWeight50 0 textInputForCounterInOrderItemDetailsKOT" readonly/>
+                            <input type="hidden" class="modifierrateForItem">
+                            <button type="button" class="btn pt-1 plus"
+                                onclick="plusTheNumber(this,@Model.item.Itemquantity,@Model.item.Itemrate)">
+                                <span class="fontWeight500">+</span>
+                            </button>
+                        </div>
                     </div>
-                    <span class="plus text-dark " style="cursor: pointer; font-size: 1.5rem;">+</span>
-                </button>
-            </div>
-            <div class="w-25 d-flex justify-content-between align-items-center">
-                <div class="text-end me-auto">
-                    <span class="item-amount">₹@Model.item.Itemrate</span>
                 </div>
-                <img src='~/images/trash-fill.svg' alt='delete-icon' class='img-fluid delOrder ms-3'
-                    style="width: 20px; cursor: pointer;" />
+                <div class="col-4 d-flex align-items-center pe-0 pe-sm-2">
+                    <div class="d-flex align-items-center justify-content-between w-100">
+                        <span class="fontWeight500 ps-0 ps-sm-4 text-center" style="width: 80%;">₹@Model.item.Itemrate</span>
+                        <div>
+                            <img src="/images/trash-fill.svg" class="deleteIconOrderItemDetailsKOT">
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
-    <div id="@collapseId" class="accordion-collapse collapse" aria-labelledby="@headingId"
-        data-bs-parent="#orderSummaryAccordion">
-        <div class="accordion-body pt-2">
+    </span>
+   <div id="collapse-@Model.item.Itemid" class="accordion-collapse collapse" data-bs-parent="#orderSummaryContainer">
 
-            <ul class="mb-0 ps-3 modifier-list"></ul>
-            @foreach (var mod in Model.modifiers)
-            {
-                <li>@mod.Modifiername ₹@mod.Modifierrate</li>
-            }
-            </ul>
-
+        <div class="accordion-body px-0">
+            <div id="tableAccordingToSectionLoaderForKOT-">
+                <div class="container-fluid p-0">
+                    <div class="row">
+                        <div class="col-9 pe-0">
+                            @foreach (var modifier in Model.modifiers)
+                            {
+                                <div class="d-flex align-items-center justify-content-between ps-2"
+                                    style="max-width: 250px;">
+                                    <li class="m-0 ps-3">
+                                        <span>@modifier.Modifiername</span>
+                                    </li>
+                                    <span  >₹@modifier.Modifierrate</span>
+                                </div>
+                                totalModifierPrice += modifier.Modifierrate; 
+                            }
+                        </div>
+                        <div class="col-3 ps-0 d-flex">
+                            <div class="container-fluid d-flex align-items-center" style="padding-left: 12px;">
+                                <!-- Passing the total modifier price to the hidden input field -->
+                                <span class="fontWeight500 modifierrate"  data-modifierrate="@totalModifierPrice">₹@totalModifierPrice</span>
+                                <input type="hidden" id="@(Model.uniqueId)_modifier_rate"
+                                    value="@totalModifierPrice" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<script>
+
+function minusTheNumber(button,price) {
+
+    var inputField = $(button).closest('.numberForOrderItemDetailsKOT').find('input');
+    var currentValue = parseInt(inputField.val());
+
+    if (currentValue > 1) {
+    inputField.val(currentValue - 1)
+    var subtotalValue = parseFloat($("#subtotal").text().replace("₹", ""));
+    subtotalValue -= price ;
+    console.log($("#@(Model.uniqueId)_modifier_rate").val())
+    subtotalValue -= parseInt($("#@(Model.uniqueId)_modifier_rate").val())
+    totalAmount -= price;
+    totalAmount -= parseInt($("#@(Model.uniqueId)_modifier_rate").val())
+    $("#subtotal").text("₹" + subtotalValue.toFixed(2));
+    }
+    @* updateTotalPrice(inputField); *@
+}
+
+function plusTheNumber(button, maxQuantity,price) {
+
+    var inputField = $(button).siblings('input');
+    var currentValue = parseInt(inputField.val());
+     console.log($("#@(Model.uniqueId)_modifier_rate").val())
+    if (currentValue < maxQuantity) {
+    inputField.val(currentValue + 1);
+    var subtotalValue = parseFloat($("#subtotal").text().replace("₹", ""));
+    subtotalValue += price;
+    subtotalValue += parseInt($("#@(Model.uniqueId)_modifier_rate").val())
+    totalAmount += price;
+    totalAmount += parseInt($("#@(Model.uniqueId)_modifier_rate").val())
+    $("#subtotal").text("₹" + subtotalValue.toFixed(2));
+    } else {
+        alert('Maximum quantity reached for this item.'); 
+    }
+}
+
+
+</script>

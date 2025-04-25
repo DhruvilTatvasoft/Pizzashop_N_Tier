@@ -30,7 +30,7 @@
                                             style="width: 23%;">
                                             <div class="d-flex flex-column">
                                                 <label for="">@modifier.Modifiername @modifier.Modifierid</label>
-                                                <label for="">₹ @modifier.Modifierrate </label>
+                                                <label for="" >₹ @modifier.Modifierrate </label>
                                             </div>
                                             <div class="d-flex justify-content-between flex-column">
                                                 <div class="typeIndicatorForModifier p-2" style="background-color: rgb(244 182 32);">
@@ -52,7 +52,7 @@
                                 src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Modifiers Found</label>
                     </div>
                 }
-                @if (Model.isTableAssigned && Model.modifiersForItem.Count > 0)
+                @if (Model.isTableAssigned)
                 {
                     <div class="modal-footer">
                         <button type="button" class="btn btn-outline-primary btnoutlinecolour cancelButton"
@@ -67,11 +67,12 @@
 
 <script>
     var modifiers = [];
+   
     function addItemsInOrder(itemid){
          var modifiergroups = $('[id^="modifierGroup_"]');
-        var isValid = true;
+         var isValid = true;
         modifiers = [];
-
+        var uniqueId = "item_" + itemid;
         modifiergroups.each(function (index, group) {
             var minValue = parseInt($(group).data('min-value'));
             var maxValue = parseInt($(group).data('max-value'));
@@ -90,16 +91,50 @@
 
             selected.each(function () {
                 modifiers.push($(this).data('modifierid'));
+                
             });
-        });
+            modifiers.sort(function(a, b) {
+                return a - b;
+            });
 
+        });
+        for (var i = 0; i < modifiers.length; i++) {
+            uniqueId += "_" + modifiers[i];
+        }
+        if(document.querySelector("#"+uniqueId+" .textInputForCounterInOrderItemDetailsKOT")){
+            alert("found")
+            var quantity = $("#"+uniqueId+" .textInputForCounterInOrderItemDetailsKOT").val();
+            var price = $("#"+uniqueId).data("itemrate");
+            var modifierrate = $("#"+uniqueId+"_modifier_rate").val();
+            @* alert($("#"+uniqueId+" .textInputForCounterInOrderItemDetailsKOT").val()) *@
+            $("#"+uniqueId+" .textInputForCounterInOrderItemDetailsKOT").val(parseInt(quantity) + 1);
+            var subtotalValue = parseFloat($("#subtotal").text().replace("₹", ""));
+            console.log(price+" "+modifierrate);
+            subtotalValue += parseFloat(price);
+            subtotalValue += parseFloat(modifierrate);
+            $("#subtotal").text("₹" + subtotalValue.toFixed(2));
+            totalAmount += parseFloat(price);
+            totalAmount += parseFloat(modifierrate);
+            isValid = false;
+        }
         if (!isValid) return;
         $.ajax({
             url:"@Url.Action("addItemInOrder","MenuOrderApp")",
             type: "POST",
-            data:{itemid : itemid, modifiers: modifiers},
+            data:{itemid : itemid, modifiers: modifiers,uniqueId : uniqueId},
             success:function(response){
+
                 $("#orderSummaryContainer").append(response);
+                console.log(totalAmount)
+                @* totalAmount += parseInt($(uniqueId).data("itemrate") + parseFloat($("#"+uniqueId + " .modifierrate").val())*$("#"+uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val()); *@
+                var itemprice = parseFloat($("#"+uniqueId).data("itemrate"));
+                var quantity = parseInt($("#"+uniqueId+" .textInputForCounterInOrderItemDetailsKOT").val());
+                var modifiersrate = parseFloat($("#"+uniqueId+" .modifierrate").data("modifierrate"));
+                console.log("itemprice : "+itemprice);
+                console.log("modifiersrate : "+modifiersrate);
+                console.log("modifiersrate : "+quantity);
+                totalAmount += (itemprice + modifiersrate) * quantity;
+                $("#subtotal").text("₹"+totalAmount);
                 $(".cancelButton").click()
             }
         });

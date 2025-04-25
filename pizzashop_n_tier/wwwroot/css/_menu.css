@@ -96,19 +96,38 @@ ul {
     height: auto;
     margin: 2%;
     margin-top: 0px;
-    max-height: 90%;
+    /* max-height: 90%; */
     margin-right: 1%;
     background-color: rgb(139, 205, 240);
     border-radius: 7px;
 }
 .parentDivForAccordians {
     max-height: 250px;
-    /* min-height: 160px; */
+    overflow-x: hidden ;
     overflow-y: auto;
 }
+.textInputForCounterInOrderItemDetailsKOT {
+    height: 41px;
+    max-width: 40px;
+    text-align: center;
+    font-size: 17px;
+    display: inline-block;
+    vertical-align: middle;
+    border: 0px solid #fff;
+  }
+  .accordion-item{
+    border-top: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+  }
+
+  .numberForOrderItemDetailsKOT{
+    border: var(--bs-accordion-border-width) solid var(--bs-accordion-border-color);
+    border-radius: 7px;
+  }
+   
 .accordion-button::after {
     content: "";
-    /* background-image: url('data:image/svg+xml,...'); optional custom arrow */
     transform: rotate(0deg);
     transition: transform 0.3s;
 }

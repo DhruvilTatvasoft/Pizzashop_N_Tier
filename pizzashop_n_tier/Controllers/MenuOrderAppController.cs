@@ -71,6 +71,18 @@ public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable 
 
     return PartialView("_itemData", responseModel);
 }
+[HttpPost]
+public IActionResult getOrderDetails([FromBody]assignTableDetails model){
+    MenuOrderAppModel responseModel = new MenuOrderAppModel();
+    responseModel.customer = _waitingTokenService.getCustomerForWaitingToken(model.tokenid, model.tableids);
+    responseModel.tables = new List<DAL.Data.Table>();
+    foreach(int tableid in model.tableids){
+        DAL.Data.Table table = _tableService.gettablebyid(tableid);
+        responseModel.tables.Add(table);
+    }
+    responseModel.tokenid = model.tokenid;
+    return PartialView("_orderDetailModal",responseModel);
+}
 
     public IActionResult getMenuDataContainer(){
         MenuOrderAppModel model = new MenuOrderAppModel();
@@ -105,7 +117,7 @@ public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable 
 
 
 [HttpPost]
-    public IActionResult addItemInOrder(int itemid,List<int> modifiers){
+    public IActionResult addItemInOrder(int itemid,List<int> modifiers,string uniqueId){
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.item = _itemService.getItemFromId(itemid);
         List<Modifier> modifierList = new List<Modifier>();
@@ -114,6 +126,7 @@ public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable 
             modifierList.Add(modifier);
         }
         model.modifiers = modifierList;
+        model.uniqueId = uniqueId;
         return PartialView("_itemAccordian",model);
     }
 

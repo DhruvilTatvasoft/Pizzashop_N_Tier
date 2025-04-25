@@ -17,6 +17,8 @@ public class MenuOrderAppModel
     public List<Modifier> modifiers{get;set;}
     public Item item{get;set;}
 
+    public string uniqueId {get;set;}
+
     public List<Table> tables{get;set;}
 
     public int categoryId{set;get;} = 0;
