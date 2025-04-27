@@ -314,7 +314,7 @@ namespace BAL.Implementations
 
                     cellindex = cellindex + 2;
                     gridcell = gridrow.CreateCell(cellindex);
-                    gridcell.SetCellValue(order.Rattings.HasValue ? (double)order.Rattings.Value : 0.0);
+                    gridcell.SetCellValue(order.Rattings != 0 ? (double)order.Rattings : 0.0);
                     gridcell.CellStyle = Data;
                     sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
                     ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);

@@ -138,6 +138,10 @@
   </div>
 </div>
 <script>
+    $("document").ready(function(){
+      $('.sidebar ul li').removeClass('active-class');
+             $('.roleandpermission').addClass('active-class')
+  })
 
 $('document').ready(()=>{
    if($('.subcheck:checked').length == $('.subcheck').length){$("#mastercheck").prop('checked', true)}

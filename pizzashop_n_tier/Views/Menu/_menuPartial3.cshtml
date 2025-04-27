@@ -2,6 +2,7 @@
     Layout = "";
 }
 @model ItemModel
+<div style="position: relative; height: 235px; overflow-y: auto;">
 <table class="table">
     <thead>
         <tr>
@@ -83,7 +84,8 @@
                 }
     </tbody>
 </table>
-<div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2">
+</div>
+<div class="bg-white w-100 d-flex justify-content-end align-items-center pe-2" style="position: sticky;bottom: 0;z-index: 10;">
     <div class="d-flex justify-content-center align-items-center">
         <label for="" class="me-2">items per page:</label>
         <div class="dropdown mt-2 me-2">

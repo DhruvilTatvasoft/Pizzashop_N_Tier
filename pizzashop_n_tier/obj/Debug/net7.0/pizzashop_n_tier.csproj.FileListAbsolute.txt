@@ -192,7 +192,6 @@ C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\ref
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
-C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.MvcApplicationPartsAssemblyInfo.cs
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Select.Tools.dep
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\Select.Html.dep
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\bin\Debug\net7.0\appsettings.Development.json
@@ -299,3 +298,4 @@ C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\BouncyCastle.Crypto.dll

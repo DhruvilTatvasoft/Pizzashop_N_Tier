@@ -13,17 +13,17 @@ public partial class Order
 
     public string? Ordercomment { get; set; }
 
-    public int? Statusid { get; set; }
+    public int Statusid { get; set; }
 
-    public string? Paymentmethod { get; set; }
+    public string Paymentmethod { get; set; } = null!;
 
-    public decimal? Subtotalamount { get; set; }
+    public decimal Subtotalamount { get; set; }
 
     public int? Taxamount { get; set; }
 
     public int? Discount { get; set; }
 
-    public decimal? Totalamount { get; set; }
+    public decimal Totalamount { get; set; }
 
     public DateTime? Createdat { get; set; }
 
@@ -33,7 +33,7 @@ public partial class Order
 
     public int Modifiedby { get; set; }
 
-    public int? Rattings { get; set; }
+    public int Rattings { get; set; }
 
     public bool IsDeleted { get; set; }
 
@@ -59,7 +59,7 @@ public partial class Order
 
     public virtual Section Section { get; set; } = null!;
 
-    public virtual Orderstatus? Status { get; set; }
+    public virtual Orderstatus Status { get; set; } = null!;
 
     public virtual Table Table { get; set; } = null!;
 }
