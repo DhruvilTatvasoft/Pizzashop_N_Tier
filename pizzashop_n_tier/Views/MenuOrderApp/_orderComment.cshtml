@@ -1,25 +1,37 @@
-<!-- Button trigger modal -->
-<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModalCenter">
-  Launch demo modal
-</button>
+@model MenuOrderAppModel
 
-<!-- Modal -->
-<div class="modal fade" id="orderComment" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle">Modal title</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-        <button type="button" class="btn btn-primary">Save changes</button>
-      </div>
+<div class="modal fade" id="orderCommentModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">Orderwise comment</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="orderCommentForm">
+                <div class="modal-body">
+                    <textarea class="form-check" id="orderComment" />
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btncolor">Save</button>
+                    <button type="button" class="btn btn-outline-primary btnoutlinecolor closeOrderCommentModal">cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
-  </div>
 </div>
+<script>
+$("#orderCommentForm").on('submit',function(){
+    if(!$(this).valid()){
+        return
+    }
+    else{
+        orderComment = $("#orderComment").val()
+        $(".closeOrderCommentModal").click();
+
+    }
+})
+</script>
+

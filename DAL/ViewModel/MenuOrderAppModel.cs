@@ -1,3 +1,4 @@
+using System.Net;
 using DAL.Data;
 
 public class MenuOrderAppModel
@@ -8,6 +9,11 @@ public class MenuOrderAppModel
     public CustomerModel customer{get;set;}
     public int orderid{get;set;}
 
+    public Order order{
+        get;set;
+    }
+
+    public List<Taxesandfee> taxesandfees{get;set;}
     public bool isTableAssigned{get;set;} 
 
     public int tokenid{get;set;}

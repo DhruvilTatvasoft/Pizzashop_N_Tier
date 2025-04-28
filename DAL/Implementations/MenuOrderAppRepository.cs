@@ -72,17 +72,30 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         return model;
     }
 
+    public Order getOrderfromOrderid(int orderId)
+    {
+        return _context.Orders.FirstOrDefault(order=>order.Orderid == orderId)!;
+    }
+
     public void saveCustomerDetails(CustomerModel customer)
     {
-        Customer ExistingCustomer = _context.Customers.FirstOrDefault(Customer => Customer.Customerid == customer.customerId);
+        Customer ExistingCustomer = _context.Customers.FirstOrDefault(Customer => Customer.Customerid == customer.customerId)!;
         ExistingCustomer.Customername = customer.name;
         ExistingCustomer.Email = customer.email;
         ExistingCustomer.Phonenumber = customer.phone;
         ExistingCustomer.Modifiedat = DateTime.Now;
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false);
+        Waitingtoken token = _context!.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false)!;
         token.Totalpersons = customer.PersonCount;
         _context.Customers.Update(ExistingCustomer);
         _context.Waitingtokens.Update(token);
+        _context.SaveChanges();
+    }
+
+    public void saveOrderWiseComment(MenuOrderAppModel model)
+    {
+        Order order = _context.Orders.FirstOrDefault(Order=>Order.Orderid == model.orderid);
+        order.Ordercomment = model.order.Ordercomment;
+        _context.Orders.Update(order);
         _context.SaveChanges();
     }
 }

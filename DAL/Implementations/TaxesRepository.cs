@@ -72,7 +72,6 @@ public class TaxesRepository : ITaxesRepository
     {
         return _context.Taxesandfees.Where(taxes => taxes.Isdeleted == false).ToList();
     }
-
     public Taxesandfee getTaxById(int taxid)
     {
         return _context.Taxesandfees.FirstOrDefault(tax => tax.Taxid == taxid)!;

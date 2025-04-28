@@ -37,11 +37,9 @@ public class TableViewController : Controller
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid,Model.tableids);
-        
         model.isTableAssigned = true;
-
         model.tokenid = Model.tokenid;
-        model.categoryId = 0;    
+        model.categoryId = 0;
         return PartialView("_menu",model);
     }   
 }

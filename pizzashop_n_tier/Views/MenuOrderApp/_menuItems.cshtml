@@ -7,7 +7,7 @@
                 <input type="text" class="form-control" onkeyup="loadItemsForCategory(@Model.categoryId)"
                     id="searchItemForCategory" aria-describedby="emailHelp" placeholder="Search">
                 <span id="search-icon">
-                    <input type="hidden" id="selectedCategory" asp-for="categoryId"/>
+                    <input type="hidden" id="selectedCategory" asp-for="categoryId" />
                     <img src="~/images/icons8-search-30.png" style="width: 20px;" alt="">
                 </span>
             </div>
@@ -18,36 +18,80 @@
             </div>
         </div>
         <div class="d-flex" style="height: 92%;">
-        <div class="menuDataContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 92%;"></div>
-        <div class="orderDetailContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 100%;"></div>
+            <div class="menuDataContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 92%;"></div>
+            <div class="orderDetailContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 100%;"></div>
         </div>
 
-<div id="itemDetailsModalContainer"></div>
-<script>
-     var totalAmount = 0;
-    $("document").ready(() => {
-        if($("#IsTableAssigned").val() == "False") {
-          $(".menuDataContainer").addClass("menuDataContainer d-flex pt-0 mt-0 pe-0 w-100")
-          $(".orderDetailContainer").addClass("orderDetailContainer d-none pt-0 mt-0 pe-0 w-50")
-        }
-    });
-    var favorites = [];
-    function AddToFavorite(x, id) {
-        console.log(x)
-        if ($(x).attr("src") == "/images/heart-fill.svg") {
-            $(x).attr("src", "/images/heart.svg");
-            if (!favorites.includes(id)) {
-                favorites.pop(id);
+        <div id="itemDetailsModalContainer"></div>
+        <script>
+            var totalAmount = 0;
+            var orderComment;
+            var itemWiseComment = [];
+            $("document").ready(() => {
+                if ($("#IsTableAssigned").val() == "False") {
+                    $(".menuDataContainer").addClass("menuDataContainer d-flex pt-0 mt-0 pe-0 w-100")
+                    $(".orderDetailContainer").addClass("orderDetailContainer d-none pt-0 mt-0 pe-0 w-50")
+                }
+            });
+            var favorites = [];
+            function AddToFavorite(x, id) {
+                console.log(x)
+                if ($(x).attr("src") == "/images/heart-fill.svg") {
+                    $(x).attr("src", "/images/heart.svg");
+                    if (!favorites.includes(id)) {
+                        favorites.pop(id);
+                    }
+                }
+                else {
+                    $(x).attr("src", "/images/heart-fill.svg");
+                    favorites.push(id);
+                }
             }
-        }
-        else {
-            $(x).attr("src", "/images/heart-fill.svg");
-            favorites.push(id);
-        }
+            $("document").ready(() => {
+                loadItemsForCategory(0);
+            })
+            function openOrderCommentModal() {
+                console.log(orderComment)
+                if (orderComment != "") {
+                    console.log("comment found");
+                    $("#orderCommentModal").modal("show");
+                    $("#orderComment").val(orderComment);
+                }
+            }
+            function postorderComment() {
+                console.log("okkkk")
+                orderComment = $("#orderComment").val()
+                toastr.success("Order Comment added successfully")
+                $(".closeOrderCommentModal").click();
+            }
+            function openItemInstructionModal(uniqueid) {
+                $("#itemInstructionModal").modal("show");
+                var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);   
+                if (item != null) {
+                    $("#ItemInstruction").val(item.Instruction);
+                }
+            }
+            function postItemInstruction(uniqueid) {
+                var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);
+                if (item != null) {
+                    console.log("found");
+                    itemWiseComment = itemWiseComment.map(existingItem => {
+                        if (existingItem.uniqueid == uniqueid.id) {
+                            existingItem.Instruction = $("#ItemInstruction").val(); 
+                        }
+                        return existingItem; 
+                    });
+                    toastr.success("Instruction Updated successfully");
+                } else {
+                    var Instruction = {
+                        uniqueid: uniqueid.id,
+                        Instruction: $("#ItemInstruction").val()
+                    };
+                    itemWiseComment.push(Instruction);
+                    toastr.success("Instruction added successfully");
+                }
+                $(".closeItemInstructionModal").click();
+            }
 
-    }
 
-    $("document").ready(()=>{
-        loadItemsForCategory(0);
-    })
-</script>
+        </script>

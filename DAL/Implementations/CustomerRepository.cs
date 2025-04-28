@@ -121,10 +121,10 @@ public class CustomerRepository : ICustomerRepository
 
         foreach (var order in customerOrders)
         {
-            avg_order += order.Totalamount ;
+            avg_order += order.Totalamount ?? 0;
             if (order.Totalamount > max_order)
             {
-                max_order = order.Totalamount ;
+                max_order = order.Totalamount ?? 0;
                             }
             if (coming_since == null)
             {
@@ -158,7 +158,7 @@ public class CustomerRepository : ICustomerRepository
             orderDetail.orderType = "DineIn";
             orderDetail.paymentStatus = order.PaymentStatus!;
             orderDetail.noOfItems = _context.Ordermodifiers.Where(orderModifiers => orderModifiers.Orderid == order.Orderid && orderModifiers.Isdeleted == false).GroupBy(om => om.Itemid).Count();
-            orderDetail.amount = order.Totalamount ;
+            orderDetail.amount = order.Totalamount ?? 0;
             orderDetails.Add(orderDetail);
         }
         model.orderDetails = orderDetails;

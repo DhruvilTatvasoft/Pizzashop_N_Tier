@@ -2,6 +2,7 @@ using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
+// using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class MenuOrderAppController : Controller
 {
@@ -14,9 +15,10 @@ public class MenuOrderAppController : Controller
     private readonly IItemService _itemService;
     private readonly IModifierService _modifierService;
     private readonly ITableService _tableService;
+    private readonly ITaxService _taxesService;
 
 
-    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService,ITableService tableService,IItemService itemService,IModifierService modifierService,IMenuService menuService,IOrderService orderService,IWaitingTokenService waitingTokenService){
+    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService,ITaxService taxesService,ITableService tableService,IItemService itemService,IModifierService modifierService,IMenuService menuService,IOrderService orderService,IWaitingTokenService waitingTokenService){
         _menuOrderAppService = menuOrderAppService;
         _menuService = menuService;
         _waitingTokenService = waitingTokenService;
@@ -24,6 +26,7 @@ public class MenuOrderAppController : Controller
         _itemService = itemService;
         _modifierService = modifierService;
         _tableService = tableService;
+        _taxesService = taxesService;
     }
     public IActionResult getMenuSidebar(){
         MenuOrderAppModel model = new MenuOrderAppModel();
@@ -80,7 +83,9 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
         DAL.Data.Table table = _tableService.gettablebyid(tableid);
         responseModel.tables.Add(table);
     }
+    responseModel.taxesandfees = _taxesService.getAllTaxes();
     responseModel.tokenid = model.tokenid;
+
     return PartialView("_orderDetailModal",responseModel);
 }
 

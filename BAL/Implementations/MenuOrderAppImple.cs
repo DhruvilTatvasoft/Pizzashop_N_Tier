@@ -24,8 +24,18 @@ public class MenuOrderAppImple : IMenuOrderAppService
        return _menuOrderAppRepository.getModifiersForItem(itemid);
     }
 
+    public Order getOrderfromOrderid(int orderId)
+    {
+        return _menuOrderAppRepository.getOrderfromOrderid(orderId);
+    }
+
     public void saveCustomerDetails(CustomerModel customer)
     {
          _menuOrderAppRepository.saveCustomerDetails(customer);
+    }
+
+    public void saveOrderWiseComment(MenuOrderAppModel model)
+    {
+        _menuOrderAppRepository.saveOrderWiseComment(model);
     }
 }

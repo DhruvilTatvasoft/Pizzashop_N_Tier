@@ -54,7 +54,7 @@ public class OrderRepository : IOrderRepository
 
             foreach (var order in query)
             {
-                order.Status = StatusDict.ContainsKey(order.Statusid) ? StatusDict[order.Statusid] : null!;
+                order.Status = StatusDict.ContainsKey(order.Statusid ?? 0) ? StatusDict[order.Statusid ?? 0] : null!;
                 order.Customer = CustomerDict.ContainsKey(order.Customerid) ? CustomerDict[order.Customerid] : new Customer();
             }
             model.orders = query.ToList();
@@ -94,7 +94,7 @@ public class OrderRepository : IOrderRepository
 
         foreach (var order in query)
         {
-            order.Status = statusDict.ContainsKey(order.Statusid) ? statusDict[order.Statusid] : null!;
+            order.Status = statusDict.ContainsKey(order.Statusid ?? 0) ? statusDict[order.Statusid ?? 0] : null!;
             order.Customer = customerDict.ContainsKey(order.Customerid) ? customerDict[order.Customerid] : new Customer();
         }
 
