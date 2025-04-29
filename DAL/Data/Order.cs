@@ -37,7 +37,7 @@ public partial class Order
 
     public bool IsDeleted { get; set; }
 
-    public int Tableid { get; set; }
+    public int? Tableid { get; set; }
 
     public int Sectionid { get; set; }
 
@@ -57,9 +57,9 @@ public partial class Order
 
     public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
 
+    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
+
     public virtual Section Section { get; set; } = null!;
 
     public virtual Orderstatus? Status { get; set; }
-
-    public virtual Table Table { get; set; } = null!;
 }

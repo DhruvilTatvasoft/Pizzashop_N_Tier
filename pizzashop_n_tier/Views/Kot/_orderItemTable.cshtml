@@ -1,0 +1,37 @@
+@model SingleOrderDetailModel
+<table class="table">
+    <thead>
+        <tr>
+            <th scope="col">Item</th>
+            <th scope="col" class="d-flex justify-content-end" style="padding-right:19%;">Quantity</th>
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.itemAndModifiers)
+        {
+            <tr>
+
+                <td><input class="form-check-input" type="checkbox">
+                    <label for="">@item.Key.Itemname</label>
+                    <div class="ps-2 modifierForItem">
+                        @foreach (var modifier in item.Value)
+                        {
+                            <li>@modifier.Modifiername</li>
+                        }
+                    </div>
+                <td>
+                    <div class="incrementerContainer">
+                        <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.Key.Itemid')"
+                            value="Decrease Value">-</div>
+                        <input type="number h-100" class="number" asp-for="@item.Key.Itemquantity" id="number-@item.Key.Itemid" min="0"
+                            max="@item.Key.Itemquantity" name="readyItemCount[@item.Key.Itemid]" />
+                        <div class="value-button h-100" id="increase"
+                            onclick="increaseValue(@item.Key.Itemquantity,'number-@item.Key.Itemid')"
+                            value="Increase Value">+</div>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,65 +1,67 @@
 @model SingleOrderDetailModel
- <form id="readyQuantityChangeForm">
-<div class="modal fade" id="modalForItemStatusChange" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content w-75">
-                    <div class="modal-header d-flex pb-0" style="border: none;">
-                        <h5 class="modal-title"><label for="" style="font-weight: bold;">Order id : #<span
-                                    id="orderid">@Model.orderid</span></label></h5>
-                        <button type="button" class="close" data-bs-dismiss="modal"
-                            style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
-                            aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body d-flex flex-column align-items-center justify-content-center ps-1 pe-1 pt-0 pb-0">
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th scope="col">Item</th>
-                                    <th scope="col" class="d-flex justify-content-end" style="padding-right:19%;">Quantity</th>
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                               
-                                @foreach(var item in Model.itemAndModifiers){
-                                <tr>
-                                   
-                                   <td><input class="form-check-input" type="checkbox"> 
-                                   <label for="">@item.Key.Itemname</label>
-                                   <div class="ps-2 modifierForItem">
-                                    @foreach(var modifier in item.Value){
-                                        <li>@modifier.Modifiername</li>
-                                    }
-                                   </div>
-                                    <td>
-                                            <div class="incrementerContainer">
-                                            <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.Key.Itemid')"
-                                                value="Decrease Value">-</div>    
-                                            <input type="number h-100" class="number" id="number-@item.Key.Itemid" min="0" max="@item.Key.Itemquantity" value="0" name="readyItemCount[@item.Key.Itemid]" />
-                                            <div class="value-button h-100" id="increase" onclick="increaseValue(@item.Key.Itemquantity,'number-@item.Key.Itemid')"
-                                                value="Increase Value">+</div>
-                                            </div>
-                                    </td>
-                                </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
+<form id="readyQuantityChangeForm">
+    <div class="modal fade" id="modalForItemStatusChange" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content w-75">
+                <div class="modal-header d-flex pb-0" style="border: none;">
+                    <h5 class="modal-title"><label for="" style="font-weight: bold;">Order id : #<span
+                                id="orderid">@Model.orderid</span></label></h5>
+                    <button type="button" class="close" data-bs-dismiss="modal"
+                        style="margin-left:  auto; background-color: transparent;border: none;font-size:21px;"
+                        aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
 
-                    <div class="modal-footer pt-0" style="border:none;">
-                        <button class="btn btn-primary btncolour" type="submit">Marked As Prepared</button>
-                        <button class="btn  btnoutlinecolour closeModalBtn" data-bs-dismiss="modal">cancel</button>
-                    </div>
+                <div class="d-flex w-100 align-items-center justify-content-center p-2">
+                    <button class="btn btn-outline-primary me-2 btnforready" type="button"
+                        onclick="loadStatusWiseOrderItems('Ready')">Ready</button>
+                    <button class="btn btn-outline-primary btnforinprogress" type="button"
+                        onclick="loadStatusWiseOrderItems('In Progress')">In Progress</button>
+                </div>
+                <div
+                    class="modal-body d-flex flex-column align-items-center justify-content-center ps-1 pe-1 pt-0 pb-0">
+                    <div class="statusWiseItems w-100"></div>
+                </div>
+                <div class="modal-footer pt-0" style="border:none;">
+                    <button class="btn btn-primary btncolour markAsBtn" type="submit">Marked As Prepared</button>
+                    <button class="btn  btnoutlinecolour closeModalBtn" data-bs-dismiss="modal">cancel</button>
                 </div>
             </div>
         </div>
-  </form>
+    </div>
+</form>
 
 
-    <script>
-        
+<script>
+    $("document").ready(() => {
+        console.log("ready")
+        loadStatusWiseOrderItems("Ready");
+    })
+    function loadStatusWiseOrderItems(status) {
+        if (status == "In Progress") {
+            $(".btnforinprogress").removeClass("btn-outline-primary")
+            $(".btnforinprogress").addClass("btn-primary")
+            $(".btnforready").removeClass("btn-primary")
+            $(".btnforready").addClass("btn-outline-primary")
+            $(".markAsBtn").text("Mark As Prepared")
+        }
+        else {
+            $(".btnforready").removeClass("btn-outline-primary")
+            $(".btnforready").addClass("btn-primary")
+            $(".btnforinprogress").removeClass("btn-primary")
+            $(".btnforinprogress").addClass("btn-outline-primary")
+            $(".markAsBtn").text("Mark As InProgress")
+        }
+        $.ajax({
+            url: "@Url.Action("loadItemsInModalAccordingToStatus", "Kot")",
+            type: "GET",
+            data: { categoryid:@Model.categoryid, orderid:@Model.orderid, status: status },
+            success: function (response) {
+                $(".statusWiseItems").html(response);
+            }
+        });
+    }
 
-    </script>
+</script>

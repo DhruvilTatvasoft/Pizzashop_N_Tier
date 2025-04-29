@@ -135,4 +135,10 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
         return PartialView("_itemAccordian",model);
     }
 
+    [HttpPost]
+    public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails){
+        _menuOrderAppService.createOrder(orderDetails);
+        return Json(new {success = "ok ok"});
+    }
+
 }

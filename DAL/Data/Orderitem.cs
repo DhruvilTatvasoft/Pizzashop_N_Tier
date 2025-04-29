@@ -11,9 +11,9 @@ public partial class Orderitem
 
     public int Orderid { get; set; }
 
-    public decimal Orderitemrate { get; set; }
+    public decimal? Orderitemrate { get; set; }
 
-    public int Orderitemquantity { get; set; }
+    public int? Orderitemquantity { get; set; }
 
     public decimal? Totalamount { get; set; }
 
@@ -21,7 +21,7 @@ public partial class Orderitem
 
     public string? Specialcomment { get; set; }
 
-    public int Readyitemquanitiy { get; set; }
+    public int? Readyitemquanitiy { get; set; }
 
     public bool? Isdeleted { get; set; }
 
@@ -29,9 +29,9 @@ public partial class Orderitem
 
     public DateTime? Modifiedat { get; set; }
 
-    public int Createdby { get; set; }
+    public int? Createdby { get; set; }
 
-    public int Modifiedby { get; set; }
+    public int? Modifiedby { get; set; }
 
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
@@ -40,6 +40,4 @@ public partial class Orderitem
     public virtual Order Order { get; set; } = null!;
 
     public virtual ICollection<OrderItemModifier> OrderItemModifiers { get; } = new List<OrderItemModifier>();
-
-    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }

@@ -27,6 +27,8 @@ public partial class Customer
 
     public virtual ICollection<Order> Orders { get; } = new List<Order>();
 
+    public virtual ICollection<Ordertable> Ordertables { get; } = new List<Ordertable>();
+
     public virtual ICollection<Table> Tables { get; } = new List<Table>();
 
     public virtual ICollection<Waitingtoken> Waitingtokens { get; } = new List<Waitingtoken>();

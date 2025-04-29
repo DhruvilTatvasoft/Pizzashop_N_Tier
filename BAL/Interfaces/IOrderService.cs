@@ -19,10 +19,11 @@ namespace BAL.Interfaces
         // Dictionary<int, orderItemModifierViewModel> getOrderDetailsByCategory(int categoryid,bool? IsReady);
 
         Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady);
-        SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid);
+        SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid,string status);
         void changeReadyQuantity(Dictionary<int, int> readyItemCount);
         Dictionary<int, Dictionary<Item, List<Modifier>>> getModifiersForItems(int orderid);
         int CreateOrder(int tokenid, int tableid);
         void addItemInOrder(int itemid, List<int> modifiers);
+        int CreateOrderForCustomer(int tokenid, List<int> tableids);
     }
 }

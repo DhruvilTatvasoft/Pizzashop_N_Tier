@@ -1,6 +1,4 @@
 using DAL.Data;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-using Microsoft.IdentityModel.Tokens;
 
 
 public class OrderRepository : IOrderRepository
@@ -164,8 +162,7 @@ public class OrderRepository : IOrderRepository
         order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
         order.Customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == order.Customerid)!;
         order.Section = _context.Sections.FirstOrDefault(section => section.Sectionid == order.Sectionid)!;
-        
-        order.Table = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)!;
+        // order.Table = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)!;
         return order;
     }
 
@@ -218,7 +215,7 @@ public class OrderRepository : IOrderRepository
             foreach(var modifier in modifiers){
                 modifier.Modifierquantity = _context.OrderItemModifiers.FirstOrDefault(oim=>oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId && oim.Modifierid == modifier.Modifierid).ModifierQuantity?? 0;
             }
-            item.Itemquantity = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == orderItemDetailId).Orderitemquantity;
+            item.Itemquantity = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == orderItemDetailId)?.Orderitemquantity ?? 0;
             count++;
             itemsAndModifiers.Add(count,new Dictionary<Item, List<Modifier>> { { item, modifiers } });
             
@@ -322,15 +319,15 @@ public class OrderRepository : IOrderRepository
 
             if (IsReady == null)
             {
-                item.Itemquantity = orderItem.Orderitemquantity;
+                item.Itemquantity = orderItem.Orderitemquantity ?? 0;
             }
             else if (IsReady == true && orderItem.Readyitemquanitiy > 0)
             {
-                item.Itemquantity = orderItem.Readyitemquanitiy;
+                item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
             }
             else if (IsReady == false && (orderItem.Orderitemquantity - orderItem.Readyitemquanitiy) > 0)
             {
-                item.Itemquantity = orderItem.Orderitemquantity - orderItem.Readyitemquanitiy;
+                item.Itemquantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
             }
             else
             {
@@ -360,7 +357,7 @@ public class OrderRepository : IOrderRepository
 }
 
 
-    public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid)
+    public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid,string status)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
         model.orderid = orderid;
@@ -402,10 +399,12 @@ public class OrderRepository : IOrderRepository
             var modifiers = _context.Modifiers
                 .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
                 .ToList();
-
-                
-            item.Itemquantity = orderItem.Orderitemquantity-orderItem.Readyitemquanitiy;
-
+            if(status == "In Progress"){
+            item.Itemquantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
+            }
+            else{
+            item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
+            }
             itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
         }
         model.itemAndModifiers = itemModifierList
@@ -440,5 +439,36 @@ public class OrderRepository : IOrderRepository
     public void addItemInOrder(int itemid, List<int> modifiers)
     {
         
+    }
+
+    public int CreateOrderForCustomer(int tokenid, List<int> tableids)
+    {
+        Order order = new Order();
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(tkn=>tkn.Waitingtokenid == tokenid && tkn.Isdeleted == false);
+        order.Customerid = token.Customerid;
+        order.Totalpersons = token.Totalpersons;
+        order.Createdat = DateTime.Now;
+        order.Createdby = 1;
+        order.Modifiedby = 1;
+        order.Modifiedat = DateTime.Now;
+        order.Sectionid = token.Sectionid;
+        order.IsDeleted = false;
+        _context.Orders.Add(order);
+        _context.SaveChanges();
+        foreach(var tableid in tableids){
+           Table table = _context.Tables.FirstOrDefault(Table => Table.Tableid == tableid);
+           table.Status = false;
+           table.Statusname = "Assigned";
+           Ordertable orderedtable = new Ordertable();
+           orderedtable.Orderid = order.Orderid;
+           orderedtable.Customerid = token.Customerid;
+           orderedtable.Createdby = 1;
+           orderedtable.Modifiedby = 1;
+            orderedtable.Tableid = tableid;
+           _context.Ordertables.Add(orderedtable);
+           _context.Tables.Update(table);
+        }
+        _context.SaveChanges();
+        return order.Orderid;
     }
 }

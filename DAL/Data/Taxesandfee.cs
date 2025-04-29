@@ -17,7 +17,7 @@ public partial class Taxesandfee
 
     public decimal Taxpercentage { get; set; }
 
-    public bool Isdefault { get; set; }
+    public bool? Isdefault { get; set; }
 
     public DateTime? Createdat { get; set; }
 
@@ -26,6 +26,4 @@ public partial class Taxesandfee
     public int Createdby { get; set; }
 
     public int Modifiedby { get; set; }
-
-    public virtual ICollection<Ordertaxesandfee> Ordertaxesandfees { get; } = new List<Ordertaxesandfee>();
 }

@@ -40,6 +40,7 @@ public class TableViewController : Controller
         model.isTableAssigned = true;
         model.tokenid = Model.tokenid;
         model.categoryId = 0;
+        // model.orderid = _orderService.CreateOrderForCustomer(Model.tokenid,Model.tableids);
         return PartialView("_menu",model);
     }   
 }

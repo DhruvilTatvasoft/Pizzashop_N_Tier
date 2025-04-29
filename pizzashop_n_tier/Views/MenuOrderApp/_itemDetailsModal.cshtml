@@ -172,7 +172,7 @@
         if (document.querySelector("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT")) {
             var quantity = $("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val();
             var price = $("#" + uniqueId).data("itemrate");
-            var modifierrate = $("#" + uniqueId + "_modifier_rate").val();
+            var modifierrate = $("#modifier_rate_"+uniqueId).val();
             $("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val(parseInt(quantity) + 1);
             var subtotalValue = parseFloat($("#subtotal").text().replace("₹", ""));
             subtotalValue += parseFloat(price);
@@ -200,13 +200,6 @@
                 console.log("total becomes   " + totalAmount);
                 $("#subtotal").text("₹" + totalAmount);
                 calculateTax($("#subtotal").text().replace("₹", ""))
-                @* var taxes = $('[id^="tax_"]');
-                var subtotal = parseFloat($('#subtotal').text().replace('₹', ''));
-                taxes.each(function () {
-                    var taxPercentage = parseFloat($(this).data("taxpercentage"));
-                    var taxValue = (taxPercentage / 100) * subtotal;
-                    $(this).text("₹" + taxValue.toFixed(2));
-                }); *@
                     calculateTheTotalAmount()
                 $(".cancelButton").click()
             }

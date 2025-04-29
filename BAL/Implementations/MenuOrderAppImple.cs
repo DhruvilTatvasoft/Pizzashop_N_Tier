@@ -9,6 +9,11 @@ public class MenuOrderAppImple : IMenuOrderAppService
         _menuOrderAppRepository = menuOrderAppRepository;
     }
 
+    public bool createOrder(OrderDetailsViewModel orderDetails)
+    {
+        return _menuOrderAppRepository.createOrder(orderDetails);
+    }
+
     public Item getItem(int itemid)
     {
         return _menuOrderAppRepository.getItem(itemid);

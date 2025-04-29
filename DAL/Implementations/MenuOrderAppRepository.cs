@@ -1,3 +1,4 @@
+using System.Reflection.Metadata.Ecma335;
 using DAL.Data;
 using Microsoft.IdentityModel.Tokens;
 
@@ -8,6 +9,76 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     public MenuOrderAppRepository(PizzashopCContext context)
     {
         _context = context;
+    }
+
+    public bool createOrder(OrderDetailsViewModel orderDetails)
+    {
+        Order order = new Order();
+       order.Customerid = orderDetails.customerid;
+       if(orderDetails.ordercomment != "" || orderDetails.ordercomment != null)
+       order.Ordercomment = orderDetails.ordercomment;
+       order.Totalamount = (decimal?)orderDetails.totalamount;
+       order.PaymentStatus = "Pending";
+       order.Statusid = 4;
+       order.Sectionid = orderDetails.sectionid;
+       order.Totalpersons = orderDetails.totalPersons;
+       order.Paymentmethod = orderDetails.PaymentMethod;
+       order.Createdat = DateTime.Now;
+       order.Createdby = 1;
+       order.Modifiedby = 1;
+       order.IsDeleted = false; 
+       _context.Orders.Add(order);
+       _context.SaveChanges();
+
+       foreach(var tableid in orderDetails.tableids){
+        Ordertable ordertable = new Ordertable();
+        ordertable.Tableid = tableid;
+        ordertable.Orderid = order.Orderid;
+        ordertable.Isdeleted = false;
+        // Table table = _context.Tables.FirstOrDefault(tbl=>tbl.Tableid == tableid)!;
+        // table.Status = false;
+        // table.Statusname = "Running";
+        // _context.Tables.Update(table);
+        ordertable.Createdby = 1;
+        ordertable.Modifiedby = 1;
+        ordertable.Customerid = orderDetails.customerid;    
+        _context.Ordertables.Add(ordertable);
+       }
+
+        foreach(var item in orderDetails.itemDetails)
+        {
+            Orderitem orderedItem = new Orderitem();
+            orderedItem.Orderid = order.Orderid;
+            orderedItem.Itemid = int.Parse(item.itemId);
+            orderedItem.Orderitemquantity = int.Parse(item.quantity);
+            orderedItem.Createdby = 1;
+            orderedItem.Modifiedby = 1;
+            orderedItem.Specialcomment = item.itemcomment;
+            _context.Orderitems.Add(orderedItem);
+            _context.SaveChanges();
+            foreach(var modifierid in item.modifierIds){
+                OrderItemModifier itemModifier = new OrderItemModifier();
+                itemModifier.ItemId = int.Parse(item.itemId);
+                itemModifier.Modifierid = int.Parse(modifierid);
+                itemModifier.ModifierQuantity = int.Parse(item.quantity);
+                itemModifier.Orderitemdetailid = orderedItem.Orderitemid;
+                itemModifier.Orderid = order.Orderid;
+                _context.OrderItemModifiers.Add(itemModifier);
+                _context.SaveChanges();
+            }
+        }
+
+        foreach(var tax in orderDetails.appliedTaxes){
+            Ordertaxesandfee taxAndFees = new Ordertaxesandfee();
+            taxAndFees.Orderid = order.Orderid;
+            taxAndFees.Taxname = tax.taxname;
+            taxAndFees.TaxPercentage = (decimal?)float.Parse(tax.taxPercentage.ToString());
+            taxAndFees.Taxtype = tax.taxtype;
+            _context.Ordertaxesandfees.Add(taxAndFees);
+        }
+       _context.SaveChanges();
+       return true;
+
     }
 
     public Item getItem(int itemid)

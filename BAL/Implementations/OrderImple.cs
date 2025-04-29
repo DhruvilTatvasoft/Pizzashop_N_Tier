@@ -391,8 +391,8 @@ namespace BAL.Implementations
             return _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady);
         }
 
-       public SingleOrderDetailModel getSingleOrderDetail(int categoryid,int orderid){
-        return _orderRepository.getSingleOrderDetail(categoryid,orderid);
+       public SingleOrderDetailModel getSingleOrderDetail(int categoryid,int orderid,string status){
+        return _orderRepository.getSingleOrderDetail(categoryid,orderid, status);
        }
 
         public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
@@ -413,6 +413,11 @@ namespace BAL.Implementations
         public void addItemInOrder(int itemid, List<int> modifiers)
         {
             _orderRepository.addItemInOrder(itemid, modifiers);
+        }
+
+        public int CreateOrderForCustomer(int tokenid, List<int> tableids)
+        {
+           return _orderRepository.CreateOrderForCustomer(tokenid,tableids);
         }
     }
 }

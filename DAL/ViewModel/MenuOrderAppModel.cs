@@ -7,7 +7,7 @@ public class MenuOrderAppModel
     public List<Item> items{get;set;}
 
     public CustomerModel customer{get;set;}
-    public int orderid{get;set;}
+    public int orderid{get;set;} = 0;
 
     public Order order{
         get;set;

@@ -11,8 +11,6 @@ public partial class Ordertable
 
     public int Tableid { get; set; }
 
-    public int Totalpersonsoftable { get; set; }
-
     public bool? Isdeleted { get; set; }
 
     public DateTime? Createdat { get; set; }
@@ -22,6 +20,10 @@ public partial class Ordertable
     public int Createdby { get; set; }
 
     public int Modifiedby { get; set; }
+
+    public int? Customerid { get; set; }
+
+    public virtual Customer? Customer { get; set; }
 
     public virtual Order Order { get; set; } = null!;
 

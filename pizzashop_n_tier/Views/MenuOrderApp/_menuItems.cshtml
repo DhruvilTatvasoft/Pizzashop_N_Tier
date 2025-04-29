@@ -25,8 +25,7 @@
         <div id="itemDetailsModalContainer"></div>
         <script>
             var totalAmount = 0;
-            var orderComment;
-            var itemWiseComment = [];
+            var orderComment = "";
             $("document").ready(() => {
                 if ($("#IsTableAssigned").val() == "False") {
                     $(".menuDataContainer").addClass("menuDataContainer d-flex pt-0 mt-0 pe-0 w-100")
@@ -59,24 +58,29 @@
                 }
             }
             function postorderComment() {
-                console.log("okkkk")
+                
                 orderComment = $("#orderComment").val()
                 toastr.success("Order Comment added successfully")
                 $(".closeOrderCommentModal").click();
             }
             function openItemInstructionModal(uniqueid) {
                 $("#itemInstructionModal").modal("show");
-                var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);   
-                if (item != null) {
+                var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);
+                console.log(item);     
+                if (item != null && item != undefined) {
                     $("#ItemInstruction").val(item.Instruction);
                 }
+                else{
+                     $("#ItemInstruction").val('');
+                }
+                $("#uniqueidForItemcomment").val(uniqueid.id)
             }
-            function postItemInstruction(uniqueid) {
-                var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);
-                if (item != null) {
-                    console.log("found");
+            function postItemInstruction() {
+                var uniqueid = $("#uniqueidForItemcomment").val()
+                var item = itemWiseComment.find(item => item.uniqueid == uniqueid);
+                if (item != null  && item != undefined) {
                     itemWiseComment = itemWiseComment.map(existingItem => {
-                        if (existingItem.uniqueid == uniqueid.id) {
+                        if (existingItem.uniqueid == uniqueid) {
                             existingItem.Instruction = $("#ItemInstruction").val(); 
                         }
                         return existingItem; 
@@ -84,7 +88,7 @@
                     toastr.success("Instruction Updated successfully");
                 } else {
                     var Instruction = {
-                        uniqueid: uniqueid.id,
+                        uniqueid: uniqueid,
                         Instruction: $("#ItemInstruction").val()
                     };
                     itemWiseComment.push(Instruction);
@@ -92,6 +96,4 @@
                 }
                 $(".closeItemInstructionModal").click();
             }
-
-
         </script>

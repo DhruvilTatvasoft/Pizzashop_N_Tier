@@ -7,25 +7,13 @@ public partial class Ordertaxesandfee
 {
     public int Ordertaxid { get; set; }
 
-    public int Orderitemid { get; set; }
+    public int? Orderid { get; set; }
 
-    public int Taxid { get; set; }
+    public string? Taxtype { get; set; }
 
-    public string Ordertaxname { get; set; } = null!;
+    public decimal? TaxPercentage { get; set; }
 
-    public decimal Ordertaxamount { get; set; }
+    public string? Taxname { get; set; }
 
-    public bool? Isdeleted { get; set; }
-
-    public DateTime? Createdat { get; set; }
-
-    public DateTime? Modifiedat { get; set; }
-
-    public int Createdby { get; set; }
-
-    public int Modifiedby { get; set; }
-
-    public virtual Orderitem Orderitem { get; set; } = null!;
-
-    public virtual Taxesandfee Tax { get; set; } = null!;
+    public virtual Order? Order { get; set; }
 }

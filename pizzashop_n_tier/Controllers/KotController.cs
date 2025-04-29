@@ -27,6 +27,12 @@ public class KotController : Controller
         return PartialView("_kot", model);
     }
 
+    public IActionResult loadOrderDetailCardContainer(int categoryid){
+        KotViewModel model = new KotViewModel();
+        model.categoryid = categoryid;
+        return PartialView("_orderDetailsCard",model);
+    }
+
     public IActionResult loadOrdersPerCategory(int categoryid, bool? IsReady)
     {
         KotViewModel model = new KotViewModel();
@@ -50,14 +56,24 @@ public class KotController : Controller
             model.categoryName = category.Categoryname;
             model.categoryid = category.Categoryid;
         }
-        return PartialView("_orderDetailsCard", model);
+        return PartialView("_orderCardPartial", model);
     }
 
     public IActionResult loadSingleOrderDetails(int categoryid, int orderid)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
-        model = _orderService.getSingleOrderDetail(categoryid, orderid);
+        // model = _orderService.getSingleOrderDetail(categoryid, orderid,status);
+        model.orderid = orderid;
+        model.categoryid = categoryid;
         return PartialView("_orderStatusChangeModal", model);
+    }
+
+    public IActionResult loadItemsInModalAccordingToStatus(int categoryid, int orderid,string status = "Ready"){
+        SingleOrderDetailModel model = new SingleOrderDetailModel();
+        model = _orderService.getSingleOrderDetail(categoryid, orderid,status);
+        model.categoryid = categoryid;
+        model.orderid = orderid;
+        return PartialView("_orderItemTable", model);
     }
 
     [HttpPost]

@@ -22,7 +22,6 @@
                     onclick="openOrderCommentModal()"><img src="~/images/chat-text.svg" alt=""></button>
             </div>
         </div>
-
         <div class="parentDivForAccordians m-1 mt-0">
             <div class="accordion" id="orderSummaryContainer">
                 <div class="d-flex fw-bold border-bottom pb-2 mb-2">
@@ -32,16 +31,16 @@
                 </div>
             </div>
         </div>
-
         <div>
             <div class="d-flex justify-content-between"><span>Subtotal</span><span id="subtotal">₹0</span></div>
             @foreach (var tax in Model.taxesandfees.OrderBy(Tax => Tax.Taxname))
             {
                 <div class="d-flex justify-content-between">
-                    <div><input type="checkbox"
-                            onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')"
-                            checked><span>@tax.Taxname</span></div><span id="tax_@tax.Taxname"
-                        data-taxPercentage="@tax.Taxpercentage" data-taxType="@tax.Taxtype"></span>
+                    <div>
+                        <input type="checkbox" id="isTaxApplied_@tax.Taxname" data-taxname="@tax.Taxname" data-taxType="@tax.Taxtype" data-taxPercentage="@tax.Taxpercentage" onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')"checked>
+                        <span>@tax.Taxname</span>
+                </div>
+                <span id="tax_@tax.Taxname" data-taxPercentage="@tax.Taxpercentage" data-taxType="@tax.Taxtype"></span>
                 </div>
             }
             <div class="d-flex justify-content-between fw-bold mt-2 border-top pt-2">
@@ -51,14 +50,14 @@
         <div class="mt-3 d-flex justify-content-between ">
             <label class="mb-1 fw-bold">Payment Method</label>
             <div class="d-flex gap-3 mb-3">
-                <div><input type="radio" name="payment" /> Cash</div>
-                <div><input type="radio" name="payment" /> Card</div>
-                <div><input type="radio" name="payment" /> UPI</div>
+                <div><input type="radio" name="payment" value="Cash" checked /> Cash</div>
+                <div><input type="radio" name="payment" value="Card" /> Card</div>
+                <div><input type="radio" name="payment" value="UPI"/> UPI</div>
             </div>
         </div>
         <div>
             <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-primary btncolour" style="width: 20%;">Save</button>
+                <button class="btn btn-primary btncolour" style="width: 20%;" onclick="saveTheOrder()">Save</button>
                 <button class="btn btn-outline-primary btnoutlinecolourLight">Complete</button>
                 <button class="btn btn-outline-primary btnoutlinecolourLight">Generate Invoice</button>
             </div>
@@ -83,7 +82,8 @@
                     <textarea class="form-control" placeholder="Comment" id="orderComment"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary btncolor" onclick="postorderComment()" id="postTheOrderComment">Save</button>
+                    <button type="button" class="btn btn-primary btncolor" onclick="postorderComment()"
+                        id="postTheOrderComment">Save</button>
                     <button type="button" class="btn btn-outline-primary btnoutlinecolor closeOrderCommentModal"
                         data-bs-dismiss="modal">cancel</button>
                 </div>
@@ -91,3 +91,78 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    function saveTheOrder() {
+        var itemDetails = [];
+        console.log(itemWiseComment)
+        $('[id^="item_"]').each(function (index, element) {
+            var fullId = $(element).attr('id');
+            var parts = fullId.split("_");
+            if (parts[2] != 'modifier') {
+                var itemId = parts[1];
+                var modifierIds = parts.slice(2);
+                var item = itemWiseComment.find(item => item.uniqueid == fullId);
+                if (item == null || item == undefined) {
+                    itemcomment = ""
+                }
+                else {
+                    itemcomment = item.Instruction
+                }
+                itemDetails.push({
+                    itemId: itemId,
+                    modifierIds: modifierIds,
+                    quantity: $("#" + fullId + " .textInputForCounterInOrderItemDetailsKOT").val(),
+                    itemcomment: itemcomment,
+                });
+            }
+        });
+
+        var appliedTaxes =$("[id^='isTaxApplied_']:checked");
+        var taxesForOrder = [];
+        appliedTaxes.each(function(){
+            var tax = {
+            taxname: $(this).data("taxname"),  
+            taxtype: $(this).data("taxtype"), 
+            taxPercentage: $(this).data("taxpercentage") 
+            }
+            taxesForOrder.push(tax);
+        })
+        console.log(appliedTaxes)
+        var tableids = @Html.Raw(Json.Serialize(Model.customer.tableids));
+        var customerid = @Html.Raw(Json.Serialize(Model.customer.customerId));
+        var totalamount = parseFloat($('#totalamount').text().replace('₹', ''));
+        var totalPersons =  @Html.Raw(Json.Serialize(Model.customer.PersonCount));
+        var sectionId = @Html.Raw(Json.Serialize(Model.customer.section.Sectionid));
+        var orderDetails = {
+            tableids: tableids,
+            customerid: customerid,
+            itemDetails: itemDetails,
+            totalamount: totalamount,
+            totalPersons: totalPersons,
+            ordercomment : orderComment,
+            PaymentMethod :  $('input[name="payment"]:checked').val(),
+            sectionId : sectionId,
+            appliedTaxes : taxesForOrder 
+        }
+
+        console.log(orderDetails);
+
+        $.ajax({
+            url: "@Url.Action("saveTheOrderDetails", "MenuOrderApp")",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(orderDetails),
+            success: function (response) {
+                toastr.success(response.success);
+            },
+            error: function (xhr, status, error) {
+                console.error("Error saving the order:", error);
+                toastr.error("There was an issue saving the order.");
+            }
+        });
+    }
+
+</script>
