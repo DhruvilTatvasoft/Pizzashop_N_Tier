@@ -37,7 +37,7 @@ h6{
     background-color: #9ed3ff;
     border-radius: 4px;
     padding: 5%;
-   
+   cursor: pointer;
 }
 .Available-Table{
     min-width: 15%;

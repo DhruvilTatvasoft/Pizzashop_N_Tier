@@ -95,7 +95,7 @@
             </div>
             <form id="iteminstructionForm">
                 <div class="modal-body">
-                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction"></textarea>
+                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction" asp-for="itemcomment"></textarea>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="uniqueidForItemcomment">
@@ -109,7 +109,6 @@
 </div>
 
 <script>
-    @* var totalAmount = 0; *@
 
         function removeTheItemFromOrder(id) {
             console.log("id" + id)

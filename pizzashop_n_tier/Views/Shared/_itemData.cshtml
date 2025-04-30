@@ -141,17 +141,68 @@
         });
     })
 
-    function showCustomerDetails(tokenid) {
+    function showCustomerDetails(customerid) {
         $.ajax({
             url: "@Url.Action("showCustomerDetails", "MenuOrderApp")",
             type: "GET",
-            data: { tokenid: tokenid },
+            data: { customerid: customerid,totalPersonCount : $("#totalpersonCount").val() },
             success: function (data) {
                 $(".customerDetailModalContainer").html(data);
                 $("#customerDetailModal").modal("show");
             }
         });
     }
+
+    function calculateTheTotalAmount() {
+        var subtotal = parseFloat($("#subtotal").text().replace('₹', ''));
+        var sumOfTaxAmount = 0;
+        var taxes = $('[id^="tax_"]');
+        taxes.each(function () {
+            if ($(this).data('taxtype') != "flat amount") {
+                sumOfTaxAmount += parseFloat($(this).text().replace('₹', ''));
+            }
+        })
+        console.log("subtotal:" + subtotal + "sum of tax" + sumOfTaxAmount)
+        var total = subtotal + sumOfTaxAmount;
+        $("#totalamount").text("₹" + total.toFixed(2));
+    }
+    function appliedTaxOrNot(element, value, type, name) {
+
+        if (type == "flat amount") {
+            if ($(element).prop("checked")) {
+
+                totalAmount += parseFloat(value);
+                var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) + parseFloat(value);
+                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
+                $("#tax_" + name).text("₹" + parseFloat(value))
+            }
+            else {
+                totalAmount -= parseFloat(value);
+                if (totalAmount > 0) {
+                    var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) - parseFloat(value);
+                    $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
+                    $("#tax_" + name).text("₹0.00")
+                }
+            }
+        }
+        else {
+            if ($(element).prop("checked")) {
+                totalAmount += parseFloat(value);
+                var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) + (parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100;
+                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
+                $("#tax_" + name).text("₹" + (parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100)
+            }
+            else {
+                totalAmount -= parseFloat(value);
+                if (totalAmount > 0) {
+                    var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) - (parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100;
+                    $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
+                    $("#tax_" + name).text("₹0.00")
+                }
+            }
+        }
+    }
+
 
 
 </script>

@@ -40,19 +40,9 @@ public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable 
 {
     MenuOrderAppModel responseModel = new MenuOrderAppModel();
 
-    if (model.TokenId != 0)
+    if (model.customerid != 0)
     {
-        List<int> tableIds = new List<int>();
-        if(model.TableIds.Count == 0)
-        {
-        tableIds = new List<int> { 0 }; 
-        }
-        else{
-            tableIds = model.TableIds;
-            
-        }
-        responseModel.customer = _waitingTokenService.getCustomerForWaitingToken(model.TokenId, tableIds);
-        responseModel.tokenid = model.TokenId;
+        responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid??0,model.TableIds);
         responseModel.isTableAssigned = true;
 
         List<DAL.Data.Table> tables = new List<DAL.Data.Table>();
@@ -76,15 +66,25 @@ public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable 
 }
 [HttpPost]
 public IActionResult getOrderDetails([FromBody]assignTableDetails model){
+    
     MenuOrderAppModel responseModel = new MenuOrderAppModel();
-    responseModel.customer = _waitingTokenService.getCustomerForWaitingToken(model.tokenid, model.tableids);
+    responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid??0,model.tableids);
+    responseModel.customer.PersonCount = model.totalPersonCount ?? 0;
     responseModel.tables = new List<DAL.Data.Table>();
+    List<int> tableids = new List<int>();
     foreach(int tableid in model.tableids){
         DAL.Data.Table table = _tableService.gettablebyid(tableid);
+        tableids.Add(tableid);
+
         responseModel.tables.Add(table);
     }
+    responseModel.customer.tableids = tableids;
     responseModel.taxesandfees = _taxesService.getAllTaxes();
-    responseModel.tokenid = model.tokenid;
+    responseModel.tokenid = model.tokenid ?? 0;
+    responseModel.orderid = model.orderid ?? 0;
+    if(model.orderid != 0  && model.orderid != null){
+       _menuOrderAppService.loadOrderedItemsData(model.orderid,responseModel);
+    }
 
     return PartialView("_orderDetailModal",responseModel);
 }
@@ -107,11 +107,13 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
         return PartialView("_itemDetailsModal",model);
     }
 
-     public IActionResult showCustomerDetails(int tokenid)
+     public IActionResult showCustomerDetails(int customerid,int totalPersonCount)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
         List<int> tableid = new List<int>{0};
-        model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid, tableid);
+        // model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid, tableid);
+        model.customer = _menuOrderAppService.getcustomerDetails(customerid,null);
+        model.customer.PersonCount = totalPersonCount;
         return PartialView("_customerDetailModal", model);
     }
 [HttpPost]
@@ -122,9 +124,12 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
 
 
 [HttpPost]
-    public IActionResult addItemInOrder(int itemid,List<int> modifiers,string uniqueId){
+    public IActionResult addItemInOrder(int itemid,List<int> modifiers,string uniqueId,int? orderid){
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.item = _itemService.getItemFromId(itemid);
+        if(orderid != 0){
+            _menuOrderAppService.getOrderdItemQuantity(orderid,itemid,model);
+        }
         List<Modifier> modifierList = new List<Modifier>();
         foreach(int modifierid in modifiers){
             Modifier modifier = _modifierService.getModifierFromId(modifierid);
@@ -138,7 +143,12 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
     [HttpPost]
     public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails){
         _menuOrderAppService.createOrder(orderDetails);
-        return Json(new {success = "ok ok"});
+        return Json(new {success = "Order Saved Successfully"});
+    }
+
+    public IActionResult getRunningTableOrder(int tableid){
+        MenuOrderAppModel model = _menuOrderAppService.getRunningTableOrder(tableid);
+        return PartialView("_menu",model);
     }
 
 }

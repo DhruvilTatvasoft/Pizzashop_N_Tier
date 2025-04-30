@@ -16,10 +16,11 @@
                 <button class="btn btn-outline-primary btnoutlinecolour pt-1"><img src="~/images/qr-code-scan.svg"
                         alt=""></button>
                 <button class="btn btn-outline-primary btnoutlinecolour pt-1"
-                    onclick="showCustomerDetails(@Model.tokenid)"><img src="~/images/person-lines-fill (1).svg"
+                    onclick="showCustomerDetails(@Model.customer.customerId)"><img
+                        src="~/images/person-lines-fill (1).svg" alt=""></button>
+                <button class="btn btn-outline-primary btnoutlinecolour pt-1" type="button" using
+                    Org.BouncyCastle.Crypto.Engines; onclick="openOrderCommentModal()"><img src="~/images/chat-text.svg"
                         alt=""></button>
-                <button class="btn btn-outline-primary btnoutlinecolour pt-1" type="button"
-                    onclick="openOrderCommentModal()"><img src="~/images/chat-text.svg" alt=""></button>
             </div>
         </div>
         <div class="parentDivForAccordians m-1 mt-0">
@@ -37,10 +38,30 @@
             {
                 <div class="d-flex justify-content-between">
                     <div>
-                        <input type="checkbox" id="isTaxApplied_@tax.Taxname" data-taxname="@tax.Taxname" data-taxType="@tax.Taxtype" data-taxPercentage="@tax.Taxpercentage" onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')"checked>
+                        @if (Model.appliedTax?.Count > 0)
+                        {
+                            if (Model.appliedTax.Any(Tax => Tax.taxname == tax.Taxname))
+                            {
+                                <input type="checkbox" id="isTaxApplied_@tax.Taxname" data-taxname="@tax.Taxname"
+                                    data-taxType="@tax.Taxtype" data-taxPercentage="@tax.Taxpercentage"
+                                    onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')" checked />
+                            }
+                            else
+                            {
+                                <input type="checkbox" id="isTaxApplied_@tax.Taxname" data-taxname="@tax.Taxname"
+                                    data-taxType="@tax.Taxtype" data-taxPercentage="@tax.Taxpercentage"
+                                    onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')" />
+                            }
+                        }
+                        else
+                        {
+                            <input type="checkbox" id="isTaxApplied_@tax.Taxname" data-taxname="@tax.Taxname"
+                                data-taxType="@tax.Taxtype" data-taxPercentage="@tax.Taxpercentage"
+                                onchange="appliedTaxOrNot(this,@tax.Taxpercentage,'@tax.Taxtype','@tax.Taxname')" checked />
+                        }
                         <span>@tax.Taxname</span>
-                </div>
-                <span id="tax_@tax.Taxname" data-taxPercentage="@tax.Taxpercentage" data-taxType="@tax.Taxtype"></span>
+                    </div>
+                    <span id="tax_@tax.Taxname" data-taxPercentage="@tax.Taxpercentage" data-taxType="@tax.Taxtype"></span>
                 </div>
             }
             <div class="d-flex justify-content-between fw-bold mt-2 border-top pt-2">
@@ -52,7 +73,7 @@
             <div class="d-flex gap-3 mb-3">
                 <div><input type="radio" name="payment" value="Cash" checked /> Cash</div>
                 <div><input type="radio" name="payment" value="Card" /> Card</div>
-                <div><input type="radio" name="payment" value="UPI"/> UPI</div>
+                <div><input type="radio" name="payment" value="UPI" /> UPI</div>
             </div>
         </div>
         <div>
@@ -94,6 +115,24 @@
 
 
 <script>
+
+    $(document).ready(function () {
+        var uniqueids = @Html.Raw(Json.Serialize(Model.uniqueids));
+        uniqueids.forEach(function (uniqueid) {
+            var parts = uniqueid.split('_');
+           
+            var itemid = parseInt(parts[1]);
+            var itemquantity = itemQuantities[uniqueid]
+            var modifierids = parts.slice(2).map(function (modifierid) {
+                return parseInt(modifierid);
+            });
+            addNewItemInOrder(itemid, modifierids, uniqueid)
+            
+        });
+    });
+
+
+
     function saveTheOrder() {
         var itemDetails = [];
         console.log(itemWiseComment)
@@ -119,13 +158,13 @@
             }
         });
 
-        var appliedTaxes =$("[id^='isTaxApplied_']:checked");
+        var appliedTaxes = $("[id^='isTaxApplied_']:checked");
         var taxesForOrder = [];
-        appliedTaxes.each(function(){
+        appliedTaxes.each(function () {
             var tax = {
-            taxname: $(this).data("taxname"),  
-            taxtype: $(this).data("taxtype"), 
-            taxPercentage: $(this).data("taxpercentage") 
+                taxname: $(this).data("taxname"),
+                taxtype: $(this).data("taxtype"),
+                taxPercentage: $(this).data("taxpercentage")
             }
             taxesForOrder.push(tax);
         })
@@ -141,10 +180,10 @@
             itemDetails: itemDetails,
             totalamount: totalamount,
             totalPersons: totalPersons,
-            ordercomment : orderComment,
-            PaymentMethod :  $('input[name="payment"]:checked').val(),
-            sectionId : sectionId,
-            appliedTaxes : taxesForOrder 
+            ordercomment: orderComment,
+            PaymentMethod: $('input[name="payment"]:checked').val(),
+            sectionId: sectionId,
+            appliedTaxes: taxesForOrder
         }
 
         console.log(orderDetails);

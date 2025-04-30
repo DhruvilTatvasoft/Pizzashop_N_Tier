@@ -14,9 +14,11 @@
     <div class="d-flex w-100 h-100">
         <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
         <input type="hidden" id="tableid" asp-for="tableid" />
-        <input type="hidden" id="tokenid" asp-for="tokenid" />
+        <input type="hidden" id="tokenid" asp-for="tokenid"/>
+        <input type="hidden" id="customerid" asp-for="customer.customerId">
+        <input type="hidden" id="orderid" asp-for="orderid">
+        @* <input type="hidden" id="totalpersonCount" asp-for="customer.PersonCount"> *@
         <div class="MenuSidebarContainer h-100"></div>
-        <h1>@Model.isTableAssigned</h1>
         <div class="MenuBodyContainer w-100 h-100"></div>
     </div>
 </div>
@@ -25,11 +27,12 @@
     $("document").ready(() => {
         loadSideBar();
         loadMenuDataContainer();
-
-        if ($("#IsTableAssigned").val() == "True") {
+        if ($("#IsTableAssigned").val() != "False") {
             var requestedData = {
-                tokenid: $("#tokenid").val(),
-                tableids: @Html.Raw(Tableids)
+                customerid: $("#customerid").val(),
+                tableids: @Html.Raw(Tableids),
+                totalPersonCount : @Html.Raw(Model.customer?.PersonCount ?? 0),
+                orderid : @Html.Raw(Model.orderid)
             };
             $.ajax({
                 url: '@Url.Action("getOrderDetails", "MenuOrderApp")',
@@ -80,10 +83,11 @@
         }
 
         var requestedData = {
+            customerId:@Html.Raw(Model.customer?.customerId ?? 0),
             CategoryId: id,
-            TokenId: tokenId,
             TableIds: tableIds,
-            SearchedItem: searchedItem
+            SearchedItem: searchedItem,
+            orderid : @Html.Raw(Model?.orderid)
         };
 
         @* console.log('Request Payload:', requestedData);  *@
@@ -120,5 +124,47 @@
                 $("#itemDetailsModal").modal("show");
             }
         });
+    }
+
+    function addNewItemInOrder(itemid, modifiers, uniqueId) {
+        $.ajax({
+            url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
+            type: "POST",
+            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId,orderid : $("#orderid").val()},
+            success: function (response) {
+                $("#orderSummaryContainer").append(response);
+                var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
+                var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
+                var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
+                console.log("total amount is " + totalAmount);
+                totalAmount += (itemprice + modifiersrate) * quantity;
+                console.log("total becomes   " + totalAmount);
+                $("#subtotal").text("₹" + totalAmount);
+                calculateTax($("#subtotal").text().replace("₹", ""))
+                calculateTheTotalAmount()
+                $(".cancelButton").click()
+            }
+        });
+    }
+
+    function calculateTax(subtotal) {
+        var taxes = $('[id^="tax_"]');
+        console.log(subtotal)
+        taxes.each(function () {
+            var taxType = $(this).data("taxtype");
+            var taxValue = $(this).data("taxpercentage")
+
+            if (taxType == "flat amount") {
+                if (subtotal == 0) {
+                    $(this).text("₹0.0")
+                }
+                else {
+                    $(this).text("₹" + taxValue)
+                }
+            }
+            else {
+                $(this).text("₹" + (taxValue * parseFloat(subtotal)) / 100);
+            }
+        })
     }
 </script>

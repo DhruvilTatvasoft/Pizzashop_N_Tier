@@ -1,7 +1,7 @@
 @model MenuOrderAppModel
 
 <div class="w-100 h-100 mt-4 d-flex">
-    <div class="row pe-0 w-100 mb-0">
+    <div class="row pe-0 w-100 mb-0" style="padding-left: 5%;">
         <div class="d-flex justify-content-between " style="height: 9%;width: 50%;">
             <div class="form-group searchInput">
                 <input type="text" class="form-control" onkeyup="loadItemsForCategory(@Model.categoryId)"
@@ -58,7 +58,7 @@
                 }
             }
             function postorderComment() {
-                
+
                 orderComment = $("#orderComment").val()
                 toastr.success("Order Comment added successfully")
                 $(".closeOrderCommentModal").click();
@@ -66,24 +66,24 @@
             function openItemInstructionModal(uniqueid) {
                 $("#itemInstructionModal").modal("show");
                 var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);
-                console.log(item);     
+                console.log(item);
                 if (item != null && item != undefined) {
                     $("#ItemInstruction").val(item.Instruction);
                 }
-                else{
-                     $("#ItemInstruction").val('');
+                else {
+                    $("#ItemInstruction").val('');
                 }
                 $("#uniqueidForItemcomment").val(uniqueid.id)
             }
             function postItemInstruction() {
                 var uniqueid = $("#uniqueidForItemcomment").val()
                 var item = itemWiseComment.find(item => item.uniqueid == uniqueid);
-                if (item != null  && item != undefined) {
+                if (item != null && item != undefined) {
                     itemWiseComment = itemWiseComment.map(existingItem => {
                         if (existingItem.uniqueid == uniqueid) {
-                            existingItem.Instruction = $("#ItemInstruction").val(); 
+                            existingItem.Instruction = $("#ItemInstruction").val();
                         }
-                        return existingItem; 
+                        return existingItem;
                     });
                     toastr.success("Instruction Updated successfully");
                 } else {
@@ -96,4 +96,6 @@
                 }
                 $(".closeItemInstructionModal").click();
             }
+
+           
         </script>

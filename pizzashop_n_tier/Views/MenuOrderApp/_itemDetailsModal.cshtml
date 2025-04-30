@@ -70,76 +70,28 @@
 <script>
     var modifiers = [];
 
-    function calculateTax(subtotal) {
+    @* function calculateTax(subtotal) {
         var taxes = $('[id^="tax_"]');
         console.log(subtotal)
-        taxes.each(function (){
+        taxes.each(function () {
             var taxType = $(this).data("taxtype");
             var taxValue = $(this).data("taxpercentage")
 
-            if (taxType == "flat amount"){
-                if(subtotal == 0){
-                $(this).text("₹0.0")
+            if (taxType == "flat amount") {
+                if (subtotal == 0) {
+                    $(this).text("₹0.0")
                 }
-                else{
-                $(this).text("₹"+taxValue)
+                else {
+                    $(this).text("₹" + taxValue)
                 }
             }
             else {
                 $(this).text("₹" + (taxValue * parseFloat(subtotal)) / 100);
             }
         })
-    }
-    function appliedTaxOrNot(element, value, type, name) {
-        
-        if (type == "flat amount") {
-            if ($(element).prop("checked")) {
-
-                totalAmount += parseFloat(value);
-                var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) + parseFloat(value);
-                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
-                $("#tax_"+name).text("₹"+ parseFloat(value))
-            }
-            else {
-                totalAmount -= parseFloat(value);
-                if(totalAmount > 0){
-                var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) - parseFloat(value);
-                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
-                $("#tax_"+name).text("₹0.00")
-                }
-            }
-        }
-        else {
-            if ($(element).prop("checked")) {
-                totalAmount += parseFloat(value);
-                var currentTotalAmount = parseFloat($("#totalamount").text().replace('₹', '')) + (parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100;
-                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
-                $("#tax_"+name).text("₹"+(parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100)
-            }
-            else {
-                totalAmount -= parseFloat(value);
-                if(totalAmount > 0){
-                var currentTotalAmount =  parseFloat($("#totalamount").text().replace('₹', '')) - (parseFloat($("#subtotal").text().replace('₹', '')) * parseFloat(value)) / 100;
-                $("#totalamount").text("₹" + currentTotalAmount.toFixed(2))
-                $("#tax_"+name).text("₹0.00")
-                }
-            }
-        }
-    }
-    function calculateTheTotalAmount() {
-        var subtotal = parseFloat($("#subtotal").text().replace('₹', ''));
-        var sumOfTaxAmount = 0;
-        var taxes = $('[id^="tax_"]');
-        taxes.each(function () {
-            if ($(this).data('taxtype') != "flat amount") {
-                sumOfTaxAmount += parseFloat($(this).text().replace('₹', ''));
-            }
-        })
-        console.log("subtotal:" + subtotal + "sum of tax" + sumOfTaxAmount)
-        var total = subtotal + sumOfTaxAmount;
-        $("#totalamount").text("₹" + total.toFixed(2));
-    }
-
+    } *@
+    
+    
     function addItemsInOrder(itemid) {
         var modifiergroups = $('[id^="modifierGroup_"]');
         var isValid = true;
@@ -172,7 +124,7 @@
         if (document.querySelector("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT")) {
             var quantity = $("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val();
             var price = $("#" + uniqueId).data("itemrate");
-            var modifierrate = $("#modifier_rate_"+uniqueId).val();
+            var modifierrate = $("#modifier_rate_" + uniqueId).val();
             $("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val(parseInt(quantity) + 1);
             var subtotalValue = parseFloat($("#subtotal").text().replace("₹", ""));
             subtotalValue += parseFloat(price);
@@ -186,7 +138,8 @@
 
         }
         if (!isValid) return;
-        $.ajax({
+        addNewItemInOrder(itemid, modifiers, uniqueId);
+        @* $.ajax({
             url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
             type: "POST",
             data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId },
@@ -203,10 +156,29 @@
                     calculateTheTotalAmount()
                 $(".cancelButton").click()
             }
-        })
+        }) *@
     }
 
-
+    @* function addNewItemInOrder(itemid, modifiers, uniqueId) {
+        $.ajax({
+            url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
+            type: "POST",
+            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId },
+            success: function (response) {
+                $("#orderSummaryContainer").append(response);
+                var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
+                var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
+                var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
+                console.log("total amount is " + totalAmount);
+                totalAmount += (itemprice + modifiersrate) * quantity;
+                console.log("total becomes   " + totalAmount);
+                $("#subtotal").text("₹" + totalAmount);
+                calculateTax($("#subtotal").text().replace("₹", ""))
+                calculateTheTotalAmount()
+                $(".cancelButton").click()
+            }
+        });
+    } *@
     function addItemInOrder(element, modifierid) {
         var modifiergroups = $('[id^="modifierGroup_"]');
 

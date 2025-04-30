@@ -36,11 +36,11 @@ public class TableViewController : Controller
     public IActionResult assignTable([FromBody]assignTableDetails Model)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
-        model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid,Model.tableids);
+        model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid ?? 0,Model.tableids);
         model.isTableAssigned = true;
-        model.tokenid = Model.tokenid;
+        model.tokenid = Model.tokenid??0;
         model.categoryId = 0;
-        // model.orderid = _orderService.CreateOrderForCustomer(Model.tokenid,Model.tableids);
+        // model.orderid = _orderService.CreateOrderForCustomer(Model.tokenid??0,Model.tableids);
         return PartialView("_menu",model);
     }   
 }

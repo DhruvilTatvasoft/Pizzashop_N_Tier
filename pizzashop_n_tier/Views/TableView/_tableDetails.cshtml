@@ -85,18 +85,13 @@
 
 <script>
 	function openAssignOffCanvas(sectionid) {
-		@* var tableid = $("#selectedTable").data("sectionid"); *@
 		var selectedTables = $(".selectedTable");
 		var selectedTableIds = [];
-
 		selectedTables.each(function () {
 			selectedTableIds.push(parseInt($(this).data("tableid")));
 			console.log($(this).data("tableid"))
 		});
-
 		console.log(selectedTableIds)
-
-
 		var tableid = $(".selectedTable").data("tableid");
 		$.ajax({
 			url: "@Url.Action("getOffCanvas", "TableView")",
@@ -105,6 +100,27 @@
 			data: { sectionid: sectionid, tableids: selectedTableIds },
 			success: function (data) {
 				$(".WaitingTokendata").html(data);
+			}
+		});
+	}
+
+	$(document).ready(function () {
+		var runningTables = $(".Running-Table");
+		runningTables.each(function () {
+			const tableId = $(this).data("tableid");
+			$(this).on("click", function () {
+				findOrderForRunningTable(tableId);
+			});
+		});
+	});
+	function findOrderForRunningTable(tableid) {
+		$.ajax({
+			url: "@Url.Action("getRunningTableOrder", "MenuOrderApp")",
+			type: "GET",
+			data: { tableid: tableid },
+			success: function (response) {
+				$(".loadTabBody").html(response);
+				toastr.success("Order Found");
 			}
 		});
 	}
