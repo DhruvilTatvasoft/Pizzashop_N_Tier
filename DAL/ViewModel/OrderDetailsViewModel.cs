@@ -1,10 +1,13 @@
+using DAL.Data;
 using Microsoft.Identity.Client;
 using Microsoft.VisualStudio.TextTemplating;
 
 public class OrderDetailsViewModel
 {
     public List<int> tableids { get; set; }
+    public List<Table> tables{get;set;}
     public int customerid { get; set; }
+    public CustomerModel customerModel{get;set;}
     public List<ItemDetail> itemDetails { get; set; }  
     public float totalamount { get; set; }
     public string ordercomment{get;set;}
@@ -18,7 +21,9 @@ public class OrderDetailsViewModel
 public class ItemDetail
 {
     public string itemId { get; set; }
+    public Item item{get;set;}
     public List<string> modifierIds { get; set; }
+    public List<Modifier> modifiers{get;set;}
     public string quantity { get; set; }
     public string itemcomment{get;set;}
 }

@@ -18,6 +18,10 @@ public class SectionViewModel{
 }
 
 public class assignTableDetails{
-    public int tokenid{get;set;}
+    public int? tokenid{get;set;}
     public List<int> tableids{get;set;}
+    public int? customerid {get;set;}
+    public int? totalPersonCount {get;set;}
+
+    public int? orderid{get;set;}
 }

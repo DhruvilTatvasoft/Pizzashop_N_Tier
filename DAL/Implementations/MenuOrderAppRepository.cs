@@ -1,5 +1,8 @@
+using System.Net;
 using System.Reflection.Metadata.Ecma335;
 using DAL.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.IdentityModel.Tokens;
 
 public class MenuOrderAppRepository : IMenuOrderAppRepository
@@ -14,38 +17,41 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     public bool createOrder(OrderDetailsViewModel orderDetails)
     {
         Order order = new Order();
-       order.Customerid = orderDetails.customerid;
-       if(orderDetails.ordercomment != "" || orderDetails.ordercomment != null)
-       order.Ordercomment = orderDetails.ordercomment;
-       order.Totalamount = (decimal?)orderDetails.totalamount;
-       order.PaymentStatus = "Pending";
-       order.Statusid = 4;
-       order.Sectionid = orderDetails.sectionid;
-       order.Totalpersons = orderDetails.totalPersons;
-       order.Paymentmethod = orderDetails.PaymentMethod;
-       order.Createdat = DateTime.Now;
-       order.Createdby = 1;
-       order.Modifiedby = 1;
-       order.IsDeleted = false; 
-       _context.Orders.Add(order);
-       _context.SaveChanges();
+        order.Customerid = orderDetails.customerid;
+        if (orderDetails.ordercomment != "" || orderDetails.ordercomment != null)
+            order.Ordercomment = orderDetails.ordercomment;
+        order.Totalamount = (decimal?)orderDetails.totalamount;
+        order.PaymentStatus = "Pending";
+        order.Statusid = 4;
+        order.Sectionid = orderDetails.sectionid;
+        order.Totalpersons = orderDetails.totalPersons;
+        order.Paymentmethod = orderDetails.PaymentMethod;
+        order.Createdat = DateTime.Now;
+        order.Createdby = 1;
+        order.Modifiedby = 1;
+        order.IsDeleted = false;
+        _context.Orders.Add(order);
+        _context.SaveChanges();
 
-       foreach(var tableid in orderDetails.tableids){
-        Ordertable ordertable = new Ordertable();
-        ordertable.Tableid = tableid;
-        ordertable.Orderid = order.Orderid;
-        ordertable.Isdeleted = false;
-        // Table table = _context.Tables.FirstOrDefault(tbl=>tbl.Tableid == tableid)!;
-        // table.Status = false;
-        // table.Statusname = "Running";
-        // _context.Tables.Update(table);
-        ordertable.Createdby = 1;
-        ordertable.Modifiedby = 1;
-        ordertable.Customerid = orderDetails.customerid;    
-        _context.Ordertables.Add(ordertable);
-       }
+        foreach (var tableid in orderDetails.tableids)
+        {
+            Ordertable ordertable = new Ordertable();
+            ordertable.Tableid = tableid;
+            ordertable.Orderid = order.Orderid;
+            ordertable.Isdeleted = false;
+            Table table = _context.Tables.FirstOrDefault(tbl => tbl.Tableid == tableid)!;
+            table.Status = false;                                    // don't delete 
+            table.Statusname = "Running";
+            table.Customerid = orderDetails.customerid;
 
-        foreach(var item in orderDetails.itemDetails)
+            _context.Tables.Update(table);
+            ordertable.Createdby = 1;
+            ordertable.Modifiedby = 1;
+            ordertable.Customerid = orderDetails.customerid;
+            _context.Ordertables.Add(ordertable);
+        }
+
+        foreach (var item in orderDetails.itemDetails)
         {
             Orderitem orderedItem = new Orderitem();
             orderedItem.Orderid = order.Orderid;
@@ -56,7 +62,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             orderedItem.Specialcomment = item.itemcomment;
             _context.Orderitems.Add(orderedItem);
             _context.SaveChanges();
-            foreach(var modifierid in item.modifierIds){
+            foreach (var modifierid in item.modifierIds)
+            {
                 OrderItemModifier itemModifier = new OrderItemModifier();
                 itemModifier.ItemId = int.Parse(item.itemId);
                 itemModifier.Modifierid = int.Parse(modifierid);
@@ -68,7 +75,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             }
         }
 
-        foreach(var tax in orderDetails.appliedTaxes){
+        foreach (var tax in orderDetails.appliedTaxes)
+        {
             Ordertaxesandfee taxAndFees = new Ordertaxesandfee();
             taxAndFees.Orderid = order.Orderid;
             taxAndFees.Taxname = tax.taxname;
@@ -76,8 +84,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             taxAndFees.Taxtype = tax.taxtype;
             _context.Ordertaxesandfees.Add(taxAndFees);
         }
-       _context.SaveChanges();
-       return true;
+        _context.SaveChanges();
+        return true;
 
     }
 
@@ -145,8 +153,10 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
     public Order getOrderfromOrderid(int orderId)
     {
-        return _context.Orders.FirstOrDefault(order=>order.Orderid == orderId)!;
+        return _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
     }
+
+
 
     public void saveCustomerDetails(CustomerModel customer)
     {
@@ -164,9 +174,166 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
     public void saveOrderWiseComment(MenuOrderAppModel model)
     {
-        Order order = _context.Orders.FirstOrDefault(Order=>Order.Orderid == model.orderid);
+        Order order = _context.Orders.FirstOrDefault(Order => Order.Orderid == model.orderid);
         order.Ordercomment = model.order.Ordercomment;
         _context.Orders.Update(order);
         _context.SaveChanges();
+    }
+
+    public MenuOrderAppModel getRunningTableOrder(int tableid)
+    {
+        OrderDetailsViewModel model = new OrderDetailsViewModel();
+        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid)!.Orderid;
+        List<int> itemids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderid).Select(orderedItem => orderedItem.Itemid).ToList();
+        List<Item> items = new List<Item>();
+        Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
+        List<ItemDetail> itemDetails = new List<ItemDetail>();
+        CustomerModel customermodel = new CustomerModel();
+        foreach (var itemid in itemids)
+        {
+            // loading item
+            ItemDetail itemDetail = new ItemDetail();
+            itemDetail.itemId = itemid.ToString();
+            Item item = _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
+            itemDetail.item = item;
+            itemDetail.itemcomment = _context.Orderitems.FirstOrDefault(orderdItem => orderdItem.Orderid == orderid && orderdItem.Itemid == itemid)!.Specialcomment ?? "";
+            int itemQuantity = _context.Orderitems.FirstOrDefault(Orderitems => Orderitems.Orderid == orderid && Orderitems.Itemid == itemid)?.Orderitemquantity ?? 0;
+
+            // loading modifiers for item
+            List<Modifier> modifiersForItem = new List<Modifier>();
+            int orderedIteDetailId = _context.Orderitems.FirstOrDefault(orderedIteDetail => orderedIteDetail.Itemid == itemid && orderedIteDetail.Orderid == orderid)!.Orderitemid;
+            List<int> modifierIds = _context.OrderItemModifiers
+                .Where(orderedItemModifiers => orderedItemModifiers.Orderitemdetailid == orderedIteDetailId && orderedItemModifiers.Modifierid.HasValue)
+                .Select(orderedItemModifiers => orderedItemModifiers.Modifierid!.Value)
+                .ToList();
+            foreach (var modifierid in modifierIds)
+            {
+                Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid)!;
+                modifiersForItem.Add(modifier);
+            }
+            itemDetail.modifiers = modifiersForItem;
+            itemDetails.Add(itemDetail);
+        }
+        model.itemDetails = itemDetails;
+
+        // loading applied tax and fees
+        List<Ordertaxesandfee> appliedTaxAndFees = _context.Ordertaxesandfees.Where(appliedtax => appliedtax.Orderid == orderid).ToList();
+        List<appliedTaxDetails> appliedTaxDetails = new List<appliedTaxDetails>();
+        foreach (var tax in appliedTaxAndFees)
+        {
+            appliedTaxDetails taxandfees = new appliedTaxDetails();
+            taxandfees.taxname = tax.Taxname!;
+            taxandfees.taxPercentage = (float)tax.TaxPercentage!;
+            taxandfees.taxtype = tax.Taxtype!;
+        }
+        model.appliedTaxes = appliedTaxDetails;
+
+        // loading tables
+        List<int> tableids = _context.Ordertables.Where(table => table.Orderid == orderid).Select(table => table.Tableid).ToList();
+        List<Table> Ordertables = new List<Table>();
+        int customerid = 0;
+        int sectionid = 0;
+        foreach (var id in tableids)
+        {
+            Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
+            Ordertables.Add(table);
+            customerid = table.Customerid ?? customerid;
+            sectionid = table.Sectionid;
+        }
+        model.tables = Ordertables;
+        customermodel.tables = Ordertables;
+        customermodel.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid)!;
+
+        // loading customerdetails
+        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == customerid)!;
+        customermodel.customerId = customer.Customerid;
+        customermodel.name = customer.Customername;
+        customermodel.email = customer.Email;
+        customermodel.PersonCount = _context.Orders.FirstOrDefault(order => order.Orderid == orderid).Totalpersons;
+        customermodel.phone = customer.Phonenumber;
+        model.customerModel = customermodel;
+        customermodel.tableids = tableids;
+
+        //loading order comment and payment method
+        model.ordercomment = order.Ordercomment ?? "";
+        model.PaymentMethod = order.Paymentmethod;
+        MenuOrderAppModel Model = new MenuOrderAppModel();
+        Model.orderDetailModel = model;
+        Model.customer = customermodel;
+        Model.isTableAssigned = true;
+        Model.orderid = orderid;
+
+
+
+        return Model;
+    }
+
+    public CustomerModel getcustomerDetails(int customerid, List<int>? tableid)
+    {
+        CustomerModel model = new CustomerModel();
+        model.customerId = customerid;
+        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == customerid)!;
+        model.name = customer.Customername;
+        model.email = customer.Email;
+        model.phone = customer.Phonenumber;
+        List<Table> tables = new List<Table>();
+        if (tableid != null)
+        {
+            foreach (var id in tableid)
+            {
+                Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
+                tables.Add(table);
+                model.section = _context.Sections.FirstOrDefault(section => section.Sectionid == table.Sectionid)!;
+            }
+            model.tables = tables;
+        }
+        return model;
+    }
+
+    public void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel)
+    {
+        List<int> itemids = _context.Orderitems
+            .Where(orderedItem => orderedItem.Orderid == orderid)
+            .Select(orderedItem => orderedItem.Itemid)
+            .ToList();
+        List<string> uniqueids = new List<string>();
+      
+        foreach (var itemid in itemids)
+        {
+            int orderItemDetailId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Itemid == itemid && orderedItem.Orderid == orderid)!.Orderitemid;
+            List<int> modifierids = _context.OrderItemModifiers
+                .Where(orderedItemModifier => orderedItemModifier.Orderitemdetailid == orderItemDetailId && orderedItemModifier.Orderid == orderid)
+                .Select(orderedItemModifier => orderedItemModifier.Modifierid)
+                .Where(modifierId => modifierId.HasValue)
+                .Select(modifierId => modifierId.Value)
+                .ToList();
+            string uniqueid = "item_" + itemid + "_";
+            foreach (var id in modifierids)
+            {
+                uniqueid += id + "_";
+            }
+            uniqueid = uniqueid.TrimEnd('_');
+           
+            uniqueids.Add(uniqueid);
+        }
+        responseModel.uniqueids = uniqueids;
+        List<Ordertaxesandfee> taxesOnOrder = _context.Ordertaxesandfees.Where(orderTax => orderTax.Orderid == orderid).ToList();
+        List<appliedTaxDetails> appliedTaxes = new List<appliedTaxDetails>();
+        foreach (var tax in taxesOnOrder)
+        {
+            appliedTaxDetails appliedTax = new appliedTaxDetails();
+            appliedTax.taxname = tax.Taxname!;
+            appliedTax.taxPercentage = (float)tax.TaxPercentage!;
+            appliedTax.taxtype = tax.Taxtype!;
+            appliedTaxes.Add(appliedTax);
+        }
+        responseModel.appliedTax = appliedTaxes;
+    }
+
+    public void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model)
+    {
+       Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orederedItem=>orederedItem.Itemid == itemid && orederedItem.Orderid == orderid)!;
+       model.itemQuantity = orderedItem.Orderitemquantity?? 0;
+       model.itemcomment = orderedItem.Specialcomment ?? "";
     }
 }
