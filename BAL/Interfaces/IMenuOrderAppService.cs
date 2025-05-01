@@ -7,7 +7,7 @@ public interface IMenuOrderAppService
     Item getItem(int itemid);
     List<Item> getItemsForcategory(int categoryid,string searchedItem);
     List<ModifierModel> getModifiersForItem(int itemid);
-    void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model);
+    void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers);
     Order getOrderfromOrderid(int orderId);
     MenuOrderAppModel getRunningTableOrder(int tableid);
     void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel);

@@ -17,67 +17,150 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     public bool createOrder(OrderDetailsViewModel orderDetails)
     {
         Order order = new Order();
+
+        if (orderDetails.orderid != 0)
+        {
+            order = _context.Orders.FirstOrDefault(existingOrder => existingOrder.Orderid == orderDetails.orderid)!;
+        }
         order.Customerid = orderDetails.customerid;
         if (orderDetails.ordercomment != "" || orderDetails.ordercomment != null)
+        {
             order.Ordercomment = orderDetails.ordercomment;
+        }
         order.Totalamount = (decimal?)orderDetails.totalamount;
         order.PaymentStatus = "Pending";
         order.Statusid = 4;
+
         order.Sectionid = orderDetails.sectionid;
         order.Totalpersons = orderDetails.totalPersons;
         order.Paymentmethod = orderDetails.PaymentMethod;
-        order.Createdat = DateTime.Now;
-        order.Createdby = 1;
+        if (orderDetails.orderid == 0)
+        {
+            order.Createdat = DateTime.Now;
+            order.Createdby = 1;
+        }
         order.Modifiedby = 1;
         order.IsDeleted = false;
-        _context.Orders.Add(order);
+        if (orderDetails.orderid != 0)
+        {
+            _context.Orders.Update(order);
+        }
+        else
+        {
+            _context.Orders.Add(order);
+        }
         _context.SaveChanges();
 
-        foreach (var tableid in orderDetails.tableids)
+        if (orderDetails.orderid != 0)
         {
-            Ordertable ordertable = new Ordertable();
-            ordertable.Tableid = tableid;
-            ordertable.Orderid = order.Orderid;
-            ordertable.Isdeleted = false;
-            Table table = _context.Tables.FirstOrDefault(tbl => tbl.Tableid == tableid)!;
-            table.Status = false;                                    // don't delete 
-            table.Statusname = "Running";
-            table.Customerid = orderDetails.customerid;
+            List<string> existingUniqueids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderDetails.orderid).Select(orderedItem => orderedItem.Uniqueid).ToList();
+            List<string> currentUniqueIds = orderDetails.uniqueids;
+            List<string> itemsToDelete = existingUniqueids.Except(currentUniqueIds ?? new List<string>()).ToList();
 
-            _context.Tables.Update(table);
-            ordertable.Createdby = 1;
-            ordertable.Modifiedby = 1;
-            ordertable.Customerid = orderDetails.customerid;
-            _context.Ordertables.Add(ordertable);
+            foreach (var id in itemsToDelete)
+            {
+                int itemDetailId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == id).Orderitemid;
+                Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Uniqueid == id);
+                _context.Orderitems.Remove(orderedItem);
+                // _context.OrderItemModifiers.RemoveRange();
+                List<OrderItemModifier> itemsAndModifiers = _context.OrderItemModifiers.Where(OrderdItemModifiers => OrderdItemModifiers.Orderitemdetailid == itemDetailId).ToList();
+                _context.OrderItemModifiers.RemoveRange(itemsAndModifiers);
+            }
+            _context.SaveChanges();
         }
-
+        if (orderDetails.orderid == 0)
+        {
+            foreach (var tableid in orderDetails.tableids)
+            {
+                Ordertable ordertable = new Ordertable();
+                if (orderDetails.orderid != 0)
+                {
+                    ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Orderid == orderDetails.orderid)!;
+                }
+                ordertable.Tableid = tableid;
+                ordertable.Orderid = order.Orderid;
+                ordertable.Isdeleted = false;
+                Table table = _context.Tables.FirstOrDefault(tbl => tbl.Tableid == tableid)!;
+                table.Status = false;
+                table.Statusname = "Running";
+                table.Customerid = orderDetails.customerid;
+                _context.Tables.Update(table);
+                ordertable.Createdby = 1;
+                ordertable.Modifiedby = 1;
+                ordertable.Customerid = orderDetails.customerid;
+                if (orderDetails.orderid != 0)
+                {
+                    _context.Ordertables.Update(ordertable);
+                }
+                else
+                {
+                    _context.Ordertables.Add(ordertable);
+                }
+            }
+        }
         foreach (var item in orderDetails.itemDetails)
         {
-            Orderitem orderedItem = new Orderitem();
-            orderedItem.Orderid = order.Orderid;
-            orderedItem.Itemid = int.Parse(item.itemId);
-            orderedItem.Orderitemquantity = int.Parse(item.quantity);
-            orderedItem.Createdby = 1;
-            orderedItem.Modifiedby = 1;
-            orderedItem.Specialcomment = item.itemcomment;
-            _context.Orderitems.Add(orderedItem);
-            _context.SaveChanges();
-            foreach (var modifierid in item.modifierIds)
+            string uniqueid = "item_" + item.itemId + "_";
+            Orderitem? orderedItem = new Orderitem();
+            Orderitem? orderedItem2 = new Orderitem();
+            orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderid == orderDetails.orderid && orderedItem.Uniqueid == item.uniqueid);
+            bool itemUpdated = false;
+            if (orderedItem != null)
             {
-                OrderItemModifier itemModifier = new OrderItemModifier();
-                itemModifier.ItemId = int.Parse(item.itemId);
-                itemModifier.Modifierid = int.Parse(modifierid);
-                itemModifier.ModifierQuantity = int.Parse(item.quantity);
-                itemModifier.Orderitemdetailid = orderedItem.Orderitemid;
-                itemModifier.Orderid = order.Orderid;
-                _context.OrderItemModifiers.Add(itemModifier);
+                orderedItem.Orderitemquantity = int.Parse(item.quantity);
+                orderedItem.Specialcomment = item.itemcomment;
+                _context.Orderitems.Update(orderedItem);
+                itemUpdated = true;
+            }
+            else
+            {
+                orderedItem2.Orderid = order.Orderid;
+                orderedItem2.Itemid = int.Parse(item.itemId);
+                orderedItem2.Orderitemquantity = int.Parse(item.quantity);
+                orderedItem2.Createdby = 1;
+                orderedItem2.Modifiedby = 1;
+                orderedItem2.Specialcomment = item.itemcomment;
+                _context.Orderitems.Add(orderedItem2);
+            }
+
+            _context.SaveChanges();
+            if (!itemUpdated)
+            {
+                foreach (var modifierid in item.modifierIds)
+                {
+                    OrderItemModifier? itemModifier = new OrderItemModifier();
+                    itemModifier.ItemId = int.Parse(item.itemId);
+                    itemModifier.Modifierid = int.Parse(modifierid);
+                    itemModifier.ModifierQuantity = int.Parse(item.quantity);
+                    itemModifier.Orderitemdetailid = orderedItem2.Orderitemid;
+                    itemModifier.Orderid = order.Orderid;
+                    _context.OrderItemModifiers.Add(itemModifier);
+                }
+                _context.SaveChanges();
+                List<int> modifierIds = item.modifierIds.Select(modifierId => int.Parse(modifierId)).ToList();
+                modifierIds.Sort();
+                foreach(var id in modifierIds){
+                    uniqueid += id + "_";
+                }
+                uniqueid = uniqueid.TrimEnd('_');
+                orderedItem2.Uniqueid = uniqueid;
+                _context.Orderitems.Update(orderedItem2);
                 _context.SaveChanges();
             }
         }
-
+        if(orderDetails.orderid != 0){
+            List<Ordertaxesandfee> taxAndFees = _context.Ordertaxesandfees.Where(Tax=>Tax.Orderid == orderDetails.orderid).ToList();
+            _context.Ordertaxesandfees.RemoveRange(taxAndFees);
+            _context.SaveChanges();
+        }
         foreach (var tax in orderDetails.appliedTaxes)
         {
             Ordertaxesandfee taxAndFees = new Ordertaxesandfee();
+            if (orderDetails.orderid != null)
+            {
+                var taxesToRemove = _context.Ordertaxesandfees.Where(Orderedtaxesandfees => Orderedtaxesandfees.Orderid == orderDetails.orderid);
+                _context.Ordertaxesandfees.RemoveRange(taxesToRemove);
+            }
             taxAndFees.Orderid = order.Orderid;
             taxAndFees.Taxname = tax.taxname;
             taxAndFees.TaxPercentage = (decimal?)float.Parse(tax.taxPercentage.ToString());
@@ -86,7 +169,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         }
         _context.SaveChanges();
         return true;
-
     }
 
     public Item getItem(int itemid)
@@ -262,6 +344,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         Model.customer = customermodel;
         Model.isTableAssigned = true;
         Model.orderid = orderid;
+        Model.orderComment = order.Ordercomment;
 
 
 
@@ -295,25 +378,34 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         List<int> itemids = _context.Orderitems
             .Where(orderedItem => orderedItem.Orderid == orderid)
             .Select(orderedItem => orderedItem.Itemid)
+            .Distinct()
             .ToList();
-        List<string> uniqueids = new List<string>();
-      
+
+        List<int> itemdetailids = new List<int>();
         foreach (var itemid in itemids)
         {
-            int orderItemDetailId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Itemid == itemid && orderedItem.Orderid == orderid)!.Orderitemid;
+            List<int> CurrentItemDetailIds = _context.Orderitems.Where(Ordereditems => Ordereditems.Itemid == itemid && Ordereditems.Orderid == orderid).Select(Ordereditems => Ordereditems.Orderitemid).ToList();
+            itemdetailids.AddRange(CurrentItemDetailIds);
+        }
+        List<string> uniqueids = new List<string>();
+
+        foreach (var itemid in itemdetailids)
+        {
+            int orderItemId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == itemid)!.Itemid;
+
             List<int> modifierids = _context.OrderItemModifiers
-                .Where(orderedItemModifier => orderedItemModifier.Orderitemdetailid == orderItemDetailId && orderedItemModifier.Orderid == orderid)
+                .Where(orderedItemModifier => orderedItemModifier.Orderitemdetailid == itemid && orderedItemModifier.Orderid == orderid)
                 .Select(orderedItemModifier => orderedItemModifier.Modifierid)
                 .Where(modifierId => modifierId.HasValue)
                 .Select(modifierId => modifierId.Value)
                 .ToList();
-            string uniqueid = "item_" + itemid + "_";
+            string uniqueid = "item_" + orderItemId + "_";
             foreach (var id in modifierids)
             {
                 uniqueid += id + "_";
             }
             uniqueid = uniqueid.TrimEnd('_');
-           
+
             uniqueids.Add(uniqueid);
         }
         responseModel.uniqueids = uniqueids;
@@ -328,12 +420,26 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             appliedTaxes.Add(appliedTax);
         }
         responseModel.appliedTax = appliedTaxes;
+        responseModel.orderComment = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!.Ordercomment ?? "";
     }
 
-    public void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model)
+    public void getOrderdItemQuantity(int? orderid, int itemid, MenuOrderAppModel model, List<int> modifiers)
     {
-       Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orederedItem=>orederedItem.Itemid == itemid && orederedItem.Orderid == orderid)!;
-       model.itemQuantity = orderedItem.Orderitemquantity?? 0;
-       model.itemcomment = orderedItem.Specialcomment ?? "";
+        string uniqueid = "item_"+itemid +"_";
+        foreach(var id in modifiers){
+            uniqueid += id + "_";
+        }
+        uniqueid = uniqueid.TrimEnd('_');
+        Orderitem? orderedItem = _context.Orderitems.FirstOrDefault(orederedItem => orederedItem.Uniqueid == uniqueid);
+        if (orderedItem == null)
+        {
+            model.itemQuantity = 1;
+            model.itemcomment = "";
+        }
+        else
+        {
+                model.itemQuantity = orderedItem.Orderitemquantity ?? 1;
+                model.itemcomment = orderedItem.Specialcomment ?? "";           
+        }
     }
 }

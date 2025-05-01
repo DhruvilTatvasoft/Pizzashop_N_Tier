@@ -79,7 +79,9 @@
         <div>
             <div class="d-flex justify-content-end gap-2">
                 <button class="btn btn-primary btncolour" style="width: 20%;" onclick="saveTheOrder()">Save</button>
-                <button class="btn btn-outline-primary btnoutlinecolourLight">Complete</button>
+                <input type="hidden" id="savedOrNot" value="false">
+                <button class="btn btn-outline-primary btnoutlinecolourLight"
+                    onclick="CompleteTheOrder()">Complete</button>
                 <button class="btn btn-outline-primary btnoutlinecolourLight">Generate Invoice</button>
             </div>
             <div class="d-flex justify-content-end mt-3">
@@ -100,7 +102,8 @@
             </div>
             <form id="orderCommentForm">
                 <div class="modal-body">
-                    <textarea class="form-control" placeholder="Comment" id="orderComment"></textarea>
+                    <textarea class="form-control" placeholder="Comment" id="orderComment"
+                        asp-for="orderComment"></textarea>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btncolor" onclick="postorderComment()"
@@ -118,22 +121,31 @@
 
     $(document).ready(function () {
         var uniqueids = @Html.Raw(Json.Serialize(Model.uniqueids));
-        uniqueids.forEach(function (uniqueid) {
-            var parts = uniqueid.split('_');
-           
-            var itemid = parseInt(parts[1]);
-            var modifierids = parts.slice(2).map(function (modifierid) {
-                return parseInt(modifierid);
+        var orderComment = @Html.Raw(Json.Serialize(Model.orderComment));
+
+        if (orderComment && orderComment !== "") {
+            $("#orderComment").val(orderComment);
+        }
+
+        if (uniqueids.length > 0) {
+            uniqueids.forEach(function (uniqueid) {
+                var parts = uniqueid.split('_');
+                var itemid = parseInt(parts[1]);
+                var modifierids = parts.slice(2).map(function (modifierid) {
+                    return parseInt(modifierid);
+                });
+
+                addNewItemInOrder(itemid, modifierids, uniqueid);
             });
-            addNewItemInOrder(itemid, modifierids, uniqueid)
-            
-        });
+        }
     });
-
-
-
     function saveTheOrder() {
         var itemDetails = [];
+        if ($('[id^="item_"]').length == 0) {
+            alert("hit")
+            toastr.error("Add some items before saving the order");
+            return;
+        }
         console.log(itemWiseComment)
         $('[id^="item_"]').each(function (index, element) {
             var fullId = $(element).attr('id');
@@ -153,6 +165,7 @@
                     modifierIds: modifierIds,
                     quantity: $("#" + fullId + " .textInputForCounterInOrderItemDetailsKOT").val(),
                     itemcomment: itemcomment,
+                    uniqueid: fullId
                 });
             }
         });
@@ -182,7 +195,9 @@
             ordercomment: orderComment,
             PaymentMethod: $('input[name="payment"]:checked').val(),
             sectionId: sectionId,
-            appliedTaxes: taxesForOrder
+            appliedTaxes: taxesForOrder,
+            orderid: @Html.Raw(Json.Serialize(Model.orderid)),
+            uniqueids: [...new Set($("[id^='item_']").map(function () { return this.id; }).get())]
         }
 
         console.log(orderDetails);
@@ -195,12 +210,29 @@
             data: JSON.stringify(orderDetails),
             success: function (response) {
                 toastr.success(response.success);
+                $("#savedOrNot").val(true);
             },
             error: function (xhr, status, error) {
                 console.error("Error saving the order:", error);
                 toastr.error("There was an issue saving the order.");
             }
         });
+    }
+
+    function CompleteTheOrder(){
+       var itemDetails =  [...new Set($("[id^='item_']").map(function () { return this.id; }).get())];
+       var itemIds ={
+        uniqueids : itemDetails,
+       } 
+        $.ajax({
+            url:"@Url.Action("checkAllItemsAreReadyOrNot","MenuOrderApp")",
+            type:"POST",
+            data:JSON.stringify(itemIds),
+            success:function(response){
+                
+            }
+        });
+
     }
 
 </script>

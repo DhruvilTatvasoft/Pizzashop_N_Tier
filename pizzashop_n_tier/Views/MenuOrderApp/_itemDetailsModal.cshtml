@@ -139,46 +139,7 @@
         }
         if (!isValid) return;
         addNewItemInOrder(itemid, modifiers, uniqueId);
-        @* $.ajax({
-            url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
-            type: "POST",
-            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId },
-            success: function (response) {
-                $("#orderSummaryContainer").append(response);
-                var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
-                var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
-                var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
-                console.log("total amount is " + totalAmount);
-                totalAmount += (itemprice + modifiersrate) * quantity;
-                console.log("total becomes   " + totalAmount);
-                $("#subtotal").text("₹" + totalAmount);
-                calculateTax($("#subtotal").text().replace("₹", ""))
-                    calculateTheTotalAmount()
-                $(".cancelButton").click()
-            }
-        }) *@
     }
-
-    @* function addNewItemInOrder(itemid, modifiers, uniqueId) {
-        $.ajax({
-            url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
-            type: "POST",
-            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId },
-            success: function (response) {
-                $("#orderSummaryContainer").append(response);
-                var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
-                var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
-                var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
-                console.log("total amount is " + totalAmount);
-                totalAmount += (itemprice + modifiersrate) * quantity;
-                console.log("total becomes   " + totalAmount);
-                $("#subtotal").text("₹" + totalAmount);
-                calculateTax($("#subtotal").text().replace("₹", ""))
-                calculateTheTotalAmount()
-                $(".cancelButton").click()
-            }
-        });
-    } *@
     function addItemInOrder(element, modifierid) {
         var modifiergroups = $('[id^="modifierGroup_"]');
 

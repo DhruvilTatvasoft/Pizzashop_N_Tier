@@ -13,6 +13,8 @@ public class MenuOrderAppModel
         get;set;
     }
 
+    public string orderComment{get;set;}
+
     public int itemQuantity{get;set;}
 
     public string itemcomment{get;set;}

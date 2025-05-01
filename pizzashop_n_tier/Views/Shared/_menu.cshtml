@@ -14,7 +14,7 @@
     <div class="d-flex w-100 h-100">
         <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
         <input type="hidden" id="tableid" asp-for="tableid" />
-        <input type="hidden" id="tokenid" asp-for="tokenid"/>
+        <input type="hidden" id="tokenid" asp-for="tokenid" />
         <input type="hidden" id="customerid" asp-for="customer.customerId">
         <input type="hidden" id="orderid" asp-for="orderid">
         @* <input type="hidden" id="totalpersonCount" asp-for="customer.PersonCount"> *@
@@ -23,7 +23,7 @@
     </div>
 </div>
 <script>
-     var itemWiseComment = [];
+    var itemWiseComment = [];
     $("document").ready(() => {
         loadSideBar();
         loadMenuDataContainer();
@@ -31,8 +31,8 @@
             var requestedData = {
                 customerid: $("#customerid").val(),
                 tableids: @Html.Raw(Tableids),
-                totalPersonCount : @Html.Raw(Model.customer?.PersonCount ?? 0),
-                orderid : @Html.Raw(Model.orderid)
+                totalPersonCount: @Html.Raw(Model.customer?.PersonCount ?? 0),
+                orderid: @Html.Raw(Model.orderid)
             };
             $.ajax({
                 url: '@Url.Action("getOrderDetails", "MenuOrderApp")',
@@ -87,7 +87,7 @@
             CategoryId: id,
             TableIds: tableIds,
             SearchedItem: searchedItem,
-            orderid : @Html.Raw(Model?.orderid)
+            orderid: @Html.Raw(Model?.orderid)
         };
 
         @* console.log('Request Payload:', requestedData);  *@
@@ -130,7 +130,7 @@
         $.ajax({
             url: "@Url.Action("addItemInOrder", "MenuOrderApp")",
             type: "POST",
-            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId,orderid : $("#orderid").val()},
+            data: { itemid: itemid, modifiers: modifiers, uniqueId: uniqueId, orderid: $("#orderid").val() },
             success: function (response) {
                 $("#orderSummaryContainer").append(response);
                 var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));

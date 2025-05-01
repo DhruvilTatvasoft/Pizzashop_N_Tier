@@ -128,7 +128,7 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.item = _itemService.getItemFromId(itemid);
         if(orderid != 0){
-            _menuOrderAppService.getOrderdItemQuantity(orderid,itemid,model);
+            _menuOrderAppService.getOrderdItemQuantity(orderid,itemid,model,modifiers);
         }
         List<Modifier> modifierList = new List<Modifier>();
         foreach(int modifierid in modifiers){
@@ -137,6 +137,9 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
         }
         model.modifiers = modifierList;
         model.uniqueId = uniqueId;
+        model.orderid = orderid?? 0;
+        
+
         return PartialView("_itemAccordian",model);
     }
 

@@ -2,15 +2,15 @@
 @{
     decimal totalModifierPrice = 0;
 }
-<div class="accordion-item mb-1" id="@Model.uniqueId" data-itemrate="@Model.item.Itemrate" >
-    <span class="accordion-header"  >
+<div class="accordion-item mb-1" id="@Model.uniqueId" data-itemrate="@Model.item.Itemrate">
+    <span class="accordion-header">
         <div class="container-fluid d-flex p-0 pe-sm-2 pt-2 align-items-center justify-content-between pb-2">
             <div class="row" style="width: 100%;">
                 <div class="col-8">
                     <div class="container-fluid p-0 d-flex align-items-center justify-content-between">
                         <div class="d-flex">
                             <button class="accordion-image-buttonForMenuKOT" type="button" data-bs-toggle="collapse"
-                                style="width: 100%;border:none;background-color: white;"
+                                style="border:none;background-color: white;"
                                 data-bs-target="#collapse-@Model.item.Itemid" aria-expanded="false"
                                 aria-controls="collapseOne">
                                 <div class="container-fluid ps-2 pe-0 justify-content-between d-flex">
@@ -20,16 +20,18 @@
                                     </div>
                                 </div>
                             </button>
-                            <span class="item_@Model.item.Itemid fontWeight600"
-                                            data-itemrate="@Model.item.Itemrate"  onclick="openItemInstructionModal(@Model.uniqueId)">@Model.item.Itemname</span>
+                            <span class="item_@Model.item.Itemid fontWeight600" data-itemrate="@Model.item.Itemrate"
+                                onclick="openItemInstructionModal(@Model.uniqueId)">@Model.item.Itemname</span>
                         </div>
                         <div class="numberForOrderItemDetailsKOT d-flex" style="width: 30%;">
                             <button type="button" class="btn pt-1 minus"
                                 onclick="minusTheNumber(this,@Model.item.Itemrate)">
                                 <span class="fontWeight500">-</span>
                             </button>
-                            <input type="text" name="ItemCounts[]" id="count_@Model.item.Itemid" value="1"
-                                class="fontWeight50 0 textInputForCounterInOrderItemDetailsKOT" readonly />
+                            <input type="text" name="ItemCounts[]" id="count_@Model.item.Itemid"
+                                value="@(Model.itemQuantity != 0 ? Model.itemQuantity : 1)"
+                                class="fontWeight50 0 textInputForCounterInOrderItemDetailsKOT"
+                                asp-for="@Model.itemQuantity" readonly />
                             <input type="hidden" class="modifierrateForItem">
                             <button type="button" class="btn pt-1 plus"
                                 onclick="plusTheNumber(this,@Model.item.Itemquantity,@Model.item.Itemrate)">
@@ -95,11 +97,12 @@
             </div>
             <form id="iteminstructionForm">
                 <div class="modal-body">
-                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction" asp-for="itemcomment"></textarea>
+                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction"></textarea>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="uniqueidForItemcomment">
-                    <button type="button" class="btn btn-primary btncolor" onclick="postItemInstruction()" id="postTheOrderComment">Save</button>
+                    <button type="button" class="btn btn-primary btncolor" onclick="postItemInstruction()"
+                        id="postTheOrderComment">Save</button>
                     <button type="button" class="btn btn-outline-primary btnoutlinecolor closeItemInstructionModal"
                         data-bs-dismiss="modal">cancel</button>
                 </div>
@@ -110,21 +113,21 @@
 
 <script>
 
-        function removeTheItemFromOrder(id) {
-            console.log("id" + id)
-            var itemPrice = parseFloat($("#" + id).data("itemrate"))
-            var quantity = parseInt($("#" + id + " .textInputForCounterInOrderItemDetailsKOT").val());
-            var modifierrate = parseFloat($("#" + id + " .modifierrate").data("modifierrate"));
-            console.log(itemPrice + "  " + quantity + "  " + modifierrate);
-            var subtotal = parseFloat($("#subtotal").text().replace("₹", ""));
-            subtotal -= (itemPrice + modifierrate) * quantity;
-            totalAmount -= (itemPrice + modifierrate) * quantity;
-            $("#subtotal").text("₹" + subtotal.toFixed(2))
-            console.log("₹" + subtotal.toFixed(2))
-            calculateTax($("#subtotal").text().replace("₹",""))
-            calculateTheTotalAmount();
-            $("#" + id).remove()
-        }
+    function removeTheItemFromOrder(id) {
+        console.log("id" + id)
+        var itemPrice = parseFloat($("#" + id).data("itemrate"))
+        var quantity = parseInt($("#" + id + " .textInputForCounterInOrderItemDetailsKOT").val());
+        var modifierrate = parseFloat($("#" + id + " .modifierrate").data("modifierrate"));
+        console.log(itemPrice + "  " + quantity + "  " + modifierrate);
+        var subtotal = parseFloat($("#subtotal").text().replace("₹", ""));
+        subtotal -= (itemPrice + modifierrate) * quantity;
+        totalAmount -= (itemPrice + modifierrate) * quantity;
+        $("#subtotal").text("₹" + subtotal.toFixed(2))
+        console.log("₹" + subtotal.toFixed(2))
+        calculateTax($("#subtotal").text().replace("₹", ""))
+        calculateTheTotalAmount();
+        $("#" + id).remove()
+    }
 
     function plusTheNumber(button, maxQuantity, price) {
         var inputField = $(button).siblings('input');
@@ -138,7 +141,7 @@
             totalAmount += price;
             totalAmount += parseInt($("#modifier_rate_@(Model.uniqueId)").val())
             $("#subtotal").text("₹" + subtotalValue.toFixed(2));
-            calculateTax($("#subtotal").text().replace("₹",""))
+            calculateTax($("#subtotal").text().replace("₹", ""))
             calculateTheTotalAmount();
         }
     }
@@ -159,15 +162,22 @@
             $("#subtotal").text("₹" + subtotalValue.toFixed(2));
             var taxes = $('[id^="tax_"]');
             var subtotal = parseFloat($('#subtotal').text().replace('₹', '').trim());
-             calculateTax($("#subtotal").text().replace("₹",""))
+            calculateTax($("#subtotal").text().replace("₹", ""))
             calculateTheTotalAmount();
         }
-        
+
     }
-    @* var itemWiseComment = [] *@
-
-   
-
+    $("document").ready(() => {
+        var uniqueid = @Html.Raw(Json.Serialize(Model.uniqueId))  
+        var comment = @Html.Raw(Json.Serialize(Model.itemcomment)) 
+        if (comment != "") {
+            var comment = {
+                uniqueid: uniqueid,
+                Instruction: comment
+            };
+            itemWiseComment.push(comment);
+        }
+    })
 
 
 

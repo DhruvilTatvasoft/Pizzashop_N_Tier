@@ -16,16 +16,23 @@ public class OrderDetailsViewModel
     public string PaymentMethod{get;set;}
     public int sectionid{get;set;}
     public List<appliedTaxDetails> appliedTaxes{get;set;}
+    public int? orderid{get;set;} = 0; 
+
+    public List<string>? uniqueids {get;set;}
 }
 
 public class ItemDetail
 {
-    public string itemId { get; set; }
-    public Item item{get;set;}
-    public List<string> modifierIds { get; set; }
-    public List<Modifier> modifiers{get;set;}
-    public string quantity { get; set; }
-    public string itemcomment{get;set;}
+    public string? itemId { get; set; }
+    public Item? item{get;set;}
+    public List<string>? modifierIds { get; set; }
+    public List<Modifier>? modifiers{get;set;}
+    public string? quantity { get; set; }
+    public string? itemcomment{get;set;}
+
+    public string? uniqueid{get;set;}
+
+    public List<string>? uniqueids{get;set;}
 }
 
 public class appliedTaxDetails{

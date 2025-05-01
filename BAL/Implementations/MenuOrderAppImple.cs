@@ -40,9 +40,9 @@ public class MenuOrderAppImple : IMenuOrderAppService
        return _menuOrderAppRepository.getModifiersForItem(itemid);
     }
 
-    public void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model)
+    public void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers)
     {
-         _menuOrderAppRepository.getOrderdItemQuantity(orderid,itemid,model);
+         _menuOrderAppRepository.getOrderdItemQuantity(orderid,itemid,model,modifiers);
     }
 
     public Order getOrderfromOrderid(int orderId)

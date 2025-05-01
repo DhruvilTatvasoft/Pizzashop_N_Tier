@@ -33,6 +33,8 @@ public partial class Orderitem
 
     public int? Modifiedby { get; set; }
 
+    public string? Uniqueid { get; set; }
+
     public virtual ICollection<Invoice> Invoices { get; } = new List<Invoice>();
 
     public virtual Item Item { get; set; } = null!;

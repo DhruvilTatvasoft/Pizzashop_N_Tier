@@ -543,6 +543,9 @@ public partial class PizzashopCContext : DbContext
                 .HasMaxLength(256)
                 .HasColumnName("specialcomment");
             entity.Property(e => e.Totalamount).HasColumnName("totalamount");
+            entity.Property(e => e.Uniqueid)
+                .HasColumnType("character varying")
+                .HasColumnName("uniqueid");
 
             entity.HasOne(d => d.Item).WithMany(p => p.Orderitems)
                 .HasForeignKey(d => d.Itemid)

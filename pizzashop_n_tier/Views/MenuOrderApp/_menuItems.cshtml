@@ -51,11 +51,11 @@
             })
             function openOrderCommentModal() {
                 console.log(orderComment)
-                if (orderComment != "") {
+                
                     console.log("comment found");
                     $("#orderCommentModal").modal("show");
-                    $("#orderComment").val(orderComment);
-                }
+                    @* $("#orderComment").val(orderComment); *@
+                
             }
             function postorderComment() {
 
@@ -69,9 +69,6 @@
                 console.log(item);
                 if (item != null && item != undefined) {
                     $("#ItemInstruction").val(item.Instruction);
-                }
-                else {
-                    $("#ItemInstruction").val('');
                 }
                 $("#uniqueidForItemcomment").val(uniqueid.id)
             }
