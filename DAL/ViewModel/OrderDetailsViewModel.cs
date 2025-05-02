@@ -31,6 +31,7 @@ public class ItemDetail
     public string? itemcomment{get;set;}
 
     public string? uniqueid{get;set;}
+    public int orderid{get;set;} 
 
     public List<string>? uniqueids{get;set;}
 }

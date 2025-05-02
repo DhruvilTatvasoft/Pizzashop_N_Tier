@@ -51,14 +51,12 @@
             })
             function openOrderCommentModal() {
                 console.log(orderComment)
-                
                     console.log("comment found");
                     $("#orderCommentModal").modal("show");
                     @* $("#orderComment").val(orderComment); *@
                 
             }
             function postorderComment() {
-
                 orderComment = $("#orderComment").val()
                 toastr.success("Order Comment added successfully")
                 $(".closeOrderCommentModal").click();

@@ -166,16 +166,16 @@ public class OrderRepository : IOrderRepository
         return order;
     }
 
-    
 
-    public Dictionary<int,Dictionary<Item,List<Modifier>>> GetItemsAndModifiersForOrder2(int orderid)
+
+    public Dictionary<int, Dictionary<Item, List<Modifier>>> GetItemsAndModifiersForOrder2(int orderid)
     {
-        Dictionary<int,Dictionary<Item,List<Modifier>>> itemsAndModifiers = new Dictionary<int, Dictionary<Item, List<Modifier>>>();
-        Dictionary<Item,List<Modifier>> itemModifier = new Dictionary<Item, List<Modifier>>();
-       var orderedItemsGrouped = _context.OrderItemModifiers
-            .Where(oim => oim.Orderid == orderid)
-            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
-            .ToList();
+        Dictionary<int, Dictionary<Item, List<Modifier>>> itemsAndModifiers = new Dictionary<int, Dictionary<Item, List<Modifier>>>();
+        Dictionary<Item, List<Modifier>> itemModifier = new Dictionary<Item, List<Modifier>>();
+        var orderedItemsGrouped = _context.OrderItemModifiers
+             .Where(oim => oim.Orderid == orderid)
+             .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
+             .ToList();
         bool hasItems = false;
         var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
         int count = 0;
@@ -184,20 +184,20 @@ public class OrderRepository : IOrderRepository
             var itemId = group.Key.ItemId;
             var orderItemDetailId = group.Key.Orderitemdetailid;
 
-            
+
             var dbItem = _context.Items.FirstOrDefault(i => i.Itemid == itemId);
 
             if (dbItem == null)
                 continue;
 
-           
+
             var item = new Item
             {
                 Itemid = dbItem.Itemid,
                 Itemname = dbItem.Itemname,
                 Categoryid = dbItem.Categoryid,
                 Itemrate = dbItem.Itemrate
-                
+
             };
 
             var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
@@ -212,13 +212,14 @@ public class OrderRepository : IOrderRepository
             var modifiers = _context.Modifiers
                 .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
                 .ToList();
-            foreach(var modifier in modifiers){
-                modifier.Modifierquantity = _context.OrderItemModifiers.FirstOrDefault(oim=>oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId && oim.Modifierid == modifier.Modifierid).ModifierQuantity?? 0;
+            foreach (var modifier in modifiers)
+            {
+                modifier.Modifierquantity = _context.OrderItemModifiers.FirstOrDefault(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId && oim.Modifierid == modifier.Modifierid).ModifierQuantity ?? 0;
             }
             item.Itemquantity = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == orderItemDetailId)?.Orderitemquantity ?? 0;
             count++;
-            itemsAndModifiers.Add(count,new Dictionary<Item, List<Modifier>> { { item, modifiers } });
-            
+            itemsAndModifiers.Add(count, new Dictionary<Item, List<Modifier>> { { item, modifiers } });
+
         }
         return itemsAndModifiers;
     }
@@ -230,7 +231,7 @@ public class OrderRepository : IOrderRepository
 
     public Dictionary<int, orderItemModifierViewModel> GetOrderByOptionFilterForKot()
     {
-        List<int> orderIds = _context.Orders.Where(order => order.IsDeleted == false).Select(order => order.Orderid).ToList();
+        List<int> orderIds = _context.Orders.Where(order => order.IsDeleted == false && order.Statusid == 4).Select(order => order.Orderid).ToList();
         Dictionary<int, orderItemModifierViewModel> model = new Dictionary<int, orderItemModifierViewModel>();
         foreach (var id in orderIds)
         {
@@ -272,92 +273,84 @@ public class OrderRepository : IOrderRepository
         return tableAndSectionNames;
     }
 
-   public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
+    public void GetOrderDetailsByCategory(int categoryid, bool? IsReady, int pageSize, int pageNumber, KotViewModel kotModel)
     {
-    var orderIds = _context.Orders
-        .Where(order => order.IsDeleted == false)
-        .Select(order => order.Orderid)
-        .ToList();
-
-    var model = new Dictionary<Order, List<Dictionary<Item, List<Modifier>>>>();
-
-    foreach (var orderId in orderIds)
-    {
-        var orderedItemsGrouped = _context.OrderItemModifiers
-            .Where(oim => oim.Orderid == orderId)
-            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
+        var orderIds = _context.Orders
+            .Where(order => order.IsDeleted == false && order.Statusid == 4 || order.Statusid == 1)
+            .Select(order => order.Orderid)
             .ToList();
 
-        bool hasItems = false;
-        var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
 
-        foreach (var group in orderedItemsGrouped)
+        var model = new Dictionary<Order, List<Dictionary<Item, List<Modifier>>>>();
+
+        foreach (var orderId in orderIds)
         {
-            var itemId = group.Key.ItemId;
-            var orderItemDetailId = group.Key.Orderitemdetailid;
-
-            
-            var dbItem = categoryid != 0
-                ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
-                : _context.Items.FirstOrDefault(i => i.Itemid == itemId);
-
-            if (dbItem == null)
-                continue;
-
-           
-            var item = new Item
+            bool hasItems = false;
+            List<Orderitem> orderedItems = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderId).ToList();
+            var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+            foreach (var Ordereditem in orderedItems)
             {
-                Itemid = dbItem.Itemid,
-                Itemname = dbItem.Itemname,
-                Categoryid = dbItem.Categoryid,
-                
-            };
-
-            var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
-            if (orderItem == null)
-                continue;
-
-            if (IsReady == null)
-            {
-                item.Itemquantity = orderItem.Orderitemquantity ?? 0;
+                var dbItem = categoryid != 0
+                     ? _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid && i.Categoryid == categoryid)
+                     : _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid);
+                bool addItem = true;
+                if (dbItem == null)
+                {
+                    hasItems = false;
+                }
+                else
+                {
+                    hasItems = true;
+                    if (IsReady == null)
+                    {
+                        dbItem.Itemquantity = Ordereditem.Orderitemquantity ?? 0;
+                    }
+                    else if (IsReady == true)
+                    {
+                        dbItem.Itemquantity = Ordereditem.Readyitemquanitiy ?? 0;
+                    }
+                    else if (IsReady == false)
+                    {
+                        dbItem.Itemquantity = (Ordereditem.Orderitemquantity ?? 0) - (Ordereditem.Readyitemquanitiy ?? 0);
+                    }
+                    if (dbItem.Itemquantity <= 0)
+                    {
+                        addItem = false;
+                        hasItems = false;
+                    }
+                    if (addItem)
+                    {
+                        List<Modifier> modifiers = new List<Modifier>();
+                        List<OrderItemModifier> modifiersForItem = _context.OrderItemModifiers.Where(orderedItemModifier => orderedItemModifier.ItemId == Ordereditem.Itemid && orderedItemModifier.Orderitemdetailid == Ordereditem.Orderitemid).ToList();
+                        foreach (var modifier in modifiersForItem)
+                        {
+                            Modifier m = _context.Modifiers.FirstOrDefault(Modifier => Modifier.Modifierid == modifier.Modifierid);
+                            modifiers.Add(m);
+                        }
+                        Dictionary<Item, List<Modifier>> itemAndModifiers = new Dictionary<Item, List<Modifier>>();
+                        itemAndModifiers.Add(dbItem, modifiers);
+                        itemModifierList.Add(itemAndModifiers);
+                    }
+                }
             }
-            else if (IsReady == true && orderItem.Readyitemquanitiy > 0)
+            if (hasItems)
             {
-                item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
+                Order order = _context.Orders.FirstOrDefault(o => o.Orderid == orderId)!;
+                model.Add(order, itemModifierList);
             }
-            else if (IsReady == false && (orderItem.Orderitemquantity - orderItem.Readyitemquanitiy) > 0)
-            {
-                item.Itemquantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
-            }
-            else
-            {
-                continue; 
-            }
-
-            var modifierIds = _context.OrderItemModifiers
-                .Where(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId)
-                .Select(oim => oim.Modifierid)
-                .ToList();
-
-            var modifiers = _context.Modifiers
-                .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
-                .ToList();
-
-            itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
-            hasItems = true;
         }
+        kotModel.pageNumber = pageNumber;
+        kotModel.pageSize = pageSize;
+        kotModel.totalOrders = model.Count;
+        model.OrderBy(order => order.Key.Orderid);
+        kotModel.orderDetails = model.Skip((pageNumber - 1) * pageSize)
+                                     .Take(pageSize)
+                                     .ToDictionary(pair => pair.Key, pair => pair.Value);
 
-        if (hasItems)
-        {
-            Order order = _context.Orders.FirstOrDefault(o => o.Orderid == orderId)!;
-            model.Add(order, itemModifierList);
-        }
     }
-    return model;
-}
 
 
-    public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid,string status)
+    public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid, string status)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
         model.orderid = orderid;
@@ -371,7 +364,7 @@ public class OrderRepository : IOrderRepository
             var itemId = group.Key.ItemId;
             var orderItemDetailId = group.Key.Orderitemdetailid;
 
-            
+
             var dbItem = categoryid != 0
                 ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
                 : _context.Items.FirstOrDefault(i => i.Itemid == itemId);
@@ -383,14 +376,14 @@ public class OrderRepository : IOrderRepository
             var orderItem = _context.Orderitems.FirstOrDefault(oi => oi.Orderitemid == orderItemDetailId);
             if (orderItem == null)
                 continue;
-            
+
             var item = new Item
             {
                 Itemid = orderItem.Orderitemid,
                 Itemname = dbItem.Itemname,
                 Categoryid = dbItem.Categoryid,
             };
-           
+
             var modifierIds = _context.OrderItemModifiers
                 .Where(oim => oim.Orderitemdetailid == orderItemDetailId && oim.ItemId == itemId)
                 .Select(oim => oim.Modifierid)
@@ -399,22 +392,26 @@ public class OrderRepository : IOrderRepository
             var modifiers = _context.Modifiers
                 .Where(mod => modifierIds.Contains(mod.Modifierid) && mod.Isdeleted == false)
                 .ToList();
-            if(status == "In Progress"){
-            item.Itemquantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
+            if (status == "In Progress")
+            {
+                item.Itemquantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
             }
-            else{
-            item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
+            else
+            {
+                item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
             }
             itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
         }
         model.itemAndModifiers = itemModifierList
             .SelectMany(dict => dict)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
-            return model;        
+        return model;
     }
-   public void changeReadyQuantity(Dictionary<int, int> readyItemCount){
-        foreach (var pair in readyItemCount){
-            var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem=>orderedItem.Orderitemid == pair.Key);
+    public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
+    {
+        foreach (var pair in readyItemCount)
+        {
+            var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == pair.Key);
             orderedItem!.Readyitemquanitiy = pair.Value;
             _context.Orderitems.Update(orderedItem);
         }
@@ -425,9 +422,9 @@ public class OrderRepository : IOrderRepository
     {
         Order newOrder = new Order();
         newOrder.Tableid = tableid;
-        newOrder.Sectionid = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid).Sectionid;
-        newOrder.Customerid = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid).Customerid;
-        newOrder.Totalpersons = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid).Totalpersons;
+        newOrder.Sectionid = _context.Tables.FirstOrDefault(table => table.Tableid == tableid).Sectionid;
+        newOrder.Customerid = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid).Customerid;
+        newOrder.Totalpersons = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid).Totalpersons;
         newOrder.Createdat = DateTime.Now;
         newOrder.Createdby = 1;
         newOrder.Modifiedby = 1;
@@ -438,13 +435,13 @@ public class OrderRepository : IOrderRepository
 
     public void addItemInOrder(int itemid, List<int> modifiers)
     {
-        
+
     }
 
     public int CreateOrderForCustomer(int tokenid, List<int> tableids)
     {
         Order order = new Order();
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(tkn=>tkn.Waitingtokenid == tokenid && tkn.Isdeleted == false);
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(tkn => tkn.Waitingtokenid == tokenid && tkn.Isdeleted == false);
         order.Customerid = token.Customerid;
         order.Totalpersons = token.Totalpersons;
         order.Createdat = DateTime.Now;
@@ -455,18 +452,19 @@ public class OrderRepository : IOrderRepository
         order.IsDeleted = false;
         _context.Orders.Add(order);
         _context.SaveChanges();
-        foreach(var tableid in tableids){
-           Table table = _context.Tables.FirstOrDefault(Table => Table.Tableid == tableid);
-           table.Status = false;
-           table.Statusname = "Assigned";
-           Ordertable orderedtable = new Ordertable();
-           orderedtable.Orderid = order.Orderid;
-           orderedtable.Customerid = token.Customerid;
-           orderedtable.Createdby = 1;
-           orderedtable.Modifiedby = 1;
+        foreach (var tableid in tableids)
+        {
+            Table table = _context.Tables.FirstOrDefault(Table => Table.Tableid == tableid);
+            table.Status = false;
+            table.Statusname = "Assigned";
+            Ordertable orderedtable = new Ordertable();
+            orderedtable.Orderid = order.Orderid;
+            orderedtable.Customerid = token.Customerid;
+            orderedtable.Createdby = 1;
+            orderedtable.Modifiedby = 1;
             orderedtable.Tableid = tableid;
-           _context.Ordertables.Add(orderedtable);
-           _context.Tables.Update(table);
+            _context.Ordertables.Add(orderedtable);
+            _context.Tables.Update(table);
         }
         _context.SaveChanges();
         return order.Orderid;

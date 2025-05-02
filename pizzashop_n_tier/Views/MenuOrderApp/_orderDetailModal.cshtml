@@ -10,6 +10,7 @@
                 <div class="d-flex flex-column">
                     <h6><b>@Model.customer.section.Sectionname</b></h6>
                     <p>Table: @string.Join(",", Model.customer.tables.Select(table => table.Tablename))</p>
+                    <input type="hidden" id="SavedOrderid">
                 </div>
             </div>
             <div>
@@ -85,7 +86,7 @@
                 <button class="btn btn-outline-primary btnoutlinecolourLight">Generate Invoice</button>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-outline-primary btnoutlinecolour">Cancel</button>
+                <button class="btn btn-outline-primary btnoutlinecolour" onclick="cancelTheOrder()">Cancel</button>
             </div>
         </div>
     </div>
@@ -122,11 +123,9 @@
     $(document).ready(function () {
         var uniqueids = @Html.Raw(Json.Serialize(Model.uniqueids));
         var orderComment = @Html.Raw(Json.Serialize(Model.orderComment));
-
         if (orderComment && orderComment !== "") {
             $("#orderComment").val(orderComment);
         }
-
         if (uniqueids.length > 0) {
             uniqueids.forEach(function (uniqueid) {
                 var parts = uniqueid.split('_');
@@ -134,7 +133,6 @@
                 var modifierids = parts.slice(2).map(function (modifierid) {
                     return parseInt(modifierid);
                 });
-
                 addNewItemInOrder(itemid, modifierids, uniqueid);
             });
         }
@@ -219,20 +217,52 @@
         });
     }
 
-    function CompleteTheOrder(){
-       var itemDetails =  [...new Set($("[id^='item_']").map(function () { return this.id; }).get())];
-       var itemIds ={
-        uniqueids : itemDetails,
-       } 
+    function CompleteTheOrder() {
+        var itemDetails = [...new Set($("[id^='item_']").map(function () { return this.id; }).get())];
+        var itemIds = {
+            uniqueids: itemDetails,
+            orderid: @Html.Raw(Json.Serialize(Model.orderid))
+       }
+        console.log(@Html.Raw(Json.Serialize(Model.orderid)))
         $.ajax({
-            url:"@Url.Action("checkAllItemsAreReadyOrNot","MenuOrderApp")",
-            type:"POST",
-            data:JSON.stringify(itemIds),
-            success:function(response){
-                
+            url: "@Url.Action("completeTheOrder", "MenuOrderApp")",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(itemIds),
+            success: function (response) {
+                if (response.success) {
+                    toastr.success(response.success);
+                }
+                else {
+                    toastr.error(response.error);
+                }
             }
         });
 
+    }
+
+    function cancelTheOrder() {
+        var itemDetails = [...new Set($("[id^='item_']").map(function () { return this.id; }).get())];
+        var itemIds = {
+            uniqueids: itemDetails,
+            orderid: @Html.Raw(Json.Serialize(Model.orderid))
+       }
+        $.ajax({
+            url: "@Url.Action("cancelTheOrder", "MenuOrderApp")",
+            type: "POST",
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(itemIds),
+            success:function(response){
+                if(response.success){
+                    toastr.success(response.success);
+                }
+                else{
+                    toastr.error(response.error);
+                }
+            }
+        });
     }
 
 </script>

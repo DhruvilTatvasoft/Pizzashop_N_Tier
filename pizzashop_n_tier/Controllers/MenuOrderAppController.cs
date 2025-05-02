@@ -145,13 +145,34 @@ public IActionResult getOrderDetails([FromBody]assignTableDetails model){
 
     [HttpPost]
     public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails){
-        _menuOrderAppService.createOrder(orderDetails);
-        return Json(new {success = "Order Saved Successfully"});
+        int orderid = _menuOrderAppService.createOrder(orderDetails);
+        return Json(new {success = "Order Saved Successfully",Orderid = orderid});
     }
 
     public IActionResult getRunningTableOrder(int tableid){
         MenuOrderAppModel model = _menuOrderAppService.getRunningTableOrder(tableid);
         return PartialView("_menu",model);
+    }
+
+    [HttpPost]
+    public IActionResult completeTheOrder([FromBody]ItemDetail Itemdetails){
+        if(_menuOrderAppService.completeTheOrder(Itemdetails)){
+            return Json(new {success = "Order completed"});
+        }
+        else{
+            return Json(new {error = "Some items are not ready yet"});
+        }
+    }
+
+    [HttpPost]
+    public IActionResult cancelTheOrder([FromBody]ItemDetail Itemdetails){
+        if(_menuOrderAppService.cancelTheOrder(Itemdetails)){
+            return Json(new {success= "Order cancelled successfully"});
+        }
+        else{
+
+            return Json(new {success= "Order can not cancelled as some items of the order are ready"});
+        }
     }
 
 }

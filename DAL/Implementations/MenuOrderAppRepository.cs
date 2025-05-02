@@ -14,7 +14,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         _context = context;
     }
 
-    public bool createOrder(OrderDetailsViewModel orderDetails)
+    public int createOrder(OrderDetailsViewModel orderDetails)
     {
         Order order = new Order();
 
@@ -120,6 +120,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 orderedItem2.Createdby = 1;
                 orderedItem2.Modifiedby = 1;
                 orderedItem2.Specialcomment = item.itemcomment;
+                orderedItem2.Readyitemquanitiy = 0;
                 _context.Orderitems.Add(orderedItem2);
             }
 
@@ -168,7 +169,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             _context.Ordertaxesandfees.Add(taxAndFees);
         }
         _context.SaveChanges();
-        return true;
+        return order.Orderid;
     }
 
     public Item getItem(int itemid)
@@ -439,7 +440,55 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         else
         {
                 model.itemQuantity = orderedItem.Orderitemquantity ?? 1;
-                model.itemcomment = orderedItem.Specialcomment ?? "";           
+                model.itemcomment = orderedItem.Specialcomment ?? "";  
+                model.readyQuantity = orderedItem.Readyitemquanitiy?? 0;
+
         }
+    }
+
+    public bool completeTheOrder(ItemDetail itemdetails)
+    {
+       List<string> orderedItemIds = new List<string>();
+       orderedItemIds = itemdetails.uniqueids;
+       foreach(var itemid in orderedItemIds){
+        Orderitem item = _context.Orderitems.FirstOrDefault(Item=>Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
+        if(item.Readyitemquanitiy != item.Orderitemquantity){
+            return false;
+        }
+       }
+       Order order = _context.Orders.FirstOrDefault(currentOrder=>currentOrder.Orderid == itemdetails.orderid)!;
+       order.Statusid = 1;
+       order.PaymentStatus = "Completed";
+       Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable=>OrderedTable.Orderid == itemdetails.orderid)!;
+       Table table = _context.Tables.FirstOrDefault(currentTable=>currentTable.Tableid == orderedTable.Tableid)!;
+       table.Status = true;
+       table.Statusname = "Available";
+       _context.Tables.Update(table);
+       _context.Orders.Update(order);
+       _context.SaveChanges();
+       return true;
+    }
+
+    public bool cancelTheOrder(ItemDetail itemdetails)
+    {
+        List<string> orderedItemIds = new List<string>();
+       orderedItemIds = itemdetails.uniqueids;
+       foreach(var itemid in orderedItemIds){
+        Orderitem item = _context.Orderitems.FirstOrDefault(Item=>Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
+        if(item.Readyitemquanitiy > 0){
+            return false;
+        }
+       }
+
+        Order order = _context.Orders.FirstOrDefault(currentOrder=>currentOrder.Orderid == itemdetails.orderid)!;
+       order.Statusid = 2;
+       Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable=>OrderedTable.Orderid == itemdetails.orderid)!;
+       Table table = _context.Tables.FirstOrDefault(currentTable=>currentTable.Tableid == orderedTable.Tableid)!;
+       table.Status = true;
+       table.Statusname = "Available";
+       _context.Tables.Update(table);
+       _context.Orders.Update(order);
+       _context.SaveChanges();
+       return true;
     }
 }

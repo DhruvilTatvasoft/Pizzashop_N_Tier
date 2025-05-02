@@ -35,7 +35,8 @@ h1{
     border-color: gray;
     border-radius: 7px;
     min-width:260px;
-    height:80%;
+    /* min-height:340px ; */
+    height:280px;
 }
 
 .ordertimeduration{
@@ -52,7 +53,6 @@ h1{
     display: none;
 }
 .tabDataContainer{
-    height:58%;
     background-color: white;
     box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
     border: none;

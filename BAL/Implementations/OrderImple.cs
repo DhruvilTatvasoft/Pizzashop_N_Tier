@@ -386,9 +386,9 @@ namespace BAL.Implementations
             return _orderRepository.getOrderSectionAndTableDetails(orderId);
         }
 
-        public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady)
+        public void GetOrderDetailsByCategory(int categoryid, bool? IsReady,int pageSize,int pageNumber,KotViewModel kotModel)
         {
-            return _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady);
+             _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady,pageSize,pageNumber,kotModel);
         }
 
        public SingleOrderDetailModel getSingleOrderDetail(int categoryid,int orderid,string status){

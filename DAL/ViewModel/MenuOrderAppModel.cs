@@ -12,7 +12,7 @@ public class MenuOrderAppModel
     public Order order{
         get;set;
     }
-
+    public int readyQuantity{get;set;}
     public string orderComment{get;set;}
 
     public int itemQuantity{get;set;}

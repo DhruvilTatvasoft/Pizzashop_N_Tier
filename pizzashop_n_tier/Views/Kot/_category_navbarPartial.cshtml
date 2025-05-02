@@ -14,15 +14,5 @@
     </div>
   </nav>
   <script>
-    function loadOrdersForcategory(categoryid,IsReady) {
-        $.ajax({
-            url:"@Url.Action("loadOrdersPerCategory","Kot")",
-            type:'GET',
-            data:{categoryid : categoryid,IsReady: IsReady},
-            success:function(data){
-                $('.orderdetailcontainer').html(data);
-                
-            }
-        });
-    }
+    
   </script>

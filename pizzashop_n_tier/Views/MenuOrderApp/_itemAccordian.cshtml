@@ -46,7 +46,7 @@
                             style="width: 80%;">₹@Model.item.Itemrate</span>
                         <div>
                             <img src="/images/trash-fill.svg" class="deleteIconOrderItemDetailsKOT"
-                                onclick="removeTheItemFromOrder('@Model.uniqueId')">
+                                onclick="removeTheItemFromOrder('@Model.uniqueId',@Model.orderid,@Model.readyQuantity,@Model.itemQuantity)">
                         </div>
                     </div>
                 </div>
@@ -111,10 +111,52 @@
     </div>
 </div>
 
+<div class="modal fade" id="deleteTheItemFromOrder" tabindex="-1" role="dialog"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-body d-flex flex-column align-items-center justify-content-center">
+                <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+                <h5 class="mb-3 deleteText"> Are you sure you want to delete this item?</h5>
+                <input type="text" name="ItemIdHidden" hidden id="ItemIdHidden">
+                <div class="d-flex">
+                    <button type="button" onclick="deleleItemFromOrder()"
+                        class="btn btn-primary multipleModifiersDelete me-2" data-bs-dismiss="modal">Yes</button>
+                    <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script>
 
-    function removeTheItemFromOrder(id) {
+    function removeTheItemFromOrder(id, orderid, readyquantity, itemquantity) {
         console.log("id" + id)
+        if (orderid != 0) {
+            var isReady = parseInt(itemquantity) - parseInt(readyquantity);
+            if (isReady != itemquantity) {
+                $("#deleteTheItemFromOrder").modal('show');
+                $("#ItemIdHidden").val(id);
+            }
+            else {
+                toastr.error(readyquantity + " Items are ready so cannot be deleted ");
+            }
+        }
+        else {
+            deleteTheItem(id)
+        }
+
+    }
+
+    function deleleItemFromOrder() {
+        deleteTheItem($("#ItemIdHidden").val());
+          $("#deleteTheItemFromOrder").modal('hide');
+    }
+
+
+    function deleteTheItem(id) {
+        
         var itemPrice = parseFloat($("#" + id).data("itemrate"))
         var quantity = parseInt($("#" + id + " .textInputForCounterInOrderItemDetailsKOT").val());
         var modifierrate = parseFloat($("#" + id + " .modifierrate").data("modifierrate"));
@@ -165,7 +207,6 @@
             calculateTax($("#subtotal").text().replace("₹", ""))
             calculateTheTotalAmount();
         }
-
     }
     $("document").ready(() => {
         var uniqueid = @Html.Raw(Json.Serialize(Model.uniqueId))  

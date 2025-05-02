@@ -7,7 +7,7 @@ public interface IOrderRepository{
     int GetTotalOrderCount();
     Dictionary<int, orderItemModifierViewModel> GetOrderByOptionFilterForKot();
     tableAndsection getOrderSectionAndTableDetails(int orderId);
-    Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> GetOrderDetailsByCategory(int categoryid, bool? IsReady);
+    void GetOrderDetailsByCategory(int categoryid, bool? IsReady,int pageSize,int pageNumber,KotViewModel kotModel);
     SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid,string status);
     void changeReadyQuantity(Dictionary<int, int> readyItemCount);
 

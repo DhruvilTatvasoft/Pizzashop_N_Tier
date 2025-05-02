@@ -85,4 +85,18 @@
       }
     });
   }
+
+  function loadOrdersForcategory(categoryid,IsReady,pageNumber) {
+      @* var pageNumber = 1; *@
+      console.log(pageNumber)
+        $.ajax({
+            url:"@Url.Action("loadOrdersPerCategory","Kot")",
+            type:'GET',
+            data:{categoryid : categoryid,IsReady: IsReady,pageNumber : pageNumber},
+            success:function(data){
+                $('.orderdetailcontainer').html(data);
+                
+            }
+        });
+    }
 </script>

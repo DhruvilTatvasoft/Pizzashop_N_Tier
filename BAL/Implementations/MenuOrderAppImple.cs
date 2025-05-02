@@ -9,7 +9,17 @@ public class MenuOrderAppImple : IMenuOrderAppService
         _menuOrderAppRepository = menuOrderAppRepository;
     }
 
-    public bool createOrder(OrderDetailsViewModel orderDetails)
+    public bool cancelTheOrder(ItemDetail itemDetails)
+    {
+        return _menuOrderAppRepository.cancelTheOrder(itemDetails);
+    }
+
+    public bool completeTheOrder(ItemDetail itemdetails)
+    {
+        return _menuOrderAppRepository.completeTheOrder(itemdetails);
+    }
+
+    public int createOrder(OrderDetailsViewModel orderDetails)
     {
         return _menuOrderAppRepository.createOrder(orderDetails);
     }

@@ -33,11 +33,11 @@ public class KotController : Controller
         return PartialView("_orderDetailsCard",model);
     }
 
-    public IActionResult loadOrdersPerCategory(int categoryid, bool? IsReady)
+    public IActionResult loadOrdersPerCategory(int categoryid, bool? IsReady,int pageSize = 3,int pageNumber = 1)
     {
         KotViewModel model = new KotViewModel();
         model.categories = _menuService.getAllCategories();
-        model.orderDetails = _orderService.GetOrderDetailsByCategory(categoryid, IsReady);
+        _orderService.GetOrderDetailsByCategory(categoryid, IsReady,pageSize,pageNumber,model);
         Dictionary<int, tableAndsection> orderTableSectionDetail = new Dictionary<int, tableAndsection>();
         foreach (var order in model.orderDetails.Keys)
         {
@@ -62,7 +62,6 @@ public class KotController : Controller
     public IActionResult loadSingleOrderDetails(int categoryid, int orderid)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
-        // model = _orderService.getSingleOrderDetail(categoryid, orderid,status);
         model.orderid = orderid;
         model.categoryid = categoryid;
         return PartialView("_orderStatusChangeModal", model);
