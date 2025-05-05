@@ -4,95 +4,95 @@
         tabindex="0">
         <input type="hidden" id="selectedCategory" asp-for="@Model.categoryid" />
         <div class="d-flex align-items-center justify-content-between mb-3">
-            
-            <div class="orderdetailcontainer p-1 w-100"></div   >
-        <div class="modalContainer"></div>
-        <script>
-            $("document").ready(() => {
-                loadOrdersForcategory(0, false)
-            })
 
-            let temp = false;
-            function inprogress(button, id, IsReady) {
-                loadOrdersForcategory(id, IsReady)
-                $(button).css("background-color", "#0066a7")
-                $(button).css("color", "white")
-                temp = IsReady
-            }
-            function ready(id, IsReady) {
-                loadOrdersForcategory(id, 'true')
-            }
+            <div class="orderdetailcontainer p-1 w-100"></div>
+            <div class="modalContainer"></div>
+            <script>
+                $("document").ready(() => {
+                    loadOrdersForcategory(0)
+                })
 
-            function increaseValue(maxvalue, id) {
+                var temp = null;
+                function inprogress(button, id, IsReady) {
+                    loadOrdersForcategory(id, IsReady)
+                    $(button).css("background-color", "#0066a7")
+                    $(button).css("color", "white")
+                    temp = IsReady
+                }
+                function ready(id, IsReady) {
+                    loadOrdersForcategory(id, 'true')
+                }
 
-                var value = document.getElementById(id).value;
-                value = isNaN(value) ? 0 : value;
-                if (value < maxvalue)
-                    value++;
+                function increaseValue(maxvalue, id) {
 
-                document.getElementById(id).value = value;
-            }
+                    var value = document.getElementById(id).value;
+                    value = isNaN(value) ? 0 : value;
+                    if (value < maxvalue)
+                        value++;
 
-            function decreaseValue(id) {
-                var value = parseInt(document.getElementById(id).value, 10);
-                value = isNaN(value) ? 0 : value;
-                value < 1 ? value = 1 : '';
-                value--;
-                document.getElementById(id).value = value;
-            }
+                    document.getElementById(id).value = value;
+                }
 
-            $('.nav-link').on('click', function (x) {
-                $('#category-name').html(this.innerHTML);
-            });
+                function decreaseValue(id) {
+                    var value = parseInt(document.getElementById(id).value, 10);
+                    value = isNaN(value) ? 0 : value;
+                    value < 1 ? value = 1 : '';
+                    value--;
+                    document.getElementById(id).value = value;
+                }
 
-            function openModalForStatusChange(orderid) {
-                $.ajax({
-                    url: "@Url.Action("loadSingleOrderDetails", "Kot")",
-                    type: 'GET',
-                    data: { categoryid: $('#selectedCategory').val(), orderid: orderid },
-                    success: function (data) {
-                        $(".modalContainer").html(data);
-                        $("#modalForItemStatusChange").modal('show');
-                    }
+                $('.nav-link').on('click', function (x) {
+                    $('#category-name').html(this.innerHTML);
                 });
-            }
-            function updateTimers() {
-                const now = new Date();
-                document.querySelectorAll("[id^='duration-waitingtime-']").forEach(timerEl => {
-                    const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
-                    if (createdAtStr) {
-                        const createdAt = new Date(createdAtStr);
-                        if (isNaN(createdAt.getTime())) {
-                            console.error("Invalid date:", createdAtStr);
-                            return;
+
+                function openModalForStatusChange(orderid) {
+                    $.ajax({
+                        url: "@Url.Action("loadSingleOrderDetails", "Kot")",
+                        type: 'GET',
+                        data: { categoryid: $('#selectedCategory').val(), orderid: orderid },
+                        success: function (data) {
+                            $(".modalContainer").html(data);
+                            $("#modalForItemStatusChange").modal('show');
                         }
-                        const diffMs = now - createdAt - 12;
+                    });
+                }
+                function updateTimers() {
+                    const now = new Date();
+                    document.querySelectorAll("[id^='duration-waitingtime-']").forEach(timerEl => {
+                        const createdAtStr = timerEl.getAttribute("data-createdatWaitingToken");
+                        if (createdAtStr) {
+                            const createdAt = new Date(createdAtStr);
+                            if (isNaN(createdAt.getTime())) {
+                                console.error("Invalid date:", createdAtStr);
+                                return;
+                            }
+                            const diffMs = now - createdAt - 12;
 
 
-                        if (!isNaN(diffMs)) {
-                            let totalSeconds = Math.floor(diffMs / 1000);
-                            const hours = Math.floor(totalSeconds / 3600);
-                            totalSeconds %= 3600;
-                            const minutes = Math.floor(totalSeconds / 60);
-                            const seconds = totalSeconds % 60;
-                            const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
+                            if (!isNaN(diffMs)) {
+                                let totalSeconds = Math.floor(diffMs / 1000);
+                                const hours = Math.floor(totalSeconds / 3600);
+                                totalSeconds %= 3600;
+                                const minutes = Math.floor(totalSeconds / 60);
+                                const seconds = totalSeconds % 60;
+                                const formatted = `${pad(hours)}hrs ${pad(minutes)}mins ${pad(seconds)}sec`;
 
-                            timerEl.textContent = formatted;
+                                timerEl.textContent = formatted;
+                            } else {
+                                console.error("Time difference is NaN", diffMs);
+                            }
                         } else {
-                            console.error("Time difference is NaN", diffMs);
+                            console.error("CreatedAt data is missing or invalid.");
                         }
-                    } else {
-                        console.error("CreatedAt data is missing or invalid.");
-                    }
-                });
-            }
+                    });
+                }
 
-            function pad(num) {
-                return num < 10 ? "0" + num : num;
-            }
+                function pad(num) {
+                    return num < 10 ? "0" + num : num;
+                }
 
-            setInterval(updateTimers, 1000);
+                setInterval(updateTimers, 1000);
 
 
 
-        </script>
+            </script>

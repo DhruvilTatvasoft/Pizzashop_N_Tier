@@ -9,10 +9,11 @@ public interface IOrderRepository{
     tableAndsection getOrderSectionAndTableDetails(int orderId);
     void GetOrderDetailsByCategory(int categoryid, bool? IsReady,int pageSize,int pageNumber,KotViewModel kotModel);
     SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid,string status);
-    void changeReadyQuantity(Dictionary<int, int> readyItemCount);
+    void changeReadyQuantity(Dictionary<int, int> readyItemCount,string currentStatus);
 
     Dictionary<int,Dictionary<Item,List<Modifier>>> GetItemsAndModifiersForOrder2(int orderid);
     int CreateOrder(int tokenid, int tableid);
     void addItemInOrder(int itemid, List<int> modifiers);
     int CreateOrderForCustomer(int tokenid, List<int> tableids);
+    void getAppliedTaxesForOrder(OrderViewModel model);
 }

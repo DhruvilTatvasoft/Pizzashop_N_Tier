@@ -40,9 +40,9 @@ public class MenuOrderAppImple : IMenuOrderAppService
         return _menuOrderAppRepository.getItem(itemid);
     }
 
-    public List<Item> getItemsForcategory(int categoryid,string searchedItem="")
+    public List<Item> getItemsForcategory(int categoryid,string ItemType,string searchedItem="")
     {
-        return _menuOrderAppRepository.getItemsForcategory(categoryid,searchedItem);
+        return _menuOrderAppRepository.getItemsForcategory(categoryid,ItemType,searchedItem);
     }
 
     public List<ModifierModel> getModifiersForItem(int itemid)

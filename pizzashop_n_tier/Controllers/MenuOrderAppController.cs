@@ -18,7 +18,8 @@ public class MenuOrderAppController : Controller
     private readonly ITaxService _taxesService;
 
 
-    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService,ITaxService taxesService,ITableService tableService,IItemService itemService,IModifierService modifierService,IMenuService menuService,IOrderService orderService,IWaitingTokenService waitingTokenService){
+    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService, ITaxService taxesService, ITableService tableService, IItemService itemService, IModifierService modifierService, IMenuService menuService, IOrderService orderService, IWaitingTokenService waitingTokenService)
+    {
         _menuOrderAppService = menuOrderAppService;
         _menuService = menuService;
         _waitingTokenService = waitingTokenService;
@@ -28,150 +29,169 @@ public class MenuOrderAppController : Controller
         _tableService = tableService;
         _taxesService = taxesService;
     }
-    public IActionResult getMenuSidebar(){
+    public IActionResult getMenuSidebar()
+    {
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.categories = _menuService.getAllCategories();
-        return PartialView("_menuSidebar",model);
+        return PartialView("_menuSidebar", model);
     }
 
-[HttpPost]
+    [HttpPost]
 
-public IActionResult getItemsForCategory([FromBody]orderDetailsForAssignedTable model)
-{
-    MenuOrderAppModel responseModel = new MenuOrderAppModel();
-
-    if (model.customerid != 0)
+    public IActionResult getItemsForCategory([FromBody] orderDetailsForAssignedTable model)
     {
-        responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid??0,model.TableIds);
-        responseModel.isTableAssigned = true;
+        MenuOrderAppModel responseModel = new MenuOrderAppModel();
 
-        List<DAL.Data.Table> tables = new List<DAL.Data.Table>();
-        foreach (int tableId in model.TableIds)
+        if (model.customerid != 0)
         {
-            DAL.Data.Table table = _tableService.gettablebyid(tableId);
-            tables.Add(table);
+            responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid ?? 0, model.TableIds);
+            responseModel.isTableAssigned = true;
+
+            List<DAL.Data.Table> tables = new List<DAL.Data.Table>();
+            foreach (int tableId in model.TableIds)
+            {
+                DAL.Data.Table table = _tableService.gettablebyid(tableId);
+                tables.Add(table);
+            }
+            responseModel.tables = tables;
         }
-        responseModel.tables = tables;
-    }
 
-    if (model.SearchedItem == null)
+        if (model.SearchedItem == null)
+        {
+            model.SearchedItem = "";
+        }
+
+        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId, model.SearchedItem, model.itemType);
+        responseModel.categoryId = model.CategoryId;
+
+        return PartialView("_itemData", responseModel);
+    }
+    [HttpPost]
+    public IActionResult getOrderDetails([FromBody] assignTableDetails model)
     {
-        model.SearchedItem = "";
+
+        MenuOrderAppModel responseModel = new MenuOrderAppModel();
+        responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid ?? 0, model.tableids);
+        responseModel.customer.PersonCount = model.totalPersonCount ?? 0;
+        responseModel.tables = new List<DAL.Data.Table>();
+        List<int> tableids = new List<int>();
+        foreach (int tableid in model.tableids)
+        {
+            DAL.Data.Table table = _tableService.gettablebyid(tableid);
+            tableids.Add(tableid);
+
+            responseModel.tables.Add(table);
+        }
+        responseModel.customer.tableids = tableids;
+        responseModel.taxesandfees = _taxesService.getAllTaxes();
+        responseModel.tokenid = model.tokenid ?? 0;
+        responseModel.orderid = model.orderid ?? 0;
+        if (model.orderid != 0 && model.orderid != null)
+        {
+            _menuOrderAppService.loadOrderedItemsData(model.orderid, responseModel);
+        }
+
+        return PartialView("_orderDetailModal", responseModel);
     }
-
-    responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId, model.SearchedItem);
-    responseModel.categoryId = model.CategoryId;
-
-    return PartialView("_itemData", responseModel);
-}
-[HttpPost]
-public IActionResult getOrderDetails([FromBody]assignTableDetails model){
-    
-    MenuOrderAppModel responseModel = new MenuOrderAppModel();
-    responseModel.customer = _menuOrderAppService.getcustomerDetails(model.customerid??0,model.tableids);
-    responseModel.customer.PersonCount = model.totalPersonCount ?? 0;
-    responseModel.tables = new List<DAL.Data.Table>();
-    List<int> tableids = new List<int>();
-    foreach(int tableid in model.tableids){
-        DAL.Data.Table table = _tableService.gettablebyid(tableid);
-        tableids.Add(tableid);
-
-        responseModel.tables.Add(table);
-    }
-    responseModel.customer.tableids = tableids;
-    responseModel.taxesandfees = _taxesService.getAllTaxes();
-    responseModel.tokenid = model.tokenid ?? 0;
-    responseModel.orderid = model.orderid ?? 0;
-    if(model.orderid != 0  && model.orderid != null){
-       _menuOrderAppService.loadOrderedItemsData(model.orderid,responseModel);
-    }
-
-    return PartialView("_orderDetailModal",responseModel);
-}
-
-    public IActionResult getMenuDataContainer(){
+    public IActionResult getMenuDataContainer()
+    {
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.categories = _menuService.getAllCategories();
-        return PartialView("_menuItems",model);
+        return PartialView("_menuItems", model);
     }
-    public IActionResult getItemDetails(int itemid,string isTableAssigned = "False"){
+    public IActionResult getItemDetails(int itemid, string isTableAssigned = "False")
+    {
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.modifiersForItem = _menuOrderAppService.getModifiersForItem(itemid);
         model.item = _menuOrderAppService.getItem(itemid);
-        if(isTableAssigned == "True"){
+        if (isTableAssigned == "True")
+        {
             model.isTableAssigned = true;
         }
-        else{
+        else
+        {
             model.isTableAssigned = false;
         }
-        return PartialView("_itemDetailsModal",model);
+        return PartialView("_itemDetailsModal", model);
     }
 
-     public IActionResult showCustomerDetails(int customerid,int totalPersonCount)
+    public IActionResult showCustomerDetails(int customerid, int totalPersonCount)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
-        List<int> tableid = new List<int>{0};
+        List<int> tableid = new List<int> { 0 };
         // model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid, tableid);
-        model.customer = _menuOrderAppService.getcustomerDetails(customerid,null);
+        model.customer = _menuOrderAppService.getcustomerDetails(customerid, null);
         model.customer.PersonCount = totalPersonCount;
         return PartialView("_customerDetailModal", model);
     }
-[HttpPost]
-    public IActionResult editCustomerDetails(MenuOrderAppModel model){
+    [HttpPost]
+    public IActionResult editCustomerDetails(MenuOrderAppModel model)
+    {
         _menuOrderAppService.saveCustomerDetails(model.customer);
-        return Json(new {success = "Customer Details Save successfully"});
+        return Json(new { success = "Customer Details Save successfully" });
     }
 
 
-[HttpPost]
-    public IActionResult addItemInOrder(int itemid,List<int> modifiers,string uniqueId,int? orderid){
+    [HttpPost]
+    public IActionResult addItemInOrder(int itemid, List<int> modifiers, string uniqueId, int? orderid)
+    {
         MenuOrderAppModel model = new MenuOrderAppModel();
         model.item = _itemService.getItemFromId(itemid);
-        if(orderid != 0){
-            _menuOrderAppService.getOrderdItemQuantity(orderid,itemid,model,modifiers);
+        if (orderid != 0)
+        {
+            _menuOrderAppService.getOrderdItemQuantity(orderid, itemid, model, modifiers);
         }
         List<Modifier> modifierList = new List<Modifier>();
-        foreach(int modifierid in modifiers){
+        foreach (int modifierid in modifiers)
+        {
             Modifier modifier = _modifierService.getModifierFromId(modifierid);
             modifierList.Add(modifier);
         }
         model.modifiers = modifierList;
         model.uniqueId = uniqueId;
-        model.orderid = orderid?? 0;
-        
+        model.orderid = orderid ?? 0;
 
-        return PartialView("_itemAccordian",model);
+
+        return PartialView("_itemAccordian", model);
     }
 
     [HttpPost]
-    public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails){
+    public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails)
+    {
         int orderid = _menuOrderAppService.createOrder(orderDetails);
-        return Json(new {success = "Order Saved Successfully",Orderid = orderid});
+        return Json(new { success = "Order Saved Successfully", Orderid = orderid });
     }
 
-    public IActionResult getRunningTableOrder(int tableid){
+    public IActionResult getRunningTableOrder(int tableid)
+    {
         MenuOrderAppModel model = _menuOrderAppService.getRunningTableOrder(tableid);
-        return PartialView("_menu",model);
+        return PartialView("_menu", model);
     }
 
     [HttpPost]
-    public IActionResult completeTheOrder([FromBody]ItemDetail Itemdetails){
-        if(_menuOrderAppService.completeTheOrder(Itemdetails)){
-            return Json(new {success = "Order completed"});
+    public IActionResult completeTheOrder([FromBody] ItemDetail Itemdetails)
+    {
+        if (_menuOrderAppService.completeTheOrder(Itemdetails))
+        {
+            return Json(new { success = "Order completed" });
         }
-        else{
-            return Json(new {error = "Some items are not ready yet"});
+        else
+        {
+            return Json(new { error = "Some items are not ready yet" });
         }
     }
 
     [HttpPost]
-    public IActionResult cancelTheOrder([FromBody]ItemDetail Itemdetails){
-        if(_menuOrderAppService.cancelTheOrder(Itemdetails)){
-            return Json(new {success= "Order cancelled successfully"});
+    public IActionResult cancelTheOrder([FromBody] ItemDetail Itemdetails)
+    {
+        if (_menuOrderAppService.cancelTheOrder(Itemdetails))
+        {
+            return Json(new { success = "Order cancelled successfully" });
         }
-        else{
+        else
+        {
 
-            return Json(new {success= "Order can not cancelled as some items of the order are ready"});
+            return Json(new { success = "Order can not cancelled as some items of the order are ready" });
         }
     }
 

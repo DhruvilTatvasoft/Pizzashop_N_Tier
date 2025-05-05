@@ -158,9 +158,9 @@
         var sumOfTaxAmount = 0;
         var taxes = $('[id^="tax_"]');
         taxes.each(function () {
-            if ($(this).data('taxtype') != "flat amount") {
+            
                 sumOfTaxAmount += parseFloat($(this).text().replace('₹', ''));
-            }
+            
         })
         console.log("subtotal:" + subtotal + "sum of tax" + sumOfTaxAmount)
         var total = subtotal + sumOfTaxAmount;

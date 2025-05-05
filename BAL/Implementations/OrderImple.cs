@@ -342,7 +342,6 @@ namespace BAL.Implementations
                 picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
-
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
                 using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
                 {
@@ -395,9 +394,9 @@ namespace BAL.Implementations
         return _orderRepository.getSingleOrderDetail(categoryid,orderid, status);
        }
 
-        public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
+        public void changeReadyQuantity(Dictionary<int, int> readyItemCount,string currentStatus)
         {
-             _orderRepository.changeReadyQuantity(readyItemCount);
+             _orderRepository.changeReadyQuantity(readyItemCount,currentStatus);
         }
 
         public Dictionary<int, Dictionary<Item, List<Modifier>>> getModifiersForItems(int orderid)
@@ -418,6 +417,11 @@ namespace BAL.Implementations
         public int CreateOrderForCustomer(int tokenid, List<int> tableids)
         {
            return _orderRepository.CreateOrderForCustomer(tokenid,tableids);
+        }
+
+        public void getAppliedTaxesForOrder(OrderViewModel model)
+        {
+             _orderRepository.getAppliedTaxesForOrder(model);
         }
     }
 }

@@ -177,35 +177,46 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         return _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
     }
 
-    public List<Item> getItemsForcategory(int categoryid, string searchedItem)
+    public List<Item> getItemsForcategory(int categoryid, string searchedItem, string ItemType)
+{
+    // Normalize and interpret ItemType
+    bool? isVeg = null;
+    if (!string.IsNullOrEmpty(ItemType))
     {
-        if (searchedItem != "")
-        {
-            if (categoryid != 0)
-            {
-                return _context.Items.Where(item => item.Itemname.ToLower().Trim().Contains(searchedItem.ToLower().Trim()) && item.Isdeleted == false && item.Categoryid == categoryid).ToList();
-            }
-            else
-            {
-                return _context.Items.Where(item => item.Itemname.ToLower().Trim().Contains(searchedItem.ToLower().Trim()) && item.Isdeleted == false).ToList();
-            }
-        }
-        if (categoryid == 0)
-        {
-            List<Category> categories = _context.Categories.Where(category => category.Isdeleted == false).ToList();
-            List<Item> items = new List<Item>();
-            foreach (var category in categories)
-            {
-                var itemsInCategory = _context.Items.Where(item => item.Categoryid == category.Categoryid && item.Isdeleted == false).ToList();
-                items.AddRange(itemsInCategory);
-            }
-            return items;
-        }
-        else
-        {
-            return _context.Items.Where(item => item.Categoryid == categoryid && item.Isdeleted == false).ToList();
-        }
+        if (ItemType.ToLower() == "veg")
+            isVeg = true;
+        else if (ItemType.ToLower() == "non-veg")
+            isVeg = false;
     }
+
+    // Start with base query
+    var query = _context.Items.AsQueryable();
+
+    // Filter: Not deleted
+    query = query.Where(item => item.Isdeleted == false);
+
+    // Filter: Category
+    if (categoryid != 0)
+    {
+        query = query.Where(item => item.Categoryid == categoryid);
+    }
+
+    // Filter: Search text
+    if (!string.IsNullOrEmpty(searchedItem))
+    {
+        string lowerSearch = searchedItem.ToLower().Trim();
+        query = query.Where(item => item.Itemname.ToLower().Trim().Contains(lowerSearch));
+    }
+
+    // Filter: Item type
+    if (isVeg.HasValue)
+    {
+        query = query.Where(item => item.Itemtype == isVeg.Value);
+    }
+
+    return query.ToList();
+}
+
 
     public List<ModifierModel> getModifiersForItem(int itemid)
     {

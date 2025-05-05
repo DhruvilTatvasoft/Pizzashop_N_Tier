@@ -33,7 +33,7 @@ public class KotController : Controller
         return PartialView("_orderDetailsCard",model);
     }
 
-    public IActionResult loadOrdersPerCategory(int categoryid, bool? IsReady,int pageSize = 3,int pageNumber = 1)
+    public IActionResult loadOrdersPerCategory(int categoryid, bool? IsReady,int pageSize = 5,int pageNumber = 1)
     {
         KotViewModel model = new KotViewModel();
         model.categories = _menuService.getAllCategories();
@@ -78,7 +78,7 @@ public class KotController : Controller
     [HttpPost]
     public IActionResult changeReadyQuantity(SingleOrderDetailModel model)
     {
-        _orderService.changeReadyQuantity(model.readyItemCount);
+        _orderService.changeReadyQuantity(model.readyItemCount,model.currentStatus);
         return Json(new { success = "Items are marked as Prepared Successfully" });
     }
 }

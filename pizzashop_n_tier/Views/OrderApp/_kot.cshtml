@@ -13,7 +13,7 @@
 
   $('document').ready(() => {
     loadCategoryNavbar();
-    @* loadOrders(); *@
+
     loadOrderDetailCardContainer(0);
   })
 
@@ -27,12 +27,12 @@
     });
   }
 
-  function loadOrderDetailCardContainer(categoryid){
+  function loadOrderDetailCardContainer(categoryid) {
     $.ajax({
-      url:"@Url.Action("loadOrderDetailCardContainer","Kot")",
-      type:"GET",
-      data: {categoryid : categoryid},
-      success:function(response){
+      url: "@Url.Action("loadOrderDetailCardContainer", "Kot")",
+      type: "GET",
+      data: { categoryid: categoryid },
+      success: function (response) {
         $(".cardContainer").html(response)
       }
     });
@@ -42,37 +42,50 @@
 
   $(document).on('submit', '#readyQuantityChangeForm', function (e) {
     e.preventDefault();
-    var $form = $(this);
 
+    var $form = $(this);
     if ($form.data('submitting')) return;
     $form.data('submitting', true);
 
-    var data = new FormData(this);
-    for (var pair of data.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
+    var formData = new FormData();
+
+    $('table tbody tr').each(function () {
+        var $row = $(this);
+        var $checkbox = $row.find('input[type="checkbox"]');
+        var $input = $row.find('input[type="number"]');
+        var inputId = $input.attr('id'); // e.g., "number-21"
+        var itemId = inputId.split('-')[1]; // get "21"
+
+        var value = $checkbox.is(':checked') ? $input.val() : 0;
+
+        formData.append(`readyItemCount[${itemId}]`, value);
+    });
+
+    formData.append("currentStatus", $("#currentStatus").val());
 
     $.ajax({
-      url: "@Url.Action("changeReadyQuantity", "Kot")",
-      type: "POST",
-      data: data,
-      contentType: false,
-      processData: false,
-      complete: function () {
-        $form.data('submitting', false);
-      },
-      success: function (response) {
-        if (response.success) {
-          $('.closeModalBtn').click();
-          toastr.success(response.success);
-          loadOrdersForcategory($('#selectedCategory').val(), false);
+        url: "@Url.Action("changeReadyQuantity", "Kot")",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        complete: function () {
+            $form.data('submitting', false);
+        },
+        success: function (response) {
+            if (response.success) {
+                $('.closeModalBtn').click();
+                toastr.success(response.success);
+                loadOrdersForcategory($('#selectedCategory').val(), false);
+            }
+        },
+        error: function () {
+            toastr.error("An error occurred while processing your request");
         }
-      },
-      error: function () {
-        toastr.error("An error occurred while processing your request");
-      }
     });
-  });
+});
+
+
 
   function loadOrders() {
     $.ajax({
@@ -86,17 +99,17 @@
     });
   }
 
-  function loadOrdersForcategory(categoryid,IsReady,pageNumber) {
-      @* var pageNumber = 1; *@
+  function loadOrdersForcategory(categoryid, IsReady, pageNumber) {
+    @* var pageNumber = 1; *@
       console.log(pageNumber)
-        $.ajax({
-            url:"@Url.Action("loadOrdersPerCategory","Kot")",
-            type:'GET',
-            data:{categoryid : categoryid,IsReady: IsReady,pageNumber : pageNumber},
-            success:function(data){
-                $('.orderdetailcontainer').html(data);
-                
-            }
-        });
-    }
+    $.ajax({
+      url: "@Url.Action("loadOrdersPerCategory", "Kot")",
+      type: 'GET',
+      data: { categoryid: categoryid, IsReady: IsReady, pageNumber: pageNumber },
+      success: function (data) {
+        $('.orderdetailcontainer').html(data);
+
+      }
+    });
+  }
 </script>

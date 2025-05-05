@@ -1,4 +1,5 @@
 using DAL.Data;
+using Microsoft.EntityFrameworkCore;
 
 
 public class OrderRepository : IOrderRepository
@@ -262,15 +263,14 @@ public class OrderRepository : IOrderRepository
     public tableAndsection getOrderSectionAndTableDetails(int orderId)
     {
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
-        string tableName = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)?.Tablename ?? string.Empty;
-        string sectionName = _context.Sections.FirstOrDefault(section => section.Sectionid == order.Sectionid).Sectionname!;
+        int tableid = _context.Ordertables.FirstOrDefault(orderTable=>orderTable.Orderid == orderId).Tableid;
+        Table OrderedTable = _context.Tables.FirstOrDefault(orderedTable=>orderedTable.Tableid == tableid);
+        string tableName = OrderedTable.Tablename;
+        string sectionName = _context.Sections.FirstOrDefault(section => section.Sectionid == OrderedTable.Sectionid).Sectionname!;
         tableAndsection tableAndsection = new tableAndsection();
         tableAndsection.tableName = tableName;
         tableAndsection.sectionName = sectionName;
-        tableAndsection tableAndSectionNames = new tableAndsection();
-        tableAndSectionNames.sectionName = sectionName;
-        tableAndSectionNames.tableName = tableName;
-        return tableAndSectionNames;
+        return tableAndsection;
     }
 
     public void GetOrderDetailsByCategory(int categoryid, bool? IsReady, int pageSize, int pageNumber, KotViewModel kotModel)
@@ -293,6 +293,7 @@ public class OrderRepository : IOrderRepository
                 var dbItem = categoryid != 0
                      ? _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid && i.Categoryid == categoryid)
                      : _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid);
+                
                 bool addItem = true;
                 if (dbItem == null)
                 {
@@ -300,26 +301,30 @@ public class OrderRepository : IOrderRepository
                 }
                 else
                 {
-                    hasItems = true;
+                    var newItem = new Item{
+                    Itemname = dbItem.Itemname,
+                    Itemid = dbItem.Itemid,
+                    Itemquantity = 0
+                };
                     if (IsReady == null)
                     {
-                        dbItem.Itemquantity = Ordereditem.Orderitemquantity ?? 0;
+                        newItem.Itemquantity = Ordereditem.Orderitemquantity ?? 0;
                     }
                     else if (IsReady == true)
                     {
-                        dbItem.Itemquantity = Ordereditem.Readyitemquanitiy ?? 0;
+                        newItem.Itemquantity = Ordereditem.Readyitemquanitiy ?? 0;
                     }
-                    else if (IsReady == false)
+                    else
                     {
-                        dbItem.Itemquantity = (Ordereditem.Orderitemquantity ?? 0) - (Ordereditem.Readyitemquanitiy ?? 0);
+                        newItem.Itemquantity = (Ordereditem.Orderitemquantity ?? 0) - (Ordereditem.Readyitemquanitiy ?? 0);
                     }
-                    if (dbItem.Itemquantity <= 0)
+                    if (newItem.Itemquantity <= 0)
                     {
                         addItem = false;
-                        hasItems = false;
                     }
                     if (addItem)
                     {
+                        hasItems = true;
                         List<Modifier> modifiers = new List<Modifier>();
                         List<OrderItemModifier> modifiersForItem = _context.OrderItemModifiers.Where(orderedItemModifier => orderedItemModifier.ItemId == Ordereditem.Itemid && orderedItemModifier.Orderitemdetailid == Ordereditem.Orderitemid).ToList();
                         foreach (var modifier in modifiersForItem)
@@ -328,7 +333,7 @@ public class OrderRepository : IOrderRepository
                             modifiers.Add(m);
                         }
                         Dictionary<Item, List<Modifier>> itemAndModifiers = new Dictionary<Item, List<Modifier>>();
-                        itemAndModifiers.Add(dbItem, modifiers);
+                        itemAndModifiers.Add(newItem, modifiers);
                         itemModifierList.Add(itemAndModifiers);
                     }
                 }
@@ -363,8 +368,6 @@ public class OrderRepository : IOrderRepository
         {
             var itemId = group.Key.ItemId;
             var orderItemDetailId = group.Key.Orderitemdetailid;
-
-
             var dbItem = categoryid != 0
                 ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
                 : _context.Items.FirstOrDefault(i => i.Itemid == itemId);
@@ -381,7 +384,7 @@ public class OrderRepository : IOrderRepository
             {
                 Itemid = orderItem.Orderitemid,
                 Itemname = dbItem.Itemname,
-                Categoryid = dbItem.Categoryid,
+                Categoryid = dbItem.Categoryid, 
             };
 
             var modifierIds = _context.OrderItemModifiers
@@ -407,12 +410,17 @@ public class OrderRepository : IOrderRepository
             .ToDictionary(pair => pair.Key, pair => pair.Value);
         return model;
     }
-    public void changeReadyQuantity(Dictionary<int, int> readyItemCount)
+    public void changeReadyQuantity(Dictionary<int, int> readyItemCount,string currentStatus)
     {
         foreach (var pair in readyItemCount)
         {
             var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == pair.Key);
-            orderedItem!.Readyitemquanitiy = pair.Value;
+            if(currentStatus == "In Progress"){
+            orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy + pair.Value;
+            }
+            else{
+            orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy - pair.Value;
+            }
             _context.Orderitems.Update(orderedItem);
         }
         _context.SaveChanges();
@@ -468,5 +476,19 @@ public class OrderRepository : IOrderRepository
         }
         _context.SaveChanges();
         return order.Orderid;
+    }
+
+    public void getAppliedTaxesForOrder(OrderViewModel model)
+    {
+        List<appliedTaxDetails> taxDetails = new List<appliedTaxDetails>();
+        List<Ordertaxesandfee> taxDetailsForOrder = _context.Ordertaxesandfees.Where(orderTaxes=>orderTaxes.Orderid == model.orderid).ToList();
+        foreach(var tax in  taxDetailsForOrder){
+            appliedTaxDetails taxDetails1 = new appliedTaxDetails();
+            taxDetails1.taxname = tax.Taxname ;
+            taxDetails1.taxPercentage = (float)(tax.TaxPercentage);
+            taxDetails1.taxtype = (tax.Taxtype);
+            taxDetails.Add(taxDetails1);
+        }
+        model.appliedTaxDetails = taxDetails;
     }
 }

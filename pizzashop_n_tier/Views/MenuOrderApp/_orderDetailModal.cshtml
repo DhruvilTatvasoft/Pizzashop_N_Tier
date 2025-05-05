@@ -140,7 +140,6 @@
     function saveTheOrder() {
         var itemDetails = [];
         if ($('[id^="item_"]').length == 0) {
-            alert("hit")
             toastr.error("Add some items before saving the order");
             return;
         }

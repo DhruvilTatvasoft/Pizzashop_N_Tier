@@ -12,9 +12,9 @@
                 </span>
             </div>
             <div class="d-flex flex-sm-column flex-lg-row">
-                <li id="veg" class="me-3">Veg </li>
-                <li id="non-veg" class="me-3">Non-veg</li>
-                <li id="vegan" class="me-3">Vegan @Model.isTableAssigned</li>
+                <li id="veg" class="me-3" onclick="loadItemsForCategory($('#selecetedCategory').val(),'veg')">Veg</li>
+                <li id="non-veg" class="me-3" onclick="loadItemsForCategory($('#selecetedCategory').val(),'non-veg')">Non-veg</li>
+                <li id="vegan" class="me-3" onclick="loadItemsForCategory($('#selecetedCategory').val(),'vegan')">Vegan @Model.isTableAssigned</li>
             </div>
         </div>
         <div class="d-flex" style="height: 92%;">
@@ -33,6 +33,7 @@
                 }
             });
             var favorites = [];
+
             function AddToFavorite(x, id) {
                 console.log(x)
                 if ($(x).attr("src") == "/images/heart-fill.svg") {

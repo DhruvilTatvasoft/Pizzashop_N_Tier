@@ -13,3 +13,9 @@ public class orderItemModifierViewModel
     }
     public decimal subtotal{get;set;}
 }
+
+public class ItemViewModelForOrder{
+    public int itemid{get;set;}
+    public int itemquantity {get;set;}
+    public string itemName{get;set;}
+}

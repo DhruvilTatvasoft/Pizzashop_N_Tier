@@ -33,4 +33,5 @@ public class SingleOrderDetailModel{
     public Dictionary<int,int> readyItemCount{get;set;}
 
     public int categoryid{get;set;}
+    public string currentStatus{get;set;}
 }

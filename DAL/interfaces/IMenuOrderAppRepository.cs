@@ -7,7 +7,7 @@ public interface IMenuOrderAppRepository
     int createOrder(OrderDetailsViewModel orderDetails);
     CustomerModel getcustomerDetails(int customerid,List<int>? tableid);
     Item getItem(int itemid);
-    List<Item> getItemsForcategory(int categoryid,string searchedItem);
+    List<Item> getItemsForcategory(int categoryid,string searchedItem,string ItemType);
     List<ModifierModel> getModifiersForItem(int itemid);
     void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers);
     Order getOrderfromOrderid(int orderId);

@@ -56,30 +56,24 @@ namespace pizzashop_n_tier.Controllers
             OrderViewModel model = new OrderViewModel();
             model.order = _orderService.getOrderDetails(orderid);
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-           
             model2.ItemsAndModifiers = _orderService.getModifiersForItems(orderid);
-
             model.orderedItemModifiers = model2;
+            model.orderid = orderid;
+             _orderService.getAppliedTaxesForOrder(model);   
             return View("orderDetails", model);
         }
         public async Task<IActionResult> generatePdf(int orderid)
         {
             OrderViewModel model = new OrderViewModel();
-
             model.order = _orderService.getOrderDetails(orderid);
             orderItemModifierViewModel model2 = new orderItemModifierViewModel();
-
             model2.ItemsAndModifiers = _orderService.getModifiersForItems(orderid);
             model.orderedItemModifiers = model2;
             model.status = _orderService.getAllStatus();
-
             var viewHtml = await ViewToStringAsync("Order/invoice.cshtml", model);
-
             try
             {
-
                 HtmlToPdf converter = new HtmlToPdf();
-
                 converter.Options.PdfPageSize = PdfPageSize.A4;
                 converter.Options.PdfPageOrientation = PdfPageOrientation.Portrait;
                 HttpRequest req = HttpContext.Request;

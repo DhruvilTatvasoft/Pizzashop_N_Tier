@@ -15,6 +15,7 @@
                 </div>
 
                 <div class="d-flex w-100 align-items-center justify-content-center p-2">
+                    <input type="hidden" id="currentStatus">
                     <button class="btn btn-outline-primary me-2 btnforready" type="button"
                         onclick="loadStatusWiseOrderItems('Ready')">Ready</button>
                     <button class="btn btn-outline-primary btnforinprogress" type="button"
@@ -27,6 +28,7 @@
                 <div class="modal-footer pt-0" style="border:none;">
                     <button class="btn btn-primary btncolour markAsBtn" type="submit">Marked As Prepared</button>
                     <button class="btn  btnoutlinecolour closeModalBtn" data-bs-dismiss="modal">cancel</button>
+                <label class="w-100 mt-3" style="font-size: 10px;">*Please mark the checkbox before marking item as Ready or In Progress</label>
                 </div>
             </div>
         </div>
@@ -37,7 +39,7 @@
 <script>
     $("document").ready(() => {
         console.log("ready")
-        loadStatusWiseOrderItems("Ready");
+        loadStatusWiseOrderItems("In Progress");
     })
     function loadStatusWiseOrderItems(status) {
         if (status == "In Progress") {
@@ -46,6 +48,7 @@
             $(".btnforready").removeClass("btn-primary")
             $(".btnforready").addClass("btn-outline-primary")
             $(".markAsBtn").text("Mark As Prepared")
+            $("#currentStatus").val("In Progress")
         }
         else {
             $(".btnforready").removeClass("btn-outline-primary")
@@ -53,6 +56,7 @@
             $(".btnforinprogress").removeClass("btn-primary")
             $(".btnforinprogress").addClass("btn-outline-primary")
             $(".markAsBtn").text("Mark As InProgress")
+                        $("#currentStatus").val("Ready")
         }
         $.ajax({
             url: "@Url.Action("loadItemsInModalAccordingToStatus", "Kot")",

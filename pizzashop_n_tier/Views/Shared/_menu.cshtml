@@ -64,7 +64,7 @@
             }
         });
     }
-    function loadItemsForCategory(id) {
+    function loadItemsForCategory(id,type) {
 
         var searchedItem = $("#searchItemForCategory").val();
 
@@ -79,7 +79,6 @@
         console.log('SearchedItem:', searchedItem);
         if (searchedItem) {
             id = $("#selectedCategory").val();
-            alert(searchedItem)
         }
 
         var requestedData = {
@@ -87,7 +86,8 @@
             CategoryId: id,
             TableIds: tableIds,
             SearchedItem: searchedItem,
-            orderid: @Html.Raw(Model?.orderid)
+            orderid: @Html.Raw(Model?.orderid),
+            ItemType: type
         };
 
         @* console.log('Request Payload:', requestedData);  *@

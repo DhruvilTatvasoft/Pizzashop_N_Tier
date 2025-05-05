@@ -11,8 +11,8 @@
         @foreach (var item in Model.itemAndModifiers)
         {
             <tr>
-
-                <td><input class="form-check-input" type="checkbox">
+                <td>
+                    <input class="form-check-input" type="checkbox">
                     <label for="">@item.Key.Itemname</label>
                     <div class="ps-2 modifierForItem">
                         @foreach (var modifier in item.Value)
@@ -24,8 +24,8 @@
                     <div class="incrementerContainer">
                         <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.Key.Itemid')"
                             value="Decrease Value">-</div>
-                        <input type="number h-100" class="number" asp-for="@item.Key.Itemquantity" id="number-@item.Key.Itemid" min="0"
-                            max="@item.Key.Itemquantity" name="readyItemCount[@item.Key.Itemid]" />
+                        <input type="number" class="number h-100" id="number-@item.Key.Itemid" min="0"
+                            max="@item.Key.Itemquantity" value="0" name="readyItemCount[@item.Key.Itemid]" />
                         <div class="value-button h-100" id="increase"
                             onclick="increaseValue(@item.Key.Itemquantity,'number-@item.Key.Itemid')"
                             value="Increase Value">+</div>
