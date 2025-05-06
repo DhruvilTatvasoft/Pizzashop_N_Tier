@@ -1,4 +1,10 @@
+@{
+  var canEditUsers = (await AuthorizationService.AuthorizeAsync(User, "Users_CanEditAdd")).Succeeded;
+  var canDeleteUsers = (await AuthorizationService.AuthorizeAsync(User, "Users_CanDelete")).Succeeded;
+}
 @model userpagingdetailmodel
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 <table class="table mb-0" id="table">
   <thead>
     <tr>
@@ -13,8 +19,8 @@
       <th scope="col">
         <label for="">Role</label>
         <img src="~/images/icons8-sorting-arrows-50.png"
-          onclick="loadRows('@(Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc")','role')"
-          onclick="" style="width: 15px;" alt="">
+          onclick="loadRows('@(Model.sortBy == "role" && Model.sortOrder == "asc" ? "desc" : "asc")','role')" onclick=""
+          style="width: 15px;" alt="">
       </th>
       <th scope="col">status</th>
       <th scope="col">Action</th>
@@ -49,12 +55,28 @@
           }
         <td class="align-items-center ">
           <div class="d-flex justify-content-start w-100 pb-2 h-100">
-            <a href='@Url.Action("EditUser", "Dashboard", new { Id = @user.userid })'>
-              <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
-            </a>
+            @if (canEditUsers)
+            {
+              <a href='@Url.Action("EditUser", "Dashboard", new { Id = @user.userid })'>
+                <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
+              </a>
+            }
+            else
+            {
+              <a onclick="showPermissionDenied('Edit')">
+                <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="">
+              </a>
+            }
+            @if(canDeleteUsers){
             <a href="#" data-bs-toggle="modal" data-bs-target="#deleteUserModal" onclick="setUserId(@user.userid)">
               <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="Delete">
             </a>
+            }
+            else{
+            <a onclick="showPermissionDenied('Delete')">
+              <img src="~/images/trash-fill.svg" style="cursor: pointer;" alt="Delete">
+            </a>
+            }
           </div>
         </td>
       </tr>
@@ -89,7 +111,7 @@
 
   <script>
 
-
+    
     $("#next").click(function () {
       var currentpage = $(this).data('page');
       $.ajax({
@@ -137,19 +159,9 @@
       });
     };
 
-    @* function loadRows(sortOrder, sortBy) {
-      console.log("OK");
-      var currentpage = $(this).data('page');
-      $.ajax({
-        url: '@Url.Action("getUsers", "Dashboard")',
-        type: 'GET',
-        data: { currentPage: currentpage, search: $("#search-record").val(),pageSize:$("#recordPerPage").val() ,maxRows: $('#recordPerPage').val(), sortOrder: sortOrder, sortBy: sortBy },
-        success: function (response) {
-          $("#t-container").html(response);
-          console.log($('#recordPerPage').val());
-        },
-      });
-    }; *@
+    function showPermissionDenied(permissionname){
+      toastr.error("Sorry,You don't have permissions to "+permissionname+" User");
+    }
 
 
   </script>

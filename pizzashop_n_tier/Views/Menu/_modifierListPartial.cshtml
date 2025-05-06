@@ -1,6 +1,12 @@
 @{
     Layout = "";
 }
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanEditAdd")).Succeeded;
+    var canDeleteMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;
+}
 @model ItemModel
 <input type="hidden" id="modifierGroupId" asp-for="@Model.modifierGroupId">
 <input type="hidden" id="pageNumber" asp-for="@Model.pageNumber">
@@ -52,11 +58,24 @@
                     <td>@modifier.Modifierquantity</td>
                     <td data-lastcolumn="L">
                         <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                            @if(canEditMenu){
                             <img src="~/images/pencil-square.svg" class="me-3" alt=""
                                 onclick="OpenEditModifierModel(@modifier.Modifierid,@modifier.Modifiergroupid)">
+                            }
+                            else{
+                            <img src="~/images/pencil-square.svg" class="me-3" alt=""
+                                onclick="showAccessDenied('modifier','edit')">
+                            }
+                            @if(canDeleteMenu){
                             <img src="~/images/trash-fill.svg"
                                 onclick="OpenDeleteModifierModal(@modifier.Modifierid,@modifier.Modifiergroupid)"
                                 style="cursor: pointer;" alt="">
+                            }
+                            else{
+                            <img src="~/images/trash-fill.svg"
+                                onclick="showAccessDenied('modifier','delete')"
+                                style="cursor: pointer;" alt="">
+                            }
                         </div>
                     </td>
                 </tr>
@@ -87,7 +106,8 @@
         @if (Model.pageNumber > 1)
         {
             <button type="button" class="btn btn-outline-dark btn2" style="padding: 6px;"
-                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1))"><img src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
+                onclick="loadModifiersForModifierGroup(@Model.modifierGroupId,@(Model.pageNumber - 1))"><img
+                    src="~/images/left-chevron-svgrepo-com.svg" style="width:25px" alt=""></button>
         }
         else
         {

@@ -35,26 +35,26 @@ public class JwtTokenImple : IJwtTokenGenService
     {
         List<Rolesandpermission> AllPermissions = _roleAndPermissionRepository.GetUserPermissions(role);
         var tokenHandler = new JwtSecurityTokenHandler();
-            
+
         var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
 
         var claims = new List<Claim>
     {
-         new Claim(JwtRegisteredClaimNames.Name, userName), 
+         new Claim(JwtRegisteredClaimNames.Name, userName),
         new Claim(ClaimTypes.Role, role)
     };
 
-        
-       foreach (var permission in AllPermissions)
-{
-    var permissionName = _roleAndPermissionRepository.getPermissionName(permission.Permissionid)?.Trim();
-    if (permission != null && !string.IsNullOrWhiteSpace(permissionName))
-    {
-        claims.Add(new Claim("CanView_" + permissionName, permission.Canview.ToString()));
-        claims.Add(new Claim("CanEdit_" + permissionName, permission.Canedit.ToString()));
-        claims.Add(new Claim("CanDelete_" + permissionName, permission.Candelete.ToString()));
-    }
-}
+
+        foreach (var permission in AllPermissions)
+        {
+            var permissionName = _roleAndPermissionRepository.getPermissionName(permission.Permissionid)?.Trim();
+            if (permission != null && !string.IsNullOrWhiteSpace(permissionName))
+            {
+                claims.Add(new Claim("CanView_" + permissionName, permission.Canview.ToString()));
+                claims.Add(new Claim("CanEdit_" + permissionName, permission.Canedit.ToString()));
+                claims.Add(new Claim("CanDelete_" + permissionName, permission.Candelete.ToString()));
+            }
+        }
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),

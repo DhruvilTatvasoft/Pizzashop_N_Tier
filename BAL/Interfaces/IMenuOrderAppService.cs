@@ -5,6 +5,7 @@ public interface IMenuOrderAppService
     bool cancelTheOrder(ItemDetail itemDetails);
     bool completeTheOrder(ItemDetail itemdetails);
     int createOrder(OrderDetailsViewModel orderDetails);
+    MenuOrderAppModel getAssignedTableDetails(int tableid);
     CustomerModel getcustomerDetails(int customerid,List<int>? tableid);
     Item getItem(int itemid);
     List<Item> getItemsForcategory(int categoryid,string searchedItem,string ItemType);

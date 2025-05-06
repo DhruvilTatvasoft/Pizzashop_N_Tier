@@ -68,7 +68,11 @@ namespace BAL.Implementations
         {
             return _waitingTokenRepository.getTokenDetails(waitingTokenId);
         }
-        
+
+        public int getTokenidFromCustomerEmail(string email)
+        {
+           return _waitingTokenRepository.getTokenidFromCustomerEmail(email);
+        }
 
         public int getTotalWaitingTokens()
         {

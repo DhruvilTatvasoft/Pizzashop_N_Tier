@@ -2,6 +2,7 @@ using DAL.Data;
 
 public interface ITableService{
     bool addNewTable(Table table);
+    void assignTable(List<int> tableids,int customerid);
     void deleteTables(List<int> selectedTables);
     int getAllTables();
     TableViewModel GetAllTablesAndSections();

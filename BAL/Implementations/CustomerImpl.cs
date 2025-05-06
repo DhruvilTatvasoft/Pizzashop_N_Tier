@@ -11,6 +11,10 @@ namespace BAL.Implementations
 {
     public class CustomerImpl : ICustomerService
     {
+        private readonly ICustomerRepository _customerRepository;
+        public CustomerImpl(ICustomerRepository customerRepository){
+            _customerRepository = customerRepository;
+        }
         private void ApplyMergedCellStyle(HSSFSheet sheet, CellRangeAddress range, ICellStyle style)
         {
             for (int rowNum = range.FirstRow; rowNum <= range.LastRow; rowNum++)
@@ -23,10 +27,7 @@ namespace BAL.Implementations
                 }
             }
         }
-        private readonly ICustomerRepository _customerRepository;
-        public CustomerImpl(ICustomerRepository customerRepository){
-            _customerRepository = customerRepository;
-        }
+        
 
         public byte[] exportCustomerDetails(int pageSize,int pageNumber,string sortBy,string sortOrder,string search,string filterBy,DateTime? startDate,DateTime? endDate,bool? isExport)
         {
@@ -49,7 +50,7 @@ namespace BAL.Implementations
                 CompanyFont.FontName = "Arial";
                 CompanyFont.Color = HSSFColor.Blue.Index;
                 CompanyFont.Boldweight = (short)FontBoldWeight.Bold;
-                CompanyFont.FontHeightInPoints = ((short)16);
+                // CompanyFont.FontHeightInPoints = ((short)16);
                 Company.SetFont(CompanyFont);
 
                 var Address = workbook.CreateCellStyle();
@@ -57,7 +58,7 @@ namespace BAL.Implementations
                 var AddressFont = workbook.CreateFont();
                 AddressFont.FontName = "Arial";
                 AddressFont.Boldweight = (short)FontBoldWeight.Bold;
-                AddressFont.FontHeightInPoints = ((short)10);
+                // AddressFont.FontHeightInPoints = ((short)10);
                 Address.SetFont(AddressFont);
 
                 var Address1 = workbook.CreateCellStyle();
@@ -65,21 +66,21 @@ namespace BAL.Implementations
                 var AddressFont1 = workbook.CreateFont();
                 AddressFont1.FontName = "Arial";
                 AddressFont1.Boldweight = (short)FontBoldWeight.Bold;
-                AddressFont1.FontHeightInPoints = ((short)10);
+                // AddressFont1.FontHeightInPoints = ((short)10);
                 Address1.SetFont(AddressFont);
 
 
                 var Header = workbook.CreateCellStyle();
                 Header.Alignment = HorizontalAlignment.Center;
                 Header.VerticalAlignment = VerticalAlignment.Center;
-                Header.FillForegroundColor = NPOI.HSSF.Util.HSSFColor.Blue.Index;
-                Header.FillBackgroundColor = NPOI.HSSF.Util.HSSFColor.Blue.Index;
+                Header.FillForegroundColor = HSSFColor.Blue.Index;
+                Header.FillBackgroundColor = HSSFColor.Blue.Index;
                 Header.FillPattern = FillPattern.SolidForeground;
                 var HeaderFont = workbook.CreateFont();
                 HeaderFont.FontName = "Arial";
                 HeaderFont.Boldweight = (short)FontBoldWeight.Bold;
                 HeaderFont.Color = HSSFColor.White.Index;
-                HeaderFont.FontHeightInPoints = ((short)10);
+                // HeaderFont.FontHeightInPoints = ((short)10);
                 Header.SetFont(HeaderFont);
                 Header.BorderLeft = BorderStyle.Thin;
                 Header.BorderTop = BorderStyle.Thin;
@@ -102,7 +103,7 @@ namespace BAL.Implementations
                 Data.VerticalAlignment = VerticalAlignment.Center;
                 var DataFont = workbook.CreateFont();
                 DataFont.FontName = "Arial";
-                DataFont.FontHeightInPoints = ((short)9);
+                // DataFont.FontHeightInPoints = ((short)9);
                 Data.SetFont(DataFont);
                 Data.BorderLeft = BorderStyle.Thin;
                 Data.BorderTop = BorderStyle.Thin;
@@ -117,7 +118,7 @@ namespace BAL.Implementations
                 var linkDataFont = workbook.CreateFont();
                 linkDataFont.FontName = "Arial";
                 linkDataFont.Color = HSSFColor.Blue.Index;
-                linkDataFont.FontHeightInPoints = ((short)9);
+                // linkDataFont.FontHeightInPoints = ((short)9);
                 linkDataFont.Underline = FontUnderlineType.Single;
                 linkDataFont.Color = HSSFColor.Blue.Index;
                 linkData.SetFont(linkDataFont);
@@ -301,19 +302,13 @@ namespace BAL.Implementations
                     AnchorType = (int)NPOI.SS.UserModel.AnchorType.MoveAndResize
                 };
                 //Here, you need to replace the Image Path and Name as per your directory structure and Image Name
-                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
+                HSSFPicture picture = (HSSFPicture)patriarch.CreatePicture(anchor, LoadImage(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot\images\pizzashop_logo.png", workbook));
                 picture.Resize(0.34);
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
                 
-                // using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
-                // {    
-                //     workbook.Write(file);
-                //     file.Close();
-                //     Console.WriteLine("File Created Successfully...");
-                // }
                 using (var memoryStream = new MemoryStream()){
                     workbook.Write(memoryStream);
                     // var result = new FileContentResult(memoryStream.ToArray(), "application/vnd.ms-excel");

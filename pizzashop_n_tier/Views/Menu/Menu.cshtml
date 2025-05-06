@@ -1,8 +1,12 @@
 @{
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
-
     ViewData["Title"] = "Menu Page";
-
+}
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanEditAdd")).Succeeded;
+    var canDeleteMenu  = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;   
 }
 @model MenuModel
 
@@ -38,6 +42,10 @@
     </div>
     <script>
         var selectedCategoryId = 0;
+
+        function showAccessDenied(permissionname,permissiontype){
+                toastr.error("Sorry,you don't have permissions to "+permissiontype+" "+permissionname);
+        }
         $("document").ready(function () {
             loadCategories();
             loadItemData();

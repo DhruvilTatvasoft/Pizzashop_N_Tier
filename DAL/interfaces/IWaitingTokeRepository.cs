@@ -13,6 +13,7 @@ public interface IWaitingTokenRepository
     List<CustomerModel> getSuggestedCustomerList(string name);
     List<Table> getTablesForToken(int tokenid);
     WaitingTokenModel getTokenDetails(int waitingTokenId);
+    int getTokenidFromCustomerEmail(string email);
     int getTotalWaitingTokens();
     bool updateWaitingToken(WaitingTokenModel model);
 }

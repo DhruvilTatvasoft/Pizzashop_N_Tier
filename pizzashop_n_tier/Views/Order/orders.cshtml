@@ -53,7 +53,7 @@
                                 </div>
                             </div>
                             <div class="col-auto my-auto d-flex justify-content-end">
-                                <button type="button" onclick="exportExcelSheet()"
+                                <button type="button" onclick="exportProductExcelSheet()"
                                     class="btn btn-primary d-flex  align-items-center justify-content-end p-md-2 add-item-modifier ">
                                     <i class="fa-solid fa-file-export me-2 text-white fa-xl"></i>
                                     <span><img src="~/images/export (1).svg" style="filter: brightness(0) invert(1);"
@@ -105,10 +105,10 @@
 
         function formatDate(date) {
             const d = new Date(date);
-                    const Month = '' + (d.getMonth() + 1);
-                    const Day = '' + d.getDate();
-                    const Year = d.getFullYear();
-                    return [Year,Month.padStart(2,'0'),Day.padStart(2,'0')].join('-');
+            const Month = '' + (d.getMonth() + 1);
+            const Day = '' + d.getDate();
+            const Year = d.getFullYear();
+            return [Year, Month.padStart(2, '0'), Day.padStart(2, '0')].join('-');
         }
 
 
@@ -120,16 +120,16 @@
             var endDate = $("#endDate").val();
             var date = new Date();
             var checkDate = formatDate(date);
-           if(startDate > checkDate){
+            if (startDate > checkDate) {
                 toastr.error("Please enter a valid date");
                 return;
             }
-            if(endDate < startDate){
+            if (endDate < startDate) {
                 toastr.error("From date should not be greatter than To date");
                 return;
             }
-        
-            if(selectedOption == "Last 7 days"){
+
+            if (selectedOption == "Last 7 days") {
                 var date = new Date();
                 var date2 = new Date();
                 var startdate = date.setDate(date2.getDate() - 6);
@@ -139,17 +139,17 @@
                 $("#startDate").val(formatDate(startdate));
                 $("#endDate").val(formatDate(enddate));
             }
-            if(selectedOption == "Current Month"){
+            if (selectedOption == "Current Month") {
                 var date = new Date();
                 var date2 = new Date();
                 startDate = "";
                 endDate = "";
-                var startdate = new Date(date.getFullYear(),date.getMonth(),1);
+                var startdate = new Date(date.getFullYear(), date.getMonth(), 1);
                 var enddate = date.setDate(date2.getDate());
                 $("#startDate").val(formatDate(startdate));
                 $("#endDate").val(formatDate(enddate));
             }
-            if(selectedOption == "Last 30 days"){
+            if (selectedOption == "Last 30 days") {
                 var today = new Date();
                 var before30days = new Date();
                 before30days.setDate(today.getDate() - 29);
@@ -158,13 +158,13 @@
                 $("#startDate").val(formatDate(before30days));
                 $("#endDate").val(formatDate(today));
             }
-            if(selectedOption == "All Time"){
+            if (selectedOption == "All Time") {
                 startDate = "";
                 endDate = "";
                 $("#startDate").val('');
                 $("#endDate").val('');
             }
-            
+
             pagesize = $(".pagesize").val();
             console.log(sortOrder)
             console.log(sortBy)
@@ -185,7 +185,7 @@
             $('input[type=date]').val('');
             showOrdersBySearch(1, $(".pagesize").val(), 'asc', 'orderid')
         }
-        function exportExcelSheet() {
+        @* function exportExcelSheet() {
             var searchedOrder = $("#SearchOrder").val();
             var searchByPeriod = $(".timePeriodFilter").val();
             var startDate = $("#startDate").val();
@@ -207,40 +207,41 @@
                     showOrdersBySearch();
                 }
             })
-        }
+        } *@
+
+
 
         function exportProductExcelSheet() {
-     var searchedOrder = $("#SearchOrder").val();
-            var searchByPeriod = $(".timePeriodFilter").val();
-            var startDate = $("#startDate").val();
-            var endDate = $("#endDate").val();
-            var searchbystatus = $("#selectStatus").val();
+    var searchedOrder = $("#SearchOrder").val();
+    var searchByPeriod = $(".timePeriodFilter").val();
+    var startDate = $("#startDate").val();
+    var endDate = $("#endDate").val();
+    var searchbystatus = $("#selectStatus").val();
 
     $.ajax({
         url: '@Url.Action("ExportData", "Order")',
         type: 'POST',
         data: {
-             searchedOrder: searchedOrder,
-                    searchByPeriod: searchByPeriod,
-                    startDate: startDate,
-                    endDate: endDate,
-                    searchbystatus: searchbystatus
+            searchedOrder: searchedOrder,
+            searchByPeriod: searchByPeriod,
+            startDate: startDate,
+            endDate: endDate,
+            searchbystatus: searchbystatus
+        },
+        xhrFields: {
+            responseType: 'blob'  
         },
         success: function (data) {
-            if (data.success) {
-                // Create a download link and trigger the download
-                var link = document.createElement('a');
-                link.href = data.fileUrl; // The URL returned from the server (the file location)
-                link.download = "Products_Data.xlsx"; // You can give the file any name
-                link.click();
-                toastr.success("Excel file generated and downloaded successfully!");
-            } else {
-                toastr.error("Error while generating file.");
-            }
+            var blob = data;
+            var link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'orderdetails_' + new Date().toISOString().slice(0, 19).replace(/[-T:]/g, "_") + '.xls'; 
+            link.click();
         },
         error: function () {
             toastr.error("There was an error during the export.");
         }
     });
 }
+
     </script>

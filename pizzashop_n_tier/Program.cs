@@ -9,6 +9,7 @@ using DAL.interfaces;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
@@ -45,6 +46,20 @@ builder.Services.AddScoped<IWaitingTokenService, WaitingTokenImpl>();
 builder.Services.AddScoped<IWaitingTokenRepository, WaitingTokenRepository>();
 builder.Services.AddScoped<IMenuOrderAppService, MenuOrderAppImple>();
 builder.Services.AddScoped<IMenuOrderAppRepository, MenuOrderAppRepository>();
+builder.Services.AddScoped<IAuthServices,AuthServiceImpl >();
+
+builder.Services.AddScoped<Microsoft.AspNetCore.Authorization.IAuthorizationHandler, PermissionHandler>();
+builder.Services.AddAuthorization(options =>
+{
+    using var scope = builder.Services.BuildServiceProvider().CreateScope();
+    var rolesAndPermissionServices = scope.ServiceProvider.GetRequiredService<IPermissionService>();
+    var policies = rolesAndPermissionServices.GetAllPolicies();
+    foreach (var policy in policies)
+    {
+        options.AddPolicy(policy, policyBuilder =>
+            policyBuilder.Requirements.Add(new PermissionRequirement(policy)));
+    }
+});
 
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -137,13 +152,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/Login/Index";
     options.AccessDeniedPath = "/Login/AccessDenied";
 });
-
-
-
 builder.Services.AddAuthorization();
 builder.Services.AddControllers().AddJsonOptions(x =>
    x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
-
 builder.Services.AddRazorPages();
 var app = builder.Build();
 if (!app.Environment.IsDevelopment())
@@ -168,4 +179,4 @@ app.Run();
 
 
 
-// dotnet ef dbcontext scaffold "Server=localhost,5432;Database=Pizzashop_c;User id=postgres;password=Tatva@123;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Data --context PizzashopCContext --context-dir Data -f
+// dotnet ef dbcontext scaffold "Server=localhost,5432;Database=Pizzashop;User id=postgres;password=Tatva@123;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Data --context PizzashopCContext --context-dir Data -f

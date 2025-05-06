@@ -1,11 +1,11 @@
 @model RolesModel
 @{
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
-
     ViewBag.Title = "Roles Page";
-
+ var canEditPermission = (await AuthorizationService.AuthorizeAsync(User, "RolesAndPermissions_CanEditAdd")).Succeeded;
 }
-
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <link rel="stylesheet" href="~/css/roles.css">
 
@@ -31,8 +31,14 @@
                         <tr>
                             <td>@role.Rolename</td>
                             <td scope="col" style="text-align: end;">
+                                @* @if(canEditPermission){ *@
                                 <a href='@Url.Action("PermissionsOfRole", "Dashboard", new { Id = @role.Roleid })'><img
                                         src="~/images/pencil-square.svg" alt=""></a>
+                                }
+                                @* else{
+                                <a onclick="showAccessDenied()"><img
+                                        src="~/images/pencil-square.svg" alt=""></a>
+                                } *@
                             </td>
                         </tr>
                     }
@@ -48,5 +54,7 @@
       $('.sidebar ul li').removeClass('active-class');
              $('.roleandpermission').addClass('active-class')
   })
-
+    function showAccessDenied(){
+        toastr.error("Sorry,you don't have permissions to Edit the Permission");
+    }
 </script>

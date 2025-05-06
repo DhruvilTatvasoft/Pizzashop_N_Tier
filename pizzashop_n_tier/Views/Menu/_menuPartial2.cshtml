@@ -1,5 +1,10 @@
 @model ItemModel
-
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanEditAdd")).Succeeded;
+    var canDeleteMenu  = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;
+}
 <h3 class="p-3 header-text">Items</h3>
 <div class="d-flex justify-content-end w-100 ">
     <div class="me-3">
@@ -7,11 +12,22 @@
             id="searchedItem" placeholder="Search">
     </div>
     <input type="hidden"  id="categoryId" value="@Model.categories[0].Categoryid" />
+    @if(canDeleteMenu){
     <button class="btn btn-outline-secondary me-2" onclick='deleteItemsGet(@Model.categoryId)'><img
             src="~/images/trash-fill.svg" style="cursor: pointer;" alt=""></button>
-
+    }
+    else{
+    <button class="btn btn-outline-secondary me-2" onclick="showAccessDenied('items','add')"><img
+            src="~/images/trash-fill.svg" style="cursor: pointer;" alt=""></button>
+    }
+    @if(canEditMenu){
     <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="openAddItemModal()">+ New
         Item</button>
+    }
+    else{
+    <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="showAccessDenied('item','add')">+ New
+        Item</button>
+    }
     <input type="text" id="categoryid_hidden" value="@Model.categoryId" hidden>
 </div>
 <div class="tbl m-3 table-container"></div>

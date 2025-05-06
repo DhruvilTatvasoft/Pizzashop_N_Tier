@@ -1,6 +1,12 @@
 @{
 Layout = null;
 }
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanEditAdd")).Succeeded;
+    var canDeleteTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanDelete")).Succeeded;
+}
 @model TableAndSectionViewModel
 <div class="w-100" style="position: relative; height: 235px; overflow-y: auto;">
  <table class="table">
@@ -31,8 +37,7 @@ Layout = null;
 
    @if(Model.tables.Count() == 0){
       <tr>
-         <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No
-                    Tables Found</td>
+         <td colspan="8" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Tables Found</td>
       </tr>
    }
    @foreach (var table in Model.tables)
@@ -55,10 +60,10 @@ Layout = null;
       </td>
       <td>
          <div class="d-flex justify-content-start w-100 pb-2 h-100">
-            <img src="~/images/pencil-square.svg" style="cursor: pointer;" onclick="openEditModal(@table.Tableid)" class="me-2"  alt="">
-            <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="openSingleDeleteModal(@table.Tableid)" alt="" >
+            <img src="~/images/pencil-square.svg" style="cursor: pointer;" onclick="@(canEditTableSection ? "openEditModal(@table.Tableid)" : "showAccessDenied('table details','edit')")" class="me-2"  alt="">
+            <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="@(canDeleteTableSection ? "openSingleDeleteModal(@table.Tableid)" : "showAccessDenied('table details','delete')")" alt="" >
          </div>
-      </td>
+   </td>
    </tr>
    }
    </table>

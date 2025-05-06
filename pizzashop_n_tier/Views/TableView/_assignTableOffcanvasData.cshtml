@@ -3,16 +3,6 @@
   var tableIDS = Json.Serialize(Model.tables);
 }
 <link rel="stylesheet" href="~/css/_waitingList.css">
-@* <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
-  <div class="offcanvas-header">
-    <h5 id="offcanvasRightLabel">Waiting List</h5>
-    <button type="button" class="btn-close text-reset" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-  </div>
-  <div class="offcanvas-body">
-    ...
-  </div>
-</div> *@
-
 <div>
 
   <input type="hidden" asp-for="tables" id="tableids">
@@ -31,13 +21,13 @@
         <tr>
           <td>
             <div id="customerDetails_@customer.tokenid">
-            <input type="radio"  onclick="fillCustomerDetails(@customer.tokenid)" name="selectedToken">
-          <input type="hidden" class="customer_name" value="@customer.name"></input>
-          <input type="hidden" class="customer_email" value="@customer.email"></input>
-          <input type="hidden" class="customer_personcount" value="@customer.PersonCount"></input>
-          <input type="hidden" class="customer_phone" value="@customer.phone"></input>
-          <input type="hidden" class="customer_personCount" value="@customer.PersonCount"></input>
-          <input type="hidden" class="customer_sectionid" value="@customer.section.Sectionid"></input>
+              <input type="radio" onclick="fillCustomerDetails(@customer.tokenid)" name="selectedToken">
+              <input type="hidden" class="customer_name" value="@customer.name"></input>
+              <input type="hidden" class="customer_email" value="@customer.email"></input>
+              <input type="hidden" class="customer_personcount" value="@customer.PersonCount"></input>
+              <input type="hidden" class="customer_phone" value="@customer.phone"></input>
+              <input type="hidden" class="customer_personCount" value="@customer.PersonCount"></input>
+              <input type="hidden" class="customer_sectionid" value="@customer.section.Sectionid"></input>
             </div>
           </td>
           <td>@customer.tokenid</td>
@@ -52,10 +42,10 @@
     <label for="" class="headerTEXT mb-3" style="font-weight: 600;">Customer Details </label>
     <form id="assigntableForm">
       <div class="row">
-        <input type="hidden" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
+        <input type="text" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
         <div class="form-group col-12 mb-3 ">
-          <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"
-            aria-describedby="emailHelp" asp-for="@Model.WaitingToken.customer.email" placeholder="Email*">
+          <input type="email" class="form-control p-2" id="customer-email" aria-describedby="emailHelp"
+            asp-for="@Model.WaitingToken.customer.email" placeholder="Email*">
           <span asp-validation-for="@Model.WaitingToken.customer.email" class="text-danger pt-2 emailaddress"></span>
           <div class="suggesion_container"></div>
         </div>
@@ -94,7 +84,7 @@
         </div>
       </div>
       <div class="d-flex justify-content-end mt-4">
-        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken" >Save</button>
+        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken">Save</button>
         <button class="btn btn-outline-primary btnoutlinecolour" id="closeBtn" data-bs-dismiss="modal">Cancel</button>
       </div>
     </form>
@@ -103,14 +93,14 @@
 </div>
 
 <script>
-  function fillCustomerDetails(tokenid){
+  function fillCustomerDetails(tokenid) {
 
-    var id = "customerDetails_"+tokenid
-    var Name = $("#"+id+" .customer_name").val()
-    var Phone = $("#"+id+" .customer_phone").val()
-    var Email = $("#"+id+" .customer_email").val()
-    var PersonCount = $("#"+id+" .customer_personCount").val()
-    var sectionId = $("#"+id+" .customer_sectionid").val()
+    var id = "customerDetails_" + tokenid
+    var Name = $("#" + id + " .customer_name").val()
+    var Phone = $("#" + id + " .customer_phone").val()
+    var Email = $("#" + id + " .customer_email").val()
+    var PersonCount = $("#" + id + " .customer_personCount").val()
+    var sectionId = $("#" + id + " .customer_sectionid").val()
     $("#customer-name").val(Name)
     $("#customer-email").val(Email)
     $("#customer_PersonCount").val(PersonCount)
@@ -118,47 +108,51 @@
     $("#customer_tableSection").val(sectionId)
     $("#tokenid").val(tokenid)
   }
-  @* $(document).on('submit',"#assigntableForm",function(e){
-          e.preventDefaults();
-          var tokenid = parseInt($("#tokenid").val())
-          var tableid = parseInt($(".selectedTable").data("tableid"));
-         alert(tokenid + "" + tableid)
-               $.ajax({
-                    url: "@Url.Action("assignTable", "TableView")",
-                    method: "POST",
-                    data: { tableid: tableid, tokenid: tokenid},
-                    success: function (response) {
-                         alert("ok");
-                         $(".loadTabBody").html(response);
-                    },
-                    error: function (xhr, status, error) {
-                         alert("Error: " + error);
-                    }
-               });
-     }); *@
-  $("#assigntableForm").on("submit",function(e){
-          e.preventDefault();
-          var tokenid = parseInt($("#tokenid").val())
-          var tableid = parseInt($(".selectedTable").data("tableid"));
-          var assignedtableIds = @Html.Raw(tableIDS);
-          var requestedData = {
-                tokenid: tokenid,
-                tableids: assignedtableIds
-            };
-            var data = JSON.stringify(requestedData)
-            console.log(requestedData)
-               $.ajax({
-                    url: "@Url.Action("assignTable", "TableView")",
-                    method: "POST",
-                    dataType: "html",
-                    contentType: "application/json",
-                    data: data,
-                    success: function (response) {
-                         $(".loadTabBody").html(response);
-                    },
-                    error: function (xhr, status, error) {
-                         alert("Error: " + error);
-                    }
-               });
-     });
+
+
+  $("#assigntableForm").on("submit", function (e) {
+  e.preventDefault();
+
+  var tokenid = parseInt($("#tokenid").val());
+  var tableid = parseInt($(".selectedTable").data("tableid"));
+  var assignedtableIds = @Html.Raw(tableIDS);
+
+  var requestedData = {
+    tokenid: tokenid,
+    tableids: assignedtableIds
+  };
+
+  if ($("#tokenid").val() === '') {
+    alert("token id 0 found");
+
+    var customerModal = {
+      name: $("#customer-name").val(),
+      phone: $("#customer-phone").val(),
+      email: $("#customer-email").val(),
+      PersonCount: parseInt($("#customer_PersonCount").val()) || 0,
+      sectinid: parseInt($("#customer_tableSection").val()) || null,
+      tableids: assignedtableIds
+    };
+
+    requestedData.customerModal = customerModal;
+  }
+
+  var data = JSON.stringify(requestedData);
+  console.log("Final Data to Send:", requestedData);
+
+  $.ajax({
+    url: "@Url.Action("assignTable", "TableView")",
+    method: "POST",
+    dataType: "html",
+    contentType: "application/json",
+    data: data,
+    success: function (response) {
+      $(".loadTabBody").html(response);
+    },
+    error: function (xhr, status, error) {
+      alert("Error: " + error);
+    }
+  });
+});
+
 </script>

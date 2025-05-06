@@ -8,4 +8,7 @@ public interface IRoleAndPermissionRepository
     Rolesandpermission GetPermission(int permissionId, int roleId);
     List<Rolesandpermission> GetUserPermissions(string role);
     string getPermissionName(int permissionid);
+    List<Permission> getAllPermissions();
+    Role GetRoleByRoleName(string roleName);
+    List<Rolesandpermission> GetRolePermissions(int roleid);
 }

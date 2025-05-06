@@ -64,6 +64,7 @@ h6{
     background-color: rgb(170, 253, 159);
     border-radius: 4px;
     padding: 5%;
+    cursor: pointer;
 }
 .accordion-button{
     padding: 5px;

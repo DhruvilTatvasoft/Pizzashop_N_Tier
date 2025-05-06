@@ -61,7 +61,7 @@ public class MenuOrderAppController : Controller
             model.SearchedItem = "";
         }
 
-        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId, model.SearchedItem, model.itemType);
+        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId, model.itemType, model.SearchedItem);
         responseModel.categoryId = model.CategoryId;
 
         return PartialView("_itemData", responseModel);
@@ -119,7 +119,6 @@ public class MenuOrderAppController : Controller
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
         List<int> tableid = new List<int> { 0 };
-        // model.customer = _waitingTokenService.getCustomerForWaitingToken(tokenid, tableid);
         model.customer = _menuOrderAppService.getcustomerDetails(customerid, null);
         model.customer.PersonCount = totalPersonCount;
         return PartialView("_customerDetailModal", model);
@@ -166,6 +165,11 @@ public class MenuOrderAppController : Controller
     {
         MenuOrderAppModel model = _menuOrderAppService.getRunningTableOrder(tableid);
         return PartialView("_menu", model);
+    }
+
+    public IActionResult getOrderDetailsForAssignedTable(int tableid){
+        MenuOrderAppModel model = _menuOrderAppService.getAssignedTableDetails(tableid);
+        return PartialView("_menu",model);
     }
 
     [HttpPost]

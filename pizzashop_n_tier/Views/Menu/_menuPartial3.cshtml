@@ -1,6 +1,12 @@
 @{
     Layout = "";
 }
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanEditAdd")).Succeeded;
+    var canDeleteMenu  = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;
+}
 @model ItemModel
 <div style="position: relative; height: 235px; overflow-y: auto;">
 <table class="table">
@@ -72,11 +78,22 @@
             </td>
             <td>
                 <div class="d-flex justify-content-start w-100 pb-2 h-100">
+                    @if(canEditMenu){
                     <img src="~/images/pencil-square.svg" class="me-2" style="cursor: pointer;"
                         onclick="EditItemGet(@item.Itemid)" alt="">
+                    }
+                    else{
+                    <img src="~/images/pencil-square.svg" class="me-2" style="cursor: pointer;"
+                        onclick="showAccessDenied('item','edit')" alt="">
+                    }
+                    @if(canDeleteMenu){
                     <img src="~/images/trash-fill.svg" onclick="deleteItemGet(@item.Itemid,@item.Categoryid)"
                         style="cursor: pointer;" alt="">
-
+                    }
+                    else{
+                    <img src="~/images/trash-fill.svg" onclick="showAccessDenied('item','delete')"
+                        style="cursor: pointer;" alt="">
+                    }
                     </div>
                 </td>
             </tr>

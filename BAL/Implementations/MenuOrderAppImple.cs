@@ -24,6 +24,11 @@ public class MenuOrderAppImple : IMenuOrderAppService
         return _menuOrderAppRepository.createOrder(orderDetails);
     }
 
+    public MenuOrderAppModel getAssignedTableDetails(int tableid)
+    {
+        return _menuOrderAppRepository.getAssignedTableDetails(tableid);
+    }
+
     public CustomerModel getcustomerDetails(int customerid,List<int>? tableid)
     {
         if(tableid != null){

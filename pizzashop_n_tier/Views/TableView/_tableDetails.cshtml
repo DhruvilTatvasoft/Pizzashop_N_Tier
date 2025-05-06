@@ -106,10 +106,17 @@
 
 	$(document).ready(function () {
 		var runningTables = $(".Running-Table");
+		var assignedTable = $(".Assigned-Table");
 		runningTables.each(function () {
 			const tableId = $(this).data("tableid");
 			$(this).on("click", function () {
 				findOrderForRunningTable(tableId);
+			});
+		});
+		assignedTable.each(function () {
+			const tableId = $(this).data("tableid");
+			$(this).on("click", function () {
+				findDetailsForAssignedTable(tableId);
 			});
 		});
 	});
@@ -121,9 +128,21 @@
 			success: function (response) {
 				$(".loadTabBody").html(response);
 				toastr.success("Order Found");
+				$('.options a').removeClass('selectedOption');
+				$("#menuInOrderApp").addClass('selectedOption');
 			}
 		});
 	}
-
-
+	function findDetailsForAssignedTable(tableid) {
+		$.ajax({
+			url: "@Url.Action("getOrderDetailsForAssignedTable", "MenuOrderApp")",
+			type: "GET",
+			data: { tableid: tableid },
+			success: function (response) {
+				$(".loadTabBody").html(response);
+				$('.options a').removeClass('selectedOption');
+				$("#menuInOrderApp").addClass('selectedOption');
+			}
+		});
+	}
 </script>

@@ -1,7 +1,11 @@
 @{
   Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
   ViewData["Title"] = "User Detail Page";
+  var canViewUsers= (await AuthorizationService.AuthorizeAsync(User, "Users_CanView")).Succeeded;
+  
 }
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
 
 <link rel="stylesheet" href="~/css/showuser.css">
 
@@ -16,13 +20,16 @@
         <input type="search" class="form-control" id="search-record" onkeyup="loadPage(1)" aria-describedby="emailHelp"
           placeholder="Search">
         <form method="GET" asp-controller="Dashboard" asp-action="AddUser">
+          @if(canViewUsers){
           <button type="submit" class="btn btn-primary" style="height:100%;">+ Add <span>user </span></button>
+          }
+          else{
+          <button onclick="showPermissionDenied()" type="button" class="btn btn-primary" style="height:100%;">+ Add <span>user </span></button>
+          }
         </form>
       </div>
     </div>
     <div class="form-container shadow" id="t-container"></div>
-
-    @* <div><h2>No record Found !! </h2></div> *@
   </div>
 </div>
 </div>
@@ -49,7 +56,7 @@
   $(document).ready(function () {
 
       $('.sidebar ul li').removeClass('active-class');
-             $('.Users').addClass('active-class')
+      $('.Users').addClass('active-class')
     loadRows("asc","name");
   });
   function loadPage(pageIndex, pageSize) {
@@ -100,8 +107,9 @@ function deleteUser() {
         }
     });
 }
-
-
+  function showPermissionDenied(){
+    toastr.error("You does not have permission for Add user");
+  }
 </script>
 <script>
 </script>

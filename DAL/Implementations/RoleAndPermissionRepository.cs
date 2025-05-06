@@ -78,5 +78,20 @@ namespace DAL.Implementations
         {
             return _context.Permissions.FirstOrDefault(p=>p.Permissionid == permissionid)?.Permissionname ?? string.Empty;
         }
+
+        public List<Permission> getAllPermissions()
+        {
+            return _context.Permissions.ToList();
+        }
+
+        public Role GetRoleByRoleName(string roleName)
+        {
+            return _context.Roles.FirstOrDefault(role=>role.Rolename == roleName)!;
+        }
+
+        public List<Rolesandpermission> GetRolePermissions(int roleid)
+        {
+            return _context.Rolesandpermissions.Where(RoleAndPermission=>RoleAndPermission.Roleid == roleid).Include(role=>role.Permission).ToList();
+        }
     }
 }

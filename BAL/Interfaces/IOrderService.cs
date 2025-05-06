@@ -10,7 +10,7 @@ namespace BAL.Interfaces
     {
         List<Orderstatus> getAllStatus();
         OrderViewModel getOrdersByFilters(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate,int pageNumber,int pageSize,string sortOrder,string sortBy);
-        void createExcelSheet(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
+        byte[] createExcelSheet(int? status,string? searchedOrder,string? filterBy,DateTime? startDate,DateTime? endDate);
         Order? getOrderDetails(int orderid);
       
         int getTotalOrderCount();

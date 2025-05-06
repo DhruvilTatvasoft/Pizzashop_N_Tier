@@ -33,6 +33,10 @@
               $('.sidebar ul li').removeClass('active-class');
              $('.tableandsection').addClass('active-class')
         })
+
+        function showAccessDenied(permissionname,permissiontype){
+             toastr.error("Sorry,you don't have permissions to "+permissiontype+" "+permissionname);
+        }
         function loadSections(){
             $.ajax({
                 url:'@Url.Action("SectionData","TableAndSection")',

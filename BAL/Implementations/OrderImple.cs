@@ -41,7 +41,7 @@ namespace BAL.Implementations
             }
         }
 
-        public void createExcelSheet(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
+        public byte[] createExcelSheet(int? status, string? searchedOrder, string? filterBy, DateTime? startDate, DateTime? endDate)
         {
             try
             {
@@ -62,7 +62,7 @@ namespace BAL.Implementations
                 CompanyFont.FontName = "Arial";
                 CompanyFont.Color = HSSFColor.Blue.Index;
                 CompanyFont.Boldweight = (short)FontBoldWeight.Bold;
-                CompanyFont.FontHeightInPoints = ((short)16);
+                // CompanyFont.FontHeightInPoints = ((short)16);
                 Company.SetFont(CompanyFont);
 
                 var Address = workbook.CreateCellStyle();
@@ -70,7 +70,7 @@ namespace BAL.Implementations
                 var AddressFont = workbook.CreateFont();
                 AddressFont.FontName = "Arial";
                 AddressFont.Boldweight = (short)FontBoldWeight.Bold;
-                AddressFont.FontHeightInPoints = ((short)10);
+                // AddressFont.FontHeightInPoints = ((short)10);
                 Address.SetFont(AddressFont);
 
                 var Address1 = workbook.CreateCellStyle();
@@ -78,7 +78,7 @@ namespace BAL.Implementations
                 var AddressFont1 = workbook.CreateFont();
                 AddressFont1.FontName = "Arial";
                 AddressFont1.Boldweight = (short)FontBoldWeight.Bold;
-                AddressFont1.FontHeightInPoints = ((short)10);
+                // AddressFont1.FontHeightInPoints = ((short)10);
                 Address1.SetFont(AddressFont);
 
 
@@ -92,7 +92,7 @@ namespace BAL.Implementations
                 HeaderFont.FontName = "Arial";
                 HeaderFont.Boldweight = (short)FontBoldWeight.Bold;
                 HeaderFont.Color = HSSFColor.White.Index;
-                HeaderFont.FontHeightInPoints = ((short)10);
+                // HeaderFont.FontHeightInPoints = (short)10;
                 Header.SetFont(HeaderFont);
                 Header.BorderLeft = BorderStyle.Thin;
                 Header.BorderTop = BorderStyle.Thin;
@@ -115,7 +115,7 @@ namespace BAL.Implementations
                 Data.VerticalAlignment = VerticalAlignment.Center;
                 var DataFont = workbook.CreateFont();
                 DataFont.FontName = "Arial";
-                DataFont.FontHeightInPoints = ((short)9);
+                // DataFont.FontHeightInPoints = ((short)9);
                 Data.SetFont(DataFont);
                 Data.BorderLeft = BorderStyle.Thin;
                 Data.BorderTop = BorderStyle.Thin;
@@ -147,7 +147,7 @@ namespace BAL.Implementations
                 var linkDataFont = workbook.CreateFont();
                 linkDataFont.FontName = "Arial";
                 linkDataFont.Color = HSSFColor.Blue.Index;
-                linkDataFont.FontHeightInPoints = ((short)9);
+                // linkDataFont.FontHeightInPoints = ((short)9);
                 linkDataFont.Underline = FontUnderlineType.Single;
                 linkDataFont.Color = HSSFColor.Blue.Index;
                 linkData.SetFont(linkDataFont);
@@ -314,7 +314,7 @@ namespace BAL.Implementations
 
                     cellindex = cellindex + 2;
                     gridcell = gridrow.CreateCell(cellindex);
-                    gridcell.SetCellValue(order.Rattings != 0 ? (double)order.Rattings : 0.0);
+                    gridcell.SetCellValue(order.Rattings.HasValue ? (double)order.Rattings.Value : 0.0);
                     gridcell.CellStyle = Data;
                     sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
                     ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);
@@ -343,16 +343,17 @@ namespace BAL.Implementations
                 picture.LineStyle = (LineStyle)HSSFPicture.LINESTYLE_NONE;
 
                 string FileName = "MyExcel_" + DateTime.Now.ToString("yyyy-dd-MM--HH-mm-ss") + ".xls";
-                using (FileStream file = new FileStream(@"C:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\wwwroot" + FileName, FileMode.Create))
+                using (var memoryStream = new MemoryStream())
                 {
-                    workbook.Write(file);
-                    file.Close();
-                    Console.WriteLine("File Created Successfully...");
+                    workbook.Write(memoryStream);
+                    memoryStream.Position = 0;
+                   return memoryStream.ToArray();
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+                return Array.Empty<byte>(); 
             }
         }
         public static int LoadImage(string path, HSSFWorkbook wb)

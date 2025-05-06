@@ -44,23 +44,9 @@ public class DashboardController : Controller
         _jwtService = jwtTokenService;
     }
 
-    [Authorize(Roles = "Admin")]
+  
     public IActionResult ShowDashboard()
     {
-        var user = HttpContext.User;
-        if (!user.Identity.IsAuthenticated)
-        {
-            return Unauthorized("User is not authenticated !");
-        }
-
-        var roles = user.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
-        Console.WriteLine("User Roles: " + string.Join(", ", roles));
-
-        if (!roles.Contains("Admin"))
-        {
-            return Forbid("User does not have Admin role!");
-        }
-        Console.WriteLine("page access granted");
         return View();
     }
 
@@ -164,7 +150,7 @@ public class DashboardController : Controller
     }
 
     [HttpGet]
-    [Authorize(Policy = "CanEdit_Users")]
+   
     public IActionResult AddUser()
     {
         UserDetailModel model = new UserDetailModel();
@@ -173,7 +159,7 @@ public class DashboardController : Controller
         return View(model);
     }
     [HttpPost]
-    [Authorize(Policy = "CanEdit_Users")]
+  
     public IActionResult AddUser(UserDetailModel model)
     {
         model.Role = _user.getRoles();
@@ -244,7 +230,7 @@ public class DashboardController : Controller
         return View("showUsers");
     }
     [HttpGet]
-    [Authorize(Policy = "CanEdit_Users")]
+   
     public IActionResult EditUser(int Id)
     {
 
@@ -291,7 +277,7 @@ public class DashboardController : Controller
         model.Role = _user.getAllRoles();
         return View(model);
     }
-    [Authorize(Policy = "CanView_Users")]
+   
     public IActionResult showUsers()
     {
         return View();
@@ -310,8 +296,7 @@ public class DashboardController : Controller
 
 
     [HttpPost]
-    [Authorize(Policy = "CanEdit_RolesAndPermissions")]
-    public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
+       public IActionResult UpdatePermissions(PermissionsModel2 model, int roleid)
     {
         _permissionService.UpdatePermissions(model);
         model = _user.permissionsForRole(roleid);

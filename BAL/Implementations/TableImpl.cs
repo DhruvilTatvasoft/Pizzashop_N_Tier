@@ -13,6 +13,11 @@ public class TableImpl : ITableService
         return _tableRepository.addNewTable(table);
     }
 
+    public void assignTable(List<int> tableids,int customerid)
+    {
+        _tableRepository.assignTable(tableids,customerid);
+    }
+
     public void deleteTables(List<int> selectedTables)
     {
         foreach(int tableId in selectedTables){

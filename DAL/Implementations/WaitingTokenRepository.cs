@@ -20,15 +20,15 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         }
         }
         token.Createdat = DateTime.Now;
-        token.Sectionid = model.sectionId;
-        token.Totalpersons = model.personCount;
-        Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customername.ToLower().Trim() == model.customer.name.ToLower().Trim() && customer.Isdeleted == false);
-        if(customer == null){
-            createCustomer(model.customer);
-            token.Customerid = getCustomerId(model.customer.name);
+        token.Sectionid = model.sectionId ?? 0;
+        token.Totalpersons = model.personCount ?? 0;
+        // Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customername.ToLower().Trim() == model.customer.name.ToLower().Trim() && customer.Isdeleted == false);
+        if(Customer == null){
+            int customerid = createCustomer(model.customer);
+            token.Customerid = getCustomerId(customerid);
         }
         else{
-            token.Customerid = customer.Customerid;
+            token.Customerid = Customer.Customerid;
         }
         token.Isdeleted = false;
         token.Createdat = DateTime.Now;
@@ -42,20 +42,23 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         return true;
     }
 
-    public  void createCustomer(CustomerModel model){
+    public  int createCustomer(CustomerModel model){
         Customer customer = new Customer();
         customer.Customername = model.name;
         customer.Email = model.email;
         customer.Phonenumber = model.phone;
+        customer.Createdat = DateTime.Now;
+        customer.Modifiedat = DateTime.Now;
         customer.Isdeleted = false;
         customer.Createdby = 1;
         customer.Modifiedby = 1;
         _context.Customers.Add(customer);
         _context.SaveChanges();
+        return customer.Customerid;
         
     }
-    public int getCustomerId(string name){
-        Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customername.ToLower().Trim() == name.ToLower().Trim() && customer.Isdeleted == false);
+    public int getCustomerId(int customerid){
+        Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customerid == customerid)!;
         if(customer != null){
             return customer.Customerid;
         }
@@ -117,8 +120,8 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     public bool updateWaitingToken(WaitingTokenModel model)
     {
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == model.tokenId)!;
-        token.Totalpersons = model.personCount;
-        token.Sectionid = model.sectionId;
+        token.Totalpersons = model.personCount ?? 0;
+        token.Sectionid = model.sectionId ?? 0;
         updateCustomerDetail(token.Customerid,model.customer);
         _context.Waitingtokens.Update(token);
         _context.SaveChanges();
@@ -215,19 +218,6 @@ public class WaitingTokenRepository : IWaitingTokenRepository
             model.tokenid = token.Waitingtokenid;
             customerViewModels.Add(model);
         }
-        // Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid && table.Isdeleted == false);
-        // List<Waitingtoken> tokens = _context.Waitingtokens.Where(token=>token.Sectionid == sectionid && token.Totalpersons <= table.Capacity && token.Isdeleted == false).ToList();
-        // foreach (var token in tokens){
-        //     Customer customer = _context.Customers.FirstOrDefault(Customer=>Customer.Customerid == token.Customerid);
-        //     CustomerModel model = new CustomerModel();
-        //     model.name = customer.Customername;
-        //     model.phone = customer.Phonenumber;
-        //     model.email = customer.Email;
-        //     model.section = _context.Sections.FirstOrDefault(section=>section.Sectionid == sectionid);
-        //     model.PersonCount = token.Totalpersons;
-        //     model.tokenid = token.Waitingtokenid;
-        //     customerViewModels.Add(model);
-        // }
         return customerViewModels;
     }
 
@@ -258,5 +248,12 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.tableids = tableids;
         model.tables = tables;
         return model;
+    }
+
+    public int getTokenidFromCustomerEmail(string email)
+    {
+        Customer customer = _context.Customers.FirstOrDefault(ExistingCustomer=>ExistingCustomer.Email == email)!;
+        int tokenid = _context.Waitingtokens.FirstOrDefault(token=>token.Customerid == customer.Customerid)!.Waitingtokenid;
+        return tokenid;
     }
 }

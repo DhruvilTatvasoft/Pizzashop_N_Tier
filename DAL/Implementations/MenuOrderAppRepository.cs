@@ -1,9 +1,7 @@
-using System.Net;
-using System.Reflection.Metadata.Ecma335;
+
+
+
 using DAL.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.IdentityModel.Tokens;
 
 public class MenuOrderAppRepository : IMenuOrderAppRepository
 {
@@ -73,22 +71,34 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             foreach (var tableid in orderDetails.tableids)
             {
                 Ordertable ordertable = new Ordertable();
+                bool isTableAdded = false;
                 if (orderDetails.orderid != 0)
                 {
                     ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Orderid == orderDetails.orderid)!;
                 }
+                if(ordertable.Ordertableid == 0){
+                    ordertable =  _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == orderDetails.customerid)!;
+                }
+                if(ordertable == null){
                 ordertable.Tableid = tableid;
                 ordertable.Orderid = order.Orderid;
                 ordertable.Isdeleted = false;
+                ordertable.Createdby = 1;
+                ordertable.Modifiedby = 1;
+                ordertable.Customerid = orderDetails.customerid;
+                isTableAdded = true;
+                }
+                else{
+                    if(ordertable.Orderid == null || ordertable.Orderid == 0){
+                    ordertable.Orderid = order.Orderid;
+                    }
+                }
                 Table table = _context.Tables.FirstOrDefault(tbl => tbl.Tableid == tableid)!;
                 table.Status = false;
                 table.Statusname = "Running";
                 table.Customerid = orderDetails.customerid;
                 _context.Tables.Update(table);
-                ordertable.Createdby = 1;
-                ordertable.Modifiedby = 1;
-                ordertable.Customerid = orderDetails.customerid;
-                if (orderDetails.orderid != 0)
+                if (!isTableAdded)
                 {
                     _context.Ordertables.Update(ordertable);
                 }
@@ -98,6 +108,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 }
             }
         }
+        _context.SaveChanges();
         foreach (var item in orderDetails.itemDetails)
         {
             string uniqueid = "item_" + item.itemId + "_";
@@ -177,9 +188,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         return _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
     }
 
-    public List<Item> getItemsForcategory(int categoryid, string searchedItem, string ItemType)
+    public List<Item> getItemsForcategory(int categoryid, string ItemType, string searchedItem)
 {
-    // Normalize and interpret ItemType
     bool? isVeg = null;
     if (!string.IsNullOrEmpty(ItemType))
     {
@@ -189,26 +199,26 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             isVeg = false;
     }
 
-    // Start with base query
+
     var query = _context.Items.AsQueryable();
 
-    // Filter: Not deleted
+
     query = query.Where(item => item.Isdeleted == false);
 
-    // Filter: Category
+   
     if (categoryid != 0)
     {
         query = query.Where(item => item.Categoryid == categoryid);
     }
 
-    // Filter: Search text
+   
     if (!string.IsNullOrEmpty(searchedItem))
     {
         string lowerSearch = searchedItem.ToLower().Trim();
         query = query.Where(item => item.Itemname.ToLower().Trim().Contains(lowerSearch));
     }
 
-    // Filter: Item type
+   
     if (isVeg.HasValue)
     {
         query = query.Where(item => item.Itemtype == isVeg.Value);
@@ -277,7 +287,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     public MenuOrderAppModel getRunningTableOrder(int tableid)
     {
         OrderDetailsViewModel model = new OrderDetailsViewModel();
-        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid)!.Orderid;
+        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid)?.Orderid ?? 0;
         List<int> itemids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderid).Select(orderedItem => orderedItem.Itemid).ToList();
         List<Item> items = new List<Item>();
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
@@ -357,12 +367,33 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         Model.isTableAssigned = true;
         Model.orderid = orderid;
         Model.orderComment = order.Ordercomment;
-
-
-
         return Model;
     }
 
+     public MenuOrderAppModel getAssignedTableDetails(int tableid)
+    {
+       MenuOrderAppModel model = new MenuOrderAppModel();
+       int customerid = _context.Ordertables.FirstOrDefault(orderedTable=>orderedTable.Tableid == tableid)!.Customerid??0;
+       CustomerModel customermodel = new CustomerModel();
+       Customer customer = _context.Customers.FirstOrDefault(tableCustomer=>tableCustomer.Customerid == customerid);
+        customermodel.customerId = customer.Customerid;
+        customermodel.name = customer.Customername;
+        customermodel.email = customer.Email;
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(Token=>Token.Customerid == customerid)!;
+        customermodel.PersonCount = token.Totalpersons;
+        customermodel.phone = customer.Phonenumber;
+        List<int> tableids = new List<int>
+        {
+            tableid
+        };
+        customermodel.tableids = tableids;
+        model.customer = customermodel;
+        model.isTableAssigned = true;
+        model.tokenid = token.Waitingtokenid;
+        model.categoryId = 0;
+        model.isTableAssigned = true;
+        return model;
+    }
     public CustomerModel getcustomerDetails(int customerid, List<int>? tableid)
     {
         CustomerModel model = new CustomerModel();

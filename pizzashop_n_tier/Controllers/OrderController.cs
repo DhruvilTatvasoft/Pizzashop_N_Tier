@@ -32,7 +32,7 @@ namespace pizzashop_n_tier.Controllers
             _serviceProvider = serviceProvider;
             _linkGenerator = linkGenerator;
         }
-        [Authorize(policy:"CanView_Order")]
+
         public IActionResult showOrders()
         {
             OrderViewModel model = new OrderViewModel();
@@ -48,8 +48,12 @@ namespace pizzashop_n_tier.Controllers
         public IActionResult ExportData(string? searchedOrder = "", int? searchbystatus = 1, string searchByPeriod = "All Time", DateTime? startDate = null, DateTime? endDate = null)
         {
             OrderViewModel model = new OrderViewModel();
-            _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
-            return Json(new { success = true, fileUrl = "//Products_Data.xlsx" });
+            var fileBytes = _orderService.createExcelSheet(searchbystatus, searchedOrder, searchByPeriod, startDate, endDate);
+            if(fileBytes == null || fileBytes.Length == 0){
+                 return BadRequest("Failed to generate Excel file");
+            }
+            string filename = $"orderdetails_{DateTime.Now:yyyy-MM-dd-HH-mm-ss}.xls";
+            return File(fileBytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", filename);
         }
         public IActionResult showOrderDetailsView(int orderid)
         {

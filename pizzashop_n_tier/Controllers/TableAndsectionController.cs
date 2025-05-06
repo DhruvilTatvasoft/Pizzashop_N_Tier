@@ -1,6 +1,5 @@
 
 using DAL.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 
@@ -15,7 +14,7 @@ public class TableAndSection : Controller
         _tableService = tableService;
     }
 
-    [Authorize(Policy = "CanView_TableAndSection")]
+
     public IActionResult TableSection()
     {
         return View("TableAndsection");
@@ -41,7 +40,7 @@ public class TableAndSection : Controller
         model.sections = _sectionService.getAllSections();
         return PartialView("_TableContainer", model);
     }
-    [Authorize(Policy = "CanEdit_TableAndSection")]
+ 
     public IActionResult AddNewSection(TableAndSectionViewModel model)
     {
         if (!_sectionService.addNewSection(model))
@@ -59,7 +58,7 @@ public class TableAndSection : Controller
             return Json(new { success = "Section Updated Successfully",sectionid = model.sections[0].Sectionid });
         }
     }
-    [Authorize(Policy = "CanEdit_TableAndSection")]
+
     public IActionResult updateSectionGet(int sectionId)
     {
         var section = _sectionService.getSection(sectionId);
@@ -92,7 +91,7 @@ public class TableAndSection : Controller
             return Json(new { error = "Section cannot be deleted",sectionId =  model.sections[0].Sectionid });
         }
     }
-    [Authorize(Policy = "CanDelete_TableAndSection")]
+   
     public IActionResult deleteModalGet(int? tableid, List<int>? selectedTables, int? sectionid)
     {
         if (sectionid.HasValue && selectedTables.Count > 0)
@@ -117,7 +116,7 @@ public class TableAndSection : Controller
         }
     }
 
-    [Authorize(Policy = "CanEdit_TableAndSection")]
+  
     public IActionResult AddNewTable(TableAndSectionViewModel model)
     {
         if (!_tableService.addNewTable(model.table))
@@ -145,7 +144,7 @@ public class TableAndSection : Controller
         return Json(new { sectionid });
     }
     [HttpGet]
-    [Authorize(Policy = "CanEdit_TableAndSection")]
+   
     public IActionResult updatetableGet(int tableid)
     {
         Table table = _tableService.gettablebyid(tableid);

@@ -1,5 +1,11 @@
 
 @model TableAndSectionViewModel
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanEditAdd")).Succeeded;
+    var canDeleteTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanDelete")).Succeeded;
+}
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex">
   <h3 class="p-3 c-text">Tables</h3>
@@ -10,10 +16,16 @@
       <input type="hidden" class="form-control h-100 " id="HiddenSectionId" asp-for="sectionId">
     </div>
     <button class="btn btn-outline-secondary me-2" id="deleteMultipleTables"
-      onclick="OpenDeleteMultipleModal(@Model.sectionId)"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
+      onclick="@(canDeleteTableSection ? "OpenDeleteMultipleModal(@Model.sectionId)" : "showAccessDenied('tables','delete')")"><img src="~/images/trash-fill.svg" style="cursor: pointer;"
         alt=""></button>
+     @if(canEditTableSection){
     <button class="btn btn-primary me-3 add-item-modifier" data-bs-toggle="modal" data-bs-target="#addTableModal"
       type="button">+ New Table</button>
+     }   
+     else{
+    <button class="btn btn-primary me-3 add-item-modifier" onclick="showAccessDenied('table','add')"
+      type="button">+ New Table</button>
+     }
     <input type="text" hidden>
   </div>
 </div>
