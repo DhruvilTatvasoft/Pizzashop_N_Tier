@@ -182,13 +182,29 @@ else
         });
     });
 
-    document.querySelector(".tg-btn").addEventListener("click", function () {
-        document.querySelector(".sidebar").style.display = "block";
-    });
 
-    document.querySelector(".close-btn").addEventListener("click", function () {
-        document.querySelector(".sidebar").style.display = "none";
+
+$(document).ready(function () {
+    $(".tg-btn").on("click", function () {
+        console.log("click");
+        const sidebar = $(".sidebar");
+        if (window.innerWidth <= 768) {
+            sidebar.toggleClass("open");
+            $(".content").css("padding-left","19%")
+        } else {
+            sidebar.toggleClass("collapsed");
+        }
     });
+});
+
+
+
+document.querySelector(".close-btn").addEventListener("click", function () {
+    document.querySelector(".sidebar").classList.remove("open");
+    $(".content").css("padding-left","8%")
+    console.log($(".content"))
+});
+
 
     $(function () {
         var message = '@Html.Raw(TempData["ToastrMessage"])';
