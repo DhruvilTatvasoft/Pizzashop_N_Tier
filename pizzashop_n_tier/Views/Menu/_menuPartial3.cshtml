@@ -51,16 +51,14 @@
                         <label class="form-check-label" for="flexCheckDefault">
                             @if (item.Itemimage != null)
                             {
-                                <img src="@item.Itemimage" style="width:30px;height: 30px" alt="">
+                                <img src="@item.Itemimage" class="ms-1 me-2"style="width:25px;height: 25px" alt="">
                             }
                             else
                             {
-                                <img src="~/images/dining-menu.png" style="width:30px;height: 30px" alt="">
+                                <img src="~/images/dining-menu.png" class="ms-1 me-2" style="width:25px;height:25px" alt="">
                             }
-
                             <label for="" style="font-size: 14px;">@item.Itemname</label>
                         </label>
-
                     </th>
                     <td>@if(item.Itemtype){
                         <img src="~/images/veg-icon.svg" style="width:25px" alt="">
@@ -72,8 +70,8 @@
                 <td>@item.Itemrate</td>
                 <td>@item.Itemquantity</td>
                 <td>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ? "checked" : "unchecked") disabled>
+                    <div class="form-check form-switch w-50">
+                        <input class="form-check-input ms-3 w-50" type="checkbox" id="flexSwitchCheckChecked" @(item.Isavailable ? "checked" : "unchecked") disabled>
                 </div>
             </td>
             <td>

@@ -1,4 +1,10 @@
 @model TaxesViewModel
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditTax = (await AuthorizationService.AuthorizeAsync(User, "TaxAndFee_CanEditAdd")).Succeeded;
+    var canDeleteTax = (await AuthorizationService.AuthorizeAsync(User, "TaxAndFee_CanDelete")).Succeeded;
+}
 <table class="table mb-0" id="table">
     <thead>
         <tr>
@@ -36,7 +42,7 @@
                 </td>
                 <td style="padding-left: 4%;">
                     
-                    @if (@tax.Isdefault ?? false)
+                    @if (@tax.Isdefault)
                     {
                         <div class="form-check form-switch  ">
                             <input class="form-check-input" type="checkbox"   style="width:47px;"id="flexSwitchCheckChecked" checked disabled>
@@ -52,8 +58,8 @@
                 <td>@tax.Taxpercentage</td>
                 <td class="align-items-center ">
                     <div class="d-flex justify-content-start w-100 pb-2 h-100">
-                        <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="" onclick="openModelForEditTax(@tax.Taxid)">
-                        <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="OpenDeleteTaxModal(@tax.Taxid)" alt="Delete">
+                        <img src="~/images/pencil-square.svg" style="cursor: pointer;" class="me-2" alt="" onclick="@(canEditTax ? "openModelForEditTax(@tax.Taxid)" : "showAccessDenied('Taxes and fees','edit')")">
+                        <img src="~/images/trash-fill.svg" style="cursor: pointer;" onclick="@(canDeleteTax ? "OpenDeleteTaxModal(@tax.Taxid)" : "showAccessDenied('Taxes And Fees','edit')")" alt="Delete">
                     </div>
                 </td>
             </tr>

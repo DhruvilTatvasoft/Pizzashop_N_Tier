@@ -3,13 +3,11 @@
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
     ViewBag.Title = "Roles Page";
  var canEditPermission = (await AuthorizationService.AuthorizeAsync(User, "RolesAndPermissions_CanEditAdd")).Succeeded;
+
 }
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
-
 <link rel="stylesheet" href="~/css/roles.css">
-
-
 <div class="row p-0 h-100 d-flex">
     <div class="content pt-3 w-100">
         <div class="header  mb-4 d-flex">
@@ -31,14 +29,14 @@
                         <tr>
                             <td>@role.Rolename</td>
                             <td scope="col" style="text-align: end;">
-                                @* @if(canEditPermission){ *@
+                                @if(canEditPermission){
                                 <a href='@Url.Action("PermissionsOfRole", "Dashboard", new { Id = @role.Roleid })'><img
                                         src="~/images/pencil-square.svg" alt=""></a>
                                 }
-                                @* else{
+                                else{
                                 <a onclick="showAccessDenied()"><img
                                         src="~/images/pencil-square.svg" alt=""></a>
-                                } *@
+                                }
                             </td>
                         </tr>
                     }
@@ -48,7 +46,6 @@
     </div>
 </div>
 </div>
-
 <script>
      $("document").ready(function(){
       $('.sidebar ul li').removeClass('active-class');

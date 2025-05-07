@@ -1,4 +1,5 @@
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 
 namespace pizzashop_n_tier.Controllers;
@@ -13,7 +14,7 @@ public class LoginController : Controller
     private readonly IJwtTokenGenService _jwtTokenGenService;
     private readonly IEmailGenService _emailGenService;
 
-    public LoginController(ILogger<LoginController> logger, ICookieService cookieService,  ILogin log, IEmailGenService emailGenService, IJwtTokenGenService jwtTokenGenService)
+    public LoginController(ILogger<LoginController> logger, ICookieService cookieService, ILogin log, IEmailGenService emailGenService, IJwtTokenGenService jwtTokenGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
@@ -33,7 +34,16 @@ public class LoginController : Controller
 
             if (principal != null)
             {
+                var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                    Console.WriteLine("Role = "+role);
+                if (role == "Chef")
+                {
+                    return RedirectToAction("getOrderAppPage", "OrderApp");
+                }
+                else
+                { 
                 return RedirectToAction("showDashboard", "Dashboard");
+                }
             }
             else
             {
@@ -65,6 +75,23 @@ public class LoginController : Controller
             Console.WriteLine("-----");
             TempData["ToastrMessage"] = "Logged in Successfully";
             TempData["ToastrType"] = "success";
+            var request = HttpContext.Request;
+            // var token1 = _CookieService.getValueFromCookie("token", request);
+            var principal = _jwtTokenGenService.ValidateToken(token);
+
+            if (principal != null)
+            {
+                var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+                if (role == "Chef")
+                {
+                    return RedirectToAction("getOrderAppPage", "OrderApp");
+                }
+                else
+                {
+                    return RedirectToAction("showDashboard", "Dashboard");
+                }
+            }
+
             return RedirectToAction("showDashboard", "Dashboard");
         }
         else

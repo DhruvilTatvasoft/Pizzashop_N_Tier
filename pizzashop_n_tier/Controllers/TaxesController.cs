@@ -9,8 +9,6 @@ public class TaxesController : Controller
     {
         _taxService = taxService;
     }
-
-    [Authorize(Policy = "CanView_TaxAndFee")]
     public IActionResult showTaxes()
     {
         return View("taxes");
@@ -21,8 +19,6 @@ public class TaxesController : Controller
         model.taxes = _taxService.getAllTaxes();
         return PartialView("_taxesTable", model);
     }
-
-    [Authorize(Policy = "CanEdit_TaxAndFee")]
     public IActionResult addEditTaxModalGet()
     {
         TaxesViewModel model = new TaxesViewModel();
@@ -48,9 +44,6 @@ public class TaxesController : Controller
             return PartialView("_taxesTable", model);
         }
     }
-
-
-
     [HttpPost]
     public IActionResult deleteTax(string Taxid)
     {
@@ -60,14 +53,10 @@ public class TaxesController : Controller
         return PartialView("_taxesTable", model);
     }
 
-    [Authorize(Policy = "CanDelete_TaxAndFee")]
     public IActionResult loadDeleteModal()
     {
         return PartialView("_deleteModel");
     }
-
-
-    [Authorize(Policy = "CanEdit_TaxAndFee")]
     public IActionResult EditModalGet(int taxid)
     {
         Taxesandfee tax = _taxService.getTaxById(taxid);
@@ -76,7 +65,6 @@ public class TaxesController : Controller
         model.taxes = _taxService.getAllTaxes();
         return PartialView("_addEditTax", model);
     }
-
     public IActionResult searchTax(string search)
     {
         TaxesViewModel model = new TaxesViewModel();

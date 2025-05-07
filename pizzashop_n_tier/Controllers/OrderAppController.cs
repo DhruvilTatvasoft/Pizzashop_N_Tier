@@ -25,7 +25,7 @@ namespace pizzashop_n_tier.Views.OrderApp
         }
 
         public IActionResult getOrderAppPage(){
-            return PartialView("_orderAppHome");
+            return View("_orderAppHome");
         }
 
         public IActionResult getTables(){

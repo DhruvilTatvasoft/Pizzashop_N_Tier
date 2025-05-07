@@ -3,6 +3,12 @@
     ViewData["Title"] = "TableAndSectionContainer";
     Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
 }
+@using Microsoft.AspNetCore.Authorization
+@inject IAuthorizationService AuthorizationService
+@{
+    var canEditTax = (await AuthorizationService.AuthorizeAsync(User, "TaxAndFee_CanEditAdd")).Succeeded;
+    var canDeleteTax = (await AuthorizationService.AuthorizeAsync(User, "TaxAndFee_CanDelete")).Succeeded;
+}
 <link rel="stylesheet" href="~/css/TaxesandFees.css">
 <div class="container-fluid w-100 h-100 p-0">
     <div class="container-fluid w-100 h-100 p-0">
@@ -14,8 +20,9 @@
                     <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
                         <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;"
                             id="taxSearch" onkeyup="searchtax()" placeholder="Search">
+                        
                         <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;"
-                            onclick="openModelForAddTax()">+ New Tax</button>
+                            onclick="@(canEditTax ? "openModelForAddTax()" : "showAccessDenied('Tax and Fees','add')")">+ New Tax</button>
                     </div>
                 </div>
                 <div class="form-container shadow taxTableContainer" id="t-container"></div>
@@ -29,8 +36,11 @@
                     $('.sidebar ul li').removeClass('active-class');
                     $('.tax').addClass('active-class')
                 })
-
             });
+
+            function showAccessDenied(permissionname,permissiontype){
+                toastr.error("Sorry,you don't have permissions to "+permissiontype+" "+permissionname);
+            }
 
             function loadTaxes() {
                 $.ajax({

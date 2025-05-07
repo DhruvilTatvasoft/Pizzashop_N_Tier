@@ -1,37 +1,35 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @{
-    string imagepath = Context.Request.Cookies["UserImage"]?? "/images/Default_pfp.svg.png";
+    string imagepath = Context.Request.Cookies["UserImage"] ?? "/images/Default_pfp.svg.png";
     string username = Context.Request.Cookies["username"];
-    var canViewForUser = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForRoleAndPermission = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForCustomers = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForOrders = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForMenu = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForTableAndSection = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
-    var canViewForTax = AuthorizationService.AuthorizeAsync(User,"CanView_Users").Result.Succeeded;
+
+    var canViewForUser = (await AuthorizationService.AuthorizeAsync(User, "Users_CanView")).Succeeded;
+    var canViewForRoleAndPermission = (await AuthorizationService.AuthorizeAsync(User, "RolesAndPermissions_CanView")).Succeeded;
+    var canViewForCustomers = (await AuthorizationService.AuthorizeAsync(User, "Customers_CanView")).Succeeded;
+    var canViewForOrders = (await AuthorizationService.AuthorizeAsync(User, "Order_CanView")).Succeeded;
+    var canViewForMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanView")).Succeeded;
+    var canViewForTableAndSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanView")).Succeeded;
+    var canViewForTax = (await AuthorizationService.AuthorizeAsync(User, "TaxAndFee_CanView")).Succeeded;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title> @ViewBag.Title</title>
-</head>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous" />
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
-    integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
-    crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-    crossorigin="anonymous"></script>
+    <title>@ViewBag.Title</title>
+      <link rel="icon" type="image/png" href="~/images/pizzashop_logo.png" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-<link rel="stylesheet" href="~/css/_Sidebarnavbar.css">
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+    <link rel="stylesheet" href="~/css/_Sidebarnavbar.css">
+</head>
 <body>
+@if (User.IsInRole("SuperAdmin") || User.IsInRole("Admin"))
+{
     <div class="container-fluid w-100 h-100 p-0">
         <nav class="navbar sticky-top navbar-light d-flex">
             <div class="d-flex align-items-center w-100">
@@ -41,32 +39,33 @@
                     </button>
                 </div>
                 <div class="dropdown me-5 d-flex align-items-center" style="margin-left: auto;">
-                    @if(User.IsInRole("Admin")){
-                    <a href="@Url.Action("getOrderAppPage", "OrderApp")" class="me-3" >
-                        <img src="~/images/phone.svg" style="width:29px;"alt="">
-                    </a>
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <a href="@Url.Action("getOrderAppPage", "OrderApp")" class="me-3">
+                            <img src="~/images/phone.svg" style="width:29px;" alt="">
+                        </a>
                     }
-                    <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown"
-                        aria-expanded="false" style="border: 0;">
-                        <a href="" > <img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;"></a>
+                    <button class="btn dropdown-toggle dropbtn" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="border: 0;">
+                        <img src="@imagepath" alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;">
                     </button>
                     <ul class="dropdown-menu">
-                        <li class="ps-2 pb-1"><img src="@imagepath"  alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;">@username</li>
-                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile"><img src="~/images/account.png" class="me-2" alt="">My profile</a>
+                        <li class="ps-2 pb-1">
+                            <img src="@imagepath" alt="" style="width:30px;object-fit: cover; border-radius: 50%;border:3px solid white;">
+                            @username
                         </li>
-                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword"><img src="~/images/reload.png" class="me-2" alt="">Change
-                                Password</a></li>
-                        <li><a class="dropdown-item" data-bs-toggle="modal"
-                                data-bs-target="#exampleModalCenter"><img src="~/images/logout.png" class="me-2" alt="">Logout</a></li>
+                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="Myprofile"><img src="~/images/account.png" class="me-2">My profile</a></li>
+                        <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="ResetPassword"><img src="~/images/reload.png" class="me-2">Change Password</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><img src="~/images/logout.png" class="me-2">Logout</a></li>
                     </ul>
                 </div>
             </div>
         </nav>
+
         <div class="row p-0 h-100 d-flex">
             <div class="bg-white sidebar d-md-block ps-0 pe-0 h-100">
                 <div class="w-100 d-flex pt-1 pe-2 d-md-none">
                     <button class="close-btn">
-                    <img src="~/images/close.png" style="width:10px;" alt="">
+                        <img src="~/images/close.png" style="width:10px;" alt="">
                     </button>
                 </div>
                 <div class="d-flex justify-content-start align-items-center ps-1 pe-3 pt-2 pb-2">
@@ -75,84 +74,84 @@
                         <h4 class="col-6 ps-1">PIZZASHOP</h4>
                     </div>
                 </div>
-                <ul> 
-                    
-                    <a asp-controller="Dashboard" asp-action="showDashboard"> 
-                    <li class="ps-2 dashboard">
-                       <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label for="">Dashboard </label>
-                    </li>
+                <ul>
+                    <a asp-controller="Dashboard" asp-action="showDashboard">
+                        <li class="ps-2 dashboard">
+                            <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label>Dashboard</label>
+                        </li>
                     </a>
-                    <a asp-controller="Dashboard" asp-action="showUsers">
-                    <li class="ps-2 Users">
-                        <img src="~/images/group.png" class="me-2 side-img" alt=""><label for="">Users</label>
-                    </li>
-                    </a>
-
-                    <a asp-controller="Dashboard" asp-action="Roles">
-                    <li class="ps-2 roleandpermission">
-                        <img src="~/images/icons8-user-settings-32.png"  class="me-2" style="width:20px;" alt=""><label for="">Roles and Permissions</label>
-                    </li>
-                    </a>
-                    
-                    
-                    <a asp-controller="Menu" asp-action="Menu">
-                    <li class="ps-2 menu">
-                        <img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" style="width:20px;"alt=""><label for="">Menu</label>
-                    </li>
-                    </a>
-                    
-
-                    
-                    <a asp-controller="TableAndSection" asp-action="TableSection">
-                    <li class="ps-2 tableandsection">
-                        <img src="~/images/icons8-stop-30.png" class="me-2 side-img" alt="">
-                        <label for="">Table And Section</label>
-                    </li>
+                    @if (canViewForUser)
+                    {
+                        <a asp-controller="Dashboard" asp-action="showUsers">
+                            <li class="ps-2 Users">
+                                <img src="~/images/group.png" class="me-2 side-img" alt=""><label>Users</label>
+                            </li>
                         </a>
-                    
-
-                    
-                         <a asp-controller="Taxes" asp-action="showTaxes">
-                    <li class="ps-2 tax">
-                        <img src="~/images/icons8-tax-money-50.png" class="me-2" alt=""><label for="">Taxes And Fees</label>
-                    </li>
-                    </a>
-                    
-
-                    
-                    <a asp-action="showorders" asp-controller="Order" style="text-decoration: none;">
-                    <li class="ps-2 orders">
-                        <img src="~/images/icons8-order-30.png"  class="me-2 side-img"  style="width:20px;" alt=""><label for="">Orders</label>
-                    </li>
-                    </a>
-                    
-
-                    
-                    <a asp-action="showCustomer" asp-controller="Customer">
-                    <li class="ps-2 customers">
-                       <img src="~/images/icons8-customer-64.png" class="me-2 side-img" alt=""><label for="">Customers</label>
-                    </li>
-                    </a>
-                    
+                    }
+                    @if (canViewForRoleAndPermission)
+                    {
+                        <a asp-controller="Dashboard" asp-action="Roles">
+                            <li class="ps-2 roleandpermission">
+                                <img src="~/images/icons8-user-settings-32.png" class="me-2" style="width:20px;"><label>Roles and Permissions</label>
+                            </li>
+                        </a>
+                    }
+                    @if (canViewForMenu)
+                    {
+                        <a asp-controller="Menu" asp-action="Menu">
+                            <li class="ps-2 menu">
+                                <img src="~/images/icons8-restaurant-menu-24.png" class="me-2 side-img" style="width:20px;"><label>Menu</label>
+                            </li>
+                        </a>
+                    }
+                    @if (canViewForTableAndSection)
+                    {
+                        <a asp-controller="TableAndSection" asp-action="TableSection">
+                            <li class="ps-2 tableandsection">
+                                <img src="~/images/icons8-stop-30.png" class="me-2 side-img"><label>Table And Section</label>
+                            </li>
+                        </a>
+                    }
+                    @if (canViewForTax)
+                    {
+                        <a asp-controller="Taxes" asp-action="showTaxes">
+                            <li class="ps-2 tax">
+                                <img src="~/images/icons8-tax-money-50.png" class="me-2"><label>Taxes And Fees</label>
+                            </li>
+                        </a>
+                    }
+                    @if (canViewForOrders)
+                    {
+                        <a asp-controller="Order" asp-action="showorders">
+                            <li class="ps-2 orders">
+                                <img src="~/images/icons8-order-30.png" class="me-2 side-img" style="width:20px;"><label>Orders</label>
+                            </li>
+                        </a>
+                    }
+                    @if (canViewForCustomers)
+                    {
+                        <a asp-controller="Customer" asp-action="showCustomer">
+                            <li class="ps-2 customers">
+                                <img src="~/images/icons8-customer-64.png" class="me-2 side-img"><label>Customers</label>
+                            </li>
+                        </a>
+                    }
                 </ul>
             </div>
-            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog"
-                aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
+
+            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
                     <div class="modal-content">
                         <div class="modal-body d-flex flex-column align-items-center justify-content-center">
-                            <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1" alt="">
+                            <img src="~/images/icons8-alert-48.png" style="width:70px" class="mb-1">
                             <h5 class="mb-2">Are you sure you want to Logout?</h5>
                             <div class="d-flex">
                                 <form method="post" asp-controller="Dashboard" asp-action="Logout">
-                                    <button type="submit" class="btn btn-primary me-2"
-                                        data-bs-dismiss="modal">Yes</button>
+                                    <button type="submit" class="btn btn-primary me-2">Yes</button>
                                 </form>
                                 <button type="button" class="btn btn-outline-primary" data-bs-dismiss="modal">No</button>
                             </div>
-                            <div></div>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -160,74 +159,56 @@
             <main>
                 @RenderBody()
             </main>
-
         </div>
+    </div>
+}
+else
+{
+    <div class="container text-center mt-5">
+        <h3>Access Denied</h3>
+        <p>You do not have permission to view this page.</p>
+    </div>
+}
 
-        <script>
+<script>
+    $(".orderApp").on("click", function () {
+        window.location.href = "/Order/showorders";
+    });
 
-            $(".orderApp").on("click",function(){
-                window.location.href = "/Order/showorders";
-            })
-
-            $("document").ready(function (){
-                $(".sidebar ul li").click(function(){
-                    $("ul li").removeClass("active-class");
-                    $(this).addClass("active-class");
-                });
-            });
-
-           
-            document.querySelector(".tg-btn").addEventListener("click", function () {
-                document.querySelector(".sidebar").style.display = "block";
-            
-                document.querySelector(".container-fluid").style.padding = "";
-                console.log("done")
-            });
-            document.querySelector(".close-btn").addEventListener("click", function () {
-                document.querySelector(".sidebar").style.display = "none";
-                console.log("done")
-
-            });
-
-             $(function () {
-            var message = '@Html.Raw(TempData["ToastrMessage"])';
-            var type = '@Html.Raw(TempData["ToastrType"])';
-            if (message.trim() !== '') {
-                switch(type){
-                    case 'success':
-                    toastr.success(message)
-                    break;
-                    case 'error':
-                    toastr.error(message)
-                    break;
-                    case 'warning':
-                    toastr.warning(message)
-                    break;
-                    case 'info':
-                    toastr.info(message)
-                }
-            }
+    $(document).ready(function () {
+        $(".sidebar ul li").click(function () {
+            $("ul li").removeClass("active-class");
+            $(this).addClass("active-class");
         });
+    });
+
+    document.querySelector(".tg-btn").addEventListener("click", function () {
+        document.querySelector(".sidebar").style.display = "block";
+    });
+
+    document.querySelector(".close-btn").addEventListener("click", function () {
+        document.querySelector(".sidebar").style.display = "none";
+    });
+
+    $(function () {
+        var message = '@Html.Raw(TempData["ToastrMessage"])';
+        var type = '@Html.Raw(TempData["ToastrType"])';
+        if (message.trim() !== '') {
+            switch (type) {
+                case 'success': toastr.success(message); break;
+                case 'error': toastr.error(message); break;
+                case 'warning': toastr.warning(message); break;
+                case 'info': toastr.info(message); break;
+            }
+        }
+    });
+
     toastr.options = {
-        "closeButton": true,   
-        "debug": false,
-        "newestOnTop": true,
-        "progressBar": true,     
-        "positionClass": "toast-top-right", // Change position
-        "preventDuplicates": true,
-        "onclick": null,
-        "showDuration": "300",
-        "hideDuration": "1000",
-        "timeOut": "2000",        // Auto-close after 5 seconds
-        "extendedTimeOut": "1000",
-        "showEasing": "swing",
-        "hideEasing": "linear",
-        "showMethod": "fadeIn",
-        "hideMethod": "fadeOut"
+        "closeButton": true,
+        "progressBar": true,
+        "positionClass": "toast-top-right",
+        "timeOut": "2000"
     };
-
-
-        </script>
+</script>
 </body>
-
 </html>
