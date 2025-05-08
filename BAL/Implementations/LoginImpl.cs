@@ -116,7 +116,8 @@ public class LoginImpl : ILogin
             countryid = (int)user.Countryid,
             cityid = (int)user.Cityid,
             role = _repository.getRolename(user.Roleid),
-            Role = _repository.getAllRoles().Select(r=>r.Rolename).ToList()
+            Role = _repository.getAllRoles().Select(r=>r.Rolename).ToList(),
+            email = user.Email,
         };
         return ud;
     }

@@ -24,16 +24,16 @@ public class EmailGenService : IEmailGenService{
         string baseUrl = $"{req.Scheme}://{req.Host}";
         // string Email = _AesService.Encrypt(email);
         string rstlink = $"{baseUrl}/Login/ResetPass?email={email}";
-        // string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
-        string emailBody = System.IO.File.ReadAllText("C:/Users/Admin/pizzashop1/Pizzashop_N_Tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
+        string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
+        // string emailBody = System.IO.File.ReadAllText("C:/Users/Admin/pizzashop1/Pizzashop_N_Tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
         emailBody = emailBody.Replace("{{reset_Link}}", rstlink);
         Send("test.dotnet@etatvasoft.com",email,"sending email",emailBody);
         Console.WriteLine("sended successfully on : "+rstlink);
     }
 
     public void emailForForgetPass(HttpRequest req, string email, string password){
-        // string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/emailbody.cshtml");
-        string emailBody = System.IO.File.ReadAllText("C:/Users/Admin/pizzashop1/Pizzashop_N_Tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
+        string emailBody = System.IO.File.ReadAllText("C:/Users/pct78/pizzashop_N_tier/pizzashop_n_tier/Views/Dashboard/emailbody.cshtml");
+        // string emailBody = System.IO.File.ReadAllText("C:/Users/Admin/pizzashop1/Pizzashop_N_Tier/pizzashop_n_tier/Views/Login/emailbody.cshtml");
         emailBody = emailBody.Replace("{{useremail}}",email);
         emailBody = emailBody.Replace("{{userpassword}}",password);
         Send("test.dotnet@etatvasoft.com",email,"sending email",emailBody);

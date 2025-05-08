@@ -162,7 +162,7 @@
                   <div class="right col-4 pe-1" style="background-color: antiquewhite;">
                      <div class="dropdown mt-2 me-2">
                         <select class="form-select form-select-lg mb-1" id="modifier-group"
-                           onchange="getModifier()" style="font-size: 80%;"
+                           onchange="getModifier('ModelForEditItem')" style="font-size: 80%;"
                            aria-label=".form-select-lg example">
                            <option value="0"><label for="" class="fs-2">Select Modifier
                               Groups(s)</label>
@@ -178,7 +178,6 @@
                         <div class="modifier-group-item" id="modifiergroup_@modifierModel.ModifiergroupId">
                            <div class="d-flex  pe-3 pt-1 mb-2" >
                               <label class="fw-bold">@modifierModel.mg.Modifiergroupname  </label>
-                              @* <label>@modifierModel.modifiers.Count</label> *@
                               <img src="~/images/trash-fill.svg" style="margin-left:auto;cursor:pointer;"
                                  onclick="deleteModifierGroup(@modifierModel.ModifiergroupId)" alt="">
                            </div>
@@ -248,7 +247,7 @@
       $("#modifier-group").val("Select Modifier Group(s)");
    }
 
-function getModifier() {
+@* function getModifier() {
       if($('#modifier-group').val() != 0){
       console.log("changed");
       var temporaryId = "#modifiergroup_" + $('#modifier-group').val();
@@ -265,7 +264,7 @@ function getModifier() {
           });
       }
       }
-   }
+   } *@
         
         $(document).on('submit', '#EditItemForm', function(e) {
             e.preventDefault();

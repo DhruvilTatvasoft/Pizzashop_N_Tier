@@ -42,7 +42,7 @@ public class LoginController : Controller
                 }
                 else
                 { 
-                return RedirectToAction("showDashboard", "Dashboard");
+                return RedirectToAction("showDashboard", "Dashboard",new{timeid = 1,fromdate = "",endDate = ""});
                 }
             }
             else
@@ -88,11 +88,11 @@ public class LoginController : Controller
                 }
                 else
                 {
-                    return RedirectToAction("showDashboard", "Dashboard");
+                    return RedirectToAction("showDashboard", "Dashboard",new{timeid = 1,fromdate = "",endDate = ""});
                 }
             }
 
-            return RedirectToAction("showDashboard", "Dashboard");
+            return RedirectToAction("showDashboard", "Dashboard",new{timeid = 1,fromdate = "",endDate = ""});
         }
         else
         {

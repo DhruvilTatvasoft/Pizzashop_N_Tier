@@ -41,7 +41,7 @@ public class ModifierModel
     public int Modifierquantity { get; set; }
     public int Unitid{get;set;}
     [Required(ErrorMessage = "Modifier rate is required")]
-    [Range(0, int.MaxValue, ErrorMessage = "Item rate cannot be less than 0")]
+    [Range(1, int.MaxValue, ErrorMessage = "Item rate cannot be less than 1")]
     public decimal Modifierrate { get; set; }
     public List<Unit> units { get; set; }
     public string Description { get; set; }

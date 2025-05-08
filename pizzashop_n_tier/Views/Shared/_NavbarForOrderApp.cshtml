@@ -107,7 +107,7 @@
                     <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#exampleModalCenter"><img
                                 src="~/images/logout.png" style="width:15px;" class="me-2" alt="">Logout</a></li>
                     @if(!User.IsInRole("Chef")){
-                    <li><a class="dropdown-item" asp-controller="Dashboard" asp-action="showDashboard"><img
+                    <li><a class="dropdown-item" href=" @Url.Action("showDashboard","Dashboard",new{timeid = 1,fromdate = "",endDate = ""})"><img
                                 src="~/images/chevron-left.svg" style="width:15px;" class="me-2" alt="">Back</a></li>
                     }            
                 </ul>

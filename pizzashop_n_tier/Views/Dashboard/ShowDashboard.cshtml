@@ -1,11 +1,347 @@
 @{
-    Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
-    ViewData["Title"] = "Dashboard Page";
+  Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
+  ViewData["Title"] = "Dashboard Page";
 }
+@model DashboardViewModel
 <script>
-     $("document").ready(function(){
-      $('.sidebar ul li').removeClass('active-class');
-             $('.dashboard').addClass('active-class')
+  $("document").ready(function () {
+    $('.sidebar ul li').removeClass('active-class');
+    $('.dashboard').addClass('active-class')
   })
 
+  function detailsByFilter() {
+    console.log("OK")
+    var selectedTime = $("#dashboardSelectTimeField").val();
+    console.log(selectedTime)
+    var link = "@Url.Action("showDashboard", "Dashboard", new { timeid = "selectedTime" })";
+    link = link.replace("selectedTime", selectedTime);
+    window.location.href = link
+  }
+
 </script>
+<link rel="stylesheet" href="~/css/maindashboard.css">
+@{
+  ViewData["Title"] = "Dashboard";
+}
+<div class="container-fluid w-100 h-100 p-0">
+  <div class="container-fluid w-100 h-100 p-0">
+    <div id="nav-sidebar"></div>
+    <div class="row p-0 h-100 d-flex">
+      <div class="content pt-3 w-100 h-100" style="padding-left: 19%;padding-top: 15%;padding-right: 3%;">
+        <div class="header d-flex align-items-center justify-content-between  d-flex">
+          <h1>Dashboard</h1>
+          <div>
+            <div class="form-floating">
+              <select class="form-select customersFirstRawSelect pt-2" id="dashboardSelectTimeField"
+                style="height: 40px;" aria-label="Floating label select example" onchange="detailsByFilter()">
+                <option value="1" selected="@(Model.timeid == 1 ? "selected" : null)">All Time</option>
+                <option value="2" selected="@(Model.timeid == 2 ? "selected" : null)">Last 7 Days</option>
+                <option value="3" selected="@(Model.timeid == 3 ? "selected" : null)">Last 30 Days</option>
+                <option value="4" selected="@(Model.timeid == 4 ? "selected" : null)">Current Month</option>
+                <option value="5" selected="@(Model.timeid == 5 ? "selected" : null)">Custom Date</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-3" style="height: 20%">
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 h-100">
+            <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row" style="height: 40%;">
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="totalSalesIconDiv">
+                    <img src="/images/total-sales.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <h4 class="mb-1" id="totalSalesText">₹@Model.totalsales</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <span>Total Sales</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 h-100">
+            <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row" style="height: 40%;" >
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="totalOrdersIconDiv">
+                    <img src="/images/total-orders.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <h4 class="mb-1" id="totalOrdersText">₹@Model.totalorders</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <span>Total Orders</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 h-100">
+            <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row" style="height: 40%;">
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="avgOrderValueIconDiv">
+                    <img src="/images/order-value.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <h4 class="mb-1" id="avgOrderValue">₹@Model.averageOrderValue</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <span>Avg. Order Value</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 h-100">
+            <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row" style="height: 40%;">
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="avgWaitingTimeIconDiv">
+                    <img src="/images/waiting-time.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <h4 class="mb-1">₹1630</h4>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <span>Avg. Waiting Time</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-1">
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pb-3">
+            <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+              <div class="row">
+                <div class="container-fluid">
+                  <div>
+                    <h5>Revenue</h5>
+                  </div>
+                </div>
+              </div>
+              <div class="row py-1">
+                <div class="container-fluid d-flex align-items-center justify-content-center">
+                  <div class="chartInsideIcon"></div>
+                  <span class="ps-1">Revenue</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <canvas id="revenueChart" class="dashboardGraphs"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pb-3">
+            <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+              <div class="row">
+                <div class="container-fluid">
+                  <h5>Customer Growth</h5>
+                </div>
+              </div>
+              <div class="row py-1">
+                <div class="container-fluid d-flex align-items-center justify-content-center">
+                  <div class="chartInsideIcon"></div>
+                  <span class="ps-1">Customer</span>
+                </div>
+              </div>
+              <div class="row">
+                <div class="container-fluid">
+                  <canvas id="customerGrowth" class="dashboardGraphs"></canvas>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-1">
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 fontWeight500">
+            <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+              <div class="row">
+                <div class="container-fluid">
+                  <h5>Top Selling Items</h5>
+                </div>
+              </div>
+              <div class="row pt-2" id="topSelling1Row">
+                <div class="container-fluid d-flex align-items-center">
+                  <h6 class="m-0 pe-2">#1</h6>
+                  <div>
+                    <img src="/images/dining-menu.png" id="topSelling1Image" style="height:50px;width:50px"
+                      class="rounded-circle">
+                  </div>
+                  <div class="container-fluid p-0 ps-2">
+                    <div class="row">
+                      <span id="topSelling1Name">@Model.topSellingItem[0].item.Itemname</span>
+                      <div class="d-flex align-items-center">
+                        <img src="/images/reception.png" style="height:20px;width:20px">
+                        <span id="topSelling1NoOfOrders">@Model.topSellingItem[0].OrderCount order</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr class="my-2">
+              <div class="row" id="topSelling2Row">
+                <div class="container-fluid d-flex align-items-center">
+                  <h6 class="m-0 pe-2">#2</h6>
+                  <div>
+                    @if (Model.topSellingItem[1].item.Itemimage != null || Model.topSellingItem[1].item.Itemimage != "")
+                    {
+                      <img src="@(Model.topSellingItem[1].item.Itemimage)" id="topSelling2Image"
+                        style="height:50px;width:50px" class="rounded-circle">
+                    }
+                    else
+                    {
+                      <img src="/images/dining-menu.png" id="topSelling2Image" style="height:50px;width:50px"
+                        class="rounded-circle">
+                    }
+                  </div>
+                  <div class="container-fluid p-0 ps-2">
+                    <div class="row">
+                      <span id="topSelling2Name">@Model.topSellingItem[1].item.Itemname</span>
+                      <div class="d-flex align-items-center">
+
+                        <img src="/images/reception.png" style="height:20px;width:20px">
+                        <span id="topSelling2NoOfOrders">@Model.topSellingItem[1].OrderCount order</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+            <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+              <div class="row">
+                <div class="container-fluid">
+                  <h5>Least Selling Items</h5>
+                </div>
+              </div>
+              <div class="row pt-2" id="leastSelling1Row">
+                <div class="container-fluid d-flex align-items-center">
+                  <h6 class="m-0 pe-2">#1</h6>
+                  <div>
+                    @if (Model.leastSellingItem[0].item.Itemimage != null || Model.leastSellingItem[0].item.Itemimage
+                                        != "")
+                    {
+                      <img src="@(Model.leastSellingItem[0].item.Itemimage)" id="leastSelling1Image"
+                        style="height:50px;width:50px" class="rounded-circle">
+                    }
+                    else
+                    {
+                      <img src="/images/dining-menu.png" id="topSelling2Image" style="height:50px;width:50px"
+                        class="rounded-circle">
+                    }
+                  </div>
+                  <div class="container-fluid p-0 ps-2">
+                    <div class="row">
+                      <span id="leastSelling1Name">@Model.leastSellingItem[0].item.Itemname</span>
+                      <div class="d-flex align-items-center">
+                        <img src="/images/reception.png" style="height:20px;width:20px">
+                        <span id="leastSelling1NoOfOrders">@Model.leastSellingItem[0].OrderCount order</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <hr class="my-2">
+              <div class="row" id="leastSelling2Row">
+                <div class="container-fluid d-flex align-items-center">
+                  <h6 class="m-0 pe-2">#2</h6>
+                  <div>
+                    @if (Model.leastSellingItem[1].item.Itemimage != null && Model.leastSellingItem[1].item.Itemimage !=
+                                        "")
+                    {
+                      <img src="@(Model.leastSellingItem[1].item.Itemimage)" id="leastSelling2Image"
+                        style="height:50px;width:50px" class="rounded-circle">
+                      <h1>@(Model.leastSellingItem[1].item.Itemimage)</h1>
+                    }
+                    else
+                    {
+                      <img src="/images/dining-menu.png" id="leastSelling2Image" style="height:50px;width:50px"
+                        class="rounded-circle">
+                    }
+                  </div>
+                  <div class="container-fluid p-0 ps-2">
+                    <div class="row">
+                      <span id="leastSelling2Name">@Model.leastSellingItem[1].item.Itemname</span>
+                      <div class="d-flex align-items-center">
+                        <img src="/images/reception.png" style="height:20px;width:20px">
+                        <span id="leastSelling2NoOfOrders">@Model.leastSellingItem[1].OrderCount order</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+            <div class="container-fluid bg-white pb-3 ps-0 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="totalSalesIconDiv">
+                    <img src="/images/waiting-list.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid pt-5">
+                <div class="row pt-3">
+                  <div class="container-fluid">
+                    <h4 class="mb-1" id="waitingListCountText">@Model.waitingListCount</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="container-fluid">
+                    <span>Waiting List Count</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+            <div class="container-fluid bg-white pb-3 ps-0 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+              <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                  <div class="totalSalesIconDiv">
+                    <img src="/images/waiting-list.svg" class="p-2">
+                  </div>
+                </div>
+              </div>
+              <div class="container-fluid pt-5">
+                <div class="row pt-3">
+                  <div class="container-fluid">
+                    <h4 class="mb-1" id="waitingListCountText">@Model.waitingListCount</h4>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="container-fluid">
+                    <span>Waiting List Count</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="customeDateSelectorModalLoader"></div>
+      </div>
+    </div>
+  </div>

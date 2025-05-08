@@ -141,7 +141,7 @@
                         <div class="right col-4 pe-1" style="background-color: antiquewhite;">
                             <div class="dropdown mt-2 me-2">
                                 <select class="form-select form-select-lg mb-1" id="modifier-group"
-                                    onchange="getModifier()" style="font-size: 80%;"
+                                    onchange="getModifier('exampleModalCenter3')" style="font-size: 80%;"
                                     aria-label=".form-select-lg example">
                                     <option value="1"><label for="" class="fs-2">Select Modifier
                                             Groups(s)</label>
@@ -181,11 +181,12 @@
         });
         return JSON.stringify(object);
     }
-    function getModifier() {
+    @* function getModifier() {
         console.log("changed");
         var temporaryId = "#modifiergroup_" + $('#modifier-group').val();
         console.log(temporaryId);
         var modifiergroup = document.querySelector(temporaryId);
+     
         if (modifiergroup == null) {
             $.ajax({
                 url: '/Menu/getModifiers',
@@ -196,7 +197,7 @@
                 }
             });
         }
-    }
+    } *@
     if (!window.addItemFormHandlerInitialized) {
         window.addItemFormHandlerInitialized = true;
         

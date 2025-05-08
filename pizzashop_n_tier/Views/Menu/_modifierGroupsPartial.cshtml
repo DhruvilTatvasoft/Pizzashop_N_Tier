@@ -10,22 +10,23 @@
 </div>
 <div class="scrollbar w-100">
   <div class="scrollbox w-100 h-100" ">
-    <ul class="categorylist mt-2 w-100 h-100 " id="ModifierGroupList">
+    <ul class=" categorylist mt-2 w-100 h-100 " id=" ModifierGroupList">
 
-      @foreach (var ModifierGroup in Model.modifiergroups)
-      {
-        <li class="w-100" id="selectedModifierGroup_@ModifierGroup.Modifiergroupid" onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid,1)">
-          <label for="" class="ms-0" style="font-size: 13px;">≣
-            @ModifierGroup.Modifiergroupname</label>
+    @foreach (var ModifierGroup in Model.modifiergroups)
+    {
+      <li class="w-100" id="selectedModifierGroup_@ModifierGroup.Modifiergroupid"
+        onclick="loadModifiersForModifierGroup(@ModifierGroup.Modifiergroupid,1)">
+        <label for="" class="ms-0" style="font-size: 13px;">≣
+          @ModifierGroup.Modifiergroupname</label>
 
-          <div class="d-flex" style="margin-left:auto;">
-            <img src="/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;"
-              onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
-            <img src="/images/trash-fill.svg" style="width:15px;cursor:pointer;"
-              onclick="openDeleteModifierGroupModel(@ModifierGroup.Modifiergroupid)" alt="">
-          </div>
-        </li>
-      }
+        <div class="d-flex" style="margin-left:auto;">
+          <img src="/images/edit.png" class="pe-2" style="width:25px;cursor:pointer;"
+            onclick="EditModifierGroupGet(@ModifierGroup.Modifiergroupid)" alt="">
+          <img src="/images/trash-fill.svg" style="width:15px;cursor:pointer;"
+            onclick="openDeleteModifierGroupModel(@ModifierGroup.Modifiergroupid)" alt="">
+        </div>
+      </li>
+    }
     </ul>
   </div>
 </div>
@@ -56,8 +57,8 @@
           </div>
           <div class="mt-2">
             <a href="#" data-bs-target="#addExistingModifiers"
-              onclick="selectModifiersForModifierGroup(null,1,6,'true')"><label
-                class="text-primary" style="font-weight: 400;">+ Add existing modifiers</label></a>
+              onclick="selectModifiersForModifierGroup(null,1,6,'true',true)"><label class="text-primary"
+                style="font-weight: 400;">+ Add existing modifiers</label></a>
             <div class="addedModifiers d-flex">
             </div>
           </div>
@@ -206,9 +207,8 @@
     });
   }
 
-  function selectModifiersForModifierGroup(id, pageNumber, pageSize, isFirstTime) {
+  function selectModifiersForModifierGroup(id, pageNumber, pageSize, isFirstTime,newModifiergroup) {
     console.log(id);
-  
     pageSize = $('.pagesize2').val();
     $.ajax({
       url: "/Menu/LoadAllModifiersForModifierGroup",
@@ -217,66 +217,67 @@
       success: function (data) {
         $(".loadmodifiers").html(data);
         $(".modifier-img").hide();
-        @* if (isFirstTime == 'true') { *@
-          const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
-          modal.show();
-          if (id != null) {
-            document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
-            $("#saveForUpdate").show();
-            $("#saveForAdd").hide();
-          } 
-          else {
-            document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
-            $("#saveForUpdate").hide();
-            $("#saveForAdd").show();
-          }
+        if(id != null || newModifiergroup == true){
+        const modal = new bootstrap.Modal(document.getElementById('addExistingModifiers'));
+        modal.show();
+        }
+        if (id != null) {
+          document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+          $("#saveForUpdate").show();
+          $("#saveForAdd").hide();
+        }
+        else {
+          document.querySelector("h5").innerHTML = "Select Modifiers for Edit Modifier Group";
+          $("#saveForUpdate").hide();
+          $("#saveForAdd").show();
+        }
         @* } *@
-        $('#addExistingModifiers .IsModifierChecked').each(function () {
-          const modifierId = parseInt($(this).val(), 10);
-          if (selectedModifiers.includes(modifierId)) {
-            $(this).prop('checked', true);
-          }
-        });
+          $('#addExistingModifiers .IsModifierChecked').each(function () {
+            const modifierId = parseInt($(this).val(), 10);
+            if (selectedModifiers.includes(modifierId)) {
+              $(this).prop('checked', true);
+            }
+          });
         $('.loadmodifiers').find('td[data-lastcolumn=L]').remove();
         $('.loadmodifiers').find('th[data-lastcolumn=L]').remove();
       }
-      });
+    });
   }
-    function addModifiersInNewMG(id){
-      const modifierIds = $('#addExistingModifiers .IsModifierChecked:checked')
-        .map(function () {
-          return parseInt($(this).val(), 10);
-        })
-        .get();
-        $('#addExistingModifiers').modal('hide');
-        document.querySelector(".modal-backdrop").remove()
-      $.ajax({
-        url: "/Menu/selectedModifiers",
-        data: { modifierIds: modifierIds },
-        type: "POST",
-        success: function (data) {
-          @* $(".closebtn").click(); *@
-          const targetModalId = id === null ? 'addModifierGroup1' : 'EditModifierGroup';
-          const targetModal = new bootstrap.Modal(document.getElementById(targetModalId));
-          targetModal.show();
-          $(`#${targetModalId} .addedModifiers`).empty();
-          selectedModifiers = modifierIds;
-          data.modifiers.forEach((modifier) => {
-            if (!$(`#modifier_${modifier.modifierid}`).length) {
-              $(`#${targetModalId} .addedModifiers`).append(
-                `<div id="modifier_${modifier.modifierid}">
+  function addModifiersInNewMG(id) {
+    const modifierIds = $('#addExistingModifiers .IsModifierChecked:checked')
+      .map(function () {
+        return parseInt($(this).val(), 10);
+      })
+      .get();
+    $('#addExistingModifiers').modal('hide');
+    document.querySelector(".modal-backdrop").remove()
+    $.ajax({
+      url: "/Menu/selectedModifiers",
+      data: { modifierIds: modifierIds },
+      type: "POST",
+      success: function (data) {
+
+        const targetModalId = id === null ? 'addModifierGroup1' : 'EditModifierGroup';
+        const targetModal = new bootstrap.Modal(document.getElementById(targetModalId));
+        targetModal.show();
+        $(`#${targetModalId} .addedModifiers`).empty();
+        selectedModifiers = modifierIds;
+        data.modifiers.forEach((modifier) => {
+          if (!$(`#modifier_${modifier.modifierid}`).length) {
+            $(`#${targetModalId} .addedModifiers`).append(
+              `<div id="modifier_${modifier.modifierid}">
               <span class="badge bg-white text-secondary me-2 mb-2 mt-2" style="border: 1px solid grey;">
                 ${modifier.modifiername}
                 <img src="/images/icons8-multiply-24.png" class="selectedModifiers" onclick="discardModifier(${modifier.modifierid})" style="width:10px;cursor:pointer;">
               </span>
               <input type="hidden" class="modifierId" value="${modifier.modifierid}" />
             </div>`
-              );
-            }
-          });
-        }
-      });
-    }
+            );
+          }
+        });
+      }
+    });
+  }
 
   function discardModifier(modifierId) {
     $(`#modifier_${modifierId}`).remove();
@@ -287,7 +288,7 @@
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
     document.body.classList.remove('modal-open');
   }
-  
+
   function cancelfromExistingModifiers() {
     const editModalEl = document.getElementById('EditModifierGroup');
     const addModalEl = document.getElementById('addModifierGroup1');
@@ -298,30 +299,34 @@
   function searchModifier() {
     const searchValue = $('#searchModifier').val();
     if (searchValue === "") {
-      selectModifiersForModifierGroup(null,1,$('.pagesize2').val(),'false');
+      selectModifiersForModifierGroup(null, 1, $('.pagesize2').val(), 'false');
       @* alert($('.pagesize2').val()) *@
     } else {
       $.ajax({
         url: '@Url.Action("SearchModifier", "Menu")',
         method: 'GET',
-        data: { searchedModifier: searchValue,pageNumber : 1,pageSize : $('.pagesize2').val() },
+        data: { searchedModifier: searchValue, pageNumber: 1, pageSize: $('.pagesize2').val() },
         success: function (data) {
           $('.loadmodifiers').html(data);
         }
       });
     }
   }
-
   $("#newModifierGroup").on('submit', function (e) {
     e.preventDefault();
-
     if (!$(this).valid()) {
       return;
     }
-    const data = new FormData(this);
+    const form = document.getElementById("newModifierGroup");
+    const data = new FormData(form);
     const payload = JSON.stringify(selectedModifiers);
     data.append("payload", payload);
+    data.append("mg.Modifiergroupname", $("#modifierGroup-Name").val())
+    data.append("mg.Description", $("#Modifier-description").val())
 
+    for (let pair of data.entries()) {
+      console.log(pair[0] + ": " + pair[1]);
+    }
     $.ajax({
       url: "/Menu/AddNewModifierGroup",
       type: "POST",
@@ -363,12 +368,12 @@
   function openDeleteModifierGroupModel(id) {
 
     $.ajax({
-      url:"@Url.Action("deleteItem","Menu")",
-      method:"GET",
-      success:function(data){
+      url: "@Url.Action("deleteItem", "Menu")",
+      method: "GET",
+      success: function (data) {
         $(".LoadDeleteModal").html(data);
         $("#exampleModalCenter8").modal("show");
-        $(".deleteText").text( "Are you sure you want to delete this modifier group?");
+        $(".deleteText").text("Are you sure you want to delete this modifier group?");
         $(".deleteText").css('font-size', '17px');
         $(".singleItemDelete").css("display", "none");
         $(".modifierGroupDelete").css("display", "block");
@@ -390,13 +395,13 @@
     });
   }
 
-    function OpenDeleteModifierModal(modifierId, modifiergroupId) {
-      const modal = new bootstrap.Modal(document.getElementById('deleteModifierModel'));
-      document.getElementById("deleteModifierText").innerText = "Are you sure you want to delete this modifier?";
-      modal.show();
-      document.getElementById("modifierIdTodelete").value = modifierId;
-      document.getElementById("modifierGroupIdTodelete").value = modifiergroupId;
-    }
+  function OpenDeleteModifierModal(modifierId, modifiergroupId) {
+    const modal = new bootstrap.Modal(document.getElementById('deleteModifierModel'));
+    document.getElementById("deleteModifierText").innerText = "Are you sure you want to delete this modifier?";
+    modal.show();
+    document.getElementById("modifierIdTodelete").value = modifierId;
+    document.getElementById("modifierGroupIdTodelete").value = modifiergroupId;
+  }
 
 
   $("#deleteModifierForm").on('submit', function (e) {

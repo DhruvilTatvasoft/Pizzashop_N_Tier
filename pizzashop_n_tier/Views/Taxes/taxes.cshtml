@@ -20,9 +20,10 @@
                     <div class="me-3 d-flex justify-content-center align-items-center" style="margin-left: auto;">
                         <input type="email" class="form-control h-100 " style="margin-right: 2%;width: 100%;"
                             id="taxSearch" onkeyup="searchtax()" placeholder="Search">
-                        
+
                         <button class="btn btn-primary me-3 add-item-modifier" type="button" style="width:48%;"
-                            onclick="@(canEditTax ? "openModelForAddTax()" : "showAccessDenied('Tax and Fees','add')")">+ New Tax</button>
+                            onclick="@(canEditTax ? "openModelForAddTax()" : "showAccessDenied('Tax and Fees','add')")">+
+                            New Tax</button>
                     </div>
                 </div>
                 <div class="form-container shadow taxTableContainer" id="t-container"></div>
@@ -38,8 +39,8 @@
                 })
             });
 
-            function showAccessDenied(permissionname,permissiontype){
-                toastr.error("Sorry,you don't have permissions to "+permissiontype+" "+permissionname);
+            function showAccessDenied(permissionname, permissiontype) {
+                toastr.error("Sorry,you don't have permissions to " + permissiontype + " " + permissionname);
             }
 
             function loadTaxes() {

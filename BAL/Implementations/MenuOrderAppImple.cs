@@ -40,6 +40,11 @@ public class MenuOrderAppImple : IMenuOrderAppService
         }
     }
 
+    public void getDashBoardDetails(int timeId,string fromDate,string startDate,DashboardViewModel model)
+    {
+         _menuOrderAppRepository.getDashBoardDetails(model, timeId,startDate, fromDate);
+    }
+
     public Item getItem(int itemid)
     {
         return _menuOrderAppRepository.getItem(itemid);
@@ -84,4 +89,5 @@ public class MenuOrderAppImple : IMenuOrderAppService
     {
         _menuOrderAppRepository.saveOrderWiseComment(model);
     }
+
 }

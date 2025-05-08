@@ -19,6 +19,7 @@
 
             <tr>
                 
+    using NPOI.SS.Formula.Functions;
                 <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
                 
             </tr>
@@ -49,7 +50,11 @@
             <option value="6" selected="@(Model.pageSize == 6 ? "selected" : null)">6</option>
             </select>
         </div>
-    <label for="" class="me-2">Showing 1-5 of 13</label>
+        @{
+    int startRecord = ((Model.pageNumber - 1) * Model.pageSize) + 1;
+    int endRecord = Math.Min(Model.pageNumber * Model.pageSize, Model.totalCustomers);
+}
+    <label for="" class="me-2">Showing @startRecord - @endRecord of @Model.totalCustomers</label>
         <div class="d-flex mt-1">
 
     @if(Model.pageNumber > 1){

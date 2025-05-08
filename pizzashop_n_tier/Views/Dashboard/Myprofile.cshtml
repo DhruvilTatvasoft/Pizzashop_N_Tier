@@ -32,8 +32,13 @@ else{
             </div>
            <div class="row fileUploadRow me-1 ms-1 mb-3">
             <div class="d-flex flex-column justify-content-start">
-              <h2>@Model.role</h2>
-              <h2 class="Username">@Model.role</h2>
+              <div>
+              <h2>@Model.firstname @Model.lastname</h2>
+              <h2 class="Username mt-2">@Model.role</h2>
+              </div>
+              @* <div>
+                <h2 class="email">@Model.email</h2>
+              </div> *@
             </div>
           </div>
 

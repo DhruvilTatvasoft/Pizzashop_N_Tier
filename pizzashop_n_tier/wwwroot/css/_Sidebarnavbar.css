@@ -35,7 +35,7 @@ nav {
     width: 60px;
 }
 
-.sidebar .side-img,
+.sidebar
 .sidebar.collapsed label {
     display: none;
     /* hide labels and images in collapsed mode */
@@ -67,10 +67,6 @@ nav {
     }
 }
 
-/* main {
-    margin-left: 250px;
-  
-} */
 
 .sidebar.collapsed~main {
     margin-left: 60px;

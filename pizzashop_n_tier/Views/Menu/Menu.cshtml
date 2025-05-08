@@ -6,7 +6,7 @@
 @inject IAuthorizationService AuthorizationService
 @{
     var canEditMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanEditAdd")).Succeeded;
-    var canDeleteMenu  = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;   
+    var canDeleteMenu = (await AuthorizationService.AuthorizeAsync(User, "Menu_CanDelete")).Succeeded;
 }
 @model MenuModel
 
@@ -43,8 +43,8 @@
     <script>
         var selectedCategoryId = 0;
 
-        function showAccessDenied(permissionname,permissiontype){
-                toastr.error("Sorry,you don't have permissions to "+permissiontype+" "+permissionname);
+        function showAccessDenied(permissionname, permissiontype) {
+            toastr.error("Sorry,you don't have permissions to " + permissiontype + " " + permissionname);
         }
         $("document").ready(function () {
             loadCategories();
@@ -100,7 +100,7 @@
 
         function deleteItemsGet() {
 
-            if([...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10)).length < 1) {
+            if ([...document.querySelectorAll(".checkedItems:checked")].map(x => parseInt(x.value, 10)).length < 1) {
                 toastr.error("Please select items to delete");
                 return;
             }
@@ -136,8 +136,8 @@
             });
         };
         function deleteItemGet(itemid, Categoryid) {
-            console.log("clicked");
-            console.log(itemid);
+
+
             $.ajax({
                 url: '@Url.Action("deleteItem", "Menu")',
                 type: "GET",
@@ -155,10 +155,10 @@
         };
 
         function deleteItemPost() {
-            console.log("clicked");
+
             var itemid = $('#itemid_hidden').val();
             var categoryId = $('#categoryid_hidden').val();
-            console.log(categoryId)
+
             $.ajax({
                 url: '@Url.Action("deleteItem", "Menu")',
                 type: "POST",
@@ -174,14 +174,22 @@
         };
 
         function openAddItemModal() {
-            console.log("model opened");
+            var modifiergroupids = $("[id^='#modifiergroup_']");
+            modifiergroupids.each(function () {
+                $(this).remove();
+            })
             $.ajax({
                 url: '@Url.Action("OpenAddItemModel", "Menu")',
                 method: 'GET',
                 success: function (data) {
-                    console.log(data);
+
                     $("#AddItemModelDiv").html(data);
                     $("#exampleModalCenter3").modal('show');
+                    var modifiergroupids = $("[id^='#modifiergroup_']");
+
+                    modifiergroupids.each(function () {
+                        $(this).remove();
+                    })
                 }
             });
         }
@@ -200,7 +208,7 @@
             });
         }
 
-    @* -------------------------------------ModifierPage-------------------------------------------- *@
+        @* -------------------------------------ModifierPage-------------------------------------------- *@
 
             function loadModifierPage() {
                 loadModifierGroups();
@@ -211,9 +219,30 @@
                 $('.mod img').attr("src", "/images/ui-radios-grid copy.svg")
 
             }
+        function getModifier(modalname) {
 
+            var temporaryId = "";
+            if (modalname) {
+                temporaryId = "#" + modalname + " #modifiergroup_" + $('#modifier-group').val();
+            }
+            else {
+                temporaryId = "#modifiergroup_" + $('#modifier-group').val();
+            }
+            console.log(temporaryId);
+            var modifiergroup = document.querySelector(temporaryId);
+
+            if (modifiergroup == null) {
+                $.ajax({
+                    url: '/Menu/getModifiers',
+                    type: 'GET',
+                    data: { modifiergroupid: $('#modifier-group').val() },
+                    success: function (data) {
+                        $(".loadModifiers").append(data);
+                    }
+                });
+            }
+        }
         function loadModifierGroups() {
-            console.log("Loading Modifier Groups...");
             $.ajax({
                 url: '@Url.Action("getModifierGroups", "Menu")',
                 method: 'GET',
@@ -263,7 +292,7 @@
                 data: { modifierGroupId: modifierGroupId },
                 success: function (response) {
                     $(".menubody").html(response);
-                    console.log("modifier page loaded");
+
                 },
                 error: function (xhr, status, error) {
                     console.error('Error fetching modifiers data:', error);
@@ -276,49 +305,46 @@
             var $form = $(this);
             if ($form.data('submitting')) return;
             $form.data('submitting', true);
-            if ($(this).valid()) {
-                var data = new FormData(this);
-                var Action = $(document.activeElement).data('action');
-                var selectedModifierGroup = $('#modifierGroup').val();
-                let = "";
-                if (Action === "Add") {
-                    url = '@Url.Action("AddNewModifier", "Menu")';
-                    data.append("modifier.Modifiergroupid", selectedModifierGroup)
-                }
-                else {
-                    url = '@Url.Action("EditmodifierPost", "Menu")';
-                    data.append("modifier.Modifiergroupid", selectedModifierGroup)
-                    data.append("modifier.Modifierid", $("#modifierIdForUpdate").val())
-                }
-                for (const pair of data.entries()) {
-                    console.log(pair[0], pair[1]);
-                }
-                console.log("url: " + url);
-
-
-                console.log("value of selected modifier group is " + selectedModifierGroup);
-                $.ajax({
-                    url: url,
-                    type: 'POST',
-                    data: data,
-                    processData: false,
-                    contentType: false,
-                    success: function (data) {
-                        $(".cancelBtn").click();
-                        if (data.success) {
-                            toastr.success(data.success);
-                            console.log("data should load for modifiergroup : " + selectedModifierGroup);
-                            loadModifiersForModifierGroup(data.modifierGroupId, 1);
-
-                        }
-                        else {
-                            toastr.error(data.error);
-                            loadModifiersForModifierGroup(data.modifierGroupId, 1);
-
-                        }
-                    }
-                });
+            if (!$(this).valid()) {
+                $form.data('submitting', false);
+                return false;
             }
+            var data = new FormData(this);
+            var Action = $(document.activeElement).data('action');
+            var selectedModifierGroup = $('#modifierGroup').val();
+            let = "";
+            if (Action === "Add") {
+                url = '@Url.Action("AddNewModifier", "Menu")';
+                data.append("modifier.Modifiergroupid", selectedModifierGroup)
+            }
+            else {
+                url = '@Url.Action("EditmodifierPost", "Menu")';
+                data.append("modifier.Modifiergroupid", selectedModifierGroup)
+                data.append("modifier.Modifierid", $("#modifierIdForUpdate").val())
+            }
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    $(".cancelBtn").click();
+                    if (data.success) {
+                        toastr.success(data.success);
+
+                        loadModifiersForModifierGroup(data.modifierGroupId, 1);
+
+                    }
+                    else {
+                        toastr.error(data.error);
+                        loadModifiersForModifierGroup(data.modifierGroupId, 1);
+
+                    }
+                }
+            });
+
         });
 
 

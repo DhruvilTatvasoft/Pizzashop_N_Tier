@@ -75,7 +75,7 @@
                     </div>
                 </div>
                 <ul>
-                    <a asp-controller="Dashboard" asp-action="showDashboard">
+                    <a href="@Url.Action("showDashboard","Dashboard",new{timeid = 1,fromdate = "",endDate = ""})">
                         <li class="ps-2 dashboard">
                             <img src="~/images/dashboard-interface.png" class="me-2 side-img" alt=""><label>Dashboard</label>
                         </li>

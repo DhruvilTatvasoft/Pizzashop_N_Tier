@@ -1,0 +1,284 @@
+@{
+    ViewData["Title"] = "Dashboard";
+}
+@if (TempData["toastMessage"] != null)
+{
+    <script>
+        $(document).ready(function () {
+            toastr.options = {
+                closeButton: true,
+                progressBar: true,
+                positionClass: "toast-top-right",
+                timeOut: 5000,
+            };
+            toastr.success("@TempData["toastMessage"]", "Success");
+        });
+    </script>
+}
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="container-fluid d-flex justify-content-between align-items-center p-0">
+            <div>
+                <h1 class="contentHeader">Dashboard</h1>
+            </div>
+            <div>
+                <div class="container-fluid p-0">
+                    <div class="form-floating">
+                        <select class="form-select customersFirstRawSelect pt-2" id="dashboardSelectTimeField"
+                            style="height: 40px;" aria-label="Floating label select example">
+                            <option selected value="1">All Time</option>
+                            <option value="2">Last 7 Days</option>
+                            <option value="3">Last 30 Days</option>
+                            <option value="4">Current Month</option>
+                            <option value="5">Custom Date</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row pt-3">
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                    <div class="totalSalesIconDiv">
+                        <img src="/images/icons/camera.svg" class="p-2">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h4 class="mb-1" id="totalSalesText"></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <span>Total Sales</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                    <div class="totalOrdersIconDiv">
+                        <img src="/images/icons/camera.svg" class="p-2">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h4 class="mb-1" id="totalOrdersText"></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <span>Total Orders</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                    <div class="avgOrderValueIconDiv">
+                        <img src="/images/icons/camera.svg" class="p-2">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h4 class="mb-1" id="avgOrderValue"></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <span>Avg. Order Value</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                    <div class="avgWaitingTimeIconDiv">
+                        <img src="/images/icons/camera.svg" class="p-2">
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <h4 class="mb-1">₹1630</h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <span>Avg. Waiting Time</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row pt-3">
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid">
+                    <div>
+                        <h5>Revenue</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="row py-1">
+                <div class="container-fluid d-flex align-items-center justify-content-center">
+                    <div class="chartInsideIcon"></div>
+                    <span class="ps-1">Revenue</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <canvas id="revenueChart" class="dashboardGraphs"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid">
+                    <h5>Customer Growth</h5>
+                </div>
+            </div>
+            <div class="row py-1">
+                <div class="container-fluid d-flex align-items-center justify-content-center">
+                    <div class="chartInsideIcon"></div>
+                    <span class="ps-1">Customer</span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="container-fluid">
+                    <canvas id="customerGrowth" class="dashboardGraphs"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="row pt-3">
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 pb-3 fontWeight500">
+        <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid">
+                    <h5>Top Selling Items</h5>
+                </div>
+            </div>
+            <div class="row pt-2" id="topSelling1Row">
+                <div class="container-fluid d-flex align-items-center">
+                    <h6 class="m-0 pe-2">#1</h6>
+                    <div>
+                        <img src="" id="topSelling1Image" style="height:50px;width:50px" class="rounded-circle">
+                    </div>
+                    <div class="container-fluid p-0 ps-2">
+                        <div class="row">
+                            <span id="topSelling1Name"></span>
+                            <div class="d-flex align-items-center">
+                                <img src="/images/icons/menu.svg" style="height:20px;width:20px">
+                                <span id="topSelling1NoOfOrders"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-2">
+            <div class="row" id="topSelling2Row">
+                <div class="container-fluid d-flex align-items-center">
+                    <h6 class="m-0 pe-2">#2</h6>
+                    <div>
+                        <img src="" id="topSelling2Image" style="height:50px;width:50px" class="rounded-circle">
+                    </div>
+                    <div class="container-fluid p-0 ps-2">
+                        <div class="row">
+                            <span id="topSelling2Name"></span>
+                            <div class="d-flex align-items-center">
+                                <img src="/images/icons/menu.svg" style="height:20px;width:20px">
+                                <span id="topSelling2NoOfOrders"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle">
+            <div class="row">
+                <div class="container-fluid">
+                    <h5>Least Selling Items</h5>
+                </div>
+            </div>
+            <div class="row pt-2" id="leastSelling1Row">
+                <div class="container-fluid d-flex align-items-center">
+                    <h6 class="m-0 pe-2">#1</h6>
+                    <div>
+                        <img src="" id="leastSelling1Image" style="height:50px;width:50px" class="rounded-circle">
+                    </div>
+                    <div class="container-fluid p-0 ps-2">
+                        <div class="row">
+                            <span id="leastSelling1Name"></span>
+                            <div class="d-flex align-items-center">
+                                <img src="/images/icons/menu.svg" style="height:20px;width:20px">
+                                <span id="leastSelling1NoOfOrders"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <hr class="my-2">
+            <div class="row" id="leastSelling2Row">
+                <div class="container-fluid d-flex align-items-center">
+                    <h6 class="m-0 pe-2">#2</h6>
+                    <div>
+                        <img src="" id="leastSelling2Image" style="height:50px;width:50px" class="rounded-circle">
+                    </div>
+                    <div class="container-fluid p-0 ps-2">
+                        <div class="row">
+                            <span id="leastSelling2Name"></span>
+                            <div class="d-flex align-items-center">
+                                <img src="/images/icons/menu.svg" style="height:20px;width:20px">
+                                <span id="leastSelling2NoOfOrders"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-xl-4 col-lg-4 col-md-6 col-sm-6 col-xs-12 pb-3">
+        <div class="container-fluid bg-white pb-3 ps-0 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
+            <div class="row">
+                <div class="container-fluid d-flex justify-content-end">
+                    <div class="totalSalesIconDiv">
+                        <img src="/images/icons/camera.svg" class="p-2">
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid pt-5">
+                <div class="row pt-3">
+                    <div class="container-fluid">
+                        <h4 class="mb-1" id="waitingListCountText">0</h4>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="container-fluid">
+                        <span>Waiting List Count</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div id="customeDateSelectorModalLoader"></div>

@@ -5,8 +5,8 @@
     <div class="me-3">
         <input type="text" class="form-control h-100 " placeholder="Search">
     </div>
-    <button class="btn btn-outline-secondary me-2"><img src="~/images/trash-fill.svg"
-            onclick="deleleMultipleModifiersGet()" style="cursor: pointer;" alt=""></button>
+    <button class="btn btn-outline-secondary me-2" onclick="deleleMultipleModifiersGet()"><img src="~/images/trash-fill.svg"
+             style="cursor: pointer;" alt=""></button>
 
     <button class="btn btn-primary me-3 add-item-modifier" type="button" onclick="openAddModifierModal()">+ New
         Modfifier</button>
@@ -21,8 +21,8 @@
     })
 
     function deleleMultipleModifiersGet(){
-        @* alert("ok") *@
-        var selectedModifiersToDelete = [...document.querySelectorAll(".IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
+
+        var selectedModifiersToDelete = [...document.querySelectorAll(".modifiersTable .IsModifierChecked:checked")].map(x => parseInt(x.value, 10));
         if(selectedModifiersToDelete.length < 1){
             toastr.error("please select modifiers to delete");
             return;

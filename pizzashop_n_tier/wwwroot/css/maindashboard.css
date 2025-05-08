@@ -1,0 +1,50 @@
+.dashboardCardsFirstRow{
+    border-radius: 8px;
+  }
+   
+  .totalSalesIconDiv
+  {
+    border:2px solid #000;
+    border-radius: 50%;
+  }
+   
+  .totalOrdersIconDiv
+  {
+    border:2px solid #000;
+    border-radius: 50%;
+  }
+   
+  .avgOrderValueIconDiv
+  {
+    border:2px solid #000;
+    border-radius: 50%;
+  }
+   
+  .avgWaitingTimeIconDiv
+  {
+    border:2px solid #000;
+    border-radius: 50%;
+  }
+   
+  .slightBoxShadowStyle {
+    box-shadow: 0 0 7px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+  }
+   
+  /* --------------------------------------------------------------------------Dashboard-------------------------------------------------------------------------------------- */
+  .dashboardGraphs{
+    max-height: 250px;
+  }
+   
+  .chartInsideIcon
+  {
+    height: 15px;
+    width: 60px;
+    background-color: rgb(27, 101, 161,0.2);
+    border: 2px solid rgb(27, 101, 161);
+  }
+  .content{
+    padding-left: 17%;
+  }
+
+  

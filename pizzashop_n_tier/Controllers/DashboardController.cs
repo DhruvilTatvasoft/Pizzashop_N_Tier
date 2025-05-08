@@ -31,7 +31,9 @@ public class DashboardController : Controller
     public readonly IImagePath _imageService;
 
     public readonly IJwtTokenGenService _jwtService;
-    public DashboardController(ILogin log, IImagePath imagePath, IJwtTokenGenService jwtTokenService, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
+
+    public readonly IMenuOrderAppService _orderAppService;
+    public DashboardController(ILogin log, IImagePath imagePath,IMenuOrderAppService orderAppService, IJwtTokenGenService jwtTokenService, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)
     {
         _log = log;
         _user = user;
@@ -42,13 +44,17 @@ public class DashboardController : Controller
         _permissionService = permissionService;
         _modifierService = modifierService;
         _jwtService = jwtTokenService;
+        _orderAppService = orderAppService;
     }
 
   
-    public IActionResult ShowDashboard()
+    public IActionResult ShowDashboard(int timeid,string endDate = "",string fromdate = "")
     {
-        return View();
+        DashboardViewModel model = new DashboardViewModel();
+        _orderAppService.getDashBoardDetails(timeid,fromdate,endDate,model);
+        return View(model);
     }
+
 
     public IActionResult Myprofile()
     {

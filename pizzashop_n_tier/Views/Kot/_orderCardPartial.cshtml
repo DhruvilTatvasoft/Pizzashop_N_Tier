@@ -3,6 +3,7 @@
 {
     <h1>No Orders Found !!</h1>
 }
+else{
 <div class="d-flex justify-content-between">
 <div>
     <label for="" id="category-name">@(Model.categoryName ?? "All")</label>
@@ -13,12 +14,23 @@
             class="inprogressText">In progress </label>
         <img src="~/images/hourglass-top.svg" class="inprogressImg" alt=""></button>
     <button class="btn btn-outline-primary  readybtn" onclick="inprogress(this,@Model.categoryid,true)"
-        style="color: #0066a7;border-color: #0066a7;border-radius: 2px;">Ready</button>
-
-    <button class="btn btn-outline-primary btnoutlinecolour " onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber-1))" @Model.> &lt;
+        style="color: #0066a7;border-color: #0066a7;border-radius: 2px;">Ready @Model.totalOrders</button>
+    @if(Model.pageNumber == 1){
+    <button class="btn btn-outline-primary btnoutlinecolour " onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber-1))" disabled> &lt;
     </button>
-    <button class="btn btn-outline-primary btnoutlinecolour" onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber+1))">
+    }
+    else{
+    <button class="btn btn-outline-primary btnoutlinecolour " onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber-1))"> &lt;
+    </button>
+    }
+    @if(Model.pageNumber * 5 >= Model.totalOrders){
+    <button class="btn btn-outline-primary btnoutlinecolour" onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber+1))" disabled>
         &gt;</button>
+    }
+    else{
+    <button class="btn btn-outline-primary btnoutlinecolour" onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber+1))" @(Model.pageNumber * 5 == Model.totalOrders ? "disable" : "")>
+        &gt;</button>
+    }
 </div>
 </div>
 <div class="d-flex ms-3" style="width:100%;">
@@ -29,9 +41,12 @@
             <div class="p-1" style="background-color: #efefef;">
                 <div class="d-flex justify-content-between align-items-center">
                     <label for="" class="text-color" style="font-weight: 600;"># @order.Key.Orderid</label>
+                    <div>
+                    <img src="~/images/clock-fill copy 2.svg" alt="">
                     <label for="" id="duration-waitingtime-@order.Key.Orderid"
                         data-createdatWaitingToken="@order.Key.Createdat?.ToString("o")">
                     </label>
+                    </div>
                     <script>
                         @* updateTimers(); *@
                     </script>
@@ -57,14 +72,21 @@
                             {
                                 @foreach (var modifier in itemDict.Value)
                                 {
-                                    <li><label for="">@modifier.Modifiername</label></li>
+                                    <li><label>@modifier.Modifiername</label></li>
                                 }
                             }
                         </div>
                     }
                 }
             </div>
-            <div class="p-1 container" style="background-color: #efefef;flex-grow:1;"></div>
+            <div class="p-1 container" style="background-color: #efefef;flex-grow:1;">
+                @if(order.Key.Ordercomment != ""){
+                    <div class="d-flex">
+                <label for="">Orders Instruction : <label for="" style="color: #00aae9;">@order.Key.Ordercomment</label></label>
+                    </div>
+                }
+            </div>
         </div>
     }
 </div>
+}

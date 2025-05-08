@@ -7,6 +7,7 @@ public interface IMenuOrderAppService
     int createOrder(OrderDetailsViewModel orderDetails);
     MenuOrderAppModel getAssignedTableDetails(int tableid);
     CustomerModel getcustomerDetails(int customerid,List<int>? tableid);
+    void getDashBoardDetails(int timeId,string fromDate,string startDate,DashboardViewModel model);
     Item getItem(int itemid);
     List<Item> getItemsForcategory(int categoryid,string searchedItem,string ItemType);
     List<ModifierModel> getModifiersForItem(int itemid);
