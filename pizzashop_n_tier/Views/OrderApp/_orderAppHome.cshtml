@@ -52,11 +52,10 @@
           $(this).removeClass('Available-Table').addClass('selectedTable');
           var sectionid = $(this).data('sectionid')
           var id = "table_" + sectionid;
-          @* alert(id) *@
-               setTimeout(1)
+          
+          setTimeout(1)
           if ($("#" + id + " .selectedTable").length > 0) {
-               @* alert("OK") *@
-                    $("#assignBtn_" + sectionid).prop('disabled', false)
+               $("#assignBtn_" + sectionid).prop('disabled', false)
           }
      });
      $(document).on('click', '.selectedTable', function () {
@@ -68,7 +67,7 @@
           }
      });
 
-     
+
 
      @* function assignTable() {
           

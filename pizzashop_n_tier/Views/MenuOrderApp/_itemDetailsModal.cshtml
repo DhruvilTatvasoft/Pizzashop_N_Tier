@@ -135,6 +135,8 @@
             calculateTax($("#subtotal").text().replace("₹", ""))
             calculateTheTotalAmount()
             isValid = false;
+            $("#itemDetailsModal").modal('hide');
+
 
         }
         if (!isValid) return;

@@ -545,7 +545,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         _context.SaveChanges();
         return true;
     }
-    public void getDashBoardDetails(DashboardViewModel model, int timeId = 1, string toDate = "",string fromDate = "")
+    public void getDashBoardDetails(DashboardViewModel model, int timeId = 1, string toDate = "", string fromDate = "")
     {
         DateTime? from = null;
         DateTime? to = null;
@@ -741,7 +741,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     Total = g.Sum(x => x.Totalamount)
                 })
                 .ToList();
-
             var customerGroup = _context.Customers
                                 .Where(o => o.Createdat.HasValue
                                 && o.Createdat.Value.Date >= monthStart
@@ -753,7 +752,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                                     Total = g.Count()
                                 })
                                 .ToList();
-
             foreach (var sg in salesGroup)
             {
                 if (dailySales.ContainsKey(sg.Date))
@@ -767,7 +765,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 }
             }
         }
-
         else if (timeId == 5)
         {
             if (from.HasValue && to.HasValue)
@@ -923,31 +920,32 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         })
     .ToList();
 
-
-      var leastSellingItems = sellingQuery
-    .GroupBy(oi => oi.Itemid)
-    .Select(g => new
-    {
-        ItemId = g.Key,
-        OrderCount = g.Select(oi => oi.Orderid).Distinct().Count(),
-        TotalQuantity = g.Sum(oi => oi.Orderitemquantity ?? 0)
-    })
-    .OrderBy(x => x.OrderCount)
-    .ThenBy(x => x.TotalQuantity)
-    .Take(2)
-    .Join(
-        _context.Items,
-        g => g.ItemId,
-        i => i.Itemid,
-        (g, i) => new sellingItemDetail
-        {
-            item = i,
-            OrderCount = g.OrderCount,
-            TotalQuantity = g.TotalQuantity
-        })
-    .ToList();
+        var customerCount = customerQuery.ToList().Count();
+        var leastSellingItems = sellingQuery
+      .GroupBy(oi => oi.Itemid)
+      .Select(g => new
+      {
+          ItemId = g.Key,
+          OrderCount = g.Select(oi => oi.Orderid).Distinct().Count(),
+          TotalQuantity = g.Sum(oi => oi.Orderitemquantity ?? 0)
+      })
+      .OrderBy(x => x.OrderCount)
+      .ThenBy(x => x.TotalQuantity)
+      .Take(2)
+      .Join(
+          _context.Items,
+          g => g.ItemId,
+          i => i.Itemid,
+          (g, i) => new sellingItemDetail
+          {
+              item = i,
+              OrderCount = g.OrderCount,
+              TotalQuantity = g.TotalQuantity
+          })
+      .ToList();
 
         var waitingListCount = _context.Waitingtokens.Count();
+
         model.totalsales = (float)totalSales;
         model.totalorders = totalOrders;
         model.averageOrderValue = (float)avgOrderValue;

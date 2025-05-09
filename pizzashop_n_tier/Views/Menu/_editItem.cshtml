@@ -135,26 +135,23 @@
                               <textarea class="form-control" placeholder="Leave a comment here"
                                  id="floatingTextarea2" style="height: 100px"
                                  asp-for="Description"></textarea>
-                              <label for="floatingTextarea2">description</label>
+                              <label for="floatingTextarea2">description </label>
                            </div>
                         </div>
                      </div>
                      <div class="row mb-2">
                         <div class="col-12">
                            <div class="form-floating">
-                              <div class="container-fluid"
-                                 style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;"> 
-                                 <input type="file" asp-for="ImagePath" id="ItemImage">
-                                 <div class="d-flex justify-content-center p-4 align-items-center">
-                                    <label for="fileUpload1" class="fileUploadLabel">
-                                    <img src="/images/icons8-cloud-upload-50.png"
-                                       style="margin-left: 47%;margin-top:2%;">
-                                    </label>
-                                    <div style="text-align: center;" class="ms-5">Drag and drop or Browse
-                                       Files @Model.ModifierModels.Count
-                                    </div>
-                                 </div>
-                              </div>
+                              <div class="container-fluid" style="padding: 0; border: 1px solid #dee2e6; border-radius: 0%;">
+                                            <input type="file" asp-for="@Model.ItemImagePathString" id="ItemImage" style="display: none;" />
+                                            <label for="ItemImage" class="fileUploadLabel" style="width: 100%; cursor: pointer;">
+                                                <div class="d-flex justify-content-center align-items-center p-4" style="width: 100%;">
+                                                   
+                                                    <img src="@(Model.ItemImagePathString != null ? $"{Model.ItemImagePathString}" : "/images/icons8-cloud-upload-50.png")" style="margin-right: 10px;width:25px;height:25px;">
+                                                    <div style="text-align: center;">@(Model.ItemImagePathString != null ? $"{Model.ItemImagePathString.Split('/')[2]}" : "Drag and drop or Browse Files")</div>
+                                                </div>
+                                            </label>
+                                        </div>
                            </div>
                         </div>
                      </div>
@@ -246,25 +243,6 @@
       document.querySelector(temp).remove();
       $("#modifier-group").val("Select Modifier Group(s)");
    }
-
-@* function getModifier() {
-      if($('#modifier-group').val() != 0){
-      console.log("changed");
-      var temporaryId = "#modifiergroup_" + $('#modifier-group').val();
-      console.log(temporaryId);
-      var modifiergroup = document.querySelector(temporaryId);
-      if (modifiergroup == null) {
-          $.ajax({
-              url: '/Menu/getModifiers',
-              type: 'GET',
-              data: { modifiergroupid: $('#modifier-group').val() },
-              success: function (data) {
-                  $(".loadModifiers").append(data);
-              }
-          });
-      }
-      }
-   } *@
         
         $(document).on('submit', '#EditItemForm', function(e) {
             e.preventDefault();
@@ -310,7 +288,6 @@
                         $('#ModelForEditItem').modal('hide');
                         toastr.success(response.success || "Item updated successfully");
                         loadTableData(response.categoryid,response.pageSize,response.pageNumber)
-                        
                     } else if (response.error) {
                         toastr.error(response.error);
                     }

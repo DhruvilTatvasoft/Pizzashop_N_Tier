@@ -159,6 +159,13 @@
     </div>
     <script>
         $(document).ready(function () {
+
+             $("document").ready(function(){
+      $('.sidebar ul li').removeClass('active-class');
+             $('.Users').addClass('active-class')
+  })
+
+
              var selectedCountry = $('#countryid').val();
 
             var selectedState = '@Model.stateid';

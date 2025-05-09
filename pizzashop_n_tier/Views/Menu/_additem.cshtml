@@ -121,22 +121,18 @@
                             <div class="row mb-2">
                                 <div class="col-12">
                                     <div class="form-floating">
-                                        <div class="container-fluid"
-                                            style="padding: 0%;border: 1px solid #dee2e6;border-radius: 0%;">
-                                            <input type="file" asp-for="@Model.ImagePath" id="ItemImage" style="width: 100%;height: 97px;position: absolute;" >
-                                            <div class="d-flex justify-content-center p-4 align-items-center">
-                                                <label for="fileUpload1" class="fileUploadLabel">
-                                                    <img src="/images/icons8-cloud-upload-50.png"
-                                                        style="margin-left: 47%;margin-top:2%;">
-                                                </label>
-                                                <div style="text-align: center;" class="ms-5">Drag and drop or Browse
-                                                    Files</div>
-                                            </div>
+                                        <div class="container-fluid" style="padding: 0; border: 1px solid #dee2e6; border-radius: 0%;">
+                                            <input type="file" asp-for="@Model.ImagePath" id="ItemImage" style="display: none;" onchange="displayImageName(event)" />
+                                            <label for="ItemImage" class="fileUploadLabel" style="width: 100%; cursor: pointer;">
+                                                <div class="d-flex justify-content-center align-items-center p-4" style="width: 100%;">
+                                                    <img id="uploadIcon" src="/images/icons8-cloud-upload-50.png" style="margin-right: 10px;width:30px;height : 30px;">
+                                                    <div id="imageText" style="text-align: center;">Drag and drop or Browse Files</div>
+                                                </div>
+                                            </label>
                                         </div>
-                                    </div>
+</div>
                                 </div>
                             </div>
-
                         </div>
                         <div class="right col-4 pe-1" style="background-color: antiquewhite;">
                             <div class="dropdown mt-2 me-2">
@@ -181,23 +177,22 @@
         });
         return JSON.stringify(object);
     }
-    @* function getModifier() {
-        console.log("changed");
-        var temporaryId = "#modifiergroup_" + $('#modifier-group').val();
-        console.log(temporaryId);
-        var modifiergroup = document.querySelector(temporaryId);
-     
-        if (modifiergroup == null) {
-            $.ajax({
-                url: '/Menu/getModifiers',
-                type: 'GET',
-                data: { modifiergroupid: $('#modifier-group').val() },
-                success: function (data) {
-                    $(".loadModifiers").append(data);
-                }
-            });
+
+   
+    function displayImageName(event) {
+        const file = event.target.files[0]; 
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewImage = document.getElementById('uploadIcon');
+                const imagePreview = document.getElementById('imageText');
+                previewImage.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+            const fileName = document.getElementById('fileName');
+            document.getElementById('imageText').textContent = file.name; 
         }
-    } *@
+    }
     if (!window.addItemFormHandlerInitialized) {
         window.addItemFormHandlerInitialized = true;
         

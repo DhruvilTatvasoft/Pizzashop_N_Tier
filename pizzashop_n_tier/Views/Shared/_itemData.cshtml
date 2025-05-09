@@ -8,7 +8,7 @@
     decimal totalModifierPrice = 0;
 }
 
-<div class="row" style="@(Model.customer == null ? "width:100%;height:80%;" : "width : 100%;height:10%;")">
+<div class="row" style="@(Model.customer == null ? "width:100%;height:100%;" : "width : 100%;height:100%;")overflow-x:hidden;overflow-y:auto;">
     <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
     @foreach (var item in Model.items)
     {

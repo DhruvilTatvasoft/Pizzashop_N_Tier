@@ -1,13 +1,100 @@
+@using Newtonsoft.Json
 @{
   Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
   ViewData["Title"] = "Dashboard Page";
+  var chartData = JsonConvert.SerializeObject(Model.dailySales);
+  var chartData2 = JsonConvert.SerializeObject(Model.totalCustomers);
 }
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js" type="text/javascript"></script>
+<script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
+
+
+
 @model DashboardViewModel
 <script>
   $("document").ready(function () {
     $('.sidebar ul li').removeClass('active-class');
     $('.dashboard').addClass('active-class')
+
+    var aData = @Html.Raw(chartData);
+    console.log(aData)
+    var aLabels = Object.keys(aData);
+    var aDatasets1 = Object.values(aData);
+    var dataT = {
+      labels: aLabels,
+      datasets: [{
+        data: aDatasets1,
+        fill: true,
+        backgroundColor: 'rgba(15, 135, 255, 0.2)',
+        borderColor: '#0F87FF',
+        borderWidth: 1
+      }]
+    };
+
+    var ctx = $(".revenuechart").get(0).getContext("2d");
+
+    var myNewChart = new Chart(ctx, {
+      type: 'line',
+      data: dataT,
+      options: {
+        responsive: true,
+        legend: { position: 'top' },
+        title: { display: false, text: 'Revenue' },
+        scales: {
+          xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' } }],
+          yAxes: [{ gridLines: { display: true }, display: true, ticks: { stepSize: 70000, beginAtZero: false } }]
+        }
+      }
+    });
+
+    var aData2 = @Html.Raw(chartData2);
+    console.log(aData2)
+    var aLabelsForCustomer = Object.keys(aData2);
+    var aDatasetsForCustomer1 = Object.values(aData2);
+    var dataTForCustomer = {
+      labels: aLabelsForCustomer,
+      datasets: [{
+        data: aDatasetsForCustomer1,
+        fill: true,
+        backgroundColor: 'rgba(15, 135, 255, 0.2)',
+        borderColor: '#0F87FF',
+        borderWidth: 1
+      }]
+    };
+
+    var ctxForCustomer = $("#customerGrowth").get(0).getContext("2d");
+
+    var myNewChartForCustomer = new Chart(ctxForCustomer, {
+      type: 'line',
+      data: dataTForCustomer,
+      options: {
+        responsive: true,
+        legend: { position: 'top' },
+        title: { display: false, text: 'Customer Growth' },
+        scales: {
+          xAxes: [{
+            gridLines: { display: true },
+            display: true,
+            scaleLabel: { display: false, labelString: '' }
+          }],
+          yAxes: [{
+            gridLines: { display: true },
+            display: true,
+        ticks: {
+          stepSize: 1,
+          beginAtZero: true
+        }
+      }]
+    }
+  }
+});
+
   })
+
+
+
+
 
   function detailsByFilter() {
     console.log("OK")
@@ -67,7 +154,7 @@
           </div>
           <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6 col-xs-12 pb-3 h-100">
             <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
-              <div class="row" style="height: 40%;" >
+              <div class="row" style="height: 40%;">
                 <div class="container-fluid d-flex justify-content-end">
                   <div class="totalOrdersIconDiv">
                     <img src="/images/total-orders.svg" class="p-2">
@@ -134,20 +221,18 @@
             <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row">
                 <div class="container-fluid">
+
                   <div>
-                    <h5>Revenue</h5>
+                    <h5 class="mb-0">Revenue</h5>
                   </div>
                 </div>
               </div>
-              <div class="row py-1">
-                <div class="container-fluid d-flex align-items-center justify-content-center">
-                  <div class="chartInsideIcon"></div>
-                  <span class="ps-1">Revenue</span>
-                </div>
-              </div>
               <div class="row">
-                <div class="container-fluid">
-                  <canvas id="revenueChart" class="dashboardGraphs"></canvas>
+              </div>
+              <div style="font-family: Corbel; font-size: small; text-align: center;height: 80%;" class="row">
+                <div style="width: 100%; height: 100%;">
+                  <canvas class="revenuechart" style="padding: 0; margin: auto; display: block;" width="400"
+                    height="140"></canvas>
                 </div>
               </div>
             </div>
@@ -156,18 +241,14 @@
             <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row">
                 <div class="container-fluid">
-                  <h5>Customer Growth</h5>
+                  <h5 class="mb-0">Customer Growth</h5>
                 </div>
               </div>
               <div class="row py-1">
-                <div class="container-fluid d-flex align-items-center justify-content-center">
-                  <div class="chartInsideIcon"></div>
-                  <span class="ps-1">Customer</span>
-                </div>
               </div>
-              <div class="row">
-                <div class="container-fluid">
-                  <canvas id="customerGrowth" class="dashboardGraphs"></canvas>
+              <div class="row" style="height : 80%;">
+                <div class="container-fluid" style="height : 100%;">
+                  <canvas id="customerGrowth" class="dashboardGraphs" height="100"></canvas>
                 </div>
               </div>
             </div>
@@ -322,19 +403,19 @@
               <div class="row">
                 <div class="container-fluid d-flex justify-content-end">
                   <div class="totalSalesIconDiv">
-                    <img src="/images/waiting-list.svg" class="p-2">
+                    <img src="/images/account.png" class="p-2" style="width:35px;height : 35px;">
                   </div>
                 </div>
               </div>
               <div class="container-fluid pt-5">
                 <div class="row pt-3">
                   <div class="container-fluid">
-                    <h4 class="mb-1" id="waitingListCountText">@Model.waitingListCount</h4>
+                    <h4 class="mb-1" id="waitingListCountText">@Model.noOfCustomers</h4>
                   </div>
                 </div>
                 <div class="row">
                   <div class="container-fluid">
-                    <span>Waiting List Count</span>
+                    <span>new customer count</span>
                   </div>
                 </div>
               </div>

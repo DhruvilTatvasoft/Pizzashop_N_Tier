@@ -18,8 +18,6 @@
         @if(@Model.customers.Count <= 0){
 
             <tr>
-                
-    using NPOI.SS.Formula.Functions;
                 <td colspan="5" class="text-center"><img src="~/images/exclamation-circle-fill.svg" class="p-3" alt="">No Orders Found</td>
                 
             </tr>
@@ -27,7 +25,7 @@
         else{
         @foreach (var customer in @Model.customers)
         {
-            <tr onclick="loadCustomerHistory(@customer.Customerid)">
+            <tr onclick="loadCustomerHistory(@customer.Customerid)" class="customerrow" >
                 <td><label class="ps-2">@customer.Customername</label></td>
                 <td><label for="">@customer.Email</label></td>
                 <td><label for="">@customer.Phonenumber</label></td>

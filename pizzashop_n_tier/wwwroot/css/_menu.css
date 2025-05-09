@@ -13,6 +13,14 @@
     padding-top: 58px;
 }
 
+.selectedcategory{
+    background-color: #0066A7;
+    color: white;
+    border-top-right-radius: 20px;
+    border-bottom-right-radius: 20px;
+
+}
+
 .navbar {
     position: fixed;
     width: 100%;
@@ -29,9 +37,8 @@ ul {
     color: grey;
 }
 .MenuSidebarContainer ul li:hover {
-    background-color: #0066A7;
-    border-top-right-radius: 20px;
-    border-bottom-right-radius: 20px;
+    background-color: #dddddd;
+    
     color: white;
 }
  

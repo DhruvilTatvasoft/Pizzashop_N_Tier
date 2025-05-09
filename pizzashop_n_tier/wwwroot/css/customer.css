@@ -14,6 +14,15 @@ body{
         margin-right: 2%;
         border-color: transparent;
     }
+    .customerrow {
+        background-color: #c6c3c3;
+        transition: background-color 0.3s ease;
+    }
+    .customerrow:hover {
+        background-color: #878787;
+        cursor: pointer;
+    }
+  
     .part-1 div{
         border:1px solid #c6c3c3;
         border-radius: 5px;

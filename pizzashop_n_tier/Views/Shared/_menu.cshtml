@@ -10,7 +10,7 @@
 }
 
 
-<div class="container-fluid w-100 h-100 p-0" style="overflow-y: auto; overflow-x: hidden;">
+<div class="container-fluid w-100 h-100 p-0" style="overflow-y: hidden; overflow-x: hidden;">
     <div class="d-flex w-100 h-100">
         <input type="hidden" id="IsTableAssigned" asp-for="isTableAssigned" />
         <input type="hidden" id="tableid" asp-for="tableid" />
@@ -64,19 +64,13 @@
             }
         });
     }
-    function loadItemsForCategory(id,type) {
-
-        var searchedItem = $("#searchItemForCategory").val();
-
-        @* id = $("#selectedCategory").val(); *@
-            @* id = 2; *@
+    function loadItemsForCategory(element,id,type) {
+          $(".MenuSidebarContainer ul li").removeClass("selectedcategory  text-white"); 
+    $(element).addClass("selectedcategory text-white");
+    var searchedItem = $("#searchItemForCategory").val();
     var tokenId = $('#tokenid').val();
         var tableIds = @Html.Raw(Tableids);
 
-        console.log('CategoryId:', id);
-        console.log('TokenId:', tokenId);
-        console.log('TableIds:', tableIds);
-        console.log('SearchedItem:', searchedItem);
         if (searchedItem) {
             id = $("#selectedCategory").val();
         }
@@ -90,10 +84,10 @@
             ItemType: type
         };
 
-        @* console.log('Request Payload:', requestedData);  *@
+       
     var data = JSON.stringify(requestedData);
 
-        console.log('Request Payload:', data);
+       
 
 
         $.ajax({
@@ -136,9 +130,9 @@
                 var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
                 var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
                 var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
-                console.log("total amount is " + totalAmount);
+               
                 totalAmount += (itemprice + modifiersrate) * quantity;
-                console.log("total becomes   " + totalAmount);
+                
                 $("#subtotal").text("₹" + totalAmount);
                 calculateTax($("#subtotal").text().replace("₹", ""))
                 calculateTheTotalAmount()

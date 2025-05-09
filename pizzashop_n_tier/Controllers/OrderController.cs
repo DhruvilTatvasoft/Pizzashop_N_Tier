@@ -37,7 +37,7 @@ namespace pizzashop_n_tier.Controllers
         {
             OrderViewModel model = new OrderViewModel();
             model.status = _orderService.getAllStatus();
-            return View("orders", model);
+            return View("Orders", model);
         }
         public IActionResult showOrderDetailsByFilter(int? status = 0, string? searchedOrder = "", string? filterBy = "All Time", DateTime? startDate = null, DateTime? endDate = null,int pageNumber=1,int pageSize=4,string sortBy="orderid",string sortOrder="asc")
         {

@@ -257,7 +257,6 @@ public class ModifierRepository : IModifierRepository
         }
         _context.SaveChanges();
     }
-
     public void deleteModifierGroup(int modifierGroupId)
     {
         Modifiergroup modifierGroup = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupid == modifierGroupId)!;
@@ -276,7 +275,6 @@ public class ModifierRepository : IModifierRepository
         List<Unit> units = _context.Units.Where(u => u.Isdeleted == false).ToList();
         return units;
     }
-
     public bool AddNewModifier(ModifierModel modifier)
     {
         Modifier isExist = _context.Modifiers.FirstOrDefault(Modifier=>Modifier.Modifiername.ToLower().Trim() == modifier.Modifiername.ToLower().Trim() && Modifier.Modifiergroupid == modifier.Modifiergroupid && Modifier.Isdeleted == false);
@@ -309,7 +307,6 @@ public class ModifierRepository : IModifierRepository
 
         }
     }
-
     public Modifier getModifierFromDb(int modifierid)
     {
 
@@ -317,7 +314,6 @@ public class ModifierRepository : IModifierRepository
         modifier.Modifiergroup = _context.Modifiergroups.FirstOrDefault(modifierGroup => modifierGroup.Modifiergroupid == modifier.Modifierid)!;
         return modifier;
     }
-
     public void updateModifier(ModifierModel modifier, int modifierGroupId)
     {
         Modifier m = _context.Modifiers.FirstOrDefault(oldModifier => oldModifier.Modifierid == modifier.Modifierid);
@@ -333,7 +329,6 @@ public class ModifierRepository : IModifierRepository
         _context.Modifiers.Update(m);
         _context.SaveChanges();
     }
-
     public void updateModifiersForItem(List<ModifierModel> model, int? itemid)
     {
         List<int> modifierGroupids = new List<int>();
@@ -384,7 +379,6 @@ public class ModifierRepository : IModifierRepository
             _context.SaveChanges();
         }
     }
-
     public ItemModel getAllMOdifiersForModifierGroup(int? modifierGroupId,int pageSize,int pageNumber)
     {
         ItemModel model = new ItemModel();
@@ -434,7 +428,6 @@ public class ModifierRepository : IModifierRepository
         }
         return model;
     }
-
     public List<Modifier> getModifiersForMGroupForItem(int modifiergroupId)
     {
         List<Modifier> modifiers = _context.Modifiers.Where(m => m.Modifiergroupid == modifiergroupId && m.Isdeleted == false).ToList();
@@ -444,14 +437,12 @@ public class ModifierRepository : IModifierRepository
         });
         return modifiers;
     }
-
     public ItemModel getModifiersForModifierGroup(int modifiergroupid)
     {
        ItemModel model = new ItemModel();
        model.modifiers = _context.Modifiers.Where(modifier=>modifier.Modifiergroupid == modifiergroupid && modifier.Isdeleted == false).ToList();
        return model;
     }
-
     public Modifier getModifierFromId(int modifierid)
     {
         return _context.Modifiers.FirstOrDefault(modifier=>modifier.Modifierid == modifierid)!;

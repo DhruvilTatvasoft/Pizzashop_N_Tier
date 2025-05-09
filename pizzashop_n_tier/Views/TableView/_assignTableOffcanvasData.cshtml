@@ -42,7 +42,7 @@
     <label for="" class="headerTEXT mb-3" style="font-weight: 600;">Customer Details </label>
     <form id="assigntableForm">
       <div class="row">
-        <input type="text" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
+        <input type="hidden" id="tokenid" asp-for="@Model.WaitingToken.tokenId">
         <div class="form-group col-12 mb-3 ">
           <input type="email" class="form-control p-2" id="customer-email" aria-describedby="emailHelp"
             asp-for="@Model.WaitingToken.customer.email" placeholder="Email*">
@@ -111,48 +111,53 @@
 
 
   $("#assigntableForm").on("submit", function (e) {
-  e.preventDefault();
+    e.preventDefault();
 
-  var tokenid = parseInt($("#tokenid").val());
-  var tableid = parseInt($(".selectedTable").data("tableid"));
-  var assignedtableIds = @Html.Raw(tableIDS);
+    var tokenid = parseInt($("#tokenid").val());
+    var tableid = parseInt($(".selectedTable").data("tableid"));
+    var assignedtableIds = @Html.Raw(tableIDS);
 
-  var requestedData = {
-    tokenid: tokenid,
-    tableids: assignedtableIds
-  };
-
-  if ($("#tokenid").val() === '') {
-    alert("token id 0 found");
-
-    var customerModal = {
-      name: $("#customer-name").val(),
-      phone: $("#customer-phone").val(),
-      email: $("#customer-email").val(),
-      PersonCount: parseInt($("#customer_PersonCount").val()) || 0,
-      sectinid: parseInt($("#customer_tableSection").val()) || null,
+    var requestedData = {
+      tokenid: tokenid,
       tableids: assignedtableIds
     };
 
-    requestedData.customerModal = customerModal;
-  }
+    if ($("#tokenid").val() === '') {
+      alert("token id 0 found");
 
-  var data = JSON.stringify(requestedData);
-  console.log("Final Data to Send:", requestedData);
+      var customerModal = {
+        name: $("#customer-name").val(),
+        phone: $("#customer-phone").val(),
+        email: $("#customer-email").val(),
+        PersonCount: parseInt($("#customer_PersonCount").val()) || 0,
+        sectinid: parseInt($("#customer_tableSection").val()) || null,
+        tableids: assignedtableIds
+      };
 
-  $.ajax({
-    url: "@Url.Action("assignTable", "TableView")",
-    method: "POST",
-    dataType: "html",
-    contentType: "application/json",
-    data: data,
-    success: function (response) {
-      $(".loadTabBody").html(response);
-    },
-    error: function (xhr, status, error) {
-      alert("Error: " + error);
+      requestedData.customerModal = customerModal;
     }
+
+    var data = JSON.stringify(requestedData);
+    console.log("Final Data to Send:", requestedData);
+
+    $.ajax({
+      url: "@Url.Action("assignTable", "TableView")",
+      method: "POST",
+      dataType: "html",
+      contentType: "application/json",
+      data: data,
+      success: function (response) {
+        $(".loadTabBody").html(response);
+        if ($(this).attr('onclick')) {
+          e.preventDefault();
+        }
+        $('.options a').removeClass('selectedOption');
+        $("#menuInOrderApp").addClass('selectedOption');
+      },
+      error: function (xhr, status, error) {
+        alert("Error: " + error);
+      }
+    });
   });
-});
 
 </script>
