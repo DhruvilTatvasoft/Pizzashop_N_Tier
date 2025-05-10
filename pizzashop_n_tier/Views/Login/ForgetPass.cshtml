@@ -1,0 +1,71 @@
+@model LoginViewModel
+@{
+  ViewData["Title"] = "Forgot password Page";
+}
+    <style>
+        html,body{
+            height: 100%;
+            width: 100%;
+            /* overflow: hidden; */
+        }
+        .img-container img{
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+        }
+        .container-fluid{
+            overflow: hidden;
+        }
+        .form-container{
+            background-color: #D8EFF7;
+            
+        }
+        .logo-img{
+            width: 14%;
+            height: auto;
+        }
+        .ps-label{
+            font-size: 36px;
+            color: #1D7BB9;
+        }
+        input{
+            height: 25%;
+        }
+        .label-1{
+            font-weight: bold;
+            font-size: 20px;
+        }
+        .label-2{
+            font-size: 13px;
+            margin-bottom: 4%;
+        }
+
+    </style>
+@* <body> *@
+                    <form class="myForm form-group w-75 mt-4" asp-controller="Login" asp-action="ForgetPass" method="post">
+                        <label for="" class="label-1 mb-3">Forget Password</label><br>
+                        <!-- <input type="text" class="form-control mb-4" placeholder="Username" required /> -->
+                        <label for="" class="label-2" class="mb-4">Enter your email and we'll send youa a link to reset yourpassword</label>
+                        <div class="input-group mb-2">
+                            <input type="text" class="form-control" id="emailInput" name="Email" placeholder="Email*" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <span class="input-group-text" id="basic-addon2" style="
+                                border-radius: 0px 8px 7px 0px;
+                                background: white;
+                                border-left-: 0;
+                                padding: 0.264rem 0.75rem;
+                                border-left: none;
+                            "><img src="~/images/manager.png" style="width:25px;" alt=""></span>
+                            </div>
+                          </div>
+                            <span asp-validation-for="username" class="mb-4 text-danger invalidmsg"></span>
+                        <button type="submit" class="btn btn-primary w-100 mt-2">Send</button>
+                        <div class="w-100 d-flex justify-content-center mt-2">
+                            <a  style="text-decoration: none;"  asp-controller="Login" asp-action="Index" >Back to Login</a>
+                        </div>
+                      </form>
+
+
+@* </body>
+</html> *@
+

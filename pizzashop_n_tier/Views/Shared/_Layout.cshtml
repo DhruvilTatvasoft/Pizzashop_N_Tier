@@ -1,0 +1,86 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @* <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" /> *@
+    <link rel="stylesheet" href="~/css/Layout.css" asp-append-version="true" />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet">
+  @* <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> *@
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+</head>
+<body>
+    
+    <div class="container-fluid vh-100 p-0">
+        <div class="row h-100">
+            <div class="col-lg-6 col-md-6 img-container p-0">
+              <img src="~/images/dominos_background.jpg" alt="">
+            </div>
+            <div class="col-lg-6 col-md-6 form-container d-flex align-items-center justify-content-center">
+                <div class="pizashop-logo mb-4">
+                </div>
+                <div class="d-flex flex-column align-items-center">
+                    <div class="d-flex align-items-center justify-content-center">
+                        <img src="~/images/pizzashop_logo.png" class="logo-img" alt="Company Logo"/>
+                        <label for="" class="ps-label">PIZZASHOP</label>
+                    </div>
+                    @RenderBody()
+                </div>
+            </div>
+        </div>
+    </div>  
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+ <!-- Toastr CSS, jQuery , JS -->
+  
+<script>
+   
+
+     $(function () {
+            var message = '@Html.Raw(TempData["ToastrMessage"])';
+            var type = '@Html.Raw(TempData["ToastrType"])';
+            if (message.trim() !== '') {
+                switch(type){
+                    case 'success':
+                    toastr.success(message)
+                    break;
+                    case 'error':
+                    toastr.error(message)
+                    break;
+                    case 'warning':
+                    toastr.warning(message)
+                    break;
+                    case 'info':
+                    toastr.info(message)
+                }
+            }
+        });
+    toastr.options = {
+        "closeButton": true,      // Show close button
+        "debug": false,
+        "newestOnTop": true,
+        "progressBar": true,      // Show progress bar
+        "positionClass": "toast-top-right", // Change position
+        "preventDuplicates": true,
+        "onclick": null,
+        "showDuration": "300",
+        "hideDuration": "1000",
+        "timeOut": "2000",        // Auto-close after 5 seconds
+        "extendedTimeOut": "1000",
+        "showEasing": "swing",
+        "hideEasing": "linear",
+        "showMethod": "fadeIn",
+        "hideMethod": "fadeOut"
+    };
+
+
+</script>
+
+</body>
+
+</html>

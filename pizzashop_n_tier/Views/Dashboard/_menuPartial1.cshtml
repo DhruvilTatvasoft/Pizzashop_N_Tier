@@ -1,0 +1,107 @@
+@model MenuModel
+<partial name="_ValidationScriptsPartial" />
+<div class="d-flex justify-content-between p-2 mb-3">
+    <label class=" c-text">Category</label>
+    <button type="submit" class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#exampleModal5"> +
+    </button>
+</div>
+<div class="scrollbar w-100">
+    <div class="scrollbox w-100 h-100">
+        <ul class=" mt-2 w-100 h-100 ">
+           
+            @foreach (var category in Model.menuList)
+            {
+                <li class="w-100">
+
+                    <label for="" class="ms-0" style="font-size: 13px;"  onclick="loadTableData(@category.categoryId)">≣ @category.categoryName</label>
+                    <div class="d-flex" style="margin-left:auto;">
+                        <img src="~/images/edit.png" class="pe-2" onclick="openEditModal('@category.categoryId', '@category.categoryName','@category.description')" style="width:25px;cursor:pointer;" alt="">
+                        <img src="~/images/trash-fill.svg" style="width:15px;cursor:pointer;" onclick="deletecategory(@category.categoryId)" alt="">
+                    </div>
+                </li>
+            }
+        </ul>
+    </div>
+</div>
+<form method="Post" asp-controller="Dashboard" asp-action="EditCategory">
+    <div class="modal fade" id="exampleModal6" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header" style="border-bottom: none;">
+                    <h5 class="modal-title" id="exampleModalLabel">edit Category</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body pb-0">
+                    <div class="mb-3">
+                        
+                        <input type="text" class="form-control" placeholder="Name" asp-for="@Model.m.categoryName" 
+                            style="height:10%;" id="recipient-name" >
+                            <span asp-validation-for="@Model.m.categoryName" class="mb-4 text-danger invalidmsg"></span>
+                        <input type="text" asp-for="@Model.m.categoryId" id="hiddnField" hidden>
+                    </div>
+                    <div class="mb-3">
+                        <textarea class="form-control" placeholder="Description" style="height:100%;"
+                            asp-for="@Model.m.description" id="message-text" >gdhjdg</textarea>
+                            <span asp-validation-for="@Model.m.description" class="mb-4 text-danger invalidmsg"></span>
+                    </div>
+                </div>
+                <div class="modal-footer pt-0" style="border-top: none;">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Edit</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+ <form method="Post" asp-controller="Dashboard" asp-action="AddCategory">
+            <div class="modal fade" id="exampleModal5" tabindex="-1" aria-labelledby="exampleModalLabel"
+                aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header" style="border-bottom: none;">
+                            <h5 class="modal-title" id="exampleModalLabel">New message</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body pb-0">
+                            <div class="mb-3">
+                               
+                                <input type="text" class="form-control" placeholder="Name" asp-for="m.categoryName"
+                                    style="height:10%;" id="recipient-name" required>
+                                <span asp-validation-for="@Model.m.categoryName" class="text-danger"></span>
+                            </div>
+                            <div class="mb-3">
+                                <textarea class="form-control" placeholder="Description" style="height:100%;"
+                                    asp-for="m.description" id="message-text"></textarea>
+                                <span asp-validation-for="@Model.m.description" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="modal-footer pt-0" style="border-top: none;">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-primary">+Add</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+<script>
+function openEditModal(categoryId,categoryname,description){
+    console.log(categoryId);
+    $('#exampleModal6').modal('show');
+    $('textarea').val(description);
+    $('#recipient-name').val(categoryname);
+    $('#hiddnField').val(categoryId);
+   };
+   function deletecategory(categoryId) {
+        $.ajax({
+            url: '@Url.Action("DeleteCategory", "Dashboard")',
+            type: "GET",
+            data: { categoryId: categoryId },
+            cache: false,
+            success: function (data) {
+                $(".menubody").html(data);
+                console.log(categoryId);
+            }
+        });
+    };
+</script>
+
