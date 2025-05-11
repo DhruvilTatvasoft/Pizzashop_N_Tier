@@ -135,14 +135,14 @@
             <div class="container-fluid bg-white pb-3 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row" style="height: 40%;">
                 <div class="container-fluid d-flex justify-content-end">
-                  <div class="totalSalesIconDiv">
+                  <div class="totalSalesIconDiv p-1" style="background-color:  #a2f3a2;"> 
                     <img src="/images/total-sales.svg" class="p-2">
                   </div>
                 </div>
               </div>
               <div class="row">
                 <div class="container-fluid">
-                  <h4 class="mb-1" id="totalSalesText">₹@Model.totalsales</h4>
+                  <h4 class="mb-1" id="totalSalesText">@Model.totalsales.ToString("C")</h4>
                 </div>
               </div>
               <div class="row">
@@ -163,7 +163,7 @@
               </div>
               <div class="row">
                 <div class="container-fluid">
-                  <h4 class="mb-1" id="totalOrdersText">₹@Model.totalorders</h4>
+                  <h4 class="mb-1" id="totalOrdersText">@Model.totalorders</h4>
                 </div>
               </div>
               <div class="row">
@@ -184,7 +184,7 @@
               </div>
               <div class="row">
                 <div class="container-fluid">
-                  <h4 class="mb-1" id="avgOrderValue">₹@Model.averageOrderValue</h4>
+                  <h4 class="mb-1" id="avgOrderValue">@Model.averageOrderValue.ToString("C")</h4>
                 </div>
               </div>
               <div class="row">
@@ -205,7 +205,7 @@
               </div>
               <div class="row">
                 <div class="container-fluid">
-                  <h4 class="mb-1">₹1630</h4>
+                  <h4 class="mb-1"></h4>
                 </div>
               </div>
               <div class="row">
@@ -379,8 +379,8 @@
             <div class="container-fluid bg-white pb-3 ps-0 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row">
                 <div class="container-fluid d-flex justify-content-end">
-                  <div class="totalSalesIconDiv">
-                    <img src="/images/waiting-list.svg" class="p-2">
+                  <div class="waitingListCount">
+                    <img src="/images/waiting-list.svg" class="p-2" style="width:35px;height : 35px;">
                   </div>
                 </div>
               </div>
@@ -402,7 +402,7 @@
             <div class="container-fluid bg-white pb-3 ps-0 pt-2 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row">
                 <div class="container-fluid d-flex justify-content-end">
-                  <div class="totalSalesIconDiv">
+                  <div class="newCustomerCount">
                     <img src="/images/account.png" class="p-2" style="width:35px;height : 35px;">
                   </div>
                 </div>

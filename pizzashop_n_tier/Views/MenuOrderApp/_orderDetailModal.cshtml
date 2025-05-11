@@ -247,6 +247,7 @@
             uniqueids: itemDetails,
             orderid: @Html.Raw(Json.Serialize(Model.orderid))
        }
+       debugger
         $.ajax({
             url: "@Url.Action("cancelTheOrder", "MenuOrderApp")",
             type: "POST",

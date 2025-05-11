@@ -14,13 +14,13 @@
 
   <div class="content pt-3 w-100">
     <div class="header d-flex align-items-center justify-content-center mb-4 d-flex">
-      <h1>User</h1>
+      <h1>User @(Context.Items.ContainsKey("PermissionDenied"))</h1>
       <div class="search-add d-flex">
 
         <input type="search" class="form-control" id="search-record" onkeyup="loadPage(1)" aria-describedby="emailHelp"
           placeholder="Search">
         <form method="GET" asp-controller="Dashboard" asp-action="AddUser">
-          @if(canViewUsers){
+          @if(!Context.Items.ContainsKey("PermissionDenied")){
           <button type="submit" class="btn btn-primary" style="height:100%;">+ Add <span>user </span></button>
           }
           else{

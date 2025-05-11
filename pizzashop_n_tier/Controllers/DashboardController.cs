@@ -156,7 +156,7 @@ public class DashboardController : Controller
     }
 
     [HttpGet]
-   
+    [Authorize(Policy = "Users_CanEditAdd")]
     public IActionResult AddUser()
     {
         UserDetailModel model = new UserDetailModel();

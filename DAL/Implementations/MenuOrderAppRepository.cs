@@ -294,7 +294,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     public MenuOrderAppModel getRunningTableOrder(int tableid)
     {
         OrderDetailsViewModel model = new OrderDetailsViewModel();
-        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid)?.Orderid ?? 0;
+        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid && orderTable.Isdeleted == false)?.Orderid ?? 0;
         List<int> itemids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderid).Select(orderedItem => orderedItem.Itemid).ToList();
         List<Item> items = new List<Item>();
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
@@ -503,7 +503,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         foreach (var itemid in orderedItemIds)
         {
             Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy != item.Orderitemquantity)
+            if (item.Readyitemquanitiy < 1)
             {
                 return false;
             }
@@ -512,6 +512,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         order.Statusid = 1;
         order.PaymentStatus = "Completed";
         Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable => OrderedTable.Orderid == itemdetails.orderid)!;
+        orderedTable.Isdeleted = true;
         Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
         table.Status = true;
         table.Statusname = "Available";
@@ -528,7 +529,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         foreach (var itemid in orderedItemIds)
         {
             Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy > 0)
+            if (item.Readyitemquanitiy > 0  )
             {
                 return false;
             }
@@ -537,6 +538,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
         order.Statusid = 2;
         Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable => OrderedTable.Orderid == itemdetails.orderid)!;
+        orderedTable.Isdeleted = true;
         Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
         table.Status = true;
         table.Statusname = "Available";
@@ -557,6 +559,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         var query = _context.Orders.AsQueryable();
         var customerQuery = _context.Customers.AsQueryable();
         var sellingQuery = _context.Orderitems.AsQueryable();
+
         DateTime rangeStart = now;
         if (timeId == 2) rangeStart = now.AddDays(-6);
         if (timeId == 3) rangeStart = now.AddDays(-29);

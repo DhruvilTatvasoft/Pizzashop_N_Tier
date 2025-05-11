@@ -4,7 +4,9 @@ public class DashboardViewModel{
     public float totalsales{get;set;}
     public int totalorders{get;set;}
     public float averageOrderValue{get;set;}
-    public List<sellingItemDetail> topSellingItem{get;set;}
+
+    public DateTime averageWaitingTime { get;set;}
+    public List<sellingItemDetail> topSellingItem { get; set; }
 
     public List<sellingItemDetail> leastSellingItem{get;set;}
     public int waitingListCount{get;set;}

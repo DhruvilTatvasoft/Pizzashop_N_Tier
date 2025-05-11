@@ -27,8 +27,6 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
         }
         var RoleNameForPermission = roleName + "_CanViewOrderApp";
         var permissions = _rolesAndPermissionServices.GetPermissionForAuthorization(roleName);
-        // var roles = _rolesAndPermissionServices.GetRolesForOrderApp();
-        // if (permissions.Contains(requirement.Permission) && roles.Contains(RoleNameForPermission))
         if (permissions.Contains(requirement.Permission))
         {
             context.Succeed(requirement);

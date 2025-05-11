@@ -288,6 +288,7 @@ public class OrderRepository : IOrderRepository
             bool hasItems = false;
             List<Orderitem> orderedItems = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderId).ToList();
             var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+            bool isAllItemReady = true;
             foreach (var Ordereditem in orderedItems)
             {
                 var dbItem = categoryid != 0
@@ -295,17 +296,19 @@ public class OrderRepository : IOrderRepository
                      : _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid);
                 
                 bool addItem = true;
+                
                 if (dbItem == null)
                 {
                     hasItems = false;
                 }
                 else
                 {
-                    var newItem = new Item{
-                    Itemname = dbItem.Itemname,
-                    Itemid = dbItem.Itemid,
-                    Itemquantity = 0
-                };
+                    var newItem = new Item
+                    {
+                        Itemname = dbItem.Itemname,
+                        Itemid = dbItem.Itemid,
+                        Itemquantity = 0
+                    };
                     if (IsReady == null)
                     {
                         newItem.Itemquantity = Ordereditem.Orderitemquantity ?? 0;
@@ -313,6 +316,10 @@ public class OrderRepository : IOrderRepository
                     else if (IsReady == true)
                     {
                         newItem.Itemquantity = Ordereditem.Readyitemquanitiy ?? 0;
+                        if (Ordereditem.Readyitemquanitiy != Ordereditem.Orderitemquantity)
+                        {
+                            isAllItemReady = false;
+                        }
                     }
                     else
                     {
@@ -341,7 +348,17 @@ public class OrderRepository : IOrderRepository
             if (hasItems)
             {
                 Order order = _context.Orders.FirstOrDefault(o => o.Orderid == orderId)!;
+                if (IsReady == true)
+                {
+                    if (isAllItemReady == true)
+                    {
+                        model.Add(order, itemModifierList);
+                    }
+                }
+                else
+                { 
                 model.Add(order, itemModifierList);
+                }
             }
         }
         kotModel.pageNumber = pageNumber;

@@ -108,8 +108,6 @@ C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\ite
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\itext.sign.dll
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.AspNetCore.Authentication.JwtBearer.dll
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.AsyncInterfaces.dll
-C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.Memory.dll
-C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Data.SqlClient.dll
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.dll
 C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.EntityFrameworkCore.Abstractions.dll
