@@ -15,6 +15,7 @@ namespace BAL.Interfaces
         CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid);
         
         List<CustomerModel> getCustomerTokensForSection(int sectionid,List<int> tableid);
+        int? getMaxPersonCountForSection(List<int> tableids);
         int getSectionIdOfToken(int tokenid);
         Dictionary<Section,int> getSectionsWithWaitingTokens();
         List<CustomerModel> getSuggestedCustomerList(string name);

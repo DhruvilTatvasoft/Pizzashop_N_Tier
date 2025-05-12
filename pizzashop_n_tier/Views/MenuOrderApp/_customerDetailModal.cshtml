@@ -32,6 +32,7 @@
                             <label for="no of persons" class="form-label"
                                 style="font-size: 61%;top: -12px;left: -1px;">No of
                                 Person(s)<span class="text-danger">*</span></label>
+                            <input type="hidden" id="maxCapacity" asp-for="@Model.customer.maxcapacity">
                             <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
                                 asp-for="@Model.customer.PersonCount" id="personCount">
                             <span class="text-danger pt-2"  asp-validation-for="@Model.customer.PersonCount"></span>

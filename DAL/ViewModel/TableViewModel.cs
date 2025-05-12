@@ -9,6 +9,8 @@ public class TableViewModel
     public WaitingTokenModel WaitingToken{get;set;}
 
     public List<int> tables{get;set;}
+
+    public int? maxPersonCount{get;set;} 
 }
 public class SectionViewModel{
     public Section section{get;set;}
@@ -26,6 +28,8 @@ public class assignTableDetails{
     public int? orderid{get;set;}
 
     public CustomerModel? customerModal{get;set;} 
+
+    public bool? ordercreated{get;set;}
 
 
 }

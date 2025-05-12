@@ -20,4 +20,5 @@ public interface IItemRepository
   Item getItemFromItemId(int itemId);
   void updateItemdetails(ItemViewModel model, string imagepath);
   Category getCategoryById(int categoryId);
+    void addOrRemoveFromFavorites(int id, string action);
 }

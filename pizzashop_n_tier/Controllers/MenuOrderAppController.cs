@@ -66,6 +66,8 @@ public class MenuOrderAppController : Controller
 
         return PartialView("_itemData", responseModel);
     }
+
+
     [HttpPost]
     public IActionResult getOrderDetails([FromBody] assignTableDetails model)
     {
@@ -130,6 +132,22 @@ public class MenuOrderAppController : Controller
         return Json(new { success = "Customer Details Save successfully" });
     }
 
+    [HttpGet]
+    public IActionResult GenerateQRCode(string text)
+    {
+        if (string.IsNullOrEmpty(text))
+        {
+            return BadRequest("Text is required to generate a QR code.");
+        }
+        var qrCodeImage = _menuOrderAppService.GenerateQRCode(text);
+        return File(qrCodeImage, "image/png");
+    }
+    [HttpPost]
+    public IActionResult addOrRemoveFromFavorites(int itemid,string process)
+    {
+        _itemService.addOrRemoveFromFavorites(itemid,process);
+        return Ok();
+    }
 
     [HttpPost]
     public IActionResult addItemInOrder(int itemid, List<int> modifiers, string uniqueId, int? orderid)

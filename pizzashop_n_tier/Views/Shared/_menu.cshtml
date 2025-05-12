@@ -7,6 +7,7 @@
     {
         Tableids = Json.Serialize(Model.customer.tableids);
     }
+    var isFromQr1 = ViewBag.isFromQr;
 }
 
 
@@ -18,6 +19,7 @@
         <input type="hidden" id="customerid" asp-for="customer.customerId">
         <input type="hidden" id="orderid" asp-for="orderid">
         <input type="hidden" id="totalpersonCount" asp-for="customer.PersonCount">
+        <h1>@ViewBag.isFromQr</h1>
         <div class="MenuSidebarContainer h-100"></div>
         <div class="MenuBodyContainer w-100 h-100"></div>
     </div>
@@ -33,7 +35,7 @@
                 tableids: @Html.Raw(Tableids),
                 totalPersonCount: @Html.Raw(Model.customer?.PersonCount ?? 0),
                 orderid: @Html.Raw(Model.orderid)
-            };
+            }
             $.ajax({
                 url: '@Url.Action("getOrderDetails", "MenuOrderApp")',
                 method: 'POST',
@@ -64,11 +66,11 @@
             }
         });
     }
-    function loadItemsForCategory(element,id,type) {
-          $(".MenuSidebarContainer ul li").removeClass("selectedcategory  text-white"); 
-    $(element).addClass("selectedcategory text-white");
-    var searchedItem = $("#searchItemForCategory").val();
-    var tokenId = $('#tokenid').val();
+    function loadItemsForCategory(element, id, type) {
+        $(".MenuSidebarContainer ul li").removeClass("selectedcategory  text-white");
+        $(element).addClass("selectedcategory text-white");
+        var searchedItem = $("#searchItemForCategory").val();
+        var tokenId = $('#tokenid').val();
         var tableIds = @Html.Raw(Tableids);
 
         if (searchedItem) {
@@ -81,29 +83,30 @@
             TableIds: tableIds,
             SearchedItem: searchedItem,
             orderid: @Html.Raw(Model?.orderid),
-            ItemType: type
-        };
+            ItemType: type,
+            @* favorites: favorites *@
+        }
 
-       
+    console.log(requestedData);
     var data = JSON.stringify(requestedData);
 
-       
 
 
-        $.ajax({
-            url: "@Url.Action("getItemsForCategory", "MenuOrderApp")",
-            method: "POST",
-            dataType: "html",
-            contentType: "application/json",
-            data: data,
-            success: function (data) {
-                $(".menuDataContainer").html(data);
-                $("#selectedCategory").val(id);
-            },
-            error: function (error) {
-                console.log('Error:', error);
-            }
-        });
+
+    $.ajax({
+        url: "@Url.Action("getItemsForCategory", "MenuOrderApp")",
+        method: "POST",
+        dataType: "html",
+        contentType: "application/json",
+        data: data,
+        success: function (data) {
+            $(".menuDataContainer").html(data);
+            $("#selectedCategory").val(id);
+        },
+        error: function (error) {
+            console.log('Error:', error);
+        }
+    });
     }
 
 
@@ -130,9 +133,9 @@
                 var itemprice = parseFloat($("#" + uniqueId).data("itemrate"));
                 var quantity = parseInt($("#" + uniqueId + " .textInputForCounterInOrderItemDetailsKOT").val());
                 var modifiersrate = parseFloat($("#" + uniqueId + " .modifierrate").data("modifierrate"));
-               
+
                 totalAmount += (itemprice + modifiersrate) * quantity;
-                
+
                 $("#subtotal").text("₹" + totalAmount);
                 calculateTax($("#subtotal").text().replace("₹", ""))
                 calculateTheTotalAmount()
@@ -143,7 +146,7 @@
 
     function calculateTax(subtotal) {
         var taxes = $('[id^="tax_"]');
-        console.log(subtotal)
+
         taxes.each(function () {
             var taxType = $(this).data("taxtype");
             var taxValue = $(this).data("taxpercentage")

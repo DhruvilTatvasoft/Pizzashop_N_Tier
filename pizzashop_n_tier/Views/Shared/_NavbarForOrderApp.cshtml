@@ -1,6 +1,8 @@
 @{
     string imagepath = Context.Request.Cookies["UserImage"] ?? "/images/Default_pfp.svg.png";
     Layout = "";
+    var isFromQr = Context.Request.Query["fromQr"];
+    ViewBag.isFromQr = isFromQr;
 }
 <!DOCTYPE html>
 <html lang="en">
@@ -17,6 +19,7 @@
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
@@ -25,6 +28,8 @@
 <link rel="stylesheet" href="~/css/_navbarForOrderApp.css">
 
 <body>
+   
+
     <nav class="navbar sticky-top navbar-light d-flex">
 
         <div class="d-flex align-items-center w-100">
@@ -39,7 +44,7 @@
                 </button>
                 <ul class="dropdown-menu" id="nav-tab">
                     <li class="p-1"><a href="" class="p-2"><img src="~/images/clipboard2-fill copy.svg" class="me-2"
-                                alt=""><label for="">KOT</label></a>
+                                alt=""><label for="">KOT </label></a>
                     </li>
                     @if (User.IsInRole("Admin"))
                     {
@@ -58,7 +63,7 @@
             <img src="~/images/pizzashop_logo.png" class="logo img-fluid" alt="">
             <label for="" class="text-white ms-2 header">PIZZASHOP</label>
 
-
+             @if(isFromQr != "true"){
             <div class="dropdown me-3 d-flex align-items-center" style="margin-left: auto;">
                 <div class="options" style="gap: 10px;">
                     @if (User.IsInRole("Chef"))
@@ -112,8 +117,10 @@
                     }            
                 </ul>
             </div>
+        }
         </div>
     </nav>
+    
 
     <main class="h-100">
         @RenderBody()

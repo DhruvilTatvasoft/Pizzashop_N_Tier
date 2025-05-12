@@ -15,6 +15,7 @@ public interface IMenuOrderAppService
     Order getOrderfromOrderid(int orderId);
     MenuOrderAppModel getRunningTableOrder(int tableid);
     void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel);
+    byte[] GenerateQRCode(string text, int width = 250, int height = 250);
     void saveCustomerDetails(CustomerModel customer);
     void saveOrderWiseComment(MenuOrderAppModel model);
 }

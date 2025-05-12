@@ -12,6 +12,7 @@
           "Microsoft.AspNetCore.Authentication.JwtBearer": "7.0.10",
           "Microsoft.AspNetCore.Http": "2.3.0",
           "NPOI.DotNetCore.ExcelService": "1.0.5",
+          "QRCoder": "1.4.1",
           "Select.Pdf": "24.1.0",
           "itext7": "7.0.6"
         },
@@ -640,6 +641,17 @@
           "lib/netcoreapp2.2/NPOI.DotNetCore.ExcelService.dll": {
             "assemblyVersion": "1.0.5.0",
             "fileVersion": "1.0.5.0"
+          }
+        }
+      },
+      "QRCoder/1.4.1": {
+        "dependencies": {
+          "System.Drawing.Common": "5.0.0"
+        },
+        "runtime": {
+          "lib/netstandard2.0/QRCoder.dll": {
+            "assemblyVersion": "1.4.1.0",
+            "fileVersion": "1.4.1.0"
           }
         }
       },
@@ -1911,6 +1923,13 @@
       "sha512": "sha512-TpstWDn1nYNG05XMNTNv3E3SrfAvwPVEL3wxzdz+rIkaGqAFUnVz+TUJPLCxOG1bJCbwNlktlpyMxlw6U1wsyg==",
       "path": "npoi.dotnetcore.excelservice/1.0.5",
       "hashPath": "npoi.dotnetcore.excelservice.1.0.5.nupkg.sha512"
+    },
+    "QRCoder/1.4.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-W8KwCwsOJe9SI7Cm7XeIMawd08F/US6xNw34lg2Qnx6m7GYYakxbyBQaNoW1Q75oJOmX/32sJUZr6Cix2B6GUQ==",
+      "path": "qrcoder/1.4.1",
+      "hashPath": "qrcoder.1.4.1.nupkg.sha512"
     },
     "runtime.debian.8-x64.runtime.native.System.Security.Cryptography.OpenSsl/4.3.0": {
       "type": "package",

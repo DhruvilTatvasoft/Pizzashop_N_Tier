@@ -1,7 +1,7 @@
 @model KotViewModel
 <div class=" mt-3 tabDataContainer" style="background-color: white;">
-    <div class="tab-pane fade show pt-2  p-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab"
-        tabindex="0" style="min-height: 385px;">
+    <div class="tab-pane fade show pt-2  p-3" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab" tabindex="0"
+        style="min-height: 385px;">
         <input type="hidden" id="selectedCategory" asp-for="@Model.categoryid" />
         <div class="d-flex align-items-center justify-content-between mb-3">
 
@@ -11,12 +11,11 @@
                 $("document").ready(() => {
                     loadOrdersForcategory(0)
                 })
-
                 var temp = null;
                 function inprogress(button, id, IsReady) {
+                    $(".btn").removeClass("activeBtn");
+                    $(button).addClass("activeBtn");
                     loadOrdersForcategory(id, IsReady)
-                    $(button).css("background-color", "#0066a7")
-                    $(button).css("color", "white")
                     temp = IsReady
                 }
                 function ready(id, IsReady) {

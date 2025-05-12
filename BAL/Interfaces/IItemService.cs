@@ -2,6 +2,7 @@ using DAL.Data;
 
 public interface IItemService{
     bool addItem(ItemViewModel itemViewModel, string email);
+    void addOrRemoveFromFavorites(int id, string action);
     bool deleteItem(int itemid);
     void deleteItems(List<int> itemIds);
     List<Category> getAllCategories();

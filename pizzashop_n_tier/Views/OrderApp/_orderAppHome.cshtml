@@ -1,4 +1,5 @@
 @{
+
      Layout = "~/Views/Shared/_NavbarForOrderApp.cshtml";
 }
 <div class="loadTabBody h-100"></div>
@@ -6,7 +7,14 @@
      $("document").ready(() => {
           @* loadwaitingList() *@
                @* loadMenuPage() *@
-               loadKot()
+const urlParams = new URLSearchParams(window.location.search);
+          const fromQr = urlParams.get('fromQr');
+          console.log(fromQr)
+          if (fromQr == 'true') {
+               console.log("loading")
+               loadMenuPage();
+          }
+          loadKot()
      });
 
      function loadKot() {
@@ -42,8 +50,8 @@
                method: "GET",
                success: function (data) {
 
-                    console.log(data)
-                    $(".loadTabBody").html(data);
+                    @* console.log(data) *@
+                         $(".loadTabBody").html(data);
                }
           });
      }
@@ -52,7 +60,7 @@
           $(this).removeClass('Available-Table').addClass('selectedTable');
           var sectionid = $(this).data('sectionid')
           var id = "table_" + sectionid;
-          
+
           setTimeout(1)
           if ($("#" + id + " .selectedTable").length > 0) {
                $("#assignBtn_" + sectionid).prop('disabled', false)

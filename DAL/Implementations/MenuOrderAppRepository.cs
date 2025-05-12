@@ -79,7 +79,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 }
                 if (ordertable.Ordertableid == 0)
                 {
-                    ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == orderDetails.customerid)!;
+                    ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == orderDetails.customerid && orderedTable.Isdeleted == false)!;
                 }
                 if (ordertable == null)
                 {
@@ -410,6 +410,9 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         model.email = customer.Email;
         model.phone = customer.Phonenumber;
         List<Table> tables = new List<Table>();
+        List<int> tableids = new List<int>();
+        tableids = _context.Ordertables.Where(orderedTable=>orderedTable.Customerid == customerid && orderedTable.Isdeleted == false).Select(orderedTable=>orderedTable.Tableid).ToList();
+        var maxcapacity = _context.Tables.Where(tables =>  tableids.Contains(tables.Tableid)).Select(tables=>tables.Capacity).Sum();
         if (tableid != null)
         {
             foreach (var id in tableid)
@@ -420,6 +423,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             }
             model.tables = tables;
         }
+        model.maxcapacity = maxcapacity;
         return model;
     }
 

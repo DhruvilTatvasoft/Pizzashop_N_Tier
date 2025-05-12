@@ -14,21 +14,21 @@
     {
         <div class="@(Model.customer == null ? "col-lg-3  pe-2 pb-3" : "col-lg-6  pe-2 pb-3") col-sm-6">
             <div class="itemCard d-flex" style="@(Model.customer == null ? "width:100%;" : "width : 100%;")cursor:pointer;"
-                onclick="showItemDetailsModal(@item.Itemid)">
+                >
                 <div style="width:25%;">
                     @if (item.Itemimage != null)
                     {
-                        <img src="@item.Itemimage" style="width: 50px;" class="itemimage" alt="">
+                        <img src="@item.Itemimage" onclick="showItemDetailsModal(@item.Itemid)" style="width: 50px;" class="itemimage" alt="">
   
                     }
                     else
                     {
-                        <img src="~/images/dining-menu.png" style="width: 50px;" class="" alt="">
+                        <img src="~/images/dining-menu.png" onclick="showItemDetailsModal(@item.Itemid)" style="width: 50px;" class="" alt="">
                     }
                 </div>
                 <div class="itemDetailContainer pt-0 pe-0 d-flex justify-content-between p-2">
                     <div class="d-flex flex-column">
-                        <label for="">@item.Itemname </label>
+                        <label for="">@item.Itemname  </label>
                         <label for="">@item.Itemrate</label>
                     </div>
                     @if (item.Itemtype)
@@ -36,18 +36,29 @@
                         <div class="d-flex justify-content-between flex-column">
                             <div class="typeIndicator p-2" style="background-color: green;">
                             </div>
+                            @if(item.Isfavourite != null && item.Isfavourite.ToString().ToLower() == "true"){
+                            <img src="~/images/heart-fill.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
+                                onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;" alt="">
+                            }
+                            else if(item.Isfavourite != null && item.Isfavourite.ToString().ToLower() == "false"){
                             <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
                                 onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;" alt="">
+                            }
                         </div>
-
                     }
                     else
                     {
                         <div class="d-flex justify-content-between flex-column">
                             <div class="typeIndicator p-2" style="background-color: red ;">
                             </div>
+                             @if(item.Isfavourite != null && item.Isfavourite.ToString().ToLower() == "true"){
+                            <img src="~/images/heart-fill.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
+                                onclick="AddToFavorite(this,@item.Itemid)" style="width: 15px;" alt="">
+                             }
+                             else if(item.Isfavourite != null && item.Isfavourite.ToString().ToLower() == "false"){
                             <img src="~/images/heart.svg" class="AddToFavorite" onclick="AddToFavorite(this,@item.Itemid)"
                                 style="width: 15px;" alt="">
+                             }
                         </div>
                     }
                 </div>
@@ -62,6 +73,11 @@
 
     $(document).on('submit',"#customer-details", function (e) {
         e.preventDefault();
+
+        if(parseInt($("#personCount").val()) > parseInt($("#maxCapacity").val())){
+            toastr.error("Table capacity exceeded");    
+            return;
+        }
         var data = new FormData(this);
         $.ajax({
             url: "@Url.Action("editCustomerDetails", "MenuOrderApp")",

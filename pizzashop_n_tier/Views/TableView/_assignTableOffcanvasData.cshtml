@@ -121,17 +121,19 @@
       tokenid: tokenid,
       tableids: assignedtableIds
     };
-
+    if(parseInt(parseInt($("#customer_PersonCount").val())) > @Html.Raw(Model.maxPersonCount)){
+      toastr.error("Table capacity exceed");
+      return;
+    }
     if ($("#tokenid").val() === '') {
-      alert("token id 0 found");
-
       var customerModal = {
         name: $("#customer-name").val(),
         phone: $("#customer-phone").val(),
         email: $("#customer-email").val(),
         PersonCount: parseInt($("#customer_PersonCount").val()) || 0,
         sectinid: parseInt($("#customer_tableSection").val()) || null,
-        tableids: assignedtableIds
+        tableids: assignedtableIds,
+        ordercreated: true,
       };
 
       requestedData.customerModal = customerModal;

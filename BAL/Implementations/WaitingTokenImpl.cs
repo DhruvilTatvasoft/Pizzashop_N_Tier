@@ -44,6 +44,11 @@ namespace BAL.Implementations
             return _waitingTokenRepository.getCustomerTokensForSection(sectionid,tableid);
         }
 
+        public int? getMaxPersonCountForSection(List<int> tableids)
+        {
+           return _waitingTokenRepository.getMaxPersonCountForSection(tableids);
+        }
+
         public int getSectionIdOfToken(int tokenid)
         {
             return _waitingTokenRepository.getSectionIdOfToken(tokenid);

@@ -6,6 +6,7 @@ using NPOI.HSSF.UserModel;
 using NPOI.SS.Util;
 using Microsoft.AspNetCore.Mvc;
 using Azure;
+using DAL.Data;
 
 namespace BAL.Implementations
 {
@@ -342,5 +343,9 @@ namespace BAL.Implementations
             return wb.AddPicture(buffer, PictureType.JPEG);
         }
 
+        public Customer createNewCustomer(CustomerModel customerModal)
+        {
+            return _customerRepository.createNewCustomer(customerModal);
+        }
     }
 }

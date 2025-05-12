@@ -190,4 +190,11 @@ public class ItemRepository : IItemRepository
     {
         return _context.Categories.FirstOrDefault(category=>category.Categoryid == categoryId)!;
     }
+    public void addOrRemoveFromFavorites(int id, string action)
+    {
+        Item item = getItemFromItemId(id);
+        item.Isfavourite = action == "add" ? true : false;
+        _context.Items.Update(item);
+        _context.SaveChanges();
+    } 
 }

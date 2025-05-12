@@ -49,6 +49,7 @@ public class orderDetailsForAssignedTable
     public string SearchedItem { get; set; }
     public int? orderid { get; set; }
     public int? customerid{get;set;}
+    public bool? favorites{get;set;}
 }
 
 public class runningTableDetailsViewModel{

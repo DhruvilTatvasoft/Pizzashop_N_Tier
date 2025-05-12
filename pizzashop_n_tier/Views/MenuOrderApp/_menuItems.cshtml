@@ -40,9 +40,25 @@
                     if (!favorites.includes(id)) {
                         favorites.pop(id);
                     }
+                    $.ajax({
+                        url:"@Url.Action("addOrRemoveFromFavorites","MenuOrderApp")",
+                        type: "POST",
+                        data:{itemid : id,process : "remove"},
+                        success: function (data) {
+
+                        }
+                    });
                 }
                 else {
                     $(x).attr("src", "/images/heart-fill.svg");
+                     $.ajax({
+                        url:"@Url.Action("addOrRemoveFromFavorites","MenuOrderApp")",
+                        type: "POST",
+                        data:{itemid : id,process : "add"},
+                        success: function (data) {
+                            
+                        }
+                    });
                     favorites.push(id);
                 }
             }

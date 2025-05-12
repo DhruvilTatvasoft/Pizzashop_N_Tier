@@ -51,7 +51,7 @@ public class DashboardController : Controller
     public IActionResult ShowDashboard(int timeid,string endDate = "",string fromdate = "")
     {
         DashboardViewModel model = new DashboardViewModel();
-        _orderAppService.getDashBoardDetails(timeid,fromdate,endDate,model);
+        // _orderAppService.getDashBoardDetails(timeid,fromdate,endDate,model);
         return View(model);
     }
 

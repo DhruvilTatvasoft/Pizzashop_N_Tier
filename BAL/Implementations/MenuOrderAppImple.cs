@@ -1,4 +1,9 @@
+
+using QRCoder;
 using DAL.Data;
+
+
+
 
 public class MenuOrderAppImple : IMenuOrderAppService
 {
@@ -24,25 +29,43 @@ public class MenuOrderAppImple : IMenuOrderAppService
         return _menuOrderAppRepository.createOrder(orderDetails);
     }
 
+
+    public byte[] GenerateQRCode(string text, int width = 250, int height = 250)
+    {
+        using (var qrGenerator = new QRCodeGenerator())
+    {
+        var qrCodeData = qrGenerator.CreateQrCode(text, QRCodeGenerator.ECCLevel.Q);
+        var qrCode = new QRCode(qrCodeData);
+        
+        using (var ms = new MemoryStream())
+        {
+            qrCode.GetGraphic(20).Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            return ms.ToArray();  
+        }
+    }
+    }
+
     public MenuOrderAppModel getAssignedTableDetails(int tableid)
     {
         return _menuOrderAppRepository.getAssignedTableDetails(tableid);
     }
 
-    public CustomerModel getcustomerDetails(int customerid,List<int>? tableid)
+    public CustomerModel getcustomerDetails(int customerid, List<int>? tableid)
     {
-        if(tableid != null){
+        if (tableid != null)
+        {
 
-        return _menuOrderAppRepository.getcustomerDetails(customerid,tableid);
+            return _menuOrderAppRepository.getcustomerDetails(customerid, tableid);
         }
-        else{
-        return _menuOrderAppRepository.getcustomerDetails(customerid,null);
+        else
+        {
+            return _menuOrderAppRepository.getcustomerDetails(customerid, null);
         }
     }
 
-    public void getDashBoardDetails(int timeId,string fromDate,string startDate,DashboardViewModel model)
+    public void getDashBoardDetails(int timeId, string fromDate, string startDate, DashboardViewModel model)
     {
-         _menuOrderAppRepository.getDashBoardDetails(model, timeId,startDate, fromDate);
+        _menuOrderAppRepository.getDashBoardDetails(model, timeId, startDate, fromDate);
     }
 
     public Item getItem(int itemid)
@@ -50,19 +73,19 @@ public class MenuOrderAppImple : IMenuOrderAppService
         return _menuOrderAppRepository.getItem(itemid);
     }
 
-    public List<Item> getItemsForcategory(int categoryid,string ItemType,string searchedItem="")
+    public List<Item> getItemsForcategory(int categoryid, string ItemType, string searchedItem = "")
     {
-        return _menuOrderAppRepository.getItemsForcategory(categoryid,ItemType,searchedItem);
+        return _menuOrderAppRepository.getItemsForcategory(categoryid, ItemType, searchedItem);
     }
 
     public List<ModifierModel> getModifiersForItem(int itemid)
     {
-       return _menuOrderAppRepository.getModifiersForItem(itemid);
+        return _menuOrderAppRepository.getModifiersForItem(itemid);
     }
 
-    public void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers)
+    public void getOrderdItemQuantity(int? orderid, int itemid, MenuOrderAppModel model, List<int> modifiers)
     {
-         _menuOrderAppRepository.getOrderdItemQuantity(orderid,itemid,model,modifiers);
+        _menuOrderAppRepository.getOrderdItemQuantity(orderid, itemid, model, modifiers);
     }
 
     public Order getOrderfromOrderid(int orderId)
@@ -77,12 +100,12 @@ public class MenuOrderAppImple : IMenuOrderAppService
 
     public void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel)
     {
-        _menuOrderAppRepository.loadOrderedItemsData(orderid,responseModel);
+        _menuOrderAppRepository.loadOrderedItemsData(orderid, responseModel);
     }
 
     public void saveCustomerDetails(CustomerModel customer)
     {
-         _menuOrderAppRepository.saveCustomerDetails(customer);
+        _menuOrderAppRepository.saveCustomerDetails(customer);
     }
 
     public void saveOrderWiseComment(MenuOrderAppModel model)

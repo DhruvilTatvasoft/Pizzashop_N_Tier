@@ -28,6 +28,11 @@ public class ItemsImple : IItemService
         }
     }
 
+    public void addOrRemoveFromFavorites(int id, string action)
+    {
+        _itemRepository.addOrRemoveFromFavorites(id,action);
+    }
+
     public bool deleteItem(int itemid)
     {
         return _itemRepository.deleteItemFromDb(itemid);

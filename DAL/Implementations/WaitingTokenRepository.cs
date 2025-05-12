@@ -187,9 +187,17 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid)!;
         table.Status = false;
         table.Statusname = "Assigned";
-        // Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
-        // table.Customerid = token.Customerid;
-        // _context.Waitingtokens.Update(token);
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
+        token.Isdeleted = true;
+        Ordertable orderedTable = new Ordertable();
+        orderedTable.Tableid = table.Tableid;
+        orderedTable.Customerid = token.Customerid;
+        orderedTable.Isdeleted = true;
+        orderedTable.Createdat = DateTime.Now;
+        orderedTable.Modifiedat = DateTime.Now;
+        orderedTable.Createdby = 1;
+        orderedTable.Modifiedby = 1;
+        _context.Ordertables.Add(orderedTable);
         _context.Tables.Update(table);
         _context.SaveChanges();
         return true;
@@ -255,5 +263,11 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         Customer customer = _context.Customers.FirstOrDefault(ExistingCustomer=>ExistingCustomer.Email == email)!;
         int tokenid = _context.Waitingtokens.FirstOrDefault(token=>token.Customerid == customer.Customerid)!.Waitingtokenid;
         return tokenid;
+    }
+
+    public int? getMaxPersonCountForSection(List<int> tableids)
+    {
+        int maxPersonCount = _context.Tables.Where(tables=>tableids.Contains(tables.Tableid)).Select(tables=>tables.Capacity).Sum();
+        return maxPersonCount;
     }
 }

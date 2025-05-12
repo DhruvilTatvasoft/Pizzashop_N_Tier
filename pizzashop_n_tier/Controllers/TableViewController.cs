@@ -1,4 +1,6 @@
+using AspNetCoreGeneratedDocument;
 using BAL.Interfaces;
+using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
 
 public class TableViewController : Controller
@@ -6,13 +8,15 @@ public class TableViewController : Controller
     private readonly ITableService _tableService;
     private readonly ISectionService _sectionService;
     private readonly IWaitingTokenService _waitingTokenService;
+    private readonly ICustomerService _customerService;
     private readonly IOrderService _orderService;
-    public TableViewController(ITableService tableService, IWaitingTokenService waitingTokenService, ISectionService sectionService,IOrderService orderService)
+    public TableViewController(ITableService tableService,ICustomerService customerService, IWaitingTokenService waitingTokenService, ISectionService sectionService,IOrderService orderService)
     {
         _tableService = tableService;
         _waitingTokenService = waitingTokenService;
         _sectionService = sectionService;
         _orderService = orderService;
+        _customerService = customerService;
     }
     public IActionResult getAllTablesAndSections()
     {
@@ -29,6 +33,7 @@ public class TableViewController : Controller
         model2.sections = _sectionService.getAllSections();
         model.WaitingToken = model2;
         model.tables = tableids;
+        model.maxPersonCount = _waitingTokenService.getMaxPersonCountForSection(tableids);
         return PartialView("_assignTableOffcanvasData", model);
     }
 
@@ -37,22 +42,26 @@ public class TableViewController : Controller
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
         if(Model.customerModal != null){
-            WaitingTokenModel waitingTokenModel = new WaitingTokenModel();
-            waitingTokenModel.customer = Model.customerModal;
-            waitingTokenModel.personCount = Model.customerModal.PersonCount;
-            waitingTokenModel.sectionId = Model.customerModal.sectinid;
-            _waitingTokenService.AddNewWaitingToken(waitingTokenModel);
-            Model.tokenid = _waitingTokenService.getTokenidFromCustomerEmail(Model.customerModal.email);
-            model.tokenid = Model.tokenid??0;
+            // WaitingTokenModel waitingTokenModel = new WaitingTokenModel();
+            // waitingTokenModel.customer = Model.customerModal;
+            // waitingTokenModel.personCount = Model.customerModal.PersonCount;
+            // waitingTokenModel.ordrcreated = true;
+            // waitingTokenModel.sectionId = Model.customerModal.sectinid;
+            // _waitingTokenService.AddNewWaitingToken(waitingTokenModel);
+            // Model.tokenid = _waitingTokenService.getTokenidFromCustomerEmail(Model.customerModal.email);
+            // model.tokenid = Model.tokenid??0;
+            Customer createdCustomer = _customerService.createNewCustomer(Model.customerModal);
+            model.customer.customerId = createdCustomer.Customerid;
+            model.customer = Model.customerModal;
+
         }
         else{
         model.tokenid = Model.tokenid??0;
-        }
         model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid ?? 0,Model.tableids);
+        }
         model.isTableAssigned = true;
         model.categoryId = 0;
         _tableService.assignTable(Model.tableids, model.customer.customerId ?? 0);
-        // model.orderid = _orderService.CreateOrderForCustomer(Model.tokenid??0,Model.tableids);
         return PartialView("_menu",model);
     }   
 }

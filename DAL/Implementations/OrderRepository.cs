@@ -376,15 +376,14 @@ public class OrderRepository : IOrderRepository
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
         model.orderid = orderid;
-        var orderedItemsGrouped = _context.OrderItemModifiers
+        var orderedItemsGrouped = _context.Orderitems
             .Where(oim => oim.Orderid == orderid)
-            .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
             .ToList();
         List<Dictionary<Item, List<Modifier>>> itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
         foreach (var group in orderedItemsGrouped)
         {
-            var itemId = group.Key.ItemId;
-            var orderItemDetailId = group.Key.Orderitemdetailid;
+            var itemId = group.Itemid;
+            var orderItemDetailId = group.Orderitemid;
             var dbItem = categoryid != 0
                 ? _context.Items.FirstOrDefault(i => i.Itemid == itemId && i.Categoryid == categoryid)
                 : _context.Items.FirstOrDefault(i => i.Itemid == itemId);

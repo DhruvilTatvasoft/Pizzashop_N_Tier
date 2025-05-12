@@ -50,40 +50,40 @@
     var formData = new FormData();
 
     $('table tbody tr').each(function () {
-        var $row = $(this);
-        var $checkbox = $row.find('input[type="checkbox"]');
-        var $input = $row.find('input[type="number"]');
-        var inputId = $input.attr('id'); // e.g., "number-21"
-        var itemId = inputId.split('-')[1]; // get "21"
+      var $row = $(this);
+      var $checkbox = $row.find('input[type="checkbox"]');
+      var $input = $row.find('input[type="number"]');
+      var inputId = $input.attr('id'); 
+      var itemId = inputId.split('-')[1]; 
 
-        var value = $checkbox.is(':checked') ? $input.val() : 0;
+      var value = $checkbox.is(':checked') ? $input.val() : 0;
 
-        formData.append(`readyItemCount[${itemId}]`, value);
+      formData.append(`readyItemCount[${itemId}]`, value);
     });
 
     formData.append("currentStatus", $("#currentStatus").val());
 
     $.ajax({
-        url: "@Url.Action("changeReadyQuantity", "Kot")",
-        type: "POST",
-        data: formData,
-        contentType: false,
-        processData: false,
-        complete: function () {
-            $form.data('submitting', false);
-        },
-        success: function (response) {
-            if (response.success) {
-                $('.closeModalBtn').click();
-                toastr.success(response.success);
-                loadOrdersForcategory($('#selectedCategory').val(), false);
-            }
-        },
-        error: function () {
-            toastr.error("An error occurred while processing your request");
+      url: "@Url.Action("changeReadyQuantity", "Kot")",
+      type: "POST",
+      data: formData,
+      contentType: false,
+      processData: false,
+      complete: function () {
+        $form.data('submitting', false);
+      },
+      success: function (response) {
+        if (response.success) {
+          $('.closeModalBtn').click();
+          toastr.success(response.success);
+          loadOrdersForcategory($('#selectedCategory').val(), false);
         }
+      },
+      error: function () {
+        toastr.error("An error occurred while processing your request");
+      }
     });
-});
+  });
 
 
 
@@ -108,7 +108,14 @@
       data: { categoryid: categoryid, IsReady: IsReady, pageNumber: pageNumber },
       success: function (data) {
         $('.orderdetailcontainer').html(data);
-
+        if (IsReady == true) {
+          $(".btn").removeClass("activeBtn");
+          $(".readybtn").addClass("activeBtn")
+        }
+        else if (IsReady == false) {
+          $(".btn").removeClass("activeBtn");
+          $(".inprogressbtn").addClass("activeBtn");
+        }
       }
     });
   }
