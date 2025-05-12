@@ -182,13 +182,14 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         return tables;
     }
 
-    public bool assignTable(int tableid, int tokenid)
+    public bool assignTable(List<int> tableids, int tokenid)
     {
-        Table table = _context.Tables.FirstOrDefault(table=>table.Tableid == tableid)!;
+        List<Table> tables = _context.Tables.Where(table=>tableids.Contains(table.Tableid)).ToList()!;
+        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
+        foreach (var table in tables)
+        {
         table.Status = false;
         table.Statusname = "Assigned";
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
-        token.Isdeleted = true;
         Ordertable orderedTable = new Ordertable();
         orderedTable.Tableid = table.Tableid;
         orderedTable.Customerid = token.Customerid;
@@ -199,6 +200,9 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         orderedTable.Modifiedby = 1;
         _context.Ordertables.Add(orderedTable);
         _context.Tables.Update(table);
+        }
+        token.Isdeleted = true;
+        _context.Waitingtokens.Update(token);
         _context.SaveChanges();
         return true;
     }

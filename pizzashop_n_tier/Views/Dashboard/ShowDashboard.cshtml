@@ -2,8 +2,8 @@
 @{
   Layout = "~/Views/Shared/_Sidebar&navbar.cshtml";
   ViewData["Title"] = "Dashboard Page";
-  @* var chartData = JsonConvert.SerializeObject(Model.dailySales);
-  var chartData2 = JsonConvert.SerializeObject(Model.totalCustomers); *@
+  var chartData = JsonConvert.SerializeObject(Model.dailySales);
+  var chartData2 = JsonConvert.SerializeObject(Model.totalCustomers);
 }
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.6.0/Chart.min.js" type="text/javascript"></script>
@@ -12,7 +12,7 @@
 
 
 @model DashboardViewModel
-@* <script>
+<script>
   $("document").ready(function () {
     $('.sidebar ul li').removeClass('active-class');
     $('.dashboard').addClass('active-class')
@@ -43,7 +43,7 @@
         title: { display: false, text: 'Revenue' },
         scales: {
           xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' } }],
-          yAxes: [{ gridLines: { display: true }, display: true, ticks: { stepSize: 70000, beginAtZero: false } }]
+          yAxes: [{ gridLines: { display: true }, display: true, ticks: { stepSize: 100, beginAtZero: false } }]
         }
       }
     });
@@ -82,7 +82,7 @@
             gridLines: { display: true },
             display: true,
         ticks: {
-          stepSize: 1,
+          stepSize: 10,
           beginAtZero: true
         }
       }]
@@ -105,12 +105,12 @@
     window.location.href = link
   }
 
-</script> *@
+</script>
 <link rel="stylesheet" href="~/css/maindashboard.css">
 @{
   ViewData["Title"] = "Dashboard";
 }
-@* <div class="container-fluid w-100 h-100 p-0">
+<div class="container-fluid w-100 h-100 p-0">
   <div class="container-fluid w-100 h-100 p-0">
     <div id="nav-sidebar"></div>
     <div class="row p-0 h-100 d-flex">
@@ -425,4 +425,4 @@
         <div id="customeDateSelectorModalLoader"></div>
       </div>
     </div>
-  </div> *@
+  </div>

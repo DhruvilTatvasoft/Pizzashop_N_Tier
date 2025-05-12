@@ -9,7 +9,7 @@ namespace BAL.Interfaces
     public interface IWaitingTokenService
     {
         bool AddNewWaitingToken(WaitingTokenModel model);
-        bool AssignTable(int tableid, int tokenid);
+        bool AssignTable(List<int> tableid, int tokenid);
         bool deleteWaitingToken(int tokenid);
         WaitingTokenModel getAllWaitingTokens(int sectionid);
         CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid);

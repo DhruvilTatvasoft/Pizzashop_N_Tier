@@ -95,7 +95,7 @@ public class WaitingListController : Controller
 
     public IActionResult AssignTable(int tableid, int tokenid)
     {
-        if (_waitingTokenService.AssignTable(tableid, tokenid))
+        if (_waitingTokenService.AssignTable(new List<int> { tableid }, tokenid))
         {
             _orderService.CreateOrder(tokenid, tableid);
             return Json(new { success = "Table Assigned Successfully" });

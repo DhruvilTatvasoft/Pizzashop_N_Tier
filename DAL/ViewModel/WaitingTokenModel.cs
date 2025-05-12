@@ -23,7 +23,7 @@ public class WaitingTokenModel
     public CustomerModel? customer{get;set;}
 }
 public class CustomerModel{
-    public int? customerId{get;set;}
+    public int? customerId { get; set; } = 0;
     
     [Required(ErrorMessage = "Customer Name is required")]
     [RegularExpression(@"^[A-Za-z\s]+$", ErrorMessage = "please Use only letters")]

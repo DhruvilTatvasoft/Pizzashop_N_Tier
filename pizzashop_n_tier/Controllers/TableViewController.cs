@@ -10,7 +10,7 @@ public class TableViewController : Controller
     private readonly IWaitingTokenService _waitingTokenService;
     private readonly ICustomerService _customerService;
     private readonly IOrderService _orderService;
-    public TableViewController(ITableService tableService,ICustomerService customerService, IWaitingTokenService waitingTokenService, ISectionService sectionService,IOrderService orderService)
+    public TableViewController(ITableService tableService, ICustomerService customerService, IWaitingTokenService waitingTokenService, ISectionService sectionService, IOrderService orderService)
     {
         _tableService = tableService;
         _waitingTokenService = waitingTokenService;
@@ -25,10 +25,10 @@ public class TableViewController : Controller
         return PartialView("_tableDetails", model);
     }
     [HttpPost]
-    public IActionResult getOffCanvas(int sectionid,List<int> tableids)
+    public IActionResult getOffCanvas(int sectionid, List<int> tableids)
     {
         TableViewModel model = new TableViewModel();
-        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid,tableids);
+        model.customers = _waitingTokenService.getCustomerTokensForSection(sectionid, tableids);
         WaitingTokenModel model2 = new WaitingTokenModel();
         model2.sections = _sectionService.getAllSections();
         model.WaitingToken = model2;
@@ -38,10 +38,11 @@ public class TableViewController : Controller
     }
 
     [HttpPost]
-    public IActionResult assignTable([FromBody]assignTableDetails Model)
+    public IActionResult assignTable([FromBody] assignTableDetails Model)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
-        if(Model.customerModal != null){
+        if (Model.customerModal != null)
+        {
             // WaitingTokenModel waitingTokenModel = new WaitingTokenModel();
             // waitingTokenModel.customer = Model.customerModal;
             // waitingTokenModel.personCount = Model.customerModal.PersonCount;
@@ -51,17 +52,18 @@ public class TableViewController : Controller
             // Model.tokenid = _waitingTokenService.getTokenidFromCustomerEmail(Model.customerModal.email);
             // model.tokenid = Model.tokenid??0;
             Customer createdCustomer = _customerService.createNewCustomer(Model.customerModal);
-            model.customer.customerId = createdCustomer.Customerid;
             model.customer = Model.customerModal;
-
+            model.customer.customerId = createdCustomer.Customerid;
         }
-        else{
-        model.tokenid = Model.tokenid??0;
-        model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid ?? 0,Model.tableids);
+        else
+        {
+            model.tokenid = Model.tokenid ?? 0;
+            _waitingTokenService.AssignTable(Model.tableids, Model.tokenid ?? 0);
+            model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid ?? 0, Model.tableids);
         }
         model.isTableAssigned = true;
         model.categoryId = 0;
         _tableService.assignTable(Model.tableids, model.customer.customerId ?? 0);
-        return PartialView("_menu",model);
-    }   
+        return PartialView("_menu", model);
+    }
 }

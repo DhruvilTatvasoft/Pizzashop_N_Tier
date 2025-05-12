@@ -19,7 +19,7 @@ namespace BAL.Implementations
             return _waitingTokenRepository.addNewWaitingToken(model);
         }
 
-        public bool AssignTable(int tableid, int tokenid)
+        public bool AssignTable(List<int> tableid, int tokenid)
         {
             return _waitingTokenRepository.assignTable(tableid, tokenid);
         }

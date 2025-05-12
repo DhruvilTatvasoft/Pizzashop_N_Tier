@@ -297,3 +297,6 @@ c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\refint\pizzash
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.pdb
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\pizzashop_n_tier.genruntimeconfig.cache
 c:\Users\pct78\pizzashop_N_tier\pizzashop_n_tier\obj\Debug\net7.0\ref\pizzashop_n_tier.dll
+C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\Microsoft.Bcl.TimeProvider.dll
+C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\QRCoder.dll
+C:\Users\Admin\pizzashop1\Pizzashop_N_Tier\pizzashop_n_tier\bin\Debug\net7.0\zxing.dll

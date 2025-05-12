@@ -515,12 +515,15 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
         order.Statusid = 1;
         order.PaymentStatus = "Completed";
-        Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable => OrderedTable.Orderid == itemdetails.orderid)!;
+        List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
+        foreach (var orderedTable in orderedTables)
+        { 
         orderedTable.Isdeleted = true;
         Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
         table.Status = true;
         table.Statusname = "Available";
-        _context.Tables.Update(table);
+        _context.Tables.Update(table); 
+        }
         _context.Orders.Update(order);
         _context.SaveChanges();
         return true;
@@ -541,12 +544,15 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
         Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
         order.Statusid = 2;
-        Ordertable orderedTable = _context.Ordertables.FirstOrDefault(OrderedTable => OrderedTable.Orderid == itemdetails.orderid)!;
-        orderedTable.Isdeleted = true;
-        Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
-        table.Status = true;
-        table.Statusname = "Available";
-        _context.Tables.Update(table);
+        List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
+        foreach (var orderedTable in orderedTables)
+        {
+            orderedTable.Isdeleted = true;
+            Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
+            table.Status = true;
+            table.Statusname = "Available";
+            _context.Tables.Update(table);
+        }
         _context.Orders.Update(order);
         _context.SaveChanges();
         return true;

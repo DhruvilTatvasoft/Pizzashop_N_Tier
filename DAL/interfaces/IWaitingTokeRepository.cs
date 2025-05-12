@@ -3,7 +3,7 @@ using DAL.Data;
 public interface IWaitingTokenRepository
 {
     bool addNewWaitingToken(WaitingTokenModel model);
-    bool assignTable(int tableid, int tokenid);
+    bool assignTable(List<int> tableid, int tokenid);
     bool deleteWaitingToken(int tokenid);
     WaitingTokenModel getAllWaingTokens(int sectionid);
     CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid);
