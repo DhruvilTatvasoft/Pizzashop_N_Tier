@@ -9,21 +9,6 @@ public class CustomerRepository : ICustomerRepository
     {
         _context = context;
     }
-
-    public Customer createNewCustomer(CustomerModel customerModal)
-    {
-       Customer customer = new Customer();
-       customer.Customername = customerModal.name;
-       customer.Email = customerModal.email;
-       customer.Phonenumber = customerModal.phone;
-       customer.Createdat = DateTime.Now;
-       customer.Createdby = 1;
-       _context.Customers.Add(customer);
-       _context.SaveChanges();
-        return customer;
-
-    }
-
     public CustomerViewModel getAllCustomers(int pageSize, int pageNumber, string sortBy, string sortOrder, string? search, string filterBy, DateTime? startDate, DateTime? endDate,bool? isExport = false)
     {
         CustomerViewModel model = new CustomerViewModel();

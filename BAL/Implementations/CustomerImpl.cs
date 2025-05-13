@@ -342,10 +342,5 @@ namespace BAL.Implementations
             file.Read(buffer, 0, (int)file.Length);
             return wb.AddPicture(buffer, PictureType.JPEG);
         }
-
-        public Customer createNewCustomer(CustomerModel customerModal)
-        {
-            return _customerRepository.createNewCustomer(customerModal);
-        }
     }
 }

@@ -75,7 +75,6 @@
                       </div>
                     </th>
                     <td>
-                      @* @Model.grantedPermissions.FirstOrDefault(g=>g.Permissionid == Model.plist[i].Permissionid)?.Canedit *@
                       <div class="form-check form-switch">
                         @if (@Model.grantedPermissions.FirstOrDefault(gp => gp.Permissionid ==
                                               Model.plist[i].Permissionid)?.Canview == true)
@@ -139,72 +138,75 @@
   </div>
 </div>
 <script>
-    $("document").ready(function(){
-      $('.sidebar ul li').removeClass('active-class');
-             $('.roleandpermission').addClass('active-class')
-  })
+   $("document").ready(function() {
+    $('.sidebar ul li').removeClass('active-class');
+    $('.roleandpermission').addClass('active-class')
+});
 
-$('document').ready(()=>{
-   if($('.subcheck:checked').length == $('.subcheck').length){$("#mastercheck").prop('checked', true)}
-})
-
-    var subchecks = document.querySelectorAll(".subcheck");
-    var masterCheck = document.querySelector("#mastercheck");
-
-    masterCheck.addEventListener("change", function (event) {
-        subchecks.forEach(function (checkbox) {
-            checkbox.checked = event.target.checked;
-            toggleSwitches(checkbox);
-        });
-    });
-
-    subchecks.forEach(function (checkbox) {
-        checkbox.addEventListener("change", function () {
-            toggleSwitches(checkbox);
-        });
+$('document').ready(() => {
+    if ($('.subcheck:checked').length == $('.subcheck').length) {
+        $("#mastercheck").prop('checked', true)
+    }
+});
+var subchecks = document.querySelectorAll(".subcheck");
+var masterCheck = document.querySelector("#mastercheck");
+masterCheck.addEventListener("change", function(event) {
+    subchecks.forEach(function(checkbox) {
+        checkbox.checked = event.target.checked;
         toggleSwitches(checkbox);
     });
-
-    $(".subcheck").on('change',function(){
-      const row = this.closest("tr");
-      const canView = row.querySelector("#can_view");
-      if(this.checked && canView){
+});
+subchecks.forEach(function(checkbox) {
+    checkbox.addEventListener("change", function() {
+        toggleSwitches(checkbox);
+    });
+    toggleSwitches(checkbox);
+});
+$(".subcheck").on('change', function() {
+    const row = this.closest("tr");
+    const canView = row.querySelector("#can_view");
+    if (this.checked && canView) {
         canView.checked = true;
-      }
-      if($('.subcheck:checked').length == $('.subcheck').length)
-      {
-        $("#mastercheck").prop('checked', true)
-      }
-      else{
-        $("#mastercheck").prop('checked', false)
-      }
-    })
-
-    function toggleSwitches(checkbox) {
-        var row = checkbox.closest("tr");
-        var canViewToggle = row.querySelector('[id="can_view"]');
-        var toggles = row.querySelectorAll(".toggle");
-        toggles.forEach(function (toggle) {
-            toggle.disabled = !checkbox.checked;
-            if (!checkbox.checked) {
-                toggle.checked = false;
-            }
-        });
-        @* if (checkbox.checked && canViewToggle) {
-            canViewToggle.checked = true;
-        } *@
     }
-    document.querySelectorAll("#can_view").forEach(function (canViewCheckbox) {
-    canViewCheckbox.addEventListener("change", function () {
+    if ($('.subcheck:checked').length == $('.subcheck').length) {
+        $("#mastercheck").prop('checked', true)
+    } else {
+        $("#mastercheck").prop('checked', false)
+    }
+})
+function toggleSwitches(checkbox) {
+    var row = checkbox.closest("tr");
+    var canViewToggle = row.querySelector('[id="can_view"]');
+    var toggles = row.querySelectorAll(".toggle");
+    toggles.forEach(function(toggle) {
+        toggle.disabled = !checkbox.checked;
+        if (!checkbox.checked) {
+            toggle.checked = false;
+        }
+    });
+}
+document.querySelectorAll("#can_view").forEach(function(canViewCheckbox) {
+    canViewCheckbox.addEventListener("change", function() {
         const row = this.closest("tr");
         const mainCheckbox = row.querySelector(".subcheck");
 
         if (!this.checked) {
             mainCheckbox.checked = false;
-            toggleSwitches(mainCheckbox); 
+            toggleSwitches(mainCheckbox);
         }
     });
 });
+
+document.querySelectorAll("#can_edit").forEach(function(canEditCheckbox) {
+    canEditCheckbox.addEventListener("change", function() {
+        const row = this.closest("tr");
+        const canDeleteCheckbox = row.querySelector("#can_delete");
+        if (!this.checked) {
+            canDeleteCheckbox.checked = false;
+        }
+    });
+});
+
 
 
 </script>

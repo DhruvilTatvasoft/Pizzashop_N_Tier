@@ -24,7 +24,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         token.Totalpersons = model.personCount ?? 0;
         // Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customername.ToLower().Trim() == model.customer.name.ToLower().Trim() && customer.Isdeleted == false);
         if(Customer == null){
-            int customerid = createCustomer(model.customer);
+            int customerid = createCustomer(model.customer).Customerid;
             token.Customerid = getCustomerId(customerid);
         }
         else{
@@ -42,7 +42,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         return true;
     }
 
-    public  int createCustomer(CustomerModel model){
+    public  Customer createCustomer(CustomerModel model){
         Customer customer = new Customer();
         customer.Customername = model.name;
         customer.Email = model.email;
@@ -54,7 +54,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         customer.Modifiedby = 1;
         _context.Customers.Add(customer);
         _context.SaveChanges();
-        return customer.Customerid;
+        return customer;
         
     }
     public int getCustomerId(int customerid){
@@ -162,6 +162,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     {
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token=>token.Waitingtokenid == tokenid)!;
         token.Isdeleted = true;
+        token.Modifiedat = DateTime.Now;
         _context.Waitingtokens.Update(token);
         _context.SaveChanges();
         return true;
@@ -193,7 +194,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         Ordertable orderedTable = new Ordertable();
         orderedTable.Tableid = table.Tableid;
         orderedTable.Customerid = token.Customerid;
-        orderedTable.Isdeleted = true;
+        orderedTable.Isdeleted = false;
         orderedTable.Createdat = DateTime.Now;
         orderedTable.Modifiedat = DateTime.Now;
         orderedTable.Createdby = 1;
@@ -202,6 +203,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         _context.Tables.Update(table);
         }
         token.Isdeleted = true;
+        token.Modifiedat = DateTime.Now;
         _context.Waitingtokens.Update(token);
         _context.SaveChanges();
         return true;
@@ -217,7 +219,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
             tables.Add(table);
             tableCapacity += table.Capacity;
         }
-        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Totalpersons >= tableCapacity && token.Sectionid == sectionid).ToList();
+        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Totalpersons <= tableCapacity && token.Sectionid == sectionid).ToList();
         foreach (var token in tokens)
         {
             Customer customer = _context.Customers.FirstOrDefault(customer=>customer.Customerid == token.Customerid && customer.Isdeleted == false)!;

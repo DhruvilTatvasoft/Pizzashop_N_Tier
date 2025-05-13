@@ -130,7 +130,7 @@
                                                 </div>
                                             </label>
                                         </div>
-</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -149,8 +149,6 @@
                                 </select>
                             </div>
                               <div class="loadModifiers p-3" style="height: 386px;overflow-y: auto;"></div>
-                              
-
                             <input type="hidden" name="modifiername" id="modifierData">
                         </div>
                     </div>
@@ -165,7 +163,6 @@
     </div>
 </form>
 <script>
-
     function formDataToJsonString(formData) {
         let object = {};
         formData.forEach((value, key) => {
@@ -178,7 +175,6 @@
         return JSON.stringify(object);
     }
 
-   
     function displayImageName(event) {
         const file = event.target.files[0]; 
         if (file) {
@@ -195,11 +191,9 @@
     }
     if (!window.addItemFormHandlerInitialized) {
         window.addItemFormHandlerInitialized = true;
-        
         $(document).on('submit', '#AddItemForm', function(e) {
             e.preventDefault();
             e.stopImmediatePropagation();
-            
             if ($(this).valid()) {
                 var form = $(this);
                 var data = new FormData(this);

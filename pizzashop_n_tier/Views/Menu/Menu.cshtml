@@ -230,8 +230,7 @@
             }
             console.log(temporaryId);
             var modifiergroup = document.querySelector(temporaryId);
-
-            if (modifiergroup == null) {
+            if (modifiergroup == null && $('#modifier-group').val() != 0) {
                 $.ajax({
                     url: '/Menu/getModifiers',
                     type: 'GET',

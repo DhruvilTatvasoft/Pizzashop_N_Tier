@@ -1,5 +1,4 @@
 using DAL.Data;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 public class TaxesController : Controller
@@ -29,6 +28,10 @@ public class TaxesController : Controller
     public IActionResult AddNewTax(TaxesViewModel model)
     {
 
+        if (model.tax == null)
+        {
+            return Json(new { error = "Tax data is missing!" });
+        }
         bool isAdded = _taxService.addNewTax(model.tax);
         if (!isAdded && model.tax.Taxid != 0)
         {

@@ -63,7 +63,6 @@
   </form>
 
 <script>
-
   $("#EditTableForm").on('submit', function (e) {
     e.preventDefault();
     if (!$(this).valid()) {
@@ -71,9 +70,6 @@
     }
   else{
     var data = new FormData(this);
-    for (var pair of data.entries()) {
-      console.log(pair[0] + ', ' + pair[1]);
-    }
 
     $.ajax({
       url: '@Url.Action("updatetablePost","TableAndsection")',
@@ -82,8 +78,6 @@
       contentType: false,
       processData: false,
       success: function (data) {
-        console.log("edited");
-        console.log(data);
         $(".btnclose").click();
         loadTableData(data.sectionid,1);
         $("#EditTableModal").modal('hide');
@@ -92,5 +86,4 @@
     });
   }
   });
-
 </script>

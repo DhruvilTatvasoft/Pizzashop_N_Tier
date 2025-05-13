@@ -3,7 +3,6 @@
    <h4 class="p-3 pb-1">Category</h4>
    <ul>
       <li class="categoryForMenuPage selectedcategory text-white" onclick="loadItemsForCategory(0)">All</li>
-      @* <li class="categoryForMenuPage selectedcategory text-white" onclick="loadItemsForCategory(0)">favorite</li> *@
       @foreach (var category in Model.categories)
       {
          <li  class="categoryForMenuPage" onclick="loadItemsForCategory(this,@category.Categoryid)">@category.Categoryname</li>

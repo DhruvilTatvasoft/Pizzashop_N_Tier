@@ -1,7 +1,7 @@
 @model CustomerViewModel
-<table class="table mb-0" id="table">
+<table class="table mb-0" id="table" style="--bs-table-bg: none;">
     <thead>
-        <tr>
+        <tr class="bg-white">
             <th scope="col">
                 <label for="" class="me-2" >Name</label><img src="~/images/icons8-sorting-arrows-50.png" class="me-1" onclick="loadCustomerTable('name','@(Model.sortBy == "name" && Model.sortOrder == "asc" ? "desc" : "asc")','@(Model.pageNumber)','@Model.pageSize')" style="width: 15px;cursor: pointer;" alt="">
             </th>

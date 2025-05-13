@@ -186,7 +186,6 @@ else
 
 $(document).ready(function () {
     $(".tg-btn").on("click", function () {
-        console.log("click");
         const sidebar = $(".sidebar");
         if (window.innerWidth <= 768) {
             sidebar.toggleClass("open");
@@ -202,7 +201,6 @@ $(document).ready(function () {
 document.querySelector(".close-btn").addEventListener("click", function () {
     document.querySelector(".sidebar").classList.remove("open");
     $(".content").css("padding-left","8%")
-    console.log($(".content"))
 });
 
 

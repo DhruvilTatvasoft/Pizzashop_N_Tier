@@ -11,6 +11,7 @@ public interface IWaitingTokenRepository
     int? getMaxPersonCountForSection(List<int> tableids);
     int getSectionIdOfToken(int tokenid);
     Dictionary<Section,int> getSectionsWithWaitingTokens();
+     Customer createCustomer(CustomerModel model);
     List<CustomerModel> getSuggestedCustomerList(string name);
     List<Table> getTablesForToken(int tokenid);
     WaitingTokenModel getTokenDetails(int waitingTokenId);

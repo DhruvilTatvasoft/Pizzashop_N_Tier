@@ -3,6 +3,7 @@
   ViewData["Title"] = "OrderDetails";
   decimal subtotal = 0;
   Layout = "";
+  decimal Total = 0;
 }
 @model OrderViewModel
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.5/dist/css/bootstrap.min.css">
@@ -38,7 +39,6 @@
         <p><strong>Invoice Number:</strong> #DOM202500229</p>
         <p><strong>Date:</strong> @Model.order.Modifiedat </p>
         <p><strong>Section:</strong>@Model.order.Section.Sectionname</p>
-        @* <p><strong>Table:</strong> @Model.order.Table.Tablename</p> *@
       </div>
     </div>
 
@@ -112,27 +112,28 @@
             <tr>
               <td class="total-label">Sub Total:</td>
               <td style="text-align: end;">₹@subtotal</td>
+               <div class="d-none">@(Total = subtotal)</div>
             </tr>
+            @foreach (var tax in Model.appliedTaxDetails)
+                        {
+                            <tr>
+                                <td>@tax.taxname</td>
+                                @if (tax.taxtype == "flat amount")
+                                {
+                                    <td style="text-align: end;">@((decimal)tax.taxPercentage)</td>
+                                    Total = Total + (decimal)tax.taxPercentage;
+                                }
+                                else
+                                {
+                                    <td style="text-align: end;">@((subtotal * (decimal)tax.taxPercentage) / 100)</td>
+                                    Total = Total + ((decimal)tax.taxPercentage * subtotal) / 100;
+                                }
+                            </tr>
+                        }
             <tr>
-              <td>CGST:</td>
-              <td style="text-align: end;">₹@((subtotal * 6) / 100)</td>
-            </tr>
-            <tr>
-              <td>SGST:</td>
-              <td style="text-align: end;">₹150.00</td>
-            </tr>
-            <tr>
-              <td>GST:</td>
-              <td style="text-align: end;">₹7.98</td>
-            </tr>
-            <tr style="border-bottom: 1px solid #0d6efd;">
-              <td>Other:</td>
-              <td style="text-align: end;">₹19.95</td>
-            </tr>
-            <tr>
+              <hr>
               <td class="total-label text-primary">Total Amount Due:</td>
-              <td class="header-text" style="text-align: end;">₹@(subtotal + ((subtotal * 6)/100) + (decimal)150.00 +
-                                (decimal)7.98 + (decimal)19.95)</td>
+              <td class="header-text" style="text-align: end;">₹@(Total)</td>
             </tr>
           </tbody>
         </table>

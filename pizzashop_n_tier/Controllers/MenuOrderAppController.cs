@@ -1,17 +1,14 @@
+
 using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Metadata.Internal;
-// using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 public class MenuOrderAppController : Controller
 {
     private readonly IMenuOrderAppService _menuOrderAppService;
     private readonly IMenuService _menuService;
-
     private readonly IWaitingTokenService _waitingTokenService;
     private readonly IOrderService _orderService;
-
     private readonly IItemService _itemService;
     private readonly IModifierService _modifierService;
     private readonly ITableService _tableService;
@@ -37,7 +34,6 @@ public class MenuOrderAppController : Controller
     }
 
     [HttpPost]
-
     public IActionResult getItemsForCategory([FromBody] orderDetailsForAssignedTable model)
     {
         MenuOrderAppModel responseModel = new MenuOrderAppModel();
@@ -61,8 +57,8 @@ public class MenuOrderAppController : Controller
             model.SearchedItem = "";
         }
 
-        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId, model.itemType, model.SearchedItem);
-        responseModel.categoryId = model.CategoryId;
+        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId ?? 0, model.itemType, model.SearchedItem);
+        responseModel.categoryId = model.CategoryId ?? 0;
 
         return PartialView("_itemData", responseModel);
     }
@@ -129,6 +125,7 @@ public class MenuOrderAppController : Controller
     public IActionResult editCustomerDetails(MenuOrderAppModel model)
     {
         _menuOrderAppService.saveCustomerDetails(model.customer);
+       
         return Json(new { success = "Customer Details Save successfully" });
     }
 
@@ -176,6 +173,7 @@ public class MenuOrderAppController : Controller
     public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails)
     {
         int orderid = _menuOrderAppService.createOrder(orderDetails);
+        
         return Json(new { success = "Order Saved Successfully", Orderid = orderid });
     }
 

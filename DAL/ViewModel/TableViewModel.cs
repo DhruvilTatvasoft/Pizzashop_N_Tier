@@ -11,6 +11,8 @@ public class TableViewModel
     public List<int> tables{get;set;}
 
     public int? maxPersonCount{get;set;} 
+
+    public int? sectionid{get;set;}
 }
 public class SectionViewModel{
     public Section section{get;set;}

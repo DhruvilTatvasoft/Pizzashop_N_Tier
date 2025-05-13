@@ -1,24 +1,6 @@
 @model WaitingTokenModel
-<style>
-    .sugg_container {
-        border: 1px solid #d4d4d4;
-        border-radius: 7px;
-        position: absolute;
-        z-index: 3;
-        background-color: white;
-    }
-
-    .suggestionlabel {
-        color: grey;
-    }
-
-    .customer_list {
-        border-bottom: 1px solid #cecece;
-    }
-</style>
 @if (Model.customerList.Count > 0)
 {
-
     <div class="sugg_container mt-2">
         <div class="d-flex justify-content-between p-2">
             <label for="" class="suggestionlabel">Type '/' to search from your saved</label>
@@ -33,7 +15,6 @@
                     <label for="" data-name="@customer.name">@customer.name</label>
                 </div>
             }
-
         </div>
         <div>
             <div class="m-2">

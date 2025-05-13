@@ -44,8 +44,8 @@ public class MenuOrderAppModel
 public class orderDetailsForAssignedTable
 {
     public string? itemType{get;set;}
-    public List<int> TableIds { get; set; }
-    public int CategoryId { get; set; }
+    public List<int>? TableIds { get; set; }
+    public int? CategoryId { get; set; }
     public string SearchedItem { get; set; }
     public int? orderid { get; set; }
     public int? customerid{get;set;}

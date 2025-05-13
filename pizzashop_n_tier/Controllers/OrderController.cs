@@ -6,9 +6,6 @@ using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.AspNetCore.Mvc.ViewFeatures;
 using SelectPdf;
-using Microsoft.AspNetCore.Authorization;
-
-
 
 namespace pizzashop_n_tier.Controllers
 {
@@ -74,6 +71,8 @@ namespace pizzashop_n_tier.Controllers
             model2.ItemsAndModifiers = _orderService.getModifiersForItems(orderid);
             model.orderedItemModifiers = model2;
             model.status = _orderService.getAllStatus();
+            model.orderid = orderid;
+            _orderService.getAppliedTaxesForOrder(model);
             var viewHtml = await ViewToStringAsync("Order/invoice.cshtml", model);
             try
             {

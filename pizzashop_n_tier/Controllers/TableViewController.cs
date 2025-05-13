@@ -1,4 +1,3 @@
-using AspNetCoreGeneratedDocument;
 using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
@@ -34,6 +33,7 @@ public class TableViewController : Controller
         model.WaitingToken = model2;
         model.tables = tableids;
         model.maxPersonCount = _waitingTokenService.getMaxPersonCountForSection(tableids);
+        model.sectionid = sectionid;
         return PartialView("_assignTableOffcanvasData", model);
     }
 
@@ -43,27 +43,18 @@ public class TableViewController : Controller
         MenuOrderAppModel model = new MenuOrderAppModel();
         if (Model.customerModal != null)
         {
-            // WaitingTokenModel waitingTokenModel = new WaitingTokenModel();
-            // waitingTokenModel.customer = Model.customerModal;
-            // waitingTokenModel.personCount = Model.customerModal.PersonCount;
-            // waitingTokenModel.ordrcreated = true;
-            // waitingTokenModel.sectionId = Model.customerModal.sectinid;
-            // _waitingTokenService.AddNewWaitingToken(waitingTokenModel);
-            // Model.tokenid = _waitingTokenService.getTokenidFromCustomerEmail(Model.customerModal.email);
-            // model.tokenid = Model.tokenid??0;
-            Customer createdCustomer = _customerService.createNewCustomer(Model.customerModal);
+            Customer createdCustomer = _waitingTokenService.createNewCustomer(Model.customerModal);
             model.customer = Model.customerModal;
             model.customer.customerId = createdCustomer.Customerid;
         }
         else
         {
             model.tokenid = Model.tokenid ?? 0;
-            _waitingTokenService.AssignTable(Model.tableids, Model.tokenid ?? 0);
             model.customer = _waitingTokenService.getCustomerForWaitingToken(Model.tokenid ?? 0, Model.tableids);
+            _waitingTokenService.AssignTable(Model.tableids, Model.tokenid ?? 0);
         }
         model.isTableAssigned = true;
         model.categoryId = 0;
-        _tableService.assignTable(Model.tableids, model.customer.customerId ?? 0);
         return PartialView("_menu", model);
     }
 }

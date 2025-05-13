@@ -73,11 +73,10 @@
           <label for="" class="form-label"
             style="position: absolute;left: 6%;top: -20%;font-size: 64%;">section*</label>
           <select class="form-select" style="padding: 6%;padding-top: 8%;" id="customer_tableSection"
-            asp-for="@Model.WaitingToken.sectionId">
+            asp-for="@Model.WaitingToken.sectionId" disabled>
             @foreach (var sec in @Model.WaitingToken.sections)
             {
-              <option value="@sec.Sectionid"
-                selected="@(sec.Sectionid == @Model.WaitingToken.sectionId ? "selected" : null)">
+              <option value="@sec.Sectionid" selected="@(sec.Sectionid == Model.sectionid ? "selected" : null)">
                 @sec.Sectionname</option>
             }
           </select>
@@ -94,7 +93,6 @@
 
 <script>
   function fillCustomerDetails(tokenid) {
-
     var id = "customerDetails_" + tokenid
     var Name = $("#" + id + " .customer_name").val()
     var Phone = $("#" + id + " .customer_phone").val()
@@ -108,8 +106,6 @@
     $("#customer_tableSection").val(sectionId)
     $("#tokenid").val(tokenid)
   }
-
-
   $("#assigntableForm").on("submit", function (e) {
     e.preventDefault();
 
@@ -138,10 +134,7 @@
 
       requestedData.customerModal = customerModal;
     }
-
     var data = JSON.stringify(requestedData);
-    console.log("Final Data to Send:", requestedData);
-
     $.ajax({
       url: "@Url.Action("assignTable", "TableView")",
       method: "POST",

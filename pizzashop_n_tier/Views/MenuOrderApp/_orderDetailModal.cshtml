@@ -1,4 +1,7 @@
 @model MenuOrderAppModel
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"
+    integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <partial name="_ValidationScriptsPartial" />
 <div style="position: relative;margin-top: -4.8%;" class="p-2 pt-0 w-100">
     <div class="p-3 bg-white rounded d-flex flex-column  order-details" style="position: absolute;width:100%;">
@@ -14,8 +17,9 @@
                 </div>
             </div>
             <div>
-                <button class="btn btn-outline-primary btnoutlinecolour pt-1" onclick="generateQR()"><img src="~/images/qr-code-scan.svg"
-                        alt=""></button>
+                @* <div id="#chatBox"></div> *@
+                <button class="btn btn-outline-primary btnoutlinecolour pt-1" onclick="generateQR()"><img
+                        src="~/images/qr-code-scan.svg" alt=""></button>
                 <button class="btn btn-outline-primary btnoutlinecolour pt-1"
                     onclick="showCustomerDetails(@Model.customer.customerId)"><img
                         src="~/images/person-lines-fill (1).svg" alt=""></button>
@@ -117,27 +121,26 @@
     </div>
 </div>
 
-<div class="modal fade" id="QRcodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" style="    --bs-modal-width: 300px;" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLongTitle"> Menu</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body d-flex align-items-center justify-content-center">
-        <div class="QrCodeContainer">
-             <img alt="QR Code" id="qrCodeImage" style="width:100px;"/>
+<div class="modal fade" id="QRcodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    style="    --bs-modal-width: 300px;" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle"> Menu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+            <div class="modal-body d-flex align-items-center justify-content-center">
+                <div class="QrCodeContainer">
+                    <img alt="QR Code" id="qrCodeImage" style="width:100px;" />
+                </div>
+            </div>
+            <div class="modal-footer d-flex align-items-center justify-content-center">
+                <button type="button" class="btn btncolour text-white" data-bs-dismiss="modal">Done</button>
+            </div>
         </div>
-      </div>
-      <div class="modal-footer d-flex align-items-center justify-content-center">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Done</button>
-        @* <button type="button" class="btn btn-primary">Save changes</button> *@
-      </div>
     </div>
-  </div>
-</div> 
+</div>
 <script>
 
     $(document).ready(function () {
@@ -158,15 +161,15 @@
         }
     });
 
-    function generateQR(){
+    function generateQR() {
         var text = "http://localhost:5043/OrderApp/getOrderAppPage?fromQr=true"
         $.ajax({
-            url:"@Url.Action("GenerateQRCode","MenuOrderApp")",
-            type:"GET",
-            data:{text : "abcdefg"},
-            success:function(response){
+            url: "@Url.Action("GenerateQRCode", "MenuOrderApp")",
+            type: "GET",
+            data: { text: "abcdefg" },
+            success: function (response) {
                 $("#QRcodeModal").modal("show");
-                 $("#qrCodeImage").attr("src", "/MenuOrderApp/GenerateQRCode?text=" + encodeURIComponent(text));
+                $("#qrCodeImage").attr("src", "/MenuOrderApp/GenerateQRCode?text=" + encodeURIComponent(text));
             }
         });
     }
@@ -176,7 +179,7 @@
             toastr.error("Add some items before saving the order");
             return;
         }
-        console.log(itemWiseComment)
+
         $('[id^="item_"]').each(function (index, element) {
             var fullId = $(element).attr('id');
             var parts = fullId.split("_");
@@ -210,7 +213,6 @@
             }
             taxesForOrder.push(tax);
         })
-        console.log(appliedTaxes)
         var tableids = @Html.Raw(Json.Serialize(Model.customer.tableids));
         var customerid = @Html.Raw(Json.Serialize(Model.customer.customerId));
         var totalamount = parseFloat($('#totalamount').text().replace('₹', ''));
@@ -230,7 +232,11 @@
             uniqueids: [...new Set($("[id^='item_']").map(function () { return this.id; }).get())]
         }
 
-        console.log(orderDetails);
+        const connection = new signalR.HubConnectionBuilder()
+            .withUrl("/realtimehub")
+            .build();
+        connection.start().catch(err => console.error(err.toString()));
+        connection.invoke("SendMessage", "hiii", "Hello").catch(err => console.error(err.toString()));
 
         $.ajax({
             url: "@Url.Action("saveTheOrderDetails", "MenuOrderApp")",
@@ -240,9 +246,28 @@
             data: JSON.stringify(orderDetails),
             success: function (response) {
                 toastr.success(response.success);
-                console.log(response);
                 $("#SavedOrderid").val(response.orderid);
                 $("#savedOrNot").val(true);
+                loadKot()
+                @* let connection = new signalR.HubConnectionBuilder()
+                    .withUrl("/chatHub").build();
+                connection.on("ReceiveMessage", function (User, Message) {
+                    let encodedUser = $("<div />").text(user).html();
+                    let encodedMsg = $("<div />").text(message).html();
+                    $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
+                });
+                $("#send-btn").click(function () {
+                    let our_user = $("#username").val();
+                    let Message = $("#message").val();
+                    connection.invoke("Message", our_user, Message);
+                    $("#message").val("").focus();
+                });
+                connection.start().then(function () {
+                    console.log("Connected!");
+                }).catch(function (err) {
+                    console.error(err.toString());
+                }); *@
+
             },
             error: function (xhr, status, error) {
                 console.error("Error saving the order:", error);
@@ -257,12 +282,9 @@
             uniqueids: itemDetails,
             orderid: @Html.Raw(Json.Serialize(Model.orderid)) 
        }
-       if(itemIds.orderid == 0){
-        itemIds.orderid =  $("#SavedOrderid").val();
-       }
-
-
-        console.log(@Html.Raw(Json.Serialize(Model.orderid)))
+        if (itemIds.orderid == 0) {
+            itemIds.orderid = $("#SavedOrderid").val();
+        }
         $.ajax({
             url: "@Url.Action("completeTheOrder", "MenuOrderApp")",
             type: "POST",
@@ -272,6 +294,7 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success(response.success);
+                    loadKot();
                 }
                 else {
                     toastr.error(response.error);
@@ -287,18 +310,19 @@
             uniqueids: itemDetails,
             orderid: @Html.Raw(Json.Serialize(Model.orderid))
        }
-       
+
         $.ajax({
             url: "@Url.Action("cancelTheOrder", "MenuOrderApp")",
             type: "POST",
             contentType: "application/json",
             dataType: "json",
             data: JSON.stringify(itemIds),
-            success:function(response){
-                if(response.success){
+            success: function (response) {
+                if (response.success) {
                     toastr.success(response.success);
+                    loadKot();
                 }
-                else{
+                else {
                     toastr.error(response.error);
                 }
             }

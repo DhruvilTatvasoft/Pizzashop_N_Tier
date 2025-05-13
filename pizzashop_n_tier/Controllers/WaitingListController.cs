@@ -1,6 +1,5 @@
 using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
-
 public class WaitingListController : Controller
 {
     public ISectionService _sectionService;

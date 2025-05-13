@@ -1,7 +1,5 @@
 using BAL.Interfaces;
 using DAL.Data;
-using iText.Kernel.Geom;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 
@@ -9,18 +7,11 @@ public class MenuController : Controller
 {
 
     public readonly IUser _user;
-
     public readonly ICookieService _cookieService;
-
     public readonly IEmailGenService _emailService;
-
     public readonly IMenuService _menuService;
-
-
     public readonly IItemService _itemService;
-
     public readonly IModifierService _modifierService;
-
     public readonly IImagePath _imageService;
 
     public MenuController(IImagePath imagePath, IModifierService modifierService, IUser user, IPermissionService permissionService, ICookieService cookieService, IEmailGenService emailService, IMenuService menuService, IItemService itemService)

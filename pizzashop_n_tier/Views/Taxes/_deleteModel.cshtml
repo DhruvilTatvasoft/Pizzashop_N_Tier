@@ -33,7 +33,6 @@
     function deleteTax() {
         event.preventDefault();
         Taxid = $("#deleteId").val();
-        console.log(Taxid);
         $.ajax({
             url: '@Url.Action("deleteTax", "Taxes")',
             type: 'POST',

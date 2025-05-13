@@ -16,6 +16,21 @@
     font-weight: bold;
     
 }
+.sugg_container {
+    border: 1px solid #d4d4d4;
+    border-radius: 7px;
+    position: absolute;
+    z-index: 3;
+    background-color: white;
+}
+
+.suggestionlabel {
+    color: grey;
+}
+
+.customer_list {
+    border-bottom: 1px solid #cecece;
+}
 
 .headerTEXT{
     font-size: 18px;

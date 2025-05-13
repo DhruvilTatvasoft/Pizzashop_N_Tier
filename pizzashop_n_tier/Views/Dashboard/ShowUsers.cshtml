@@ -6,12 +6,8 @@
 }
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
-
 <link rel="stylesheet" href="~/css/showuser.css">
-
-
 <div class="row p-0 h-100 d-flex">
-
   <div class="content pt-3 w-100">
     <div class="header d-flex align-items-center justify-content-center mb-4 d-flex">
       <h1>User @(Context.Items.ContainsKey("PermissionDenied"))</h1>

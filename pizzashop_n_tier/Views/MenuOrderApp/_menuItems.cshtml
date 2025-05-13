@@ -4,7 +4,7 @@
     <div class="row pe-3 w-100 mb-0" style="padding-left: 5%;">
         <div class="d-flex justify-content-between " style="height: 9%;width: 50%;">
             <div class="form-group searchInput">
-                <input type="text" class="form-control" onkeyup="loadItemsForCategory(@Model.categoryId)"
+                <input type="text" class="form-control" onkeyup="loadItemsForCategory('',@Model.categoryId,'')"
                     id="searchItemForCategory" aria-describedby="emailHelp" placeholder="Search">
                 <span id="search-icon">
                     <input type="hidden" id="selectedCategory" asp-for="categoryId" />
@@ -34,7 +34,6 @@
             var favorites = [];
 
             function AddToFavorite(x, id) {
-                console.log(x)
                 if ($(x).attr("src") == "/images/heart-fill.svg") {
                     $(x).attr("src", "/images/heart.svg");
                     if (!favorites.includes(id)) {
@@ -63,13 +62,10 @@
                 }
             }
             $("document").ready(() => {
-                loadItemsForCategory(0);
+                loadItemsForCategory('',0);
             })
             function openOrderCommentModal() {
-                console.log(orderComment)
-                    console.log("comment found");
                     $("#orderCommentModal").modal("show");
-                    @* $("#orderComment").val(orderComment); *@
                 
             }
             function postorderComment() {
@@ -80,7 +76,6 @@
             function openItemInstructionModal(uniqueid) {
                 $("#itemInstructionModal").modal("show");
                 var item = itemWiseComment.find(item => item.uniqueid == uniqueid.id);
-                console.log(item);
                 if (item != null && item != undefined) {
                     $("#ItemInstruction").val(item.Instruction);
                 }

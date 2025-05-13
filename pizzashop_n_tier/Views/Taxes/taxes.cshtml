@@ -55,7 +55,6 @@
 
             function searchtax() {
                 var search = document.getElementById("taxSearch").value;
-                console.log("searching")
                 if (search == "") {
                     loadTaxes();
                 }
@@ -77,7 +76,6 @@
                     success: function (data) {
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
-                        console.log("no errors");
                         $("#isUpdated").val('false')
                     }
                 });
@@ -88,13 +86,10 @@
                     type: 'GET',
                     data: { taxid: TaxId },
                     success: function (data) {
-                        console.log("edit clicked");
                         $(".loadTaxModal").html(data);
                         $("#addEditTaxModal").modal('show');
                         document.getElementById("deleteText").innerHTML = "Edit Tax";
                         $("#isUpdated").val('true')
-                        console.log(data);
-                        @* $("#editTaxButtton").css() *@
                     }
                 });
             }

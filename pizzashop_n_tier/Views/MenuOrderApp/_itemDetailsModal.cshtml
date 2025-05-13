@@ -70,26 +70,6 @@
 <script>
     var modifiers = [];
 
-    @* function calculateTax(subtotal) {
-        var taxes = $('[id^="tax_"]');
-        console.log(subtotal)
-        taxes.each(function () {
-            var taxType = $(this).data("taxtype");
-            var taxValue = $(this).data("taxpercentage")
-
-            if (taxType == "flat amount") {
-                if (subtotal == 0) {
-                    $(this).text("₹0.0")
-                }
-                else {
-                    $(this).text("₹" + taxValue)
-                }
-            }
-            else {
-                $(this).text("₹" + (taxValue * parseFloat(subtotal)) / 100);
-            }
-        })
-    } *@
     
     
     function addItemsInOrder(itemid) {

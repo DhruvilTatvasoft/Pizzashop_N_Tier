@@ -1,11 +1,9 @@
-using System.Security.Claims;
-// using System.Text.Json.Serialization;
+
 using BAL.Interfaces;
-using DAL.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
+
 
 public class DashboardController : Controller
 {

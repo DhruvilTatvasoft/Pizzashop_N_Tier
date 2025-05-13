@@ -41,7 +41,6 @@ public class ItemRepository : IItemRepository
             return false;
         }
     }
-
     public List<Category> getAllCategories()
     {
         List<Category> categories = _context.Categories.Where(c => c.Isdeleted == false).ToList();
@@ -56,7 +55,6 @@ public class ItemRepository : IItemRepository
         _context.Update(c);
         _context.SaveChanges();
     }
-
     public void deleteCategory(int categoryId)
     {
         Category c = _context.Categories.FirstOrDefault(c => c.Categoryid == categoryId)!;
@@ -64,13 +62,11 @@ public class ItemRepository : IItemRepository
         _context.Update(c);
         _context.SaveChanges();
     }
-
     public List<Unit> getAllUnits()
     {
         List<Unit> units = _context.Units.Where(u => u.Isdeleted == false).ToList();
         return units;
     }
-
     public bool addItemInDb(ItemViewModel itemViewModel , string email,string? imagePath)
     {   
         if(_context.Items.FirstOrDefault(item=>item.Itemname == itemViewModel.Itemname && item.Categoryid == itemViewModel.Categoryid) != null){
@@ -104,7 +100,6 @@ public class ItemRepository : IItemRepository
         }
 
     }
-
     public void deleteItemFromDb(int itemId)
     {
         Item i = _context.Items.FirstOrDefault(i => i.Itemid == itemId)!;
@@ -112,13 +107,11 @@ public class ItemRepository : IItemRepository
         _context.Update(i);
         _context.SaveChanges();
     }
-
     public List<Item> getSearchedItemFromDb(string searchedItem, int categoryId)
     {
         List<Item> items = _context.Items.Where(i => i.Categoryid == categoryId && i.Itemname.ToLower().Contains(searchedItem.ToLower().Trim()) && i.Isdeleted == false).ToList();
         return items;
     }
-
     bool IItemRepository.deleteItemFromDb(int itemId)
     {
         Item? i = _context.Items.Find(itemId);
@@ -131,34 +124,28 @@ public class ItemRepository : IItemRepository
         }
         return false;
     }
-
     public List<Modifiergroup> getAllModifierGroups()
     {
         List<Modifiergroup> modifiergroups = _context.Modifiergroups.Where(mg=>mg.Isdeleted == false).ToList();
         return modifiergroups;
     }
-
     public Item getItem(int itemid)
     {
         return _context.Items.FirstOrDefault(i => i.Itemid == itemid && i.Isdeleted == false) ?? new Item();
     }
-
     public int getItemFromItemName(string itemname)
     {
        return _context.Items.FirstOrDefault(i => i.Itemname == itemname && i.Isdeleted == false).Itemid;
     }
-
     public int getAllItemsForCategory(int categoryId)
     {
         return _context.Items.Where(item=>item.Categoryid == categoryId && item.Isdeleted == false).Count();
     }
-
     public Item getItemFromItemId(int itemId)
     {
         Item item = _context.Items.FirstOrDefault(item=>item.Itemid == itemId && item.Isdeleted == false)! ;
         return item;
     }
-
     public void updateItemdetails(ItemViewModel model,string imagepath)
     {
         Item item = _context.Items.FirstOrDefault(item=>item.Itemid == model.itemid)!;
@@ -185,7 +172,6 @@ public class ItemRepository : IItemRepository
         _context.SaveChanges();
 
     }
-
     public Category getCategoryById(int categoryId)
     {
         return _context.Categories.FirstOrDefault(category=>category.Categoryid == categoryId)!;

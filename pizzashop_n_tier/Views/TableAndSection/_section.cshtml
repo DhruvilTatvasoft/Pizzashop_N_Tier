@@ -2,15 +2,16 @@
 @using Microsoft.AspNetCore.Authorization
 @inject IAuthorizationService AuthorizationService
 @{
-    var canEditTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanEditAdd")).Succeeded;
-    var canDeleteTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanDelete")).Succeeded;
+  var canEditTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanEditAdd")).Succeeded;
+  var canDeleteTableSection = (await AuthorizationService.AuthorizeAsync(User, "TableAndSection_CanDelete")).Succeeded;
 }
 <partial name="_ValidationScriptsPartial" />
 <div class="d-flex justify-content-between p-2 ps-4">
   <label class=" c-text">Section</label>
   <button type="submit" class="col-6 d-flex w-25" data-bs-toggle="modal" data-bs-target=""
     style="background: transparent;border: none;margin-left: auto;"><img src="~/images/plus-square copy.svg"
-      style="width:75%;margin-top: 5px;" onclick="@(canEditTableSection ? "OpenAddSectionModel()" : "showAccessDenied('section','add')")" alt="">
+      style="width:75%;margin-top: 5px;"
+      onclick="@(canEditTableSection ? "OpenAddSectionModel()" : "showAccessDenied('section','add')")" alt="">
   </button>
 </div>
 
@@ -25,10 +26,13 @@
           <label for="" class="ms-0" style="font-size: 13px; flex-grow: 1; overflow: hidden; text-overflow: ellipsis;">≣
             @sec.Sectionname</label>
           <div class="d-flex">
-            
-            <img src="~/images/edit.png" class="pe-2" onclick="@(canEditTableSection ? "OpenModalForEdit(@sec.Sectionid)" : "showAccessDenied('section','add')")"
+
+            <img src="~/images/edit.png" class="pe-2"
+              onclick="@(canEditTableSection ? "OpenModalForEdit(@sec.Sectionid)" : "showAccessDenied('section','add')")"
               style="width:25px; cursor:pointer;" alt="">
-            <img src="~/images/trash-fill.svg" onclick="@(canDeleteTableSection ? "deleteModal(@sec.Sectionid)" : "showAccessDenied('section','delete')")" style="width:15px; cursor:pointer;" alt="">
+            <img src="~/images/trash-fill.svg"
+              onclick="@(canDeleteTableSection ? "deleteModal(@sec.Sectionid)" : "showAccessDenied('section','delete')")"
+              style="width:15px; cursor:pointer;" alt="">
           </div>
         </li>
       }
@@ -51,11 +55,11 @@
         </div>
         <div class="modal-body">
           <div class="form-group mb-4">
-            <input type="text" class="form-control" id="sectionname"  style="padding: 3% 4% 3% 2%;" placeholder="Name*"
+            <input type="text" class="form-control" id="sectionname" style="padding: 3% 4% 3% 2%;" placeholder="Name*"
               asp-for="section.Sectionname">
-              <span asp-validation-for="section.Sectionname" class="text-danger"></span>
-          <input type="hidden" id="sectionId" asp-for="sectionId">
-           
+            <span asp-validation-for="section.Sectionname" class="text-danger"></span>
+            <input type="hidden" id="sectionId" asp-for="sectionId">
+
             <span class="text-danger"></span>
           </div>
           <div class="form-group">
@@ -63,12 +67,13 @@
               style="padding: 3% 4% 7% 2%;" asp-for="section.Description"></textarea>
             <span class="text-danger"></span>
           </div>
-          
+
         </div>
         <div class="modal-footer" style="border: none;">
           <button type="submit" class="btn btn-primary saveNewSection">Save</button>
           <button type="submit" class="btn btn-primary updateSection" data-bs-dismiss="modal">Update</button>
-          <button type="button" class="btn btn-outline-primary closebtn" data-bs-dismiss="modal" onclick="">Cancel</button>
+          <button type="button" class="btn btn-outline-primary closebtn" data-bs-dismiss="modal"
+            onclick="">Cancel</button>
         </div>
       </div>
     </div>
@@ -78,114 +83,105 @@
 <script>
   function OpenAddSectionModel() {
     $('#addNewSectionModal').modal('show');
-     $('#addNewSectionForm')[0].reset();
+    $('#addNewSectionForm')[0].reset();
     document.querySelector('.modal-title').innerHTML = "Add New Section";
     document.querySelector('.saveNewSection').style.display = 'block';
     document.querySelector('.updateSection').style.display = 'none';
     document.getElementById('addNewSectionForm').action = '@Url.Action("AddNewSection", "TableAndSection")';
-  
   }
 
   function OpenModalForEdit(sectionId) {
- 
-  $('#addNewSectionForm')[0].reset();
-  $('#addNewSectionModal').modal('show');
+    $('#addNewSectionForm')[0].reset();
+    $('#addNewSectionModal').modal('show');
+    $.ajax({
+      url: '@Url.Action("updateSectionGet", "TableAndSection")',
+      type: "GET",
+      data: { sectionId: sectionId },
+      success: function (data) {
+        document.querySelector('.modal-title').innerHTML = "Edit Section";
+        document.querySelector('.saveNewSection').style.display = 'none';
+        document.querySelector('.updateSection').style.display = 'block';
+        $('#sectionname').val(data.section.sectionname);
+        $('#Section-description').val(data.section.description);
+        $('#sectionId').val(data.section.sectionid);
 
-  $.ajax({
-    url: '@Url.Action("updateSectionGet", "TableAndSection")',
-    type: "GET",
-    data: { sectionId: sectionId},
-    success: function (data) {
-      document.querySelector('.modal-title').innerHTML = "Edit Section";
-      document.querySelector('.saveNewSection').style.display = 'none';
-      document.querySelector('.updateSection').style.display = 'block';
-      console.log(data);
+        document.getElementById('addNewSectionForm').action = '@Url.Action("AddNewSection", "TableAndSection")';
 
-      $('#sectionname').val(data.section.sectionname);
-      $('#Section-description').val(data.section.description);
-      $('#sectionId').val(data.section.sectionid);
-
-      document.getElementById('addNewSectionForm').action = '@Url.Action("AddNewSection", "TableAndSection")';
-
-    },
-    error: function () {
-      alert("Failed to load section data. Please try again.");
-    }
-  });
-}
-
+      },
+      error: function () {
+        alert("Failed to load section data. Please try again.");
+      }
+    });
+  }
 
   $("#addNewSectionForm").on('submit', function (e) {
     e.preventDefault();
-    if($(this).valid()){
-    var data = new FormData(this);
-    $(".saveNewSection, .updateSection").attr("disabled", true);
-    var formAction = $(this).attr('action');
-    if( $('#sectionId').val() != 0){
-      data.append("section.Sectionid", $('#sectionId').val());
+    if ($(this).valid()) {
+      var data = new FormData(this);
+      $(".saveNewSection, .updateSection").attr("disabled", true);
+      var formAction = $(this).attr('action');
+      if ($('#sectionId').val() != 0) {
+        data.append("section.Sectionid", $('#sectionId').val());
+      }
+      $.ajax({
+        url: formAction,
+        type: "POST",
+        data: data,
+        contentType: false,
+        processData: false,
+        success: function (data) {
+          if (data.error) {
+            $(".closebtn").click();
+            toastr.error("Section already exists");
+          }
+          else {
+            $('#addNewSectionModal').modal('hide');
+            $(".closebtn").click();
+            loadSections();
+            loadTablePage(data.sectionid)
+            toastr.success(data.success);
+          }
+        },
+        complete: function () {
+          $(".saveNewSection, .updateSection").attr("disabled", false);
+        }
+      });
     }
+  });
+
+  function deleteModal(sectionId) {
     $.ajax({
-      url: formAction,
-      type: "POST",
-      data: data,
-      contentType: false,
-      processData: false,
+      url: '@Url.Action("deleteModalGet", "TableAndSection")',
+      type: "GET",
+      data: { sectionId: sectionId },
       success: function (data) {
-        if(data.error){
-          $(".closebtn").click();
-          toastr.error("Section already exists");
-        }
-        else{
-        $('#addNewSectionModal').modal('hide');
-                $(".closebtn").click();
-        loadSections();
-        loadTablePage(data.sectionid)
-         toastr.success(data.success);
-        }
-      },
-      complete: function () {
-        $(".saveNewSection, .updateSection").attr("disabled", false);
+        $("#loadDeleteModal").html(data);
+        $("#deleteForTableSAndSectionModel").modal('show');
+        $("#deleteText").text("Are you sure you want to delete this section?");
+
+        document.querySelector("#deleteMultipletable").style.display = "none";
+        $("#deleteId").val(sectionId);
       }
     });
-    }
-  });
-
-function deleteModal(sectionId){
-$.ajax({
-  url:'@Url.Action("deleteModalGet","TableAndSection")',
-  type:"GET",
-  data:{sectionId : sectionId},
-  success:function(data){
-    $("#loadDeleteModal").html(data);
-    $("#deleteForTableSAndSectionModel").modal('show');
-  $("#deleteText").text("Are you sure you want to delete this section?");
-
-    document.querySelector("#deleteMultipletable").style.display = "none";
-  $("#deleteId").val(sectionId);
   }
-});
-}
 
-$(document).on('submit', '#deleteFormForSectionAndTable', function (e) {
-  e.preventDefault();
-  console.log("Form submitted successfully");
-  let sectionId = $("#deleteId").val();
+  $(document).on('submit', '#deleteFormForSectionAndTable', function (e) {
+    e.preventDefault();
+    let sectionId = $("#deleteId").val();
+    $.ajax({
+      url: '@Url.Action("deleteSection", "TableAndSection")',
+      type: "POST",
+      data: { sectionId: sectionId },
+      success: function (data) {
+        $('#deleteForTableSAndSectionModel').modal('hide');
+        loadSections();
+        loadTablePage(data.sectionid)
 
-  $.ajax({
-    url: '@Url.Action("deleteSection", "TableAndSection")',
-    type: "POST",
-    data: { sectionId: sectionId },
-    success: function (data) {
-      $('#deleteForTableSAndSectionModel').modal('hide');
-      loadSections();
-      loadTablePage(data.sectionid)
-
-      toastr.success("Section Deleted successfully");
-    },
-    error: function () {
-      alert("Failed to delete the section.");
-    }
+        toastr.success("Section Deleted successfully");
+      },
+      error: function () {
+        alert("Failed to delete the section.");
+      }
+    });
   });
-});
-
 </script>

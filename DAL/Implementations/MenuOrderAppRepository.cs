@@ -277,9 +277,12 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         ExistingCustomer.Phonenumber = customer.phone;
         ExistingCustomer.Modifiedat = DateTime.Now;
         Waitingtoken token = _context!.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false)!;
-        token.Totalpersons = customer.PersonCount;
+        if (token != null)
+        {
+            token.Totalpersons = customer.PersonCount;
+            _context.Waitingtokens.Update(token);
+        }
         _context.Customers.Update(ExistingCustomer);
-        _context.Waitingtokens.Update(token);
         _context.SaveChanges();
     }
 
@@ -411,8 +414,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         model.phone = customer.Phonenumber;
         List<Table> tables = new List<Table>();
         List<int> tableids = new List<int>();
-        tableids = _context.Ordertables.Where(orderedTable=>orderedTable.Customerid == customerid && orderedTable.Isdeleted == false).Select(orderedTable=>orderedTable.Tableid).ToList();
-        var maxcapacity = _context.Tables.Where(tables =>  tableids.Contains(tables.Tableid)).Select(tables=>tables.Capacity).Sum();
+        tableids = _context.Ordertables.Where(orderedTable => orderedTable.Customerid == customerid && orderedTable.Isdeleted == false).Select(orderedTable => orderedTable.Tableid).ToList();
+        var maxcapacity = _context.Tables.Where(tables => tableids.Contains(tables.Tableid)).Select(tables => tables.Capacity).Sum();
         if (tableid != null)
         {
             foreach (var id in tableid)
@@ -517,12 +520,12 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         order.PaymentStatus = "Completed";
         List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
         foreach (var orderedTable in orderedTables)
-        { 
-        orderedTable.Isdeleted = true;
-        Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
-        table.Status = true;
-        table.Statusname = "Available";
-        _context.Tables.Update(table); 
+        {
+            orderedTable.Isdeleted = true;
+            Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
+            table.Status = true;
+            table.Statusname = "Available";
+            _context.Tables.Update(table);
         }
         _context.Orders.Update(order);
         _context.SaveChanges();
@@ -536,7 +539,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         foreach (var itemid in orderedItemIds)
         {
             Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy > 0  )
+            if (item.Readyitemquanitiy > 0)
             {
                 return false;
             }
@@ -569,7 +572,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         var query = _context.Orders.AsQueryable();
         var customerQuery = _context.Customers.AsQueryable();
         var sellingQuery = _context.Orderitems.AsQueryable();
-
+        var waitingTokenQuery = _context.Waitingtokens.Where(w => w.Isdeleted == false).AsQueryable();
         DateTime rangeStart = now;
         if (timeId == 2) rangeStart = now.AddDays(-6);
         if (timeId == 3) rangeStart = now.AddDays(-29);
@@ -579,11 +582,13 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 query = query.Where(h => h.Createdat >= rangeStart);
                 customerQuery = customerQuery.Where(h => h.Createdat >= rangeStart);
                 sellingQuery = sellingQuery.Where(h => h.Createdat >= rangeStart);
+                waitingTokenQuery = waitingTokenQuery.Where(w => w.Createdat >= rangeStart);
                 break;
             case 3:
                 query = query.Where(h => h.Createdat >= rangeStart);
                 customerQuery = customerQuery.Where(h => h.Createdat >= rangeStart);
                 sellingQuery = sellingQuery.Where(h => h.Createdat >= rangeStart);
+                waitingTokenQuery = waitingTokenQuery.Where(w => w.Createdat >= rangeStart);
                 break;
             case 4:
                 query = query.Where(h => h.Createdat.HasValue &&
@@ -595,6 +600,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 sellingQuery = sellingQuery.Where(h => h.Createdat.HasValue &&
                 h.Createdat.Value.Month == now.Month &&
                 h.Createdat.Value.Year == now.Year);
+                waitingTokenQuery = waitingTokenQuery.Where(w => w.Createdat >= rangeStart);
                 break;
             case 5:
                 if (from.HasValue && to.HasValue)
@@ -602,6 +608,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     query = query.Where(h => h.Createdat >= from && h.Createdat <= to);
                     customerQuery = customerQuery.Where(h => h.Createdat >= from && h.Createdat <= to);
                     sellingQuery = sellingQuery.Where(h => h.Createdat >= from && h.Createdat <= to);
+                    waitingTokenQuery = waitingTokenQuery.Where(w => w.Createdat >= rangeStart && w.Createdat <= to);
                 }
                 break;
         }
@@ -609,6 +616,28 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         int totalOrders = query.Count();
         int noOfCustomers = customerQuery.Count();
         double avgOrderValue = totalOrders == 0 ? 0 : totalSales / totalOrders;
+        var tokens = waitingTokenQuery.ToList();
+        TimeSpan averageWaitingTime = TimeSpan.Zero;
+        int validTokens = 0;
+
+        foreach (var token in tokens)
+        {
+            if (token.Modifiedat.HasValue && token.Createdat.HasValue)
+            {
+                averageWaitingTime += token.Modifiedat.Value - token.Createdat.Value;
+                validTokens++;
+            }
+        }
+
+        if (validTokens > 0)
+        {
+            averageWaitingTime = TimeSpan.FromTicks(averageWaitingTime.Ticks / validTokens);
+        }
+        else
+        {
+            averageWaitingTime = TimeSpan.Zero;
+        }
+
         Dictionary<string, double> dailySales = new();
         Dictionary<string, int> totalCustomers = new();
         if (timeId == 1)
@@ -957,7 +986,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
           })
       .ToList();
 
-        var waitingListCount = _context.Waitingtokens.Count();
+        var waitingListCount = _context.Waitingtokens.Where(token => token.Isdeleted == false).Count();
 
         model.totalsales = (float)totalSales;
         model.totalorders = totalOrders;
@@ -969,5 +998,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         model.leastSellingItem = leastSellingItems;
         model.waitingListCount = waitingListCount;
         model.timeid = timeId;
+        model.averageWaitingTime = averageWaitingTime;
     }
 }

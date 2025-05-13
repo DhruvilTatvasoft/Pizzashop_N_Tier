@@ -18,7 +18,7 @@
     $('.dashboard').addClass('active-class')
 
     var aData = @Html.Raw(chartData);
-    console.log(aData)
+
     var aLabels = Object.keys(aData);
     var aDatasets1 = Object.values(aData);
     var dataT = {
@@ -39,7 +39,7 @@
       data: dataT,
       options: {
         responsive: true,
-        legend: { position: 'top' },
+        legend: {display: false },
         title: { display: false, text: 'Revenue' },
         scales: {
           xAxes: [{ gridLines: { display: true }, display: true, scaleLabel: { display: false, labelString: '' } }],
@@ -49,7 +49,7 @@
     });
 
     var aData2 = @Html.Raw(chartData2);
-    console.log(aData2)
+
     var aLabelsForCustomer = Object.keys(aData2);
     var aDatasetsForCustomer1 = Object.values(aData2);
     var dataTForCustomer = {
@@ -70,7 +70,7 @@
       data: dataTForCustomer,
       options: {
         responsive: true,
-        legend: { position: 'top' },
+        legend: { display: false },
         title: { display: false, text: 'Customer Growth' },
         scales: {
           xAxes: [{
@@ -92,14 +92,8 @@
 
   })
 
-
-
-
-
   function detailsByFilter() {
-    console.log("OK")
     var selectedTime = $("#dashboardSelectTimeField").val();
-    console.log(selectedTime)
     var link = "@Url.Action("showDashboard", "Dashboard", new { timeid = "selectedTime" })";
     link = link.replace("selectedTime", selectedTime);
     window.location.href = link
@@ -125,7 +119,7 @@
                 <option value="2" selected="@(Model.timeid == 2 ? "selected" : null)">Last 7 Days</option>
                 <option value="3" selected="@(Model.timeid == 3 ? "selected" : null)">Last 30 Days</option>
                 <option value="4" selected="@(Model.timeid == 4 ? "selected" : null)">Current Month</option>
-                <option value="5" selected="@(Model.timeid == 5 ? "selected" : null)">Custom Date</option>
+                @* <option value="5" selected="@(Model.timeid == 5 ? "selected" : null)">Custom Date</option> *@
               </select>
             </div>
           </div>
@@ -205,7 +199,7 @@
               </div>
               <div class="row">
                 <div class="container-fluid">
-                  <h4 class="mb-1"></h4>
+                  <h4 class="mb-1">@(string.Format("{0:D2}hrs {1:D2}mins",  Model.averageWaitingTime.Hours, Model.averageWaitingTime.Minutes))</h4>
                 </div>
               </div>
               <div class="row">
@@ -216,7 +210,7 @@
             </div>
           </div>
         </div>
-        <div class="row pt-1" style="height:35%;">
+        <div class="row pt-1" style="">
           <div class="col-xl-6 col-lg-6 col-md-12 col-sm-12 col-xs-12 pb-3 h-100">
             <div class="container-fluid bg-white pb-3 pt-2 ps-3 dashboardCardsFirstRow slightBoxShadowStyle h-100">
               <div class="row">
@@ -230,7 +224,7 @@
               <div class="row">
               </div>
               <div style="font-family: Corbel; font-size: small; text-align: center;height: 80%;" class="row">
-                <div style="width: 100%; height: 100%;">
+                <div style="width: 100%; height: 100%;" class="pt-4 pb-1 ps-1 pe-1">
                   <canvas class="revenuechart" style="padding: 0; margin: auto; display: block;" width="400"
                     height="140"></canvas>
                 </div>
@@ -244,11 +238,10 @@
                   <h5 class="mb-0">Customer Growth</h5>
                 </div>
               </div>
-              <div class="row py-1">
-              </div>
-              <div class="row" style="height : 80%;">
-                <div class="container-fluid" style="height : 100%;">
-                  <canvas id="customerGrowth" class="dashboardGraphs" height="100"></canvas>
+              <div class="row">
+                <div class="pt-4 pb-1 ps-1 pe-1" style="height : 100%;">
+                  <canvas id="customerGrowth" class="dashboardGraphs" width="400"
+                    height="140"></canvas>
                 </div>
               </div>
             </div>
@@ -354,7 +347,7 @@
                     {
                       <img src="@(Model.leastSellingItem[1].item.Itemimage)" id="leastSelling2Image"
                         style="height:50px;width:50px" class="rounded-circle">
-                      <h1>@(Model.leastSellingItem[1].item.Itemimage)</h1>
+                      
                     }
                     else
                     {

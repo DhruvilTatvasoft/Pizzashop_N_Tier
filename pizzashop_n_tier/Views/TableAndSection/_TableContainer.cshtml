@@ -98,7 +98,6 @@
       loadTableData(@Model.sections[0].Sectionid, @Model.PageNumber);
       $(".section").removeClass("active-section");
       var id = "#selectedSection_"+@Model.sections[0].Sectionid;
-      console.log(id)
       $(id).addClass("active-section")
     })
 
@@ -109,14 +108,12 @@
     $("#addNewTableForm").on("submit", function (e) {
        e.preventDefault();
        if (!$(this).valid()) {
-        console.log("validation failed");
         e.stopPropagation();  
   }
      else{
       var data = new FormData(this);
       data.append("table.Status", document.querySelector("#tableStatus").value);
       for (var pair of data.entries()) {
-        console.log(pair[0] + ', ' + pair[1]);
       }
       $.ajax({
         url: '@Url.Action("AddNewTable", "TableAndsection")',
@@ -125,7 +122,6 @@
         processData: false,
         contentType: false,
         success: function (data) {
-          console.log(data);
           $("#addTableModal").modal('hide');
 
           loadTableData(data.table.sectionid,1);
@@ -147,7 +143,6 @@
       var selectedTables = [...document.querySelectorAll(".checkedTable:checked")].map(x => parseInt(x.value, 10)); 
       var sectionid = document.querySelector("#sectionIdFortables").value;
       selectedTables.forEach((t) => {
-        console.log(t);
       })
      
       $.ajax({
@@ -155,7 +150,6 @@
         type: 'POST',
         data: { selectedTables: selectedTables, sectionid: sectionid },
         success: function (data) {
-          console.log(data);
           loadTableData(data.sectionid,1);
           $("#deleteForTableSAndSectionModel").modal('hide');
            toastr.success("Tables deleted");
@@ -169,7 +163,6 @@
         toastr.error("Please select at least one table to delete");
         return;
       }
-      console.log("multiple deletes get");
       $.ajax({
         url: '@Url.Action("deleteModalGet", "TableAndSection")',
         type: "GET",

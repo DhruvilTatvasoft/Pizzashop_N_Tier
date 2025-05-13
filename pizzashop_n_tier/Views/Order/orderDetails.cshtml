@@ -141,50 +141,32 @@
             <div class="d-flex justify-content-end">
                 <table class="table w-auto">
                     <tbody>
-                            <tr>
-                                <td>Subtotal:</td>
-                                <td>@subtotal</td>
-                                @(Total = subtotal)
-                                <td>total is @Total</td>
-                            </tr>
+                        <tr>
+                            <td>Subtotal:</td>
+                            <td>@subtotal</td>
+                            <div class="d-none">@(Total = subtotal)</div>
+
+                        </tr>
                         @foreach (var tax in Model.appliedTaxDetails)
                         {
-                             <tr>
-                            <td>@tax.taxname</td>
-                            @if(tax.taxtype == "flat amount"){
-                                <td>@((decimal)tax.taxPercentage)</td>
+                            <tr>
+                                <td>@tax.taxname</td>
+                                @if (tax.taxtype == "flat amount")
+                                {
+                                    <td>@((decimal)tax.taxPercentage)</td>
                                     Total = Total + (decimal)tax.taxPercentage;
-                                    <td>@Total</td>
-                            }
-                            else{
-                                <td>@((subtotal*(decimal)tax.taxPercentage)/100)</td>
-                                Total = Total + ((decimal)tax.taxPercentage*subtotal)/100;
-                            }
-                        </tr>
+                                    @* <td>@Total</td> *@
+                                }
+                                else
+                                {
+                                    <td>@((subtotal * (decimal)tax.taxPercentage) / 100)</td>
+                                    Total = Total + ((decimal)tax.taxPercentage * subtotal) / 100;
+                                }
+                            </tr>
                         }
-                        @* <tr>
-                            <td>@subtotal</td>
-                        </tr>
-                        <tr>
-                            <td>CGST:</td>
-                            <td>₹@((subtotal * 6) / 100)</td>
-                        </tr>
-                        <tr>
-                            <td>SGST:</td>
-                            <td>₹150.00</td>
-                        </tr>
-                        <tr>
-                            <td>GST:</td>
-                            <td>₹7.98</td>
-                        </tr>
-                        <tr>
-                            <td>Other:</td>
-                            <td>₹19.95</td>
-                        </tr>
-                        *@
-                         <tr class="fw-bold"></tr>
-                            <td>Total:</td>
-                            <td>@Total</td>
+                        <tr class="fw-bold"></tr>
+                        <td>Total:</td>
+                        <td>@Total</td>
                         </tr>
                     </tbody>
                 </table>
@@ -192,3 +174,11 @@
         </div>
     </div>
 </div>
+<script>
+    
+        $("document").ready(function () {
+
+            $('.sidebar ul li').removeClass('active-class');
+            $('.orders').addClass('active-class')
+        });
+</script>

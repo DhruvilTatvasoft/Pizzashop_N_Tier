@@ -1,7 +1,5 @@
-
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
-
 
 public class TableAndSection : Controller
 {
@@ -72,14 +70,13 @@ public class TableAndSection : Controller
     [HttpPost]
     public IActionResult UpdateSection(TableAndSectionViewModel model)
     {
-        model.section.Sectionid = model.sectionId;
+        model.section!.Sectionid = model.sectionId;
 
         return PartialView("_section", model);
     }
     [HttpPost]
     public IActionResult deleteSection(int sectionId)
     {
-            // return RedirectToAction("SectionData");
             TableAndSectionViewModel model = new TableAndSectionViewModel();
             model.sections = _sectionService.getAllSections();
         if (_sectionService.deleteSection(sectionId))

@@ -23,7 +23,7 @@
                             <span class="item_@Model.item.Itemid fontWeight600" data-itemrate="@Model.item.Itemrate"
                                 onclick="openItemInstructionModal(@Model.uniqueId)">@Model.item.Itemname</span>
                         </div>
-                        <div class="numberForOrderItemDetailsKOT d-flex" style="width: 30%;">
+                        <div class="numberForOrderItemDetailsKOT d-flex" style="width: 33%;">
                             <button type="button" class="btn pt-1 minus"
                                 onclick="minusTheNumber(this,@Model.item.Itemrate)">
                                 <span class="fontWeight500">-</span>
@@ -46,6 +46,7 @@
                             style="width: 80%;">₹@Model.item.Itemrate</span>
                         <div>
                             <img src="/images/trash-fill.svg" class="deleteIconOrderItemDetailsKOT"
+                                style="cursor: pointer;"
                                 onclick="removeTheItemFromOrder('@Model.uniqueId',@Model.orderid,@Model.readyQuantity,@Model.itemQuantity)">
                         </div>
                     </div>
@@ -135,12 +136,16 @@
         console.log("id" + id)
         if (orderid != 0) {
             var isReady = parseInt(itemquantity) - parseInt(readyquantity);
-            if (isReady != itemquantity) {
-                $("#deleteTheItemFromOrder").modal('show');
-                $("#ItemIdHidden").val(id);
+            if (readyquantity > 0) {
+                if (readyquantity > 1) {
+                    toastr.error(readyquantity + " Items are ready so cannot be deleted ")
+                }
+                else {
+                    toastr.error(readyquantity + " Item is ready so cannot be deleted ")
+                }
             }
             else {
-                toastr.error(readyquantity + " Items are ready so cannot be deleted ");
+                deleteTheItem(id)
             }
         }
         else {
@@ -151,12 +156,12 @@
 
     function deleleItemFromOrder() {
         deleteTheItem($("#ItemIdHidden").val());
-          $("#deleteTheItemFromOrder").modal('hide');
+        $("#deleteTheItemFromOrder").modal('hide');
     }
 
 
     function deleteTheItem(id) {
-        
+
         var itemPrice = parseFloat($("#" + id).data("itemrate"))
         var quantity = parseInt($("#" + id + " .textInputForCounterInOrderItemDetailsKOT").val());
         var modifierrate = parseFloat($("#" + id + " .modifierrate").data("modifierrate"));

@@ -159,11 +159,11 @@ public class OrderRepository : IOrderRepository
 
     public Order? GetOrderDetails(int orderid)
     {
+        
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
         order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
         order.Customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == order.Customerid)!;
         order.Section = _context.Sections.FirstOrDefault(section => section.Sectionid == order.Sectionid)!;
-        // order.Table = _context.Tables.FirstOrDefault(table => table.Tableid == order.Tableid && table.Sectionid == order.Sectionid)!;
         return order;
     }
 
@@ -173,25 +173,19 @@ public class OrderRepository : IOrderRepository
     {
         Dictionary<int, Dictionary<Item, List<Modifier>>> itemsAndModifiers = new Dictionary<int, Dictionary<Item, List<Modifier>>>();
         Dictionary<Item, List<Modifier>> itemModifier = new Dictionary<Item, List<Modifier>>();
-        var orderedItemsGrouped = _context.OrderItemModifiers
+        var orderedItemsGrouped = _context.Orderitems
              .Where(oim => oim.Orderid == orderid)
-             .GroupBy(oim => new { oim.ItemId, oim.Orderitemdetailid })
              .ToList();
         bool hasItems = false;
         var itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
         int count = 0;
         foreach (var group in orderedItemsGrouped)
         {
-            var itemId = group.Key.ItemId;
-            var orderItemDetailId = group.Key.Orderitemdetailid;
-
-
+            var itemId = group.Itemid;
+            var orderItemDetailId = group.Orderitemid;
             var dbItem = _context.Items.FirstOrDefault(i => i.Itemid == itemId);
-
             if (dbItem == null)
                 continue;
-
-
             var item = new Item
             {
                 Itemid = dbItem.Itemid,
@@ -263,8 +257,8 @@ public class OrderRepository : IOrderRepository
     public tableAndsection getOrderSectionAndTableDetails(int orderId)
     {
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
-        int tableid = _context.Ordertables.FirstOrDefault(orderTable=>orderTable.Orderid == orderId).Tableid;
-        Table OrderedTable = _context.Tables.FirstOrDefault(orderedTable=>orderedTable.Tableid == tableid);
+        int tableid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Orderid == orderId).Tableid;
+        Table OrderedTable = _context.Tables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid);
         string tableName = OrderedTable.Tablename;
         string sectionName = _context.Sections.FirstOrDefault(section => section.Sectionid == OrderedTable.Sectionid).Sectionname!;
         tableAndsection tableAndsection = new tableAndsection();
@@ -294,9 +288,9 @@ public class OrderRepository : IOrderRepository
                 var dbItem = categoryid != 0
                      ? _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid && i.Categoryid == categoryid)
                      : _context.Items.FirstOrDefault(i => i.Itemid == Ordereditem.Itemid);
-                
+
                 bool addItem = true;
-                
+
                 if (dbItem == null)
                 {
                     hasItems = false;
@@ -356,8 +350,8 @@ public class OrderRepository : IOrderRepository
                     }
                 }
                 else
-                { 
-                model.Add(order, itemModifierList);
+                {
+                    model.Add(order, itemModifierList);
                 }
             }
         }
@@ -400,7 +394,7 @@ public class OrderRepository : IOrderRepository
             {
                 Itemid = orderItem.Orderitemid,
                 Itemname = dbItem.Itemname,
-                Categoryid = dbItem.Categoryid, 
+                Categoryid = dbItem.Categoryid,
             };
 
             var modifierIds = _context.OrderItemModifiers
@@ -426,16 +420,18 @@ public class OrderRepository : IOrderRepository
             .ToDictionary(pair => pair.Key, pair => pair.Value);
         return model;
     }
-    public void changeReadyQuantity(Dictionary<int, int> readyItemCount,string currentStatus)
+    public void changeReadyQuantity(Dictionary<int, int> readyItemCount, string currentStatus)
     {
         foreach (var pair in readyItemCount)
         {
             var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == pair.Key);
-            if(currentStatus == "In Progress"){
-            orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy + pair.Value;
+            if (currentStatus == "In Progress")
+            {
+                orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy + pair.Value;
             }
-            else{
-            orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy - pair.Value;
+            else
+            {
+                orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy - pair.Value;
             }
             _context.Orderitems.Update(orderedItem);
         }
@@ -497,10 +493,11 @@ public class OrderRepository : IOrderRepository
     public void getAppliedTaxesForOrder(OrderViewModel model)
     {
         List<appliedTaxDetails> taxDetails = new List<appliedTaxDetails>();
-        List<Ordertaxesandfee> taxDetailsForOrder = _context.Ordertaxesandfees.Where(orderTaxes=>orderTaxes.Orderid == model.orderid).ToList();
-        foreach(var tax in  taxDetailsForOrder){
+        List<Ordertaxesandfee> taxDetailsForOrder = _context.Ordertaxesandfees.Where(orderTaxes => orderTaxes.Orderid == model.orderid).ToList();
+        foreach (var tax in taxDetailsForOrder)
+        {
             appliedTaxDetails taxDetails1 = new appliedTaxDetails();
-            taxDetails1.taxname = tax.Taxname ;
+            taxDetails1.taxname = tax.Taxname;
             taxDetails1.taxPercentage = (float)(tax.TaxPercentage);
             taxDetails1.taxtype = (tax.Taxtype);
             taxDetails.Add(taxDetails1);

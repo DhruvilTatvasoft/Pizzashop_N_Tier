@@ -56,22 +56,5 @@
 </form>
 
 <script>
-     @* $("#customer-details").on('submit',function(e){
-            e.preventDefault();
-            if(!$(this).valid()){
-                return;
-            }
-            var data = new FormData(this);
-            $.ajax({
-                url: "@Url.Action("editCustomerDetails","MenuOrderApp")",
-                type: "POST",
-                data: data,
-                contentType: false,
-                processData: false,
-                success: function(response) {
-                    toastr.success(response.success);
-                    $("#closeCustomerDetailsModal").click();
-                }
-            });
-        }) *@
+     
 </script>

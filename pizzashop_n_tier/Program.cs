@@ -14,7 +14,8 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddSignalR();
+builder.Services.AddControllers();
 builder.Services.AddControllersWithViews();
 builder.Services.AddDistributedMemoryCache();
 builder.Services.AddDbContext<PizzashopCContext>(option =>
@@ -63,7 +64,6 @@ builder.Services.AddAuthorization(options =>
             policyBuilder.Requirements.Add(new PermissionRequirement(policy)));
     }
 });
-
 
 builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 builder.Services.AddSingleton<IAuthorizationMiddlewareResultHandler, CustomAuthorizationMiddlewareResultHandler>();
@@ -174,12 +174,42 @@ app.UseAuthorization();
 app.MapControllers();
 app.UseStatusCodePagesWithReExecute("/Error/NotFound");
 app.UseDeveloperExceptionPage();
+ app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapHub<RealTimeHub>("/realtimehub");
+        });
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");
 app.Run();
 
 
+// public class Startup
+// {
+//     public void ConfigureServices(IServiceCollection services)
+//     {
+//         services.AddControllers();
+//         services.AddSignalR();
+//     }
+
+//     public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+//     {
+//         // if (env.IsDevelopment())
+//         // {
+//         //     app.UseDeveloperExceptionPage();
+//         // }
+
+//         app.UseRouting();
+
+//         app.UseEndpoints(endpoints =>
+//         {
+//             endpoints.MapControllers();
+//             endpoints.MapHub<RealTimeHub>("/realtimehub");
+//         });
+//     }
+// }
 
 
-// dotnet ef dbcontext scaffold "Server=localhost,5432;Database=Pizzashop;User id=postgres;password=Tatva@123;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Data --context PizzashopCContext --context-dir Data -f
+
+// dotnet ef dbcontext scaffold "Server=localhost,5432;Database=pizzashop_new;User id=postgres;password=Tatva@123;TrustServerCertificate=True" Npgsql.EntityFrameworkCore.PostgreSQL -o Data --context PizzashopCContext --context-dir Data -f

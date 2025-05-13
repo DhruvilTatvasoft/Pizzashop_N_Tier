@@ -1,82 +1,90 @@
- @model WaitingTokenModel
- <partial name="_ValidationScriptsPartial" />
- <form id="AddEditWaitingTokenForm">
-        <div class="modal fade" id="addEditWaitingToken" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header pb-0" style="border:none;">
-                        <h5 class="modal-title" id="exampleModalLabel">Waiting Token Details</h5>
-                        <button type="button" class="close" style="margin-left: auto; border: none; background: none;"
-                            aria-label="Close" data-bs-dismiss="modal">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="row">
-                            <input type="hidden" id="tokenid" asp-for="@Model.tokenId">
-                           <div class="form-group col-12 mb-3 ">
-                             
-                                <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"  aria-describedby="emailHelp" asp-for="@Model.customer.email" placeholder="Email*">
-                                 <span asp-validation-for="@Model.customer.email" class="text-danger pt-2 emailaddress"></span>
-                                 <div class="suggesion_container"></div>
-                            </div>
-                           <div class="form-group col-12 mb-3">
-                                <input type="text" class="form-control p-2" id="customer-name" aria-describedby="emailHelp" asp-for="@Model.customer.name" placeholder="Name*">
-                                 <span asp-validation-for="@Model.customer.name" class="text-danger pt-2"></span>
-                            </div>
-                           <div class="form-group col-12 mb-3">
-                                <input type="tel" class="form-control p-2" id="customer-phone" maxlength="10" size="10" asp-for="@Model.customer.phone"  placeholder="Mobile Number*">
-                                 <span asp-validation-for="@Model.customer.phone" class="text-danger pt-2"></span>
-                            </div>
-                            <div class="mb-3 col-md-6 mb-3">
-                                <div class="form-floating">
-                                    <label for="" class="form-label"
-                                        style="font-size: 61%;top: -12px;left: -1px;">No of Person(s)*</label>
-                                    <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;" asp-for="@Model.personCount"  min="1">
-                                 <span asp-validation-for="@Model.personCount" class="text-danger pt-2"></span>
-                                </div>
-                                <span class="text-danger"></span>
-                            </div>
-                            <div class="mb-3 col-md-6 form-floating">
-                                    <label for="" class="form-label"style="position: absolute;left: 6%;top: -20%;font-size: 64%;">section*</label>
-                                    <select class="form-select" style="padding: 6%;padding-top: 8%;" id="tableSection" asp-for="@Model.sectionId">
+@model WaitingTokenModel
+<partial name="_ValidationScriptsPartial" />
+<form id="AddEditWaitingTokenForm">
+    <div class="modal fade" id="addEditWaitingToken" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header pb-0" style="border:none;">
+                    <h5 class="modal-title" id="exampleModalLabel">Waiting Token Details</h5>
+                    <button type="button" class="close" style="margin-left: auto; border: none; background: none;"
+                        aria-label="Close" data-bs-dismiss="modal">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <input type="hidden" id="tokenid" asp-for="@Model.tokenId">
+                        <div class="form-group col-12 mb-3 ">
 
-                                    @foreach (var sec in @Model.sections)
-                                    {
-                                        <option value="@sec.Sectionid" selected="@(sec.Sectionid == @Model.sectionId ? "selected" : null)">@sec.Sectionname</option>
-                                    }
-                                    </select>
+                            <input type="email" class="form-control p-2" id="customer-email" onkeyup="loadSuggesions()"
+                                aria-describedby="emailHelp" asp-for="@Model.customer.email" placeholder="Email*">
+                            <span asp-validation-for="@Model.customer.email"
+                                class="text-danger pt-2 emailaddress"></span>
+                            <div class="suggesion_container"></div>
+                        </div>
+                        <div class="form-group col-12 mb-3">
+                            <input type="text" class="form-control p-2" id="customer-name" aria-describedby="emailHelp"
+                                asp-for="@Model.customer.name" placeholder="Name*">
+                            <span asp-validation-for="@Model.customer.name" class="text-danger pt-2"></span>
+                        </div>
+                        <div class="form-group col-12 mb-3">
+                            <input type="tel" class="form-control p-2" id="customer-phone" maxlength="10" size="10"
+                                asp-for="@Model.customer.phone" placeholder="Mobile Number*">
+                            <span asp-validation-for="@Model.customer.phone" class="text-danger pt-2"></span>
+                        </div>
+                        <div class="mb-3 col-md-6 mb-3">
+                            <div class="form-floating">
+                                <label for="" class="form-label" style="font-size: 61%;top: -12px;left: -1px;">No of
+                                    Person(s)*</label>
+                                <input type="number" class="form-control p-2" style="padding: 6%;padding-top: 8%;"
+                                    asp-for="@Model.personCount" min="1">
+                                <span asp-validation-for="@Model.personCount" class="text-danger pt-2"></span>
                             </div>
+                            <span class="text-danger"></span>
                         </div>
-                        <div class="d-flex justify-content-end">
-                            <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken" >Save</button>
-                            <button class="btn btn-primary btncolour me-2" type="submit" id="updateToken" >Update</button>
-                            <button class="btn btn-outline-primary btnoutlinecolour" id="closeBtn" data-bs-dismiss="modal">Cancel</button>
+                        <div class="mb-3 col-md-6 form-floating">
+                            <label for="" class="form-label"
+                                style="position: absolute;left: 6%;top: -20%;font-size: 64%;">section*</label>
+                            <select class="form-select" style="padding: 6%;padding-top: 8%;" id="tableSection"
+                                asp-for="@Model.sectionId">
+
+                                @foreach (var sec in @Model.sections)
+                                {
+                                    <option value="@sec.Sectionid"
+                                        selected="@(sec.Sectionid == @Model.sectionId ? "selected" : null)">@sec.Sectionname
+                                    </option>
+                                }
+                            </select>
                         </div>
+                    </div>
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary btncolour me-2" type="submit" id="AddNewToken">Save</button>
+                        <button class="btn btn-primary btncolour me-2" type="submit" id="updateToken">Update</button>
+                        <button class="btn btn-outline-primary btnoutlinecolour" id="closeBtn"
+                            data-bs-dismiss="modal">Cancel</button>
                     </div>
                 </div>
             </div>
-    </form>
+        </div>
+</form>
 
-    <script>
-        function loadSuggesions() {
-            if($('#customer-email').val().length > 2){
-                console.log("searching");   
-                $.ajax({
-                    url:"@Url.Action("getSuggestions","WaitingList")",
-                    method:"GET",
-                    data:{name : $('#customer-email').val()},
-                    success:function(data){
-                        $(".suggesion_container").html(data);
-                    }
-                });
-            }
-            else{
-                if(document.querySelector(".sugg_container")){
-                    document.querySelector(".sugg_container").remove();
+<script>
+    function loadSuggesions() {
+        if ($('#customer-email').val().length > 2) {
+            $.ajax({
+                url: "@Url.Action("getSuggestions", "WaitingList")",
+                method: "GET",
+                data: { name: $('#customer-email').val() },
+                success: function (data) {
+                    $(".suggesion_container").html(data);
                 }
-               
+            });
+        }
+        else {
+            if (document.querySelector(".sugg_container")) {
+                document.querySelector(".sugg_container").remove();
             }
         }
-    </script>
+    }
+</script>

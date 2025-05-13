@@ -114,7 +114,6 @@
                 sumOfTaxAmount += parseFloat($(this).text().replace('₹', ''));
             
         })
-        console.log("subtotal:" + subtotal + "sum of tax" + sumOfTaxAmount)
         var total = subtotal + sumOfTaxAmount;
         $("#totalamount").text("₹" + total.toFixed(2));
     }

@@ -1,5 +1,6 @@
 
 using System.Security.Claims;
+using BAL.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace pizzashop_n_tier.Controllers;
@@ -13,14 +14,16 @@ public class LoginController : Controller
     private readonly ILogin _log;
     private readonly IJwtTokenGenService _jwtTokenGenService;
     private readonly IEmailGenService _emailGenService;
+    private readonly IAESService _aesService;
 
-    public LoginController(ILogger<LoginController> logger, ICookieService cookieService, ILogin log, IEmailGenService emailGenService, IJwtTokenGenService jwtTokenGenService)
+    public LoginController(ILogger<LoginController> logger,IAESService aesService, ICookieService cookieService, ILogin log, IEmailGenService emailGenService, IJwtTokenGenService jwtTokenGenService)
     {
         _logger = logger;
         _CookieService = cookieService;
         _log = log;
         _emailGenService = emailGenService;
         _jwtTokenGenService = jwtTokenGenService;
+        _aesService = aesService;
     }
     [HttpGet]
     public IActionResult Index()
@@ -172,7 +175,8 @@ public class LoginController : Controller
     public IActionResult ResetPass()
     {
         string Email = HttpContext.Request.Query["email"];
-        // string eMail = _aesservice.Decrypt(Email); 
+        // string eMail = _aesService.Decrypt(Email); 
+
         var model = new PasswordModel
         {
             email = Email,

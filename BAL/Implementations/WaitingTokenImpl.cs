@@ -24,6 +24,11 @@ namespace BAL.Implementations
             return _waitingTokenRepository.assignTable(tableid, tokenid);
         }
 
+        public Customer createNewCustomer(CustomerModel customerModal)
+        {
+            return _waitingTokenRepository.createCustomer(customerModal);
+        }
+
         public bool deleteWaitingToken(int tokenid)
         {
            return _waitingTokenRepository.deleteWaitingToken(tokenid);

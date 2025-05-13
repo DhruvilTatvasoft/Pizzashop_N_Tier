@@ -53,11 +53,8 @@
             }
 
             function loadTableData(sectionId, pageNumber, pageSize) {
-                console.log(pageSize);
                 pageSize = $('.pagesize').val();
-
                 const hiddenSectionId = $("#HiddenSectionId").val();
-
                 if (!sectionId || sectionId == 0) {
                     sectionId = hiddenSectionId;
                 }

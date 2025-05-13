@@ -1,17 +1,25 @@
 @{
-
      Layout = "~/Views/Shared/_NavbarForOrderApp.cshtml";
 }
+<script src="https://cdnjs.cloudflare.com/ajax/libs/microsoft-signalr/8.0.7/signalr.min.js"
+     integrity="sha512-7SRCYIJtR6F8ocwW7UxW6wGKqbSyqREDbfCORCbGLatU0iugBLwyOXpzhkPyHIFdBO0K2VCu57fvP2Twgx1o2A=="
+     crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <div class="loadTabBody h-100"></div>
 <script>
      $("document").ready(() => {
-          @* loadwaitingList() *@
-               @* loadMenuPage() *@
-const urlParams = new URLSearchParams(window.location.search);
+          @* const connection = new signalR.HubConnectionBuilder()
+               .withUrl("/realtimehub")
+               .build();
+          connection.start().catch(err => console.error(err.toString()));
+          connection.on("ReceiveMessage", (user, message) => {
+               const msg = `${user}: ${message}`;
+               const li = document.createElement("li");
+               li.textContent = msg;
+               document.getElementById("messagesList").appendChild(li);
+          }); *@
+          const urlParams = new URLSearchParams(window.location.search);
           const fromQr = urlParams.get('fromQr');
-          console.log(fromQr)
           if (fromQr == 'true') {
-               console.log("loading")
                loadMenuPage();
           }
           loadKot()
@@ -26,6 +34,7 @@ const urlParams = new URLSearchParams(window.location.search);
                }
           });
      }
+
      function loadTables() {
           $.ajax({
                url: "@Url.Action("getTables", "OrderApp")",
@@ -35,6 +44,7 @@ const urlParams = new URLSearchParams(window.location.search);
                }
           });
      }
+
      function loadwaitingList() {
           $.ajax({
                url: '@Url.Action("getWaitingTokenPage", "OrderApp")',
@@ -44,14 +54,13 @@ const urlParams = new URLSearchParams(window.location.search);
                }
           })
      }
+
      function loadMenuPage() {
           $.ajax({
                url: "@Url.Action("getMenuPage", "OrderApp")",
                method: "GET",
                success: function (data) {
-
-                    @* console.log(data) *@
-                         $(".loadTabBody").html(data);
+                    $(".loadTabBody").html(data);
                }
           });
      }
@@ -60,12 +69,12 @@ const urlParams = new URLSearchParams(window.location.search);
           $(this).removeClass('Available-Table').addClass('selectedTable');
           var sectionid = $(this).data('sectionid')
           var id = "table_" + sectionid;
-
           setTimeout(1)
           if ($("#" + id + " .selectedTable").length > 0) {
                $("#assignBtn_" + sectionid).prop('disabled', false)
           }
      });
+     
      $(document).on('click', '.selectedTable', function () {
           $(this).removeClass('selectedTable').addClass('Available-Table')
           var sectionid = $(this).data('sectionid')
@@ -74,23 +83,4 @@ const urlParams = new URLSearchParams(window.location.search);
                $("#assignBtn_" + sectionid).prop('disabled', true)
           }
      });
-
-
-
-     @* function assignTable() {
-          
-          var tokenid = $("#tokenid").val()
-          alert(tokenid)
-          
-          
-               $.ajax({
-                    url: "@Url.Action("assignTable", "TableView")",
-                    method: 'POST',
-                    data: { tableid: $(".selectedTable").data("tableid"), tokenid: tokenid },
-                    success: function (response) {
-                         console.log(response)
-                         $(".loadTabBody").html(response);
-                    }
-               });
-     } *@
 </script>

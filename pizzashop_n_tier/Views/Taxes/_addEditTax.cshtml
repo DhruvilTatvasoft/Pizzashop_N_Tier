@@ -68,7 +68,6 @@
         </div>
     </div>
 </form>
-
 <script>
             $("#AddEditTaxForm").on('submit',function(e){
                 e.preventDefault();
@@ -81,7 +80,6 @@
                     contentType:false,
                     processData:false,
                     success:function(response){
-                        console.log(response);
                         if(response.error){
                             console.log("error");
                             toastr.error(response.error);

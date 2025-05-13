@@ -10,10 +10,8 @@
 </div>
 
 <script>
-
   $('document').ready(() => {
     loadCategoryNavbar();
-
     loadOrderDetailCardContainer(0);
   })
 
@@ -38,15 +36,11 @@
     });
   }
 
-
-
   $(document).on('submit', '#readyQuantityChangeForm', function (e) {
     e.preventDefault();
-
     var $form = $(this);
     if ($form.data('submitting')) return;
     $form.data('submitting', true);
-
     var formData = new FormData();
 
     $('table tbody tr').each(function () {
@@ -55,14 +49,10 @@
       var $input = $row.find('input[type="number"]');
       var inputId = $input.attr('id'); 
       var itemId = inputId.split('-')[1]; 
-
       var value = $checkbox.is(':checked') ? $input.val() : 0;
-
       formData.append(`readyItemCount[${itemId}]`, value);
     });
-
     formData.append("currentStatus", $("#currentStatus").val());
-
     $.ajax({
       url: "@Url.Action("changeReadyQuantity", "Kot")",
       type: "POST",
@@ -84,9 +74,6 @@
       }
     });
   });
-
-
-
   function loadOrders() {
     $.ajax({
       url: '@Url.Action("loadOrdersPerCategory", "Kot")',
@@ -94,14 +81,11 @@
       data: { categoryid: 0 },
       success: function (data) {
         $('.orderdetailcontainer').html(data);
-
       }
     });
   }
 
   function loadOrdersForcategory(categoryid, IsReady, pageNumber) {
-    @* var pageNumber = 1; *@
-      console.log(pageNumber)
     $.ajax({
       url: "@Url.Action("loadOrdersPerCategory", "Kot")",
       type: 'GET',

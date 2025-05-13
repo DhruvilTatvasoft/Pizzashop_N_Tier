@@ -10,6 +10,7 @@ namespace BAL.Interfaces
     {
         bool AddNewWaitingToken(WaitingTokenModel model);
         bool AssignTable(List<int> tableid, int tokenid);
+        Customer createNewCustomer(CustomerModel customerModal);
         bool deleteWaitingToken(int tokenid);
         WaitingTokenModel getAllWaitingTokens(int sectionid);
         CustomerModel getCustomerForWaitingToken(int tokenid, List<int> tableid);

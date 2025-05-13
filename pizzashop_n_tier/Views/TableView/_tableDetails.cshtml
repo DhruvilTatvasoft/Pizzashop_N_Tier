@@ -66,8 +66,6 @@
 		</div>
 	</div>
 }
-
-
 <div class="OffCanvasContainer">
 	<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasRight" aria-labelledby="offcanvasRightLabel">
 		<div class="offcanvas-header">
@@ -89,9 +87,7 @@
 		var selectedTableIds = [];
 		selectedTables.each(function () {
 			selectedTableIds.push(parseInt($(this).data("tableid")));
-			console.log($(this).data("tableid"))
 		});
-		console.log(selectedTableIds)
 		var tableid = $(".selectedTable").data("tableid");
 		$.ajax({
 			url: "@Url.Action("getOffCanvas", "TableView")",
@@ -103,7 +99,6 @@
 			}
 		});
 	}
-
 	$(document).ready(function () {
 		var runningTables = $(".Running-Table");
 		var assignedTable = $(".Assigned-Table");
