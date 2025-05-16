@@ -108,6 +108,11 @@ public class MenuOrderAppImple : IMenuOrderAppService
         _menuOrderAppRepository.saveCustomerDetails(customer);
     }
 
+    public void saveCustomerReview(customerReviewViewModel model)
+    {
+        _menuOrderAppRepository.saveCustomerReview(model);
+    }
+
     public void saveOrderWiseComment(MenuOrderAppModel model)
     {
         _menuOrderAppRepository.saveOrderWiseComment(model);

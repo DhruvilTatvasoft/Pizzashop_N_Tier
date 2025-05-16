@@ -15,7 +15,9 @@ public class MenuOrderAppModel
     public int readyQuantity{get;set;}
     public string orderComment{get;set;}
 
-    public int itemQuantity{get;set;}
+    public string? itemtype { get; set; } = "";
+
+    public int itemQuantity { get; set; }
 
     public string itemcomment{get;set;}
     public List<Taxesandfee> taxesandfees{get;set;}

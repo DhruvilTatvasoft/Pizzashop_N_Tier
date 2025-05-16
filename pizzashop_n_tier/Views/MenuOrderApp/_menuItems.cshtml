@@ -4,7 +4,7 @@
     <div class="row pe-3 w-100 mb-0" style="padding-left: 5%;">
         <div class="d-flex justify-content-between " style="height: 9%;width: 50%;">
             <div class="form-group searchInput">
-                <input type="text" class="form-control" onkeyup="loadItemsForCategory('',@Model.categoryId,'')"
+                <input type="text" class="form-control" onkeyup="loadItemsForCategory('',@Model.categoryId,@Model.itemtype)"
                     id="searchItemForCategory" aria-describedby="emailHelp" placeholder="Search">
                 <span id="search-icon">
                     <input type="hidden" id="selectedCategory" asp-for="categoryId" />
@@ -12,8 +12,8 @@
                 </span>
             </div>
             <div class="d-flex flex-sm-column flex-lg-row">
-                <li id="veg" class="me-3" onclick="loadItemsForCategory($('#selecetedCategory').val(),'veg')">Veg</li>
-                <li id="non-veg" class="me-3" onclick="loadItemsForCategory($('#selecetedCategory').val(),'non-veg')">Non-veg</li>
+                <li id="veg" class="me-3" onclick="loadItemsForCategory('',$('#selecetedCategory').val(),'veg')">Veg</li>
+                <li id="non-veg" class="me-3" onclick="loadItemsForCategory('',$('#selecetedCategory').val(),'non-veg')">Non-veg</li>
             </div>
         </div>
         <div class="d-flex" style="height: 92%;">
@@ -25,13 +25,13 @@
         <script>
             var totalAmount = 0;
             var orderComment = "";
+            var favorites = [];
             $("document").ready(() => {
                 if ($("#IsTableAssigned").val() == "False") {
                     $(".menuDataContainer").addClass("menuDataContainer d-flex pt-0 mt-0 pe-0 w-100")
                     $(".orderDetailContainer").addClass("orderDetailContainer d-none pt-0 mt-0 pe-0 w-50")
                 }
             });
-            var favorites = [];
 
             function AddToFavorite(x, id) {
                 if ($(x).attr("src") == "/images/heart-fill.svg") {

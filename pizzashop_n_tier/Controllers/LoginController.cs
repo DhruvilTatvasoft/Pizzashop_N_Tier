@@ -38,7 +38,6 @@ public class LoginController : Controller
             if (principal != null)
             {
                 var role = principal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
-                    Console.WriteLine("Role = "+role);
                 if (role == "Chef")
                 {
                     return RedirectToAction("getOrderAppPage", "OrderApp");

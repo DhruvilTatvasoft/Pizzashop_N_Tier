@@ -1,3 +1,59 @@
 ﻿@using pizzashop_n_tier
 @using pizzashop_n_tier.Models
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+
+
+@* Connverting Old project to N-Tier
+ 
+Create Solution
+1.dotnet new sln -n PizzaShopSolution
+ 
+Presentation Layer
+2.dotnet new mvc -n PizzaShop.Web
+ 
+Business Logic Layer
+3.dotnet new classlib -n PizzaShop.Business
+ 
+DataAccess Layer
+4.dotnet new classlib -n PizzaShop.DataAccess
+ 
+Entities(Model Layer)
+5.dotnet new classlib -n PizzaShop.Entities
+ 
+Add Project to Solution
+6.dotnet sln PizzaShopSolution.sln add PizzaShop.Web/PizzaShop.Web.csproj
+7.dotnet sln PizzaShopSolution.sln add PizzaShop.Business/PizzaShop.Business.csproj
+8.dotnet sln PizzaShopSolution.sln add PizzaShop.DataAccess/PizzaShop.DataAccess.csproj
+9.dotnet sln PizzaShopSolution.sln add PizzaShop.Entities/PizzaShop.Entities.csproj
+ 
+Add Project Reference
+ 
+*Business Layer (BLL) needs DataAccess and Entities
+10.dotnet add PizzaShop.Business/PizzaShop.Business.csproj reference PizzaShop.DataAccess/PizzaShop.DataAccess.csproj
+11.dotnet add PizzaShop.Business/PizzaShop.Business.csproj reference PizzaShop.Entities/PizzaShop.Entities.csproj
+ 
+*DataAccess Layer needs Entities
+12.dotnet add PizzaShop.DataAccess/PizzaShop.DataAccess.csproj reference PizzaShop.Entities/PizzaShop.Entities.csproj
+ 
+*Web Layer needs Business Layer
+13.dotnet add PizzaShop.Web/PizzaShop.Web.csproj reference PizzaShop.Business/PizzaShop.Business.csproj
+ 
+ 
+go to project which willl run
+14. cd PizzaShop.Web
+ 
+ 
+*Installed packages
+ 
+*In PizzaShop.Web
+15.dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
+16.dotnet add package Microsoft.EntityFrameworkCore.Tools
+ 
+ 
+*In PizzaShop.DataAccess
+17.dotnet add package Microsoft.EntityFrameworkCore
+18.dotnet add package Microsoft.EntityFrameworkCore.Design
+ 
+ 
+Also add other needed package *@

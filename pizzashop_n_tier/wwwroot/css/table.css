@@ -15,6 +15,9 @@ h1{
 .mark-blue::marker{
     color:rgb(9, 189, 249) ;
 }   
+body{
+    overflow-y: auto;
+}
 .accordion-button::after {
     flex-shrink: 0;
     width: var(--bs-accordion-btn-icon-width);

@@ -98,7 +98,7 @@
             </div>
             <form id="iteminstructionForm">
                 <div class="modal-body">
-                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction"></textarea>
+                    <textarea class="form-control" placeholder="Comment" id="ItemInstruction" asp-for="@Model.orderDetailModel.itemDetails.Find(itemDetail=>itemDetail.uniqueid == Model.uniqueId).itemcomment"></textarea>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" id="uniqueidForItemcomment">

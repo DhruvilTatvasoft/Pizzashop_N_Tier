@@ -620,13 +620,7 @@ public partial class PizzashopCContext : DbContext
                 .HasDefaultValueSql("now()")
                 .HasColumnType("timestamp without time zone")
                 .HasColumnName("createdat");
-            entity.Property(e => e.Createdby).HasColumnName("createdby");
             entity.Property(e => e.Foodreview).HasColumnName("foodreview");
-            entity.Property(e => e.Modifiedat)
-                .HasDefaultValueSql("now()")
-                .HasColumnType("timestamp without time zone")
-                .HasColumnName("modifiedat");
-            entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Servicereview).HasColumnName("servicereview");
 

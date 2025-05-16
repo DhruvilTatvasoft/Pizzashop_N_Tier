@@ -39,12 +39,10 @@ public class JwtTokenImple : IJwtTokenGenService
         var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
 
         var claims = new List<Claim>
-    {
-         new Claim(JwtRegisteredClaimNames.Name, userName),
-        new Claim(ClaimTypes.Role, role)
-    };
-
-
+            {
+                new Claim(JwtRegisteredClaimNames.Name, userName),
+                new Claim(ClaimTypes.Role, role)
+            };
         foreach (var permission in AllPermissions)
         {
             var permissionName = _roleAndPermissionRepository.getPermissionName(permission.Permissionid)?.Trim();
@@ -69,34 +67,6 @@ public class JwtTokenImple : IJwtTokenGenService
         var token = tokenHandler.CreateToken(tokenDescriptor);
         return tokenHandler.WriteToken(token);
     }
-
-
-
-
-
-    // public async Task<string> GenerateJWT(User user)
-    // {
-    //     var AllPermissions = await _rolesAndPermissionsService.GetUserPermissions(user.Id);
-    //     Role Role = await _rolesAndPermissionsService.GetRoleById(user.RoleId);
-    //     var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]!));
-    //     var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-    //     var userClaims = new List<Claim>
-    //     {
-    //         new Claim("userName",user.Username),
-    //         new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-    //         new Claim("mail",user.Email),
-    //         new Claim(ClaimTypes.Role,Role.Rolename),
-    //     };
-    //     foreach (var permission in AllPermissions)
-    //     {
-    //         var requiredPermission = await _rolesAndPermissionsService.GetPermissionById(permission.PermissionId);
-    //         if (requiredPermission != null && requiredPermission.Permissionname != null)
-    //         {
-    //             userClaims.Add(new Claim("CanView_" + requiredPermission.Permissionname, permission.CanView.ToString()));
-    //             userClaims.Add(new Claim("CanEdit_" + requiredPermission.Permissionname, permission.CanEdit.ToString()));
-    //             userClaims.Add(new Claim("CanDelete_" + requiredPermission.Permissionname, permission.CanDelete.ToString()));
-    //         }
-    //     }
 
     public ClaimsPrincipal? ValidateToken(string token)
     {

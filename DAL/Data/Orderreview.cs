@@ -21,11 +21,5 @@ public partial class Orderreview
 
     public DateTime? Createdat { get; set; }
 
-    public DateTime? Modifiedat { get; set; }
-
-    public int Createdby { get; set; }
-
-    public int Modifiedby { get; set; }
-
     public virtual Order Order { get; set; } = null!;
 }

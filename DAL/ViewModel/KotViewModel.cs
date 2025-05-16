@@ -26,12 +26,26 @@ public class tableAndsection{
     public string tableName{get;set;}
 }
 
-public class SingleOrderDetailModel{
-    public int orderid{get;set;}
-    public Dictionary<Item,List<Modifier>> itemAndModifiers{get;set;}
+public class SingleOrderDetailModel
+{
+    public int orderid { get; set; }
 
-    public Dictionary<int,int> readyItemCount{get;set;}
+    public Dictionary<Item, List<Modifier>> itemAndModifiers { get; set; }
 
-    public int categoryid{get;set;}
-    public string currentStatus{get;set;}
+    public Dictionary<int, int> readyItemCount { get; set; }
+
+    public int categoryid { get; set; }
+    public string currentStatus { get; set; }
+
+    public List<itemDetails> itemDetails { get; set; }
+
 }
+public class itemDetails
+{
+    public Item item { get; set; }
+    public List<Modifier> modifiers { get; set; }
+    public int orderedQuantity { get; set; }
+    public int readyQuantity { get; set; }
+    public int inprogressQuantity { get; set; }
+}
+

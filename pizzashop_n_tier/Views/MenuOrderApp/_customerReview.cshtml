@@ -1,0 +1,126 @@
+@model customerReviewViewModel
+<partial name="_ValidationScriptsPartial" />
+<form id="customerReviewForm">
+    <div class="modal modal-item fade" id="customerReviewModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h5 class="modal-title">Customer Review</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="d-flex justify-content-between mt-3 fontWeight600">
+
+                    <div class="d-flex flex-column gap-1">
+                        <div>
+                            Food
+                        </div>
+                        <div>
+                            Service
+                        </div>
+                        <div>
+                            Ambience
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column gap-1">
+                        <div class="d-flex gap-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <img src="/images/star.svg" class="star-rating" data-star-number="@i" role="button"
+                                    data-star-for="food" />
+                            }
+                        </div>
+                        <div class="d-flex gap-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <img src="/images/star.svg" class="star-rating" data-star-number="@i" role="button"
+                                    data-star-for="service" />
+                            }
+                        </div>
+                        <div class="d-flex gap-3">
+                            @for (int i = 1; i <= 5; i++)
+                            {
+                                <img src="/images/star.svg" class="star-rating" data-star-number="@i" role="button"
+                                    data-star-for="ambience" />
+                            }
+                        </div>
+                    </div>
+                </div>
+                <hr style="color: #ffc107;">
+                <div class="form-floating">
+                    <textarea class="form-control edit-desc-review" placeholder="Write your comment here" rows="3"
+                        cols="60"></textarea>
+                    <label>Comment</label>
+                </div>
+                <input type="hidden" class="order-review-comment">
+
+                <div class="d-flex justify-content-center align-items-center gap-2 mt-2">
+                    <button class="btn btncolour" type="submit" id="confirmSaveReviewButton"
+                        data-order-id="@Model.orderid">
+                        <label for="" class="text-white">Save</label>
+                    </button>
+                    <a class="btn btnoutlinecolour" type="button" data-bs-dismiss="modal" aria-label="Close">
+                        Cancel
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $(document).ready(function () {
+        document.querySelectorAll(".star-rating").forEach(star => {
+            star.addEventListener("click", function () {
+                const group = this.getAttribute("data-star-for");
+                const clickedNumber = parseInt(this.getAttribute("data-star-number"));
+                const stars = document.querySelectorAll(`.star-rating[data-star-for="${group}"]`);
+
+                stars.forEach(starEl => {
+                    const starNum = parseInt(starEl.getAttribute("data-star-number"));
+                    if (starNum <= clickedNumber) {
+                        starEl.src = "/images/star-fill.svg";
+                    } else {
+                        starEl.src = "/images/star.svg";
+                    }
+                });
+            });
+        });
+
+        $('#customerReviewForm').on('submit', function (e) {
+            e.preventDefault();
+            var orderId =@Model.orderid;
+            var reviewData = {
+                orderid: orderId,
+                food: $('.star-rating[data-star-for="food"][src$="star-fill.svg"]').length,
+                service: $('.star-rating[data-star-for="service"][src$="star-fill.svg"]').length,
+                ambience: $('.star-rating[data-star-for="ambience"][src$="star-fill.svg"]').length,
+                comment: $('.edit-desc-review').val().trim(),
+            };
+            if (reviewData.FoodRating === 0 && reviewData.ServiceRating === 0 && reviewData.AmbienceRating === 0) {
+                toastr.error("Please provide at least one rating.");
+                return;
+            }
+
+            $.ajax({
+                url: '@Url.Action("CustomerReviewPost", "MenuOrderApp")',
+                type: "POST",
+                contentType: "application/json",
+                traditional: true,
+                data: JSON.stringify(reviewData),
+                success: function (response) {
+                    $('#customerReviewModal').modal('hide');
+                    if (response.success) {
+                        toastr.success(response.success);
+                        
+                        @* loadKot(); *@
+                    }
+                    else {
+                        toastr.error(response.error);
+                    }
+                },
+                error: function () {
+                    toastr.error("Error submitting review.");
+                }
+            });
+        });
+    });
+</script>

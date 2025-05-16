@@ -18,4 +18,5 @@ public interface IMenuOrderAppService
     byte[] GenerateQRCode(string text, int width = 250, int height = 250);
     void saveCustomerDetails(CustomerModel customer);
     void saveOrderWiseComment(MenuOrderAppModel model);
+    void saveCustomerReview(customerReviewViewModel model);
 }

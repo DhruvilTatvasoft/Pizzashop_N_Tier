@@ -36,44 +36,73 @@
     });
   }
 
-  $(document).on('submit', '#readyQuantityChangeForm', function (e) {
+ $(document).on('submit', '#readyQuantityChangeForm', function (e) {
     e.preventDefault();
     var $form = $(this);
+    var isChecked = false;
+    var hasZeroQuantity = false;
+
+    $('table tbody tr').each(function () {
+        var $checkbox = $(this).find('input[type="checkbox"]');
+        var $input = $(this).find('input[type="number"]');
+        var readyQuantity = parseInt($input.val(), 10); 
+
+        if ($checkbox.is(':checked')) {
+            isChecked = true;
+            if (readyQuantity === 0) {
+                hasZeroQuantity = true;
+            }
+        }
+    });
+    if (!isChecked) {
+        toastr.warning("Please select at least one item to submit.");
+        return; 
+    }
+
+    if (hasZeroQuantity) {
+        toastr.warning("You cannot set the ready quantity or in progress quantity to 0 for selected items.");
+        return;  
+    }
+
     if ($form.data('submitting')) return;
     $form.data('submitting', true);
+
     var formData = new FormData();
 
     $('table tbody tr').each(function () {
-      var $row = $(this);
-      var $checkbox = $row.find('input[type="checkbox"]');
-      var $input = $row.find('input[type="number"]');
-      var inputId = $input.attr('id'); 
-      var itemId = inputId.split('-')[1]; 
-      var value = $checkbox.is(':checked') ? $input.val() : 0;
-      formData.append(`readyItemCount[${itemId}]`, value);
+        var $row = $(this);
+        var $checkbox = $row.find('input[type="checkbox"]');
+        var $input = $row.find('input[type="number"]');
+        var inputId = $input.attr('id');
+        var itemId = inputId.split('-')[1];
+        var value = $checkbox.is(':checked') ? $input.val() : 0;
+        formData.append(`readyItemCount[${itemId}]`, value);
     });
     formData.append("currentStatus", $("#currentStatus").val());
+
     $.ajax({
-      url: "@Url.Action("changeReadyQuantity", "Kot")",
-      type: "POST",
-      data: formData,
-      contentType: false,
-      processData: false,
-      complete: function () {
-        $form.data('submitting', false);
-      },
-      success: function (response) {
-        if (response.success) {
-          $('.closeModalBtn').click();
-          toastr.success(response.success);
-          loadOrdersForcategory($('#selectedCategory').val(), false);
+        url: "@Url.Action("changeReadyQuantity", "Kot")",
+        type: "POST",
+        data: formData,
+        contentType: false,
+        processData: false,
+        complete: function () {
+            $form.data('submitting', false);
+        },
+        success: function (response) {
+            if (response.success) {
+                $('.closeModalBtn').click();
+                toastr.success(response.success);
+                loadOrdersForcategory($('#selectedCategory').val(), false);
+            }
+        },
+        error: function () {
+            toastr.error("An error occurred while processing your request");
         }
-      },
-      error: function () {
-        toastr.error("An error occurred while processing your request");
-      }
     });
-  });
+});
+
+
   function loadOrders() {
     $.ajax({
       url: '@Url.Action("loadOrdersPerCategory", "Kot")',

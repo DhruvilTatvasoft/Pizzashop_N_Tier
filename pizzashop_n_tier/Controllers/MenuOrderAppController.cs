@@ -59,6 +59,9 @@ public class MenuOrderAppController : Controller
 
         responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId ?? 0, model.itemType, model.SearchedItem);
         responseModel.categoryId = model.CategoryId ?? 0;
+        if (model.itemType != "" && model.itemType != null) { 
+        responseModel.itemtype = model.itemType;
+        }
 
         return PartialView("_itemData", responseModel);
     }
@@ -125,7 +128,7 @@ public class MenuOrderAppController : Controller
     public IActionResult editCustomerDetails(MenuOrderAppModel model)
     {
         _menuOrderAppService.saveCustomerDetails(model.customer);
-       
+
         return Json(new { success = "Customer Details Save successfully" });
     }
 
@@ -140,9 +143,9 @@ public class MenuOrderAppController : Controller
         return File(qrCodeImage, "image/png");
     }
     [HttpPost]
-    public IActionResult addOrRemoveFromFavorites(int itemid,string process)
+    public IActionResult addOrRemoveFromFavorites(int itemid, string process)
     {
-        _itemService.addOrRemoveFromFavorites(itemid,process);
+        _itemService.addOrRemoveFromFavorites(itemid, process);
         return Ok();
     }
 
@@ -173,7 +176,7 @@ public class MenuOrderAppController : Controller
     public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails)
     {
         int orderid = _menuOrderAppService.createOrder(orderDetails);
-        
+
         return Json(new { success = "Order Saved Successfully", Orderid = orderid });
     }
 
@@ -183,9 +186,10 @@ public class MenuOrderAppController : Controller
         return PartialView("_menu", model);
     }
 
-    public IActionResult getOrderDetailsForAssignedTable(int tableid){
+    public IActionResult getOrderDetailsForAssignedTable(int tableid)
+    {
         MenuOrderAppModel model = _menuOrderAppService.getAssignedTableDetails(tableid);
-        return PartialView("_menu",model);
+        return PartialView("_menu", model);
     }
 
     [HttpPost]
@@ -193,7 +197,7 @@ public class MenuOrderAppController : Controller
     {
         if (_menuOrderAppService.completeTheOrder(Itemdetails))
         {
-            return Json(new { success = "Order completed" });
+            return Json(new { success = "Order completed" , orderId = Itemdetails.orderid});
         }
         else
         {
@@ -213,6 +217,20 @@ public class MenuOrderAppController : Controller
 
             return Json(new { success = "Order can not cancelled as some items of the order are ready" });
         }
+    }
+
+    public IActionResult getCustomerReviewModal(int orderId)
+    {
+        customerReviewViewModel model = new customerReviewViewModel();
+        model.orderid = orderId;
+        return PartialView("_customerReview",model);
+    }
+
+    [HttpPost]
+    public IActionResult CustomerReviewPost([FromBody] customerReviewViewModel model)
+    {
+        _menuOrderAppService.saveCustomerReview(model);
+        return Json(new { success = "Review saved successfully" });
     }
 
 }

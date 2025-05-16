@@ -374,8 +374,10 @@ public class OrderRepository : IOrderRepository
             .Where(oim => oim.Orderid == orderid)
             .ToList();
         List<Dictionary<Item, List<Modifier>>> itemModifierList = new List<Dictionary<Item, List<Modifier>>>();
+        List<itemDetails> itemDetailsList = new List<itemDetails>();
         foreach (var group in orderedItemsGrouped)
         {
+            itemDetails oneItemDetail = new itemDetails();
             var itemId = group.Itemid;
             var orderItemDetailId = group.Orderitemid;
             var dbItem = categoryid != 0
@@ -413,11 +415,19 @@ public class OrderRepository : IOrderRepository
             {
                 item.Itemquantity = orderItem.Readyitemquanitiy ?? 0;
             }
+            oneItemDetail.item = item;
+            oneItemDetail.modifiers = modifiers;
+            oneItemDetail.orderedQuantity = orderItem.Orderitemquantity ?? 0;
+            oneItemDetail.readyQuantity = orderItem.Readyitemquanitiy ?? 0;
+            oneItemDetail.inprogressQuantity = (orderItem.Orderitemquantity?? 0) - (orderItem.Readyitemquanitiy ?? 0);
+            itemDetailsList.Add(oneItemDetail);
             itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
         }
         model.itemAndModifiers = itemModifierList
             .SelectMany(dict => dict)
             .ToDictionary(pair => pair.Key, pair => pair.Value);
+        model.itemDetails = itemDetailsList;
+        model.currentStatus = status;
         return model;
     }
     public void changeReadyQuantity(Dictionary<int, int> readyItemCount, string currentStatus)

@@ -12,6 +12,9 @@
   box-shadow: 1px 2px 4px 1px rgba(0, 0, 0, 0.1), 0 0px 11px 0 rgba(0, 0, 0, 0);
   background-color: white;
 }
+.readyItem{
+  background-color: #c0ffcd;
+}
 h1 {
   font-weight: bold;
   color: #0066a7;

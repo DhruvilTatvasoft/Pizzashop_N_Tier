@@ -83,14 +83,16 @@
         </div>
         <div>
             <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-primary btncolour" style="width: 20%;" onclick="saveTheOrder()">Save</button>
+                <button class="btn btn-primary btncolour" style="width: 20%;" id="saveTheOrder"
+                    onclick="saveTheOrder()">Save</button>
                 <input type="hidden" id="savedOrNot" value="false">
-                <button class="btn btn-outline-primary btnoutlinecolourLight"
+                <button class="btn btn-outline-primary btnoutlinecolour" id="completeTheOrder"
                     onclick="CompleteTheOrder()">Complete</button>
-                <button class="btn btn-outline-primary btnoutlinecolourLight">Generate Invoice</button>
+                <button class="btn btn-outline-primary btnoutlinecolour">Generate Invoice</button>
             </div>
             <div class="d-flex justify-content-end mt-3">
-                <button class="btn btn-outline-primary btnoutlinecolour" onclick="cancelTheOrder()">Cancel</button>
+                <button class="btn btn-outline-primary btnoutlinecolour" id="cancelTheOrder"
+                    onclick="cancelTheOrder()">Cancel</button>
             </div>
         </div>
     </div>
@@ -120,7 +122,6 @@
         </div>
     </div>
 </div>
-
 <div class="modal fade" id="QRcodeModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
     style="    --bs-modal-width: 300px;" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -141,8 +142,9 @@
         </div>
     </div>
 </div>
-<script>
 
+<div class="customerReview"></div>
+<script>
     $(document).ready(function () {
         var uniqueids = @Html.Raw(Json.Serialize(Model.uniqueids));
         var orderComment = @Html.Raw(Json.Serialize(Model.orderComment));
@@ -160,6 +162,18 @@
             });
         }
     });
+
+    function getCustomerReviewModal(orderid) {
+        $.ajax({
+            url: "@Url.Action("getCustomerReviewModal", "MenuOrderApp")",
+            type: "GET",
+            data: { orderId: orderid },
+            success: function (response) {
+                $(".customerReview").html(response);
+                $("#customerReviewModal").modal('show');
+            }
+        });
+    }
 
     function generateQR() {
         var text = "http://localhost:5043/OrderApp/getOrderAppPage?fromQr=true"
@@ -179,7 +193,6 @@
             toastr.error("Add some items before saving the order");
             return;
         }
-
         $('[id^="item_"]').each(function (index, element) {
             var fullId = $(element).attr('id');
             var parts = fullId.split("_");
@@ -249,24 +262,6 @@
                 $("#SavedOrderid").val(response.orderid);
                 $("#savedOrNot").val(true);
                 loadKot()
-                @* let connection = new signalR.HubConnectionBuilder()
-                    .withUrl("/chatHub").build();
-                connection.on("ReceiveMessage", function (User, Message) {
-                    let encodedUser = $("<div />").text(user).html();
-                    let encodedMsg = $("<div />").text(message).html();
-                    $("#chatBox").append("<p><strong>" + encodedUser + "</strong>: " + encodedMsg + "</p>");
-                });
-                $("#send-btn").click(function () {
-                    let our_user = $("#username").val();
-                    let Message = $("#message").val();
-                    connection.invoke("Message", our_user, Message);
-                    $("#message").val("").focus();
-                });
-                connection.start().then(function () {
-                    console.log("Connected!");
-                }).catch(function (err) {
-                    console.error(err.toString());
-                }); *@
 
             },
             error: function (xhr, status, error) {
@@ -294,23 +289,24 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success(response.success);
-                    loadKot();
+                    getCustomerReviewModal(response.orderId);
+                    $("#saveTheOrder").prop('disabled', true);
+                    $("#completeTheOrder").prop('disabled', true);
+                    $("#cancelTheOrder").prop('disabled', true);
+                    @* loadKot(); *@
                 }
                 else {
                     toastr.error(response.error);
                 }
             }
         });
-
     }
-
     function cancelTheOrder() {
         var itemDetails = [...new Set($("[id^='item_']").map(function () { return this.id; }).get())];
         var itemIds = {
             uniqueids: itemDetails,
             orderid: @Html.Raw(Json.Serialize(Model.orderid))
        }
-
         $.ajax({
             url: "@Url.Action("cancelTheOrder", "MenuOrderApp")",
             type: "POST",
@@ -320,7 +316,9 @@
             success: function (response) {
                 if (response.success) {
                     toastr.success(response.success);
-                    loadKot();
+                    $("#saveTheOrder").prop('disabled', true);
+                    $("#completeTheOrder").prop('disabled', true);
+                    $("#cancelTheOrder").prop('disabled', true);
                 }
                 else {
                     toastr.error(response.error);
@@ -328,5 +326,4 @@
             }
         });
     }
-
 </script>

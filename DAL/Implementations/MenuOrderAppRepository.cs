@@ -510,7 +510,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         foreach (var itemid in orderedItemIds)
         {
             Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy < 1)
+            if (item.Readyitemquanitiy !=  item.Orderitemquantity)
             {
                 return false;
             }
@@ -999,5 +999,23 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         model.waitingListCount = waitingListCount;
         model.timeid = timeId;
         model.averageWaitingTime = averageWaitingTime;
+    }
+
+    public void saveCustomerReview(customerReviewViewModel model)
+    {
+        Orderreview review = new Orderreview();
+        if (model.food != 0 && model.service != 0 && model.ambience != 0)
+        {
+            review.Orderid = model.orderid;
+            review.Foodreview = model.food;
+            review.Servicereview = model.service;
+            review.Ambiencereview = model.ambience;
+            review.Averagerating = (model.food + model.service + model.ambience) / 3;
+            review.Createdat = DateTime.Now;
+            review.Comment = model.comment;
+            _context.Orderreviews.Add(review);
+           _context.SaveChanges();
+        }
+
     }
 }

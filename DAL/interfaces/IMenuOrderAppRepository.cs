@@ -17,5 +17,6 @@ public interface IMenuOrderAppRepository
     MenuOrderAppModel getRunningTableOrder(int tableid);
     void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel);
     void saveCustomerDetails(CustomerModel customer);
+    void saveCustomerReview(customerReviewViewModel model);
     void saveOrderWiseComment(MenuOrderAppModel model);
 }

@@ -83,4 +83,58 @@
                $("#assignBtn_" + sectionid).prop('disabled', true)
           }
      });
+
+     function loadAddTokenModel() {
+        $.ajax({
+            url: "@Url.Action("getAddEditTokenModel", "WaitingList")",
+            method: "GET",
+            success: function (data) {
+                $(".addEditModifierModelContainer").html(data);
+                $("#addEditWaitingToken").modal('show');
+                $("#updateToken").css("display", "none");
+            }
+        });
+    }
+
+    $(document).on("submit", "#AddEditWaitingTokenForm", function (e) {
+        e.preventDefault();
+        var tokenid = $("#tokenid").val();
+        var url;
+        if (tokenid == null || tokenid == 0) {
+            url = "@Url.Action("AddNewWaitingToken", "WaitingList")"
+        }
+        else {
+            url = "@Url.Action("UpdateWaitingToken", "WaitingList")"
+        }
+        var $form = $(this);
+
+        if ($form.data('submitting')) return;
+        $form.data('submitting', true);
+        var data = new FormData(this);
+        if (!$(this).valid()) {
+            return false;
+        }
+        else {
+            $.ajax({
+                url: url,
+                method: "POST",
+                data: data,
+                processData: false,
+                contentType: false,
+                success: function (data) {
+                    if (data.success) {
+                        $("#closeBtn").click();
+                        toastr.success(data.success)
+                        loadWaitingTokensForSection(data.sectionid);
+                        loadSectionsNavbar();
+                    }
+                    else {
+                        $("#closeBtn").click();
+                        toastr.error(data.error)
+                        loadWaitingTokensForSection(data.sectionid);
+                    }
+                }
+            });
+        }
+    });
 </script>
