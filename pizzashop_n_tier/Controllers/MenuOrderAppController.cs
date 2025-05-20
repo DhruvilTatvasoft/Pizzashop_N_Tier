@@ -2,6 +2,7 @@
 using BAL.Interfaces;
 using DAL.Data;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 
 public class MenuOrderAppController : Controller
 {
@@ -14,8 +15,10 @@ public class MenuOrderAppController : Controller
     private readonly ITableService _tableService;
     private readonly ITaxService _taxesService;
 
+    private readonly INotificationService _notificationService;
 
-    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService, ITaxService taxesService, ITableService tableService, IItemService itemService, IModifierService modifierService, IMenuService menuService, IOrderService orderService, IWaitingTokenService waitingTokenService)
+
+    public MenuOrderAppController(IMenuOrderAppService menuOrderAppService,INotificationService notificationService, ITaxService taxesService, ITableService tableService, IItemService itemService, IModifierService modifierService, IMenuService menuService, IOrderService orderService, IWaitingTokenService waitingTokenService)
     {
         _menuOrderAppService = menuOrderAppService;
         _menuService = menuService;
@@ -24,6 +27,7 @@ public class MenuOrderAppController : Controller
         _itemService = itemService;
         _modifierService = modifierService;
         _tableService = tableService;
+        _notificationService = notificationService;
         _taxesService = taxesService;
     }
     public IActionResult getMenuSidebar()
@@ -176,7 +180,11 @@ public class MenuOrderAppController : Controller
     public IActionResult saveTheOrderDetails([FromBody] OrderDetailsViewModel orderDetails)
     {
         int orderid = _menuOrderAppService.createOrder(orderDetails);
-
+        if (orderid == 0)
+        { 
+            return Json(new { error = "An Error Occured while creating order" });
+        }
+        _notificationService.SendMessageToAll("New Order Created");
         return Json(new { success = "Order Saved Successfully", Orderid = orderid });
     }
 

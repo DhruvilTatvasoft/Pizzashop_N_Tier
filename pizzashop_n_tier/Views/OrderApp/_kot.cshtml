@@ -8,44 +8,72 @@
   <div class="categoryNavbarContainer"></div>
   <div class="cardContainer w-100 h-100"></div>
 </div>
+<div id="loadingBackdrop" class="loading-backdrop" style="display: none;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+<style>
 
+
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+  border-width: 0.4em;
+}
+
+</style>
 <script>
   $('document').ready(() => {
     loadCategoryNavbar();
     loadOrderDetailCardContainer(0);
-  })
+});
 
-  function loadCategoryNavbar() {
+function showSpinner() {
+    $('#loadingBackdrop').show(); 
+}
+
+function hideSpinner() {
+    $('#loadingBackdrop').hide(); 
+}
+function loadCategoryNavbar() {
+    showSpinner(); 
     $.ajax({
-      url: '@Url.Action("loadCategoryNavbar", "Kot")',
-      type: 'GET',
-      success: function (data) {
-        $('.categoryNavbarContainer').html(data);
-      }
+        url: '@Url.Action("loadCategoryNavbar", "Kot")',
+        type: 'GET',
+        success: function (data) {
+            $('.categoryNavbarContainer').html(data);
+            hideSpinner(); 
+        }
     });
-  }
+}
 
-  function loadOrderDetailCardContainer(categoryid) {
+function loadOrderDetailCardContainer(categoryid) {
+    showSpinner();
     $.ajax({
-      url: "@Url.Action("loadOrderDetailCardContainer", "Kot")",
-      type: "GET",
-      data: { categoryid: categoryid },
-      success: function (response) {
-        $(".cardContainer").html(response)
-      }
+        url: "@Url.Action("loadOrderDetailCardContainer", "Kot")",
+        type: "GET",
+        data: { categoryid: categoryid },
+        success: function (response) {
+            $(".cardContainer").html(response);
+            hideSpinner(); 
+        }
     });
-  }
+}
 
- $(document).on('submit', '#readyQuantityChangeForm', function (e) {
+$(document).on('submit', '#readyQuantityChangeForm', function (e) {
     e.preventDefault();
     var $form = $(this);
     var isChecked = false;
     var hasZeroQuantity = false;
 
+
+
     $('table tbody tr').each(function () {
         var $checkbox = $(this).find('input[type="checkbox"]');
         var $input = $(this).find('input[type="number"]');
-        var readyQuantity = parseInt($input.val(), 10); 
+        var readyQuantity = parseInt($input.val(), 10);
 
         if ($checkbox.is(':checked')) {
             isChecked = true;
@@ -54,14 +82,17 @@
             }
         }
     });
+
     if (!isChecked) {
         toastr.warning("Please select at least one item to submit.");
-        return; 
+        hideSpinner();
+        return;
     }
 
     if (hasZeroQuantity) {
         toastr.warning("You cannot set the ready quantity or in progress quantity to 0 for selected items.");
-        return;  
+        hideSpinner(); 
+        return;
     }
 
     if ($form.data('submitting')) return;
@@ -90,46 +121,52 @@
             $form.data('submitting', false);
         },
         success: function (response) {
+            hideSpinner(); 
             if (response.success) {
                 $('.closeModalBtn').click();
                 toastr.success(response.success);
-                loadOrdersForcategory($('#selectedCategory').val(), false);
+                loadOrdersForcategory($('#selectedCategory').val(),'',1);
             }
         },
         error: function () {
+            hideSpinner(); 
             toastr.error("An error occurred while processing your request");
         }
     });
 });
 
+function loadOrders() {
 
-  function loadOrders() {
+    showSpinner();
     $.ajax({
-      url: '@Url.Action("loadOrdersPerCategory", "Kot")',
-      type: 'GET',
-      data: { categoryid: 0 },
-      success: function (data) {
-        $('.orderdetailcontainer').html(data);
-      }
+        url: '@Url.Action("loadOrdersPerCategory", "Kot")',
+        type: 'GET',
+        data: { categoryid: 0 },
+        success: function (data) {
+            $('.orderdetailcontainer').html(data);
+            hideSpinner();
+        }
     });
-  }
+}
 
-  function loadOrdersForcategory(categoryid, IsReady, pageNumber) {
+function loadOrdersForcategory(categoryid, IsReady, pageNumber) {
+    showSpinner();
     $.ajax({
-      url: "@Url.Action("loadOrdersPerCategory", "Kot")",
-      type: 'GET',
-      data: { categoryid: categoryid, IsReady: IsReady, pageNumber: pageNumber },
-      success: function (data) {
-        $('.orderdetailcontainer').html(data);
-        if (IsReady == true) {
-          $(".btn").removeClass("activeBtn");
-          $(".readybtn").addClass("activeBtn")
+        url: "@Url.Action("loadOrdersPerCategory", "Kot")",
+        type: "GET",
+        data: { categoryid: categoryid, IsReady: IsReady, pageNumber: pageNumber },
+        success: function (data) {
+            $('.orderdetailcontainer').html(data);
+            hideSpinner();
+            if (IsReady == true) {
+                $(".btn").removeClass("activeBtn");
+                $(".readybtn").addClass("activeBtn");
+            } else if (IsReady == false) {
+                $(".btn").removeClass("activeBtn");
+                $(".inprogressbtn").addClass("activeBtn");
+            }
         }
-        else if (IsReady == false) {
-          $(".btn").removeClass("activeBtn");
-          $(".inprogressbtn").addClass("activeBtn");
-        }
-      }
     });
-  }
+}
+
 </script>

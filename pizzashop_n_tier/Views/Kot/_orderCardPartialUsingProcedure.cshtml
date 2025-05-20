@@ -1,0 +1,111 @@
+@model KotViewModel
+
+@if (Model.orderDetails2.Count == 0)
+{
+    <h1>No Orders Found !!</h1>
+}
+else
+{
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between">
+            <div>
+                <label id="category-name">@(Model.categoryName ?? "All")</label>
+            </div>
+            <div class="p-1">
+                <button class="btn btn-primary inprogressbtn" onclick="inprogress(this,@Model.categoryid,false)">
+                    <label class="inprogressText">In progress</label>
+                    <img src="~/images/hourglass-top.svg" class="inprogressImg" alt="">
+                </button>
+                <button class="btn btn-outline-primary readybtn" onclick="inprogress(this,@Model.categoryid,true)">
+                    <label for=""> Ready </label>
+                </button>
+
+
+                @if (Model.pageNumber == 1)
+                {
+                    <button class="btn btn-outline-primary btnoutlinecolour"
+                        onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber - 1))" disabled>&lt;</button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-primary btnoutlinecolour"
+                        onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber - 1))">&lt;</button>
+                }
+
+                @if (Model.pageNumber * 5 >= Model.totalOrders)
+                {
+                    <button class="btn btn-outline-primary btnoutlinecolour"
+                        onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber + 1))" disabled>&gt;</button>
+                }
+                else
+                {
+                    <button class="btn btn-outline-primary btnoutlinecolour"
+                        onclick="loadOrdersForcategory(@Model.categoryid,temp,@(Model.pageNumber + 1))" @(Model.pageNumber * 5
+                                                                                                                        == Model.totalOrders ? "disabled" : "")>&gt;</button>
+                        }
+            </div>
+        </div>
+
+        <div class="row mt-3" style="gap:3.3%">
+            @foreach (var order in Model.orderDetails2)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-2 mb-4">
+                    <div class="orderDetailContainer card p-0 h-100" onclick="openModalForStatusChange(@order.orderId)">
+                        <div class="card-header bg-light p-2">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <label class="fw-bold text-color">#@order.orderId</label>
+                                <div>
+                                    <img src="~/images/clock-fill copy 2.svg" alt="">
+                                    <label id="duration-waitingtime-@order.orderId"
+                                        data-createdatWaitingToken="@order.createdAt?.ToString("o")"></label>
+                                </div>
+                            </div>
+                            <div class="d-flex">
+                                <label class="me-2">@Model.orderTableSectionDetail[order.orderId].sectionName</label>
+                                <li>@Model.orderTableSectionDetail[order.orderId].tableName</li>
+                            </div>
+                        </div>
+
+                        <div class="card-body p-2" style="min-height: 150px; max-height: 150px; overflow-y: auto;">
+                            @foreach (var list in order.itemdetails)
+                            {
+                                @* @foreach (var itemDict in list.itemdetails)
+                                { *@
+                                    <div class="d-flex justify-content-between itemContainer">
+                                        <label>@list.item.Itemname</label>
+                                        @if(Model.currentStatus == null ){
+                                        <label>@list.orderedQuantity</label>
+                                        }
+                                        else if(Model.currentStatus == true){
+                                        <label>@list.readyQuantity</label>
+                                        }
+                                        else{
+                                        <label>@list.inprogressQuantity</label>
+                                        }
+                                    </div>
+                                    <div class="itemContainer">
+                                        @if (list.modifiers.Count > 0)
+                                        {
+                                            @foreach (var modifier in list.modifiers)
+                                            {
+                                                <li><label>@modifier.Modifiername</label></li>
+                                            }
+                                        }
+                                    </div>
+                                @* } *@
+                            }
+                        </div>
+                        <div class="card-footer bg-light" style="max-height:80px;min-height:50px; overflow-y: auto;">
+                            @* @if (!string.IsNullOrWhiteSpace(order.Key.Ordercomment))
+                            {
+                                <label>Orders Instruction:
+                                    <span style="color: #00aae9;">@order.Key.Ordercomment</span>
+                                </label>
+                            } *@
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+}

@@ -39,11 +39,16 @@ public class KotController : Controller
         model.categories = _menuService.getAllCategories();
         _orderService.GetOrderDetailsByCategory(categoryid, IsReady,pageSize,pageNumber,model);
         Dictionary<int, tableAndsection> orderTableSectionDetail = new Dictionary<int, tableAndsection>();
-        foreach (var order in model.orderDetails.Keys)
+        foreach (var order in model.orderDetails2)
         {
-            tableAndsection tableAndsection = _orderService.getOrderSectionAndTableDetails(order.Orderid);
-           orderTableSectionDetail.Add(order.Orderid,tableAndsection);
+            tableAndsection tableAndsection = _orderService.getOrderSectionAndTableDetails(order.orderId);
+           orderTableSectionDetail.Add(order.orderId,tableAndsection);
         }
+        // foreach (var order in model.orderDetails.Keys)                         --uncomment these to run it without stored procedure
+        // {
+        //     tableAndsection tableAndsection = _orderService.getOrderSectionAndTableDetails(order.Orderid);
+        //    orderTableSectionDetail.Add(order.Orderid,tableAndsection);
+        // }
         model.orderTableSectionDetail = orderTableSectionDetail;
         Category category = _menuService.getCategoryById(categoryid);
         if (categoryid == 0)
@@ -56,9 +61,9 @@ public class KotController : Controller
             model.categoryName = category.Categoryname;
             model.categoryid = category.Categoryid;
         }
-        return PartialView("_orderCardPartial", model);
+        return PartialView("_orderCardPartialUsingProcedure", model);
+        // return PartialView("_orderCardPartial", model);           --uncomment these to run it without stored procedure
     }
-
     public IActionResult loadSingleOrderDetails(int categoryid, int orderid)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();

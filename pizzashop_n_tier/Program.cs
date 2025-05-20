@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.SignalR;
 
 
 
@@ -51,6 +52,7 @@ builder.Services.AddScoped<IWaitingTokenRepository, WaitingTokenRepository>();
 builder.Services.AddScoped<IMenuOrderAppService, MenuOrderAppImple>();
 builder.Services.AddScoped<IMenuOrderAppRepository, MenuOrderAppRepository>();
 builder.Services.AddScoped<IAuthServices,AuthServiceImpl >();
+builder.Services.AddScoped<INotificationService, NotificationService>();
 
 builder.Services.AddScoped<Microsoft.AspNetCore.Authorization.IAuthorizationHandler, PermissionHandler>();
 builder.Services.AddAuthorization(options =>
@@ -173,12 +175,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.MapControllers();
 app.UseStatusCodePagesWithReExecute("/Error/NotFound");
+app.MapHub<KotHub>("/chathub");
 app.UseDeveloperExceptionPage();
- app.UseEndpoints(endpoints =>
-        {
-            endpoints.MapControllers();
-            endpoints.MapHub<RealTimeHub>("/realtimehub");
-        });
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Login}/{action=Index}/{id?}");

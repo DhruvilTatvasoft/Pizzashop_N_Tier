@@ -8,62 +8,68 @@
         </tr>
     </thead>
     <tbody>
+        @if (Model.itemDetails == null || !Model.itemDetails.Any(item =>
+            (Model.currentStatus == "In Progress" && item.inprogressQuantity >= 1) ||
+            (Model.currentStatus == "Ready" && item.readyQuantity >= 1)))
+    {
+        <tr>
+            <td colspan="2" class="text-center">  <img src="~/images/exclamation-circle-fill.svg" class="pe-3 pt-0" alt="">No items found</td>
+        </tr>
+    }
+    else
+    {
         @foreach (var item in Model.itemDetails)
         {
-            @if (Model.currentStatus == "In Progress" && item.inprogressQuantity >= 1)
+            if (Model.currentStatus == "In Progress" && item.inprogressQuantity >= 1)
             {
                 <tr class="@(item.readyQuantity == item.orderedQuantity ? "readyItem" : "")">
                     <td>
                         <input class="form-check-input" type="checkbox">
-                        <label for="">@item.item.Itemname</label>
+                        <label>@item.item.Itemname</label>
                         <div class="ps-2 modifierForItem">
                             @foreach (var modifier in item.modifiers)
                             {
                                 <li>@modifier.Modifiername</li>
                             }
                         </div>
+                    </td>
                     <td>
                         <div class="incrementerContainer">
-                            <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.item.Itemid')"
-                                value="Decrease Value">-</div>
-                            <input type="number" class="number h-100" id="number-@item.item.Itemid" min="0"
-                                max="@(item.orderedQuantity)"
-                                value="@(Model.currentStatus == "Ready" && item.readyQuantity == item.orderedQuantity ? $"{item.readyQuantity}" : "0")"
-                                name="readyItemCount[@item.item.Itemid]" />
-                            <div class="value-button h-100" id="increase"
-                                onclick="increaseValue(@item.orderedQuantity,'number-@item.item.Itemid')"
-                                value="Increase Value">+</div>
+                            <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.item.Itemid')" value="Decrease Value">-</div>
+                            <input type="number" class="number h-100" id="number-@item.item.Itemid" min="0" max="@(item.orderedQuantity)"
+                                   value="@(Model.currentStatus == "Ready" && item.readyQuantity == item.orderedQuantity ? $"{item.readyQuantity}" : "0")"
+                                   name="readyItemCount[@item.item.Itemid]" />
+                            <div class="value-button h-100" id="increase" onclick="increaseValue(@item.orderedQuantity,'number-@item.item.Itemid')" value="Increase Value">+</div>
                         </div>
                     </td>
                 </tr>
             }
-            @if (Model.currentStatus == "Ready" && item.readyQuantity >= 1)
+            else if (Model.currentStatus == "Ready" && item.readyQuantity >= 1)
             {
                 <tr class="@(item.readyQuantity == item.orderedQuantity ? "readyItem" : "")">
                     <td>
                         <input class="form-check-input" type="checkbox">
-                        <label for="">@item.item.Itemname</label>
+                        <label>@item.item.Itemname</label>
                         <div class="ps-2 modifierForItem">
                             @foreach (var modifier in item.modifiers)
                             {
                                 <li>@modifier.Modifiername</li>
                             }
                         </div>
+                    </td>
                     <td>
                         <div class="incrementerContainer">
-                            <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.item.Itemid')"
-                                value="Decrease Value">-</div>
-                            <input type="number" class="number h-100" id="number-@item.item.Itemid" min="0"
-                                max="@(item.orderedQuantity)"
-                                value="@(Model.currentStatus == "Ready" && item.readyQuantity == item.orderedQuantity ? $"{item.readyQuantity}" : "0")"
-                                name="readyItemCount[@item.item.Itemid]" />
-                            <div class="value-button h-100" id="increase"
-                                onclick="increaseValue(@item.orderedQuantity,'number-@item.item.Itemid')"
-                                value="Increase Value">+</div>
+                            <div class="value-button h-100" id="decrease" onclick="decreaseValue('number-@item.item.Itemid')" value="Decrease Value">-</div>
+                            <input type="number" class="number h-100" id="number-@item.item.Itemid" min="0" max="@(item.orderedQuantity)"
+                                   value="@(Model.currentStatus == "Ready" && item.readyQuantity == item.orderedQuantity ? $"{item.readyQuantity}" : "0")"
+                                   name="readyItemCount[@item.item.Itemid]" />
+                            <div class="value-button h-100" id="increase" onclick="increaseValue(@item.orderedQuantity,'number-@item.item.Itemid')" value="Increase Value">+</div>
                         </div>
                     </td>
                 </tr>
             }
         }
-    </tbody>
+    }
+</tbody>
+
 </table>

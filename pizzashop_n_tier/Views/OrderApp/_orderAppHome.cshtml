@@ -7,22 +7,13 @@
 <div class="loadTabBody h-100"></div>
 <script>
      $("document").ready(() => {
-          @* const connection = new signalR.HubConnectionBuilder()
-               .withUrl("/realtimehub")
-               .build();
-          connection.start().catch(err => console.error(err.toString()));
-          connection.on("ReceiveMessage", (user, message) => {
-               const msg = `${user}: ${message}`;
-               const li = document.createElement("li");
-               li.textContent = msg;
-               document.getElementById("messagesList").appendChild(li);
-          }); *@
           const urlParams = new URLSearchParams(window.location.search);
           const fromQr = urlParams.get('fromQr');
           if (fromQr == 'true') {
                loadMenuPage();
           }
-          loadKot()
+          @* loadKot() *@
+          loadwaitingList()
      });
 
      function loadKot() {

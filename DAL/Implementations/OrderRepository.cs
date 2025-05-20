@@ -1,5 +1,7 @@
 using DAL.Data;
+using Dapper;
 using Microsoft.EntityFrameworkCore;
+using Npgsql;
 
 
 public class OrderRepository : IOrderRepository
@@ -159,7 +161,7 @@ public class OrderRepository : IOrderRepository
 
     public Order? GetOrderDetails(int orderid)
     {
-        
+
         Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
         order.Status = _context.Orderstatuses.FirstOrDefault(orderStatus => orderStatus.Orderstatusid == order.Statusid)!;
         order.Customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == order.Customerid)!;
@@ -365,10 +367,157 @@ public class OrderRepository : IOrderRepository
 
     }
 
+    public void GetOrderDetailsByCategoryUsingProcedure(
+    int categoryId, bool? isReady, int pageSize, int pageNumber, KotViewModel Model)
+    {
+        const string query = @"
+        SELECT * 
+        FROM GetOrderDetailsByCategory(@CategoryId, @IsReady)";
+
+        using var connection = new NpgsqlConnection("Server=localhost;Port=5432;Database=pizzashop_new;User id=postgres;Password=Tatva@123;TrustServerCertificate=True");
+        connection.Open();
+
+        var result = connection.Query<dynamic>(query, new
+        {
+            CategoryId = categoryId,
+            IsReady = isReady,
+            PageSize = pageSize,
+            PageNumber = pageNumber
+        });
+
+        var ordersDict = new Dictionary<int, SingleOrderDetailModel2>();
+
+        foreach (var row in result)
+        {
+            int orderId = row.order_id;
+            int itemId = row.item_id;
+            string itemName = row.item_name;
+            int quantity = row.quantity;
+            int? modifierId = row.modifier_id;
+            string modifierName = row.modifier_name;
+            DateTime? createdDate = row.order_created_at;
+
+            if (!ordersDict.TryGetValue(orderId, out var orderDetail))
+            {
+                orderDetail = new SingleOrderDetailModel2
+                {
+                    orderId = orderId,
+                    createdAt = createdDate,
+                    itemdetails = new List<itemDetails>()
+                };
+                ordersDict[orderId] = orderDetail;
+            }
+
+            var itemList = orderDetail.itemdetails;
+            var existingItem = itemList.FirstOrDefault(i => i.item.Itemid == itemId);
+
+            if (existingItem == null)
+            {
+                existingItem = new itemDetails
+                {
+                    item = new Item
+                    {
+                        Itemid = itemId,
+                        Itemname = itemName
+                    },
+                    orderedQuantity = quantity,
+                    readyQuantity = isReady == true ? quantity : 0,
+                    inprogressQuantity = isReady == false ? quantity : 0,
+                    modifiers = new List<Modifier>()
+                };
+
+                itemList.Add(existingItem);
+            }
+
+            if (modifierId.HasValue)
+            {
+                var modifier = new Modifier
+                {
+                    Modifierid = modifierId.Value,
+                    Modifiername = modifierName
+                };
+
+                if (!existingItem.modifiers.Any(m => m.Modifierid == modifier.Modifierid))
+                {
+                    existingItem.modifiers.Add(modifier);
+                }
+            }
+        }
+
+        Model.pageNumber = pageNumber;
+        Model.pageSize = pageSize;
+        Model.totalOrders = ordersDict.Values.ToList().Count;
+        Model.currentStatus = isReady;
+        Model.orderDetails2 = ordersDict.Values.Skip((pageNumber - 1) * pageSize)
+                                     .Take(pageSize).ToList();
+    }
+    public SingleOrderDetailModel getSingleOrderDetailUsingProcedure(int categoryid, int orderid, string status)
+    {
+        const string query = @"
+    SELECT * 
+    FROM getsingleorderdetails(@OrderId, @CategoryId, @IsReady)";
+
+        using var connection = new NpgsqlConnection("Server=localhost;Port=5432;Database=pizzashop_new;User id=postgres;Password=Tatva@123;TrustServerCertificate=True");
+        connection.Open();
+
+        bool isReady = status == "Ready" ? true : false;
+
+        var result = connection.Query<dynamic>(query, new
+        {
+            OrderId = orderid,
+            CategoryId = categoryid,
+            IsReady = isReady
+        });
+
+        SingleOrderDetailModel orderDetails = new SingleOrderDetailModel
+        {
+            itemDetails = new List<itemDetails>(),
+            currentStatus = status,
+            itemAndModifiers = new Dictionary<Item, List<Modifier>>()
+        };
+        var itemModifierMap = new Dictionary<int, itemDetails>();
+
+        foreach (var row in result)
+        {
+            int orderItemDetailId = row.orderitemdetailid;
+
+            if (!itemModifierMap.ContainsKey(orderItemDetailId))
+            {
+                itemDetails singleItemDetails = new itemDetails
+                {
+                    item = new Item
+                    {
+                        Itemname = row.item_name,
+                        Itemid = row.item_id,
+                    },
+                    orderedQuantity = (int)row.orderquantity,
+                    readyQuantity = row.readyquantity != null ? (int)row.readyquantity : 0,
+                    inprogressQuantity = (int)row.orderquantity - (row.readyquantity != null ? (int)row.readyquantity : 0),
+                    modifiers = new List<Modifier>()
+                };
+                itemModifierMap[orderItemDetailId] = singleItemDetails;
+            }
+
+            var itemDetails = itemModifierMap[orderItemDetailId];
+
+            if (row.modifier_id != null)
+            {
+                itemDetails.modifiers.Add(new Modifier
+                {
+                    Modifierid = (int)row.modifier_id,
+                    Modifiername = row.modifier_name
+                });
+            }
+        }
+        orderDetails.itemDetails = itemModifierMap.Values.ToList();
+        return orderDetails;
+    }
+
 
     public SingleOrderDetailModel getSingleOrderDetail(int categoryid, int orderid, string status)
     {
         SingleOrderDetailModel model = new SingleOrderDetailModel();
+
         model.orderid = orderid;
         var orderedItemsGrouped = _context.Orderitems
             .Where(oim => oim.Orderid == orderid)
@@ -419,7 +568,7 @@ public class OrderRepository : IOrderRepository
             oneItemDetail.modifiers = modifiers;
             oneItemDetail.orderedQuantity = orderItem.Orderitemquantity ?? 0;
             oneItemDetail.readyQuantity = orderItem.Readyitemquanitiy ?? 0;
-            oneItemDetail.inprogressQuantity = (orderItem.Orderitemquantity?? 0) - (orderItem.Readyitemquanitiy ?? 0);
+            oneItemDetail.inprogressQuantity = (orderItem.Orderitemquantity ?? 0) - (orderItem.Readyitemquanitiy ?? 0);
             itemDetailsList.Add(oneItemDetail);
             itemModifierList.Add(new Dictionary<Item, List<Modifier>> { { item, modifiers } });
         }
@@ -428,24 +577,39 @@ public class OrderRepository : IOrderRepository
             .ToDictionary(pair => pair.Key, pair => pair.Value);
         model.itemDetails = itemDetailsList;
         model.currentStatus = status;
+
+
         return model;
     }
     public void changeReadyQuantity(Dictionary<int, int> readyItemCount, string currentStatus)
     {
+        // foreach (var pair in readyItemCount)        --uncomment this to do it without procedure
+        // {
+        //     var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == pair.Key);
+        //     if (currentStatus == "In Progress")
+        //     {
+        //         orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy + pair.Value;
+        //     }
+        //     else
+        //     {
+        //         orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy - pair.Value;
+        //     }
+        //     _context.Orderitems.Update(orderedItem);
+        // }
+        // _context.SaveChanges();
+
         foreach (var pair in readyItemCount)
         {
-            var orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Orderitemid == pair.Key);
-            if (currentStatus == "In Progress")
+            const string query = @"CALL change_ready_quantity(@orderitemid,@quantity,@currentstatus)";
+            using var connection = new NpgsqlConnection("Server=localhost;Port=5432;Database=pizzashop_new;User id=postgres;Password=Tatva@123;TrustServerCertificate=True");
+            connection.Open();
+            connection.Execute(query, new
             {
-                orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy + pair.Value;
-            }
-            else
-            {
-                orderedItem!.Readyitemquanitiy = orderedItem!.Readyitemquanitiy - pair.Value;
-            }
-            _context.Orderitems.Update(orderedItem);
+                orderitemid = pair.Key,
+                quantity = pair.Value,
+                currentstatus = currentStatus
+            });
         }
-        _context.SaveChanges();
     }
 
     public int CreateOrder(int tokenid, int tableid)
@@ -461,11 +625,6 @@ public class OrderRepository : IOrderRepository
         _context.Orders.Add(newOrder);
         _context.SaveChanges();
         return newOrder.Orderid;
-    }
-
-    public void addItemInOrder(int itemid, List<int> modifiers)
-    {
-
     }
 
     public int CreateOrderForCustomer(int tokenid, List<int> tableids)

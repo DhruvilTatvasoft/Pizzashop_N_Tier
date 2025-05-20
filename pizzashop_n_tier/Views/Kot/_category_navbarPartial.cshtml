@@ -1,17 +1,39 @@
 @model KotViewModel
 <nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist">
-      <button class="nav-link active" id="nav-All-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
-        role="tab" aria-controls="nav-home" aria-selected="true" onclick="loadOrders()">All</button>
-      
-      @foreach (var category in Model.categories)
-      {
-        <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab"
-          onclick="loadOrdersForcategory(@category.Categoryid)" data-bs-target="#nav-home" type="button" role="tab"
-          aria-controls="nav-home" aria-selected="true">@category.Categoryname</button>
+  <div class="nav nav-tabs" id="nav-tab" role="tablist">
+    <button class="nav-link active" id="nav-All-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
+      role="tab" aria-controls="nav-home" aria-selected="true" onclick="loadOrders()">All</button>
+
+    @foreach (var category in Model.categories)
+    {
+      <button class="nav-link" id="nav-home-tab" data-bs-toggle="tab"
+        onclick="loadOrdersForcategory(@category.Categoryid)" data-bs-target="#nav-home" type="button" role="tab"
+        aria-controls="nav-home" aria-selected="true">@category.Categoryname</button>
+    }
+  </div>
+</nav>
+<script>
+  $("document").ready(() => {
+    const connection = new signalR.HubConnectionBuilder()
+      .withUrl("/chathub")
+      .configureLogging(signalR.LogLevel.Information)
+      .build();
+    var Start = async () => {
+      try {
+        await connection.start();
+        console.log("SignalR Connected.");
+      } catch (err) {
+        console.log(err);
+        setTimeout(Start, 3000);
       }
-    </div>
-  </nav>
-  <script>
-    
-  </script>
+    };
+    Start();
+    connection.onclose(async () => {
+      await Start();
+    });
+    connection.on("ReceiveMessage", (message) => {
+      toastr.warning(message);
+      setTimeout(loadKot, 3000);
+    });
+  })
+</script>

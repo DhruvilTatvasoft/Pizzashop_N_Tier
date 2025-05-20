@@ -388,11 +388,13 @@ namespace BAL.Implementations
 
         public void GetOrderDetailsByCategory(int categoryid, bool? IsReady,int pageSize,int pageNumber,KotViewModel kotModel)
         {
-             _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady,pageSize,pageNumber,kotModel);
+            //  _orderRepository.GetOrderDetailsByCategory(categoryid,IsReady,pageSize,pageNumber,kotModel);
+             _orderRepository.GetOrderDetailsByCategoryUsingProcedure(categoryid,IsReady,pageSize,pageNumber,kotModel);
         }
 
        public SingleOrderDetailModel getSingleOrderDetail(int categoryid,int orderid,string status){
         return _orderRepository.getSingleOrderDetail(categoryid,orderid, status);
+        // return _orderRepository.getSingleOrderDetailUsingProcedure(categoryid,orderid, status);
        }
 
         public void changeReadyQuantity(Dictionary<int, int> readyItemCount,string currentStatus)
@@ -410,10 +412,7 @@ namespace BAL.Implementations
            return _orderRepository.CreateOrder(tokenid, tableid);
         }
 
-        public void addItemInOrder(int itemid, List<int> modifiers)
-        {
-            _orderRepository.addItemInOrder(itemid, modifiers);
-        }
+       
 
         public int CreateOrderForCustomer(int tokenid, List<int> tableids)
         {

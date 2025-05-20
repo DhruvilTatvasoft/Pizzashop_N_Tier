@@ -4,26 +4,30 @@ public class KotViewModel
 {
     public List<Category> categories { get; set; } = new List<Category>();
     // public orderItemModifierViewModel orderedItemModifiers { get; set; } = new orderItemModifierViewModel();
-
-    public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> orderDetails{get;set;}
-
-    public Dictionary<int,tableAndsection> orderTableSectionDetail{get;set;}
-
-    public string categoryName{get;set;}
-
-    public int? categoryid{get;set;}
-
-    public SingleOrderDetailModel singleOrderDetail{get;set;}
-    public int pageSize{get;set;}
-    public int pageNumber{get;set;}
-
-    public int totalOrders{get;set;}
-
-
+    public Dictionary<Order, List<Dictionary<Item, List<Modifier>>>> orderDetails { get; set; }
+    public Dictionary<int, tableAndsection> orderTableSectionDetail { get; set; }
+    public string categoryName { get; set; }
+    public int? categoryid { get; set; }
+    public bool? currentStatus { get; set; }
+    public SingleOrderDetailModel singleOrderDetail { get; set; }
+    public int pageSize { get; set; }
+    public int pageNumber { get; set; }
+    public List<SingleOrderDetailModel2> orderDetails2 { get; set; }
+    public int totalOrders { get; set; }
 }
-public class tableAndsection{
-    public string sectionName{get;set;}
-    public string tableName{get;set;}
+
+public class SingleOrderDetailModel2
+{
+    public int orderId { get; set; }
+
+    public DateTime? createdAt { get; set; }
+    public List<itemDetails> itemdetails { get; set; }
+}
+
+public class tableAndsection
+{
+    public string sectionName { get; set; }
+    public string tableName { get; set; }
 }
 
 public class SingleOrderDetailModel

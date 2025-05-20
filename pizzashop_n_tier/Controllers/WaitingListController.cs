@@ -15,7 +15,7 @@ public class WaitingListController : Controller
     {
         WaitingTokenModel model = new WaitingTokenModel();
         model.Sections = _waitingTokenService.getSectionsWithWaitingTokens();
-        model.sections = _sectionService.getAllSections();
+        // model.sections = _sectionService.getAllSections();
         model.TotalWaitingTokens = _waitingTokenService.getTotalWaitingTokens();
         return PartialView("_sectionNavbar", model);
 

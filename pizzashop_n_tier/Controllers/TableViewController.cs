@@ -41,6 +41,7 @@ public class TableViewController : Controller
     public IActionResult assignTable([FromBody] assignTableDetails Model)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
+
         if (Model.customerModal != null)
         {
             Customer createdCustomer = _waitingTokenService.createNewCustomer(Model.customerModal);
