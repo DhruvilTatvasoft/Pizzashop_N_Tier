@@ -6,7 +6,7 @@
             <label for="" class="suggestionlabel">Type '/' to search from your saved</label>
             <button class="btn-close closeSuggestion" type="button"></button>
         </div>
-        <div class="customer_list">
+        <div class="customer_list" >
             @foreach (var customer in Model.customerList)
             {
                 <div class="row m-2" onclick="fillDataInForm('@customer.email','@customer.phone','@customer.name')">

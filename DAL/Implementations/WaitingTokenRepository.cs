@@ -1,3 +1,4 @@
+using System.Data;
 using DAL.Data;
 using Dapper;
 using Microsoft.Extensions.Configuration;
@@ -16,37 +17,59 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public bool addNewWaitingToken(WaitingTokenModel model)
     {
-        Waitingtoken token = new Waitingtoken();
-        Customer Customer = _context.Customers.FirstOrDefault(Customer => Customer.Email.ToLower().Trim() == model.customer.email.ToLower().Trim());
-        if (Customer != null)
+        // Waitingtoken token = new Waitingtoken();
+        // Customer Customer = _context.Customers.FirstOrDefault(Customer => Customer.Email.ToLower().Trim() == model.customer.email.ToLower().Trim());
+        // if (Customer != null)
+        // {
+        //     Waitingtoken isTokenCreated = _context.Waitingtokens.FirstOrDefault(token => token.Customerid == Customer.Customerid && token.Isdeleted == false);
+        //     if (isTokenCreated != null)
+        //     {
+        //         return false;
+        //     }
+        // }
+        // token.Createdat = DateTime.Now;
+        // token.Sectionid = model.sectionId ?? 0;
+        // token.Totalpersons = model.personCount ?? 0;
+        // if (Customer == null)
+        // {
+        //     token.Customerid = createCustomer(model.customer).Customerid;
+        // }
+        // else
+        // {
+        //     token.Customerid = Customer.Customerid;
+        // }
+        // token.Isdeleted = false;
+        // token.Createdat = DateTime.Now;
+        // token.Modifiedat = DateTime.Now;
+        // token.Createdby = 1;
+        // token.Modifiedby = 1;
+
+        // _context.Waitingtokens.Add(token);
+        // _context.SaveChanges();
+
+        // IN p_customername character varying(50),
+        // IN p_phonenumber character varying(50),
+        // IN p_email character varying(100),
+        // IN p_sectionid integer,
+        // IN p_personcount integer,
+        // OUT p_success boolean
+
+        const string query = @"SELECT public.createnewwaitingtoken(@p_customername, @p_phonenumber, @p_email, @p_sectionid, @p_personcount)";
+
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            Waitingtoken isTokenCreated = _context.Waitingtokens.FirstOrDefault(token => token.Customerid == Customer.Customerid && token.Isdeleted == false);
-            if (isTokenCreated != null)
+            connection.Open();
+
+            var result = connection.QueryFirstOrDefault<bool>(query, new
             {
-                return false;
-            }
+                p_customername = model.customer.name,
+                p_phonenumber = model.customer.phone,
+                p_email = model.customer.email,
+                p_sectionid = model.sectionId,
+                p_personcount = model.personCount
+            });
+            return result;
         }
-        token.Createdat = DateTime.Now;
-        token.Sectionid = model.sectionId ?? 0;
-        token.Totalpersons = model.personCount ?? 0;
-        if (Customer == null)
-        {
-            token.Customerid = createCustomer(model.customer).Customerid;
-        }
-        else
-        {
-            token.Customerid = Customer.Customerid;
-        }
-        token.Isdeleted = false;
-        token.Createdat = DateTime.Now;
-        token.Modifiedat = DateTime.Now;
-        token.Createdby = 1;
-        token.Modifiedby = 1;
-
-        _context.Waitingtokens.Add(token);
-        _context.SaveChanges();
-
-        return true;
     }
 
     public Customer createCustomer(CustomerModel model)
@@ -63,7 +86,6 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         _context.Customers.Add(customer);
         _context.SaveChanges();
         return customer;
-
     }
     public int getCustomerId(int customerid)
     {
@@ -160,7 +182,6 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     public bool updateWaitingToken(WaitingTokenModel model)
     {
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == model.tokenId)!;
-        
         token.Totalpersons = model.personCount ?? 0;
         token.Sectionid = model.sectionId ?? 0;
         updateCustomerDetail(token.Customerid, model.customer);
@@ -179,7 +200,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         {
             customerId = customerid,
             customername = customer.name,
-            phonenumber = customer.phone ,
+            phonenumber = customer.phone,
             Email = customer.email,
         });
         // Customer.Customername = customer.name;
@@ -196,14 +217,18 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public List<CustomerModel> getSuggestedCustomerList(string name)
     {
-        var customer = _context.Customers.Where(customer => customer.Email.ToLower().Trim().Contains(name.ToLower().Trim())).ToList();
         List<CustomerModel> customerModel = new List<CustomerModel>();
-        foreach (var item in customer)
+        // var customer = _context.Customers.Where(customer => customer.Email.ToLower().Trim().Contains(name.ToLower().Trim())).ToList();
+        const string query = @"select *from search_customers_by_email_part(@name)";
+        using var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString"));
+        connection.Open();
+        var result = connection.Query<dynamic>(query, new { name = name }).ToList();
+        foreach (var row in result)
         {
             CustomerModel model = new CustomerModel();
-            model.name = item.Customername;
-            model.email = item.Email;
-            model.phone = item.Phonenumber;
+            model.name = row.customername;
+            model.email = row.email;
+            model.phone = row.phonenumber;
             customerModel.Add(model);
         }
         return customerModel;
@@ -211,11 +236,17 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public bool deleteWaitingToken(int tokenid)
     {
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid)!;
-        token.Isdeleted = true;
-        token.Modifiedat = DateTime.Now;
-        _context.Waitingtokens.Update(token);
-        _context.SaveChanges();
+        // Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid)!;
+        // token.Isdeleted = true;
+        // token.Modifiedat = DateTime.Now;
+        // _context.Waitingtokens.Update(token);
+        // _context.SaveChanges();
+        // return true;
+
+        const string query = @"CALL deletewaitingtoken(@tokenid)";
+        using var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString"));
+        connection.Open();
+        var result = connection.Query<dynamic>(query, new { tokenid = tokenid });
         return true;
 
     }
@@ -236,27 +267,39 @@ public class WaitingTokenRepository : IWaitingTokenRepository
 
     public bool assignTable(List<int> tableids, int tokenid)
     {
-        List<Table> tables = _context.Tables.Where(table => tableids.Contains(table.Tableid)).ToList()!;
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid)!;
-        foreach (var table in tables)
+        // List<Table> tables = _context.Tables.Where(table => tableids.Contains(table.Tableid)).ToList()!;
+        // Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid)!;
+        // foreach (var table in tables)
+        // {
+        //     table.Status = false;
+        //     table.Statusname = "Assigned";
+        //     Ordertable orderedTable = new Ordertable();
+        //     orderedTable.Tableid = table.Tableid;
+        //     orderedTable.Customerid = token.Customerid;
+        //     orderedTable.Isdeleted = false;
+        //     orderedTable.Createdat = DateTime.Now;
+        //     orderedTable.Modifiedat = DateTime.Now;
+        //     orderedTable.Createdby = 1;
+        //     orderedTable.Modifiedby = 1;
+        //     orderedTable.TotalPersonCount = token.Totalpersons;
+        //     _context.Ordertables.Add(orderedTable);
+        //     _context.Tables.Update(table);
+        // }
+        // token.Isdeleted = true;
+        // token.Modifiedat = DateTime.Now;
+        // _context.Waitingtokens.Update(token);
+        // _context.SaveChanges();
+
+        const string query = @"CALL public.assign_tables_to_token(@p_tableids, @p_tokenid)";
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            table.Status = false;
-            table.Statusname = "Assigned";
-            Ordertable orderedTable = new Ordertable();
-            orderedTable.Tableid = table.Tableid;
-            orderedTable.Customerid = token.Customerid;
-            orderedTable.Isdeleted = false;
-            orderedTable.Createdat = DateTime.Now;
-            orderedTable.Modifiedat = DateTime.Now;
-            orderedTable.Createdby = 1;
-            orderedTable.Modifiedby = 1;
-            _context.Ordertables.Add(orderedTable);
-            _context.Tables.Update(table);
+            connection.Open();
+            connection.Execute(query, new
+            {
+                p_tableids = tableids.ToArray(),
+                p_tokenid = tokenid
+            });
         }
-        token.Isdeleted = true;
-        token.Modifiedat = DateTime.Now;
-        _context.Waitingtokens.Update(token);
-        _context.SaveChanges();
         return true;
     }
 
@@ -291,11 +334,17 @@ public class WaitingTokenRepository : IWaitingTokenRepository
     {
         CustomerModel model = new CustomerModel();
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(token => token.Waitingtokenid == tokenid && token.Isdeleted == false)!;
-        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
-        model.customerId = customer.Customerid;
-        model.name = customer.Customername;
-        model.phone = customer.Phonenumber;
-        model.email = customer.Email;
+        // Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
+        const string query = @"SELECT * FROM getcustomerforwaitingtoken(@tokenid)";
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
+        {
+            connection.Open();
+            var result = connection.Query<dynamic>(query, new { tokenid = tokenid }).FirstOrDefault();
+            model.customerId = result.customerid;
+            model.name = result.customername;
+            model.phone = result.phonenumber;
+            model.email = result.email;
+        }
         List<Table> tables = new List<Table>();
         List<int> tableids = new List<int>();
         int sectionid = 0;
@@ -317,8 +366,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.tableids = tableids;
         model.tables = tables;
         return model;
-    }
-
+    }           
     public int getTokenidFromCustomerEmail(string email)
     {
         Customer customer = _context.Customers.FirstOrDefault(ExistingCustomer => ExistingCustomer.Email == email)!;

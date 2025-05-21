@@ -80,13 +80,11 @@
                     if (data.success) {
                         $("#closeBtn").click();
                         toastr.success(data.success)
-                        loadWaitingTokensForSection(data.sectionid);
+                        loadWaitingTokensForSection();
                         loadSectionsNavbar();
                     }
                     else {
-                        $("#closeBtn").click();
                         toastr.error(data.error)
-                        loadWaitingTokensForSection(data.sectionid);
                     }
                 }
             });

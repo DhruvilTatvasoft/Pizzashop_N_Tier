@@ -670,6 +670,7 @@ public partial class PizzashopCContext : DbContext
             entity.Property(e => e.Modifiedby).HasColumnName("modifiedby");
             entity.Property(e => e.Orderid).HasColumnName("orderid");
             entity.Property(e => e.Tableid).HasColumnName("tableid");
+            entity.Property(e => e.TotalPersonCount).HasColumnName("totalPersonCount");
 
             entity.HasOne(d => d.Customer).WithMany(p => p.Ordertables)
                 .HasForeignKey(d => d.Customerid)

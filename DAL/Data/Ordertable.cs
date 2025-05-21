@@ -23,6 +23,8 @@ public partial class Ordertable
 
     public int? Customerid { get; set; }
 
+    public int? TotalPersonCount { get; set; }
+
     public virtual Customer? Customer { get; set; }
 
     public virtual Order? Order { get; set; }

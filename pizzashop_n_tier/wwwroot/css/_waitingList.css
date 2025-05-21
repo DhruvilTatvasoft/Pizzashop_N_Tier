@@ -30,6 +30,8 @@
 
 .customer_list {
     border-bottom: 1px solid #cecece;
+    max-height: 250px;
+    overflow: auto;
 }
 
 .headerTEXT{

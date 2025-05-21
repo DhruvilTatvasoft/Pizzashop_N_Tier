@@ -2,23 +2,34 @@
 
 <div class="w-100 h-100 mt-4 d-flex">
     <div class="row pe-3 w-100 mb-0" style="padding-left: 5%;">
-        <div class="d-flex justify-content-between " style="height: 9%;width: 50%;">
+        <div class="d-flex justify-content-between " id="searchContainer" style="height: 9%;width: 50%;">
             <div class="form-group searchInput">
-                <input type="text" class="form-control" onkeyup="loadItemsForCategory('',@Model.categoryId,@Model.itemtype)"
+                <input type="text" class="form-control" onkeyup="loadItemsForCategory('',@Model.categoryId, itemType)"
                     id="searchItemForCategory" aria-describedby="emailHelp" placeholder="Search">
                 <span id="search-icon">
                     <input type="hidden" id="selectedCategory" asp-for="categoryId" />
                     <img src="~/images/icons8-search-30.png" style="width: 20px;" alt="">
                 </span>
             </div>
-            <div class="d-flex flex-sm-column flex-lg-row">
-                <li id="veg" class="me-3" onclick="loadItemsForCategory('',$('#selecetedCategory').val(),'veg')">Veg</li>
-                <li id="non-veg" class="me-3" onclick="loadItemsForCategory('',$('#selecetedCategory').val(),'non-veg')">Non-veg</li>
-            </div>
+            <ul class="d-flex list-unstyled g-2" style="padding-left: 0;">
+                <li id="veg" class="itemTypeLi me-3" onclick="toggleItemTypeFilter('veg')">
+                    <div class="vegitem d-flex align-items-center justify-content-center"
+                        style="border: 2px solid black;padding: 2px;padding-inline-end: 10px;padding-inline-start: 10px;border-radius: 10px;">
+                        <img src="~/images/veg-icon.svg" alt="" style="width: 18px;" class="me-2">Veg
+                    </div>
+                </li>
+                <li id="non-veg" class="itemTypeLi" onclick="toggleItemTypeFilter('non-veg')">
+                    <div class="nonvegitem d-flex align-items-center justify-content-center "
+                        style="border: 2px solid black;padding: 2px;padding-inline-end: 10px;padding-inline-start: 10px;border-radius: 10px;">
+                        <img src="~/images/non-veg-icon.svg" alt="" style="width: 18px;" class="me-2">Non-veg
+                    </div>
+                </li>
+            </ul>
+
         </div>
         <div class="d-flex" style="height: 92%;">
             <div class="menuDataContainer d-flex pt-0 mt-0 pe-0 w-50" style="max-height:  550px;"></div>
-            <div class="orderDetailContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 100%;"></div>
+            <div class="orderDetailContainer d-flex pt-0 mt-0 pe-0 w-50" style="height: 95%;"></div>
         </div>
 
         <div id="itemDetailsModalContainer"></div>
@@ -31,8 +42,37 @@
                     $(".menuDataContainer").addClass("menuDataContainer d-flex pt-0 mt-0 pe-0 w-100")
                     $(".orderDetailContainer").addClass("orderDetailContainer d-none pt-0 mt-0 pe-0 w-50")
                 }
+                if (isTableAssigned === "True") {
+                    $("#searchContainer").css("width", "50%");
+                } else {
+                    $("#searchContainer").css("width", "100%");
+                }
             });
 
+            
+
+            function toggleItemTypeFilter(type) {
+                const selectedCategory = $('#selectedCategory').val();
+
+                if (currentFilterForItemType === type) {
+                    currentFilterForItemType = '';
+                    loadItemsForCategory('', selectedCategory, '');
+                    $(".vegitem").removeClass("selectedTypeVeg");
+                    $(".nonvegitem").removeClass("selectedTypeNonVeg");
+                } else {
+
+                    currentFilterForItemType = type;
+                    loadItemsForCategory('', selectedCategory, type);
+
+                    if (type === 'veg') {
+                        $(".vegitem").addClass("selectedTypeVeg");
+                        $(".nonvegitem").removeClass("selectedTypeNonVeg");
+                    } else {
+                        $(".nonvegitem").addClass("selectedTypeNonVeg");
+                        $(".vegitem").removeClass("selectedTypeVeg");
+                    }
+                }
+            }
             function AddToFavorite(x, id) {
                 if ($(x).attr("src") == "/images/heart-fill.svg") {
                     $(x).attr("src", "/images/heart.svg");
@@ -40,9 +80,9 @@
                         favorites.pop(id);
                     }
                     $.ajax({
-                        url:"@Url.Action("addOrRemoveFromFavorites","MenuOrderApp")",
+                        url: "@Url.Action("addOrRemoveFromFavorites", "MenuOrderApp")",
                         type: "POST",
-                        data:{itemid : id,process : "remove"},
+                        data: { itemid: id, process: "remove" },
                         success: function (data) {
 
                         }
@@ -50,23 +90,23 @@
                 }
                 else {
                     $(x).attr("src", "/images/heart-fill.svg");
-                     $.ajax({
-                        url:"@Url.Action("addOrRemoveFromFavorites","MenuOrderApp")",
+                    $.ajax({
+                        url: "@Url.Action("addOrRemoveFromFavorites", "MenuOrderApp")",
                         type: "POST",
-                        data:{itemid : id,process : "add"},
+                        data: { itemid: id, process: "add" },
                         success: function (data) {
-                            
+
                         }
                     });
                     favorites.push(id);
                 }
             }
             $("document").ready(() => {
-                loadItemsForCategory('',0);
+                loadItemsForCategory('', 0);
+                $("#allCategorySelected").addClass("selectedcategory text-white");
             })
             function openOrderCommentModal() {
-                    $("#orderCommentModal").modal("show");
-                
+                $("#orderCommentModal").modal("show");
             }
             function postorderComment() {
                 orderComment = $("#orderComment").val()
@@ -103,5 +143,5 @@
                 $(".closeItemInstructionModal").click();
             }
 
-           
+
         </script>

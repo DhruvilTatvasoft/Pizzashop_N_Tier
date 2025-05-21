@@ -6,13 +6,39 @@
     padding-top: 58px;
 
 }
-
 .MenuBodyContainer {
     padding-left: 12%;
     /* padding-top: 4.5%; */
     padding-top: 58px;
 }
+.itemTypeContainer{
+    padding-left: 5px;
+    padding-right: 5px;
+    border-radius: 12px;
+    background-color: #faf9f9;
+    border: 2px solid black;
+    height: 51%;
+}
+.selectedTypeVeg {
+    background-color: rgb(169, 247, 169); /* Green for active */
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+.selectedTypeNonVeg {
+    background-color: rgb(253, 150, 150); /* Green for active */
+    color: rgb(0, 0, 0);
+    border-radius: 5px;
+    padding: 5px 10px;
+    cursor: pointer;
+}
 
+.itemTypeContainer li {
+    cursor: pointer;
+    list-style: none;
+    padding: 5px 10px;
+}
 .selectedcategory{
     background-color: #0066A7;
     color: white;
@@ -147,10 +173,10 @@ ul {
     width: 40%;
     position: relative;
 }
-#veg::marker{
+#vegitem::marker{
     color: green;
 }
-#non-veg::marker{
+#nonvegitem::marker{
     color: red;
 }
 #vegan::marker{

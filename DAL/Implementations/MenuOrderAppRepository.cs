@@ -83,13 +83,14 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     }
                     if (ordertable == null)
                     {
-                        // ordertable = new Ordertable();
+                        ordertable = new Ordertable();
                         ordertable.Orderid = order.Orderid;
                         ordertable.Tableid = tableid;
                         ordertable.Isdeleted = false;
                         ordertable.Createdby = 1;
                         ordertable.Modifiedby = 1;
                         ordertable.Customerid = orderDetails.customerid;
+                        ordertable.TotalPersonCount = orderDetails.totalPersons;
                         isTableAdded = true;
                     }
                     else
@@ -283,6 +284,9 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         ExistingCustomer.Email = customer.email;
         ExistingCustomer.Phonenumber = customer.phone;
         ExistingCustomer.Modifiedat = DateTime.Now;
+        Ordertable table = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == customer.customerId && orderedTable.Isdeleted == false)!;
+        table.TotalPersonCount = customer.PersonCount;
+        _context.Ordertables.Update(table);
         Waitingtoken token = _context!.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false)!;
         if (token != null)
         {
@@ -366,11 +370,12 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         customermodel.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid)!;
 
         // loading customerdetails
-        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == customerid)!;
+        Ordertable ordertable = _context.Ordertables.FirstOrDefault(ordertable => ordertable.Orderid == orderid && ordertable.Isdeleted == false)!;
+        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == ordertable.Customerid)!;
         customermodel.customerId = customer.Customerid;
         customermodel.name = customer.Customername;
         customermodel.email = customer.Email;
-        customermodel.PersonCount = _context.Orders.FirstOrDefault(order => order.Orderid == orderid).Totalpersons;
+        customermodel.PersonCount = _context.Ordertables.FirstOrDefault(ordertable=>ordertable.Orderid == orderid).TotalPersonCount ?? 0;
         customermodel.phone = customer.Phonenumber;
         model.customerModel = customermodel;
         customermodel.tableids = tableids;
@@ -391,13 +396,14 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
         int customerid = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid)!.Customerid ?? 0;
+        Ordertable ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid && orderedTable.Isdeleted == false)!;
         CustomerModel customermodel = new CustomerModel();
-        Customer customer = _context.Customers.FirstOrDefault(tableCustomer => tableCustomer.Customerid == customerid);
+        Customer customer = _context.Customers.FirstOrDefault(tableCustomer => tableCustomer.Customerid == ordertable.Customerid);
         customermodel.customerId = customer.Customerid;
         customermodel.name = customer.Customername;
         customermodel.email = customer.Email;
         Waitingtoken token = _context.Waitingtokens.FirstOrDefault(Token => Token.Customerid == customerid)!;
-        customermodel.PersonCount = token.Totalpersons;
+        customermodel.PersonCount = ordertable.TotalPersonCount ?? 0;
         customermodel.phone = customer.Phonenumber;
         List<int> tableids = new List<int>
         {
@@ -406,7 +412,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         customermodel.tableids = tableids;
         model.customer = customermodel;
         model.isTableAssigned = true;
-        model.tokenid = token.Waitingtokenid;
+        // model.tokenid = token.Waitingtokenid;
         model.categoryId = 0;
         model.isTableAssigned = true;
         return model;
@@ -579,7 +585,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         var query = _context.Orders.AsQueryable();
         var customerQuery = _context.Customers.AsQueryable();
         var sellingQuery = _context.Orderitems.AsQueryable();
-        var waitingTokenQuery = _context.Waitingtokens.Where(w => w.Isdeleted == false).AsQueryable();
+        var waitingTokenQuery = _context.Waitingtokens.AsQueryable();
         DateTime rangeStart = now;
         if (timeId == 2) rangeStart = now.AddDays(-6);
         if (timeId == 3) rangeStart = now.AddDays(-29);

@@ -42,8 +42,7 @@ public class WaitingListController : Controller
         }
         else
         {
-
-            return Json(new { error = "Token with this Email Id is Already Created.Use other Email Address", sectionid = model.sectionId });
+            return Json(new { error = "Token with this Email Id is Already Created you can update the details or use other email address", sectionid = model.sectionId });
         }
 
     }

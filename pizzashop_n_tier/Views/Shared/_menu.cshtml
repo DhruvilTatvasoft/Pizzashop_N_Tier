@@ -26,6 +26,9 @@
 </div>
 <script>
     var itemWiseComment = [];
+    var currentFilterForItemType = '';
+    var itemType = null;
+    var isTableAssigned = $("#IsTableAssigned").val();
     $("document").ready(() => {
         loadSideBar();
         loadMenuDataContainer();
