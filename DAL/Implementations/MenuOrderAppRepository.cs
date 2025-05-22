@@ -1,14 +1,23 @@
+using System.Data;
 using System.Security.Cryptography;
 using System.Transactions;
 using DAL.Data;
+using Dapper;
+using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
+using Npgsql;
+using NpgsqlTypes;
 
 public class MenuOrderAppRepository : IMenuOrderAppRepository
 {
     private readonly PizzashopCContext _context;
+    private readonly IConfiguration _configuration;
 
-    public MenuOrderAppRepository(PizzashopCContext context)
+    public MenuOrderAppRepository(PizzashopCContext context, IConfiguration configuration)
+
     {
         _context = context;
+        _configuration = configuration;
     }
 
     public int createOrder(OrderDetailsViewModel orderDetails)
@@ -189,7 +198,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 _context.Ordertaxesandfees.Add(taxAndFees);
             }
             _context.SaveChanges();
-               transaction.Commit();
+            transaction.Commit();
             return order.Orderid;
         }
         catch (Exception ex)
@@ -202,81 +211,120 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     {
         return _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
     }
-
     public List<Item> getItemsForcategory(int categoryid, string ItemType, string searchedItem)
     {
-        bool? isVeg = null;
-        if (!string.IsNullOrEmpty(ItemType))
+        const string query = "CALL getitemsforcategory(@p_categoryid, @p_itemtype, @p_searcheditem, @result_cur)";
+        using var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString"));
+        connection.Open();
+        using var transaction = connection.BeginTransaction();
+        using var command = new NpgsqlCommand(query, connection, transaction);
+        command.Parameters.AddWithValue("p_categoryid", categoryid);
+        command.Parameters.AddWithValue("p_itemtype", string.IsNullOrWhiteSpace(ItemType) ? (object)DBNull.Value : ItemType);
+        command.Parameters.AddWithValue("p_searcheditem", string.IsNullOrWhiteSpace(searchedItem) ? (object)DBNull.Value : searchedItem);
+        command.Parameters.Add(new NpgsqlParameter("result_cur", NpgsqlDbType.Refcursor) { Direction = ParameterDirection.InputOutput, Value = "mycursor" });
+        command.ExecuteNonQuery();
+        var result = connection.Query<dynamic>($"FETCH ALL FROM mycursor;", transaction: transaction).ToList();
+        List<Item> itemlist = new List<Item>();
+        foreach (var item in result)
         {
-            if (ItemType.ToLower() == "veg")
-                isVeg = true;
-            else if (ItemType.ToLower() == "non-veg")
-                isVeg = false;
+            Item item1 = new Item();
+            item1.Itemname = item.itemname;
+            item1.Itemid = item.itemid;
+            item1.Itemtype = item.itemtype;
+            item1.Itemrate = item.itemrate;
+            item1.Itemimage = item.itemimage;
+            item1.Categoryid = item.categoryid;
+            item1.Isfavourite = item.isfavourite;
+            itemlist.Add(item1);
         }
-
-
-        var query = _context.Items.AsQueryable();
-
-
-        query = query.Where(item => item.Isdeleted == false);
-
-
-        if (categoryid != 0)
-        {
-            query = query.Where(item => item.Categoryid == categoryid);
-        }
-
-
-        if (!string.IsNullOrEmpty(searchedItem))
-        {
-            string lowerSearch = searchedItem.ToLower().Trim();
-            query = query.Where(item => item.Itemname.ToLower().Trim().Contains(lowerSearch));
-        }
-
-
-        if (isVeg.HasValue)
-        {
-            query = query.Where(item => item.Itemtype == isVeg.Value);
-        }
-
-        return query.ToList();
+        transaction.Commit();
+        return itemlist;
+        // bool? isVeg = null;
+        // if (!string.IsNullOrEmpty(ItemType))
+        // {
+        //     if (ItemType.ToLower() == "veg")
+        //         isVeg = true;
+        //     else if (ItemType.ToLower() == "non-veg")
+        //         isVeg = false;
+        // }
+        // var query = _context.Items.AsQueryable();
+        // query = query.Where(item => item.Isdeleted == false);
+        // if (categoryid != 0)
+        // {
+        //     query = query.Where(item => item.Categoryid == categoryid);
+        // }
+        // if (!string.IsNullOrEmpty(searchedItem))
+        // {
+        //     string lowerSearch = searchedItem.ToLower().Trim();
+        //     query = query.Where(item => item.Itemname.ToLower().Trim().Contains(lowerSearch));
+        // }
+        // if (isVeg.HasValue)
+        // {
+        //     query = query.Where(item => item.Itemtype == isVeg.Value);
+        // }
+        // return query.ToList();
     }
-
-
     public List<ModifierModel> getModifiersForItem(int itemid)
     {
         List<ModifierModel> model = new List<ModifierModel>();
-        List<Itemsandmodifier> itemsandmodifiers = _context.Itemsandmodifiers.Where(x => x.Itemid == itemid && x.Isdeleted == false).ToList();
-        foreach (var itemmodifier in itemsandmodifiers)
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            ModifierModel modifierModel = new ModifierModel();
-            modifierModel.modifiergroup = _context.Modifiergroups.FirstOrDefault(mg => mg.Modifiergroupid == itemmodifier.Modifiergroupid && mg.Isdeleted == false);
-            if (modifierModel.modifiergroup != null)
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
             {
-                List<Modifier> modifiers = _context.Modifiers.Where(modifier => modifier.Modifiergroupid == itemmodifier.Modifiergroupid && modifier.Isdeleted == false).ToList();
-                if (modifiers.Count == 0)
+                using (var cmd = new NpgsqlCommand("CALL getitemmodifiers(@itemid,@result_cur);", connection, transaction))
                 {
-                    modifierModel.modifiers = new List<Modifier>();
+                    cmd.Parameters.AddWithValue("itemid", itemid);
+                    cmd.Parameters.Add(new NpgsqlParameter("result_cur", NpgsqlDbType.Refcursor) { Direction = ParameterDirection.InputOutput, Value = "mycursor" });
+                    cmd.ExecuteNonQuery();
+                    var result = connection.Query<dynamic>($"FETCH ALL FROM mycursor;", transaction: transaction).ToList();
+                    foreach (var row in result)
+                    {
+                        ModifierModel modifierModel = new ModifierModel
+                        {
+                            modifiergroup = new Modifiergroup
+                            {
+                                Modifiergroupid = row.modifiergroupid,
+                                Modifiergroupname = row.modifiergroupname
+                            },
+                            min_value = row.requiredminselection,
+                            max_value = row.allowedmaxselection,
+                        };
+                        model.Add(modifierModel);
+                    }
                 }
-                else
-                {
-                    modifierModel.modifiers = modifiers;
-                }
-                modifierModel.min_value = itemmodifier.Requiredminselection;
-                modifierModel.max_value = itemmodifier.Allowedmaxselection;
-                model.Add(modifierModel);
+                transaction.Commit();
             }
         }
         return model;
+        // List<ModifierModel> model = new List<ModifierModel>();
+        // List<Itemsandmodifier> itemsandmodifiers = _context.Itemsandmodifiers.Where(x => x.Itemid == itemid && x.Isdeleted == false).ToList();
+        // foreach (var itemmodifier in itemsandmodifiers)
+        // {
+        //     ModifierModel modifierModel = new ModifierModel();
+        //     modifierModel.modifiergroup = _context.Modifiergroups.FirstOrDefault(mg => mg.Modifiergroupid == itemmodifier.Modifiergroupid && mg.Isdeleted == false);
+        //     if (modifierModel.modifiergroup != null)
+        //     {
+        //         List<Modifier> modifiers = _context.Modifiers.Where(modifier => modifier.Modifiergroupid == itemmodifier.Modifiergroupid && modifier.Isdeleted == false).ToList();
+        //         if (modifiers.Count == 0)
+        //         {
+        //             modifierModel.modifiers = new List<Modifier>();
+        //         }
+        //         else
+        //         {
+        //             modifierModel.modifiers = modifiers;
+        //         }
+        //         modifierModel.min_value = itemmodifier.Requiredminselection;
+        //         modifierModel.max_value = itemmodifier.Allowedmaxselection;
+        //         model.Add(modifierModel);
+        //     }
+        // }
+        // return model;
     }
-
     public Order getOrderfromOrderid(int orderId)
     {
         return _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
     }
-
-
-
     public void saveCustomerDetails(CustomerModel customer)
     {
         Customer ExistingCustomer = _context.Customers.FirstOrDefault(Customer => Customer.Customerid == customer.customerId)!;
@@ -375,7 +423,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         customermodel.customerId = customer.Customerid;
         customermodel.name = customer.Customername;
         customermodel.email = customer.Email;
-        customermodel.PersonCount = _context.Ordertables.FirstOrDefault(ordertable=>ordertable.Orderid == orderid).TotalPersonCount ?? 0;
+        customermodel.PersonCount = _context.Ordertables.FirstOrDefault(ordertable => ordertable.Orderid == orderid).TotalPersonCount ?? 0;
         customermodel.phone = customer.Phonenumber;
         model.customerModel = customermodel;
         customermodel.tableids = tableids;
@@ -523,7 +571,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         foreach (var itemid in orderedItemIds)
         {
             Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy !=  item.Orderitemquantity)
+            if (item.Readyitemquanitiy != item.Orderitemquantity)
             {
                 return false;
             }
@@ -1027,7 +1075,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             review.Createdat = DateTime.Now;
             review.Comment = model.comment;
             _context.Orderreviews.Add(review);
-           _context.SaveChanges();
+            _context.SaveChanges();
         }
 
     }

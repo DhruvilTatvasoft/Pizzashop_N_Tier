@@ -2,7 +2,6 @@ using DAL.Data;
 
 public interface ITableRepository{
     bool addNewTable(Table table);
-    void assignTable(List<int> tableids,int customerid);
     void deleteTable(int tableId);
     int getAllTables();
     TableViewModel GetAllTablesAndSections();

@@ -3,6 +3,7 @@ using DAL.Data;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
+using NpgsqlTypes;
 
 public class WaitingTokenRepository : IWaitingTokenRepository
 {
@@ -302,31 +303,74 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         }
         return true;
     }
-
     public List<CustomerModel> getCustomerTokensForSection(int sectionid, List<int> tableid)
     {
         List<CustomerModel> customerViewModels = new List<CustomerModel>();
-        List<Table> tables = new List<Table>();
-        int tableCapacity = 0;
-        foreach (var id in tableid)
+        const string query = @"CALL get_customer_tokens_for_section(@sectionid,@tableids,@result_cur)";
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
-            tables.Add(table);
-            tableCapacity += table.Capacity;
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                try
+                {
+                    var command = new NpgsqlCommand("CALL public.get_customer_tokens_for_section(@p_sectionid, @p_tableids, @result_cur)", connection, transaction);
+                    command.Parameters.AddWithValue("p_sectionid", sectionid);
+                    command.Parameters.AddWithValue("p_tableids", tableid.ToArray());
+                    command.Parameters.Add(new NpgsqlParameter("result_cur", NpgsqlDbType.Refcursor) { Direction = ParameterDirection.InputOutput, Value = "mycursor" });
+                    command.ExecuteNonQuery();
+
+                    string cursorName = command.Parameters["result_cur"].Value.ToString();
+                    var results = connection.Query<dynamic>(
+                        $"FETCH ALL IN mycursor",
+                        transaction: transaction
+                    ).ToList();
+                    var customerModels = results.Select(row => new CustomerModel
+                    {
+                        name = row.customername,
+                        phone = row.phonenumber,
+                        email = row.email,
+                        section = new Section
+                        {
+                            Sectionid = sectionid,
+                            Sectionname = row.sectionname
+                        },
+                        PersonCount = row.personcount,
+                        tokenid = row.tokenid
+                    }).ToList();
+                    transaction.Commit();
+                    return customerModels;
+                }
+                catch (NpgsqlException ex)
+                {
+                    Console.WriteLine($"Error executing get_customer_tokens_for_section: {ex.Message}");
+                    transaction.Rollback();
+                    return new List<CustomerModel>();
+                }
+            }
         }
-        List<Waitingtoken> tokens = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Totalpersons <= tableCapacity && token.Sectionid == sectionid).ToList();
-        foreach (var token in tokens)
-        {
-            Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
-            CustomerModel model = new CustomerModel();
-            model.name = customer.Customername;
-            model.phone = customer.Phonenumber;
-            model.email = customer.Email;
-            model.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid && section.Isdeleted == false)!;
-            model.PersonCount = token.Totalpersons;
-            model.tokenid = token.Waitingtokenid;
-            customerViewModels.Add(model);
-        }
+
+        // List<Table> tables = new List<Table>();
+        // int tableCapacity = 0;
+        // foreach (var id in tableid)
+        // {
+        //     Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
+        //     tables.Add(table);
+        //     tableCapacity += table.Capacity;
+        // }
+        // List<Waitingtoken> tokens = _context.Waitingtokens.Where(token => token.Isdeleted == false && token.Totalpersons <= tableCapacity && token.Sectionid == sectionid).ToList();
+        // foreach (var token in tokens)
+        // {
+        //     Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == token.Customerid && customer.Isdeleted == false)!;
+        //     CustomerModel model = new CustomerModel();
+        //     model.name = customer.Customername;
+        //     model.phone = customer.Phonenumber;
+        //     model.email = customer.Email;
+        //     model.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid && section.Isdeleted == false)!;
+        //     model.PersonCount = token.Totalpersons;
+        //     model.tokenid = token.Waitingtokenid;
+        //     customerViewModels.Add(model);
+        // }
         return customerViewModels;
     }
 
@@ -366,7 +410,7 @@ public class WaitingTokenRepository : IWaitingTokenRepository
         model.tableids = tableids;
         model.tables = tables;
         return model;
-    }           
+    }
     public int getTokenidFromCustomerEmail(string email)
     {
         Customer customer = _context.Customers.FirstOrDefault(ExistingCustomer => ExistingCustomer.Email == email)!;
