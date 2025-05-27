@@ -1,10 +1,10 @@
 using Microsoft.AspNetCore.Http;
 
-public class imagePathImpl : IImagePath
+public class ImagePathService : IImagePath
 {
 
     private readonly IGenericRepository _repository;
-    public imagePathImpl(IGenericRepository repository)
+    public ImagePathService(IGenericRepository repository)
     {
         _repository = repository;
     }
@@ -29,7 +29,7 @@ public class imagePathImpl : IImagePath
 
             imagePath = $"/uploads/{uniqueFileName}";
         }
-        return imagePath;
+        return imagePath ?? "";
     }
 
     public string getImagePathFromUid(int userid)

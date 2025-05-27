@@ -48,7 +48,7 @@ public class MenuOrderAppController : Controller
             responseModel.isTableAssigned = true;
 
             List<DAL.Data.Table> tables = new List<DAL.Data.Table>();
-            foreach (int tableId in model.TableIds)
+            foreach (int tableId in model.TableIds ?? new List<int>())
             {
                 DAL.Data.Table table = _tableService.gettablebyid(tableId);
                 tables.Add(table);
@@ -61,7 +61,7 @@ public class MenuOrderAppController : Controller
             model.SearchedItem = "";
         }
 
-        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId ?? 0, model.itemType, model.SearchedItem);
+        responseModel.items = _menuOrderAppService.getItemsForcategory(model.CategoryId ?? 0, model.itemType??string.Empty, model.SearchedItem);
         responseModel.categoryId = model.CategoryId ?? 0;
         if (model.itemType != "" && model.itemType != null) { 
         responseModel.itemtype = model.itemType;
@@ -80,7 +80,7 @@ public class MenuOrderAppController : Controller
         responseModel.customer.PersonCount = model.totalPersonCount ?? 0;
         responseModel.tables = new List<DAL.Data.Table>();
         List<int> tableids = new List<int>();
-        foreach (int tableid in model.tableids)
+        foreach (int tableid in model.tableids!)
         {
             DAL.Data.Table table = _tableService.gettablebyid(tableid);
             tableids.Add(tableid);
@@ -223,7 +223,7 @@ public class MenuOrderAppController : Controller
         else
         {
 
-            return Json(new { success = "Order can not cancelled as some items of the order are ready" });
+            return Json(new { error = "Order can not cancelled as some items of the order are ready" });
         }
     }
 

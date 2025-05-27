@@ -11,13 +11,12 @@
                     <img src="~/images/dinner-table.png" style="width: 35px;height:35px;" alt="">
                 </div>
                 <div class="d-flex flex-column">
-                    <h6><b>@Model.customer.section.Sectionname</b></h6>
-                    <p>Table: @string.Join(",", Model.customer.tables.Select(table => table.Tablename))</p>
+                    <h6><b>@Model.customer.section!.Sectionname</b></h6>
+                    <p>Table: @string.Join(",", Model.customer.tables!.Select(table => table.Tablename))</p>
                     <input type="hidden" id="SavedOrderid">
                 </div>
             </div>
             <div>
-                @* <div id="#chatBox"></div> *@
                 <button class="btn btn-outline-primary btnoutlinecolour pt-1" onclick="generateQR()"><img
                         src="~/images/qr-code-scan.svg" alt=""></button>
                 <button class="btn btn-outline-primary btnoutlinecolour pt-1"
@@ -252,13 +251,13 @@
             dataType: "json",
             data: JSON.stringify(orderDetails),
             success: function (response) {
-                if(response.success){
-                toastr.success(response.success);
-                $("#SavedOrderid").val(response.orderid);
-                $("#savedOrNot").val(true);
+                if (response.success) {
+                    toastr.success(response.success);
+                    $("#SavedOrderid").val(response.orderid);
+                    $("#savedOrNot").val(true);
                 }
-                else{
-                toastr.error(response.error);
+                else {
+                    toastr.error(response.error);
                 }
             },
             error: function (xhr, status, error) {

@@ -2,11 +2,11 @@
 
 using DAL.Data;
 
-public class PermissionImple : IPermissionService
+public class PermissionService : IPermissionService
 {
     private readonly IRoleAndPermissionRepository _repository;
 
-    public PermissionImple(IRoleAndPermissionRepository repository)
+    public PermissionService(IRoleAndPermissionRepository repository)
     {
         _repository = repository;
     }

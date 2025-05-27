@@ -10,10 +10,10 @@ using DAL.Data;
 
 namespace BAL.Implementations
 {
-    public class CustomerImpl : ICustomerService
+    public class CustomerService : ICustomerService
     {
         private readonly ICustomerRepository _customerRepository;
-        public CustomerImpl(ICustomerRepository customerRepository){
+        public CustomerService(ICustomerRepository customerRepository){
             _customerRepository = customerRepository;
         }
         private void ApplyMergedCellStyle(HSSFSheet sheet, CellRangeAddress range, ICellStyle style)
@@ -233,7 +233,7 @@ namespace BAL.Implementations
 
                
 
-                foreach (var customer in model.customers)
+                foreach (var customer in model.customers!)
                 {
                     rowIndex = rowIndex + 1;
                     SR_NO = SR_NO + 1;

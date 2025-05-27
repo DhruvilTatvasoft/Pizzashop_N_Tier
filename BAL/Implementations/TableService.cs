@@ -1,10 +1,10 @@
 using DAL.Data;
 
-public class TableImpl : ITableService
+public class TableService : ITableService
 {
      private readonly ITableRepository _tableRepository;
 
-    public TableImpl(ITableRepository tableRepository){
+    public TableService(ITableRepository tableRepository){
         _tableRepository = tableRepository;
     }
 

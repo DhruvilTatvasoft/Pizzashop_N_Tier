@@ -3,7 +3,7 @@ using DAL.Data;
 using DAL.interfaces;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-public class ItemsImple : IItemService
+public class ItemsService : IItemService
 {
 
     public IItemRepository _itemRepository;
@@ -11,7 +11,7 @@ public class ItemsImple : IItemService
      public IImagePath _imagePath;
 
      public IModifierRepository _modifierRepository;
-    public ItemsImple(IItemRepository itemRepository,IImagePath imagePath,IModifierRepository modifierRepository){
+    public ItemsService(IItemRepository itemRepository,IImagePath imagePath,IModifierRepository modifierRepository){
         _itemRepository = itemRepository;
         _imagePath = imagePath;
         _modifierRepository = modifierRepository;
@@ -141,6 +141,6 @@ public class ItemsImple : IItemService
             imagepath = "";
         }
              _itemRepository.updateItemdetails(model,imagepath);
-        _modifierRepository.updateModifiersForItem(model.ModifierModels, model.itemid);
+        _modifierRepository.updateModifiersForItem(model.ModifierModels!, model.itemid);
     }
 }

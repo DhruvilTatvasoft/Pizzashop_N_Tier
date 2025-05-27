@@ -66,9 +66,6 @@ $(document).on('submit', '#readyQuantityChangeForm', function (e) {
     e.preventDefault();
     var $form = $(this);
     var isChecked = false;
-    var hasZeroQuantity = false;
-
-
 
     $('table tbody tr').each(function () {
         var $checkbox = $(this).find('input[type="checkbox"]');
@@ -77,9 +74,6 @@ $(document).on('submit', '#readyQuantityChangeForm', function (e) {
 
         if ($checkbox.is(':checked')) {
             isChecked = true;
-            if (readyQuantity === 0) {
-                hasZeroQuantity = true;
-            }
         }
     });
 
@@ -88,13 +82,6 @@ $(document).on('submit', '#readyQuantityChangeForm', function (e) {
         hideSpinner();
         return;
     }
-
-    if (hasZeroQuantity) {
-        toastr.warning("You cannot set the ready quantity or in progress quantity to 0 for selected items.");
-        hideSpinner(); 
-        return;
-    }
-
     if ($form.data('submitting')) return;
     $form.data('submitting', true);
 

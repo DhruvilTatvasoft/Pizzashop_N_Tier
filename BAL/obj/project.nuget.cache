@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "ikrGNg4fvNw5tMFg45RxZ4vJgqs6EVNNu3CbwU+eooLNNLGEzVH9MsUKk0Vmx9JtQ1UA2/JTwkFe9mu1z/ugUQ==",
+  "dgSpecHash": "lopMI8dj1++MAp6l1xT0+5HAClCRQjBFRXbpq9IVZpRFpRnBiP6EvpFyqHaTWJeFbc+nPzwk9u9eZrAv/XpSuw==",
   "success": true,
-  "projectFilePath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
+  "projectFilePath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\pct78\\.nuget\\packages\\azure.core\\1.24.0\\azure.core.1.24.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\azure.identity\\1.6.0\\azure.identity.1.6.0.nupkg.sha512",
@@ -76,7 +76,7 @@
     "C:\\Users\\pct78\\.nuget\\packages\\microsoft.win32.systemevents\\5.0.0\\microsoft.win32.systemevents.5.0.0.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\mono.texttemplating\\2.2.1\\mono.texttemplating.2.2.1.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
-    "C:\\Users\\pct78\\.nuget\\packages\\newtonsoft.json\\11.0.2\\newtonsoft.json.11.0.2.nupkg.sha512",
+    "C:\\Users\\pct78\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\npgsql\\7.0.6\\npgsql.7.0.6.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\npgsql.entityframeworkcore.postgresql\\7.0.11\\npgsql.entityframeworkcore.postgresql.7.0.11.nupkg.sha512",
     "C:\\Users\\pct78\\.nuget\\packages\\npoi.dotnetcore.excelservice\\1.0.5\\npoi.dotnetcore.excelservice.1.0.5.nupkg.sha512",

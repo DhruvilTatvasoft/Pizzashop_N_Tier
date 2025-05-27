@@ -1,8 +1,12 @@
+@{
+  bool userrole =  User.IsInRole("Admin") ;
+}
 @model KotViewModel
+
 <nav>
   <div class="nav nav-tabs" id="nav-tab" role="tablist">
     <button class="nav-link active" id="nav-All-tab" data-bs-toggle="tab" data-bs-target="#nav-home" type="button"
-      role="tab" aria-controls="nav-home" aria-selected="true" onclick="loadOrders()">All</button>
+      role="tab" aria-controls="nav-home" aria-selected="true" onclick="loadOrders()">All </button>
 
     @foreach (var category in Model.categories)
     {
@@ -14,6 +18,8 @@
 </nav>
 <script>
   $("document").ready(() => {
+
+    if(@userrole){
     const connection = new signalR.HubConnectionBuilder()
       .withUrl("/chathub")
       .configureLogging(signalR.LogLevel.Information)
@@ -35,5 +41,6 @@
       toastr.warning(message);
       setTimeout(loadKot, 3000);
     });
+    }
   })
 </script>

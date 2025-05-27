@@ -1,21 +1,21 @@
 using DAL.Data;
 
-public class MenuImpl : IMenuService
+public class MenuService : IMenuService
 {
 
      public IGenericRepository _repository;
 
      public IItemRepository _itemRepository;
 
-     public MenuImpl(IGenericRepository repository,IItemRepository itemRepository){
+     public MenuService(IGenericRepository repository,IItemRepository itemRepository){
         _repository = repository;
         _itemRepository = itemRepository;
      }
 
     public bool addNewcategory(MenuModel model,string email)
     {
-        Menu m = model.m;
-        bool temp = _itemRepository.addNewCategory(m.categoryName,m.description,email) ;
+        Menu m = model.m ?? new Menu();
+        bool temp = _itemRepository.addNewCategory(m.categoryName ?? "",m.description ?? "",email) ;
         return temp;
     }
 
@@ -29,7 +29,7 @@ public class MenuImpl : IMenuService
     }
 
     public void editCategory(MenuModel model,string email){
-        Menu m = model.m;
+        Menu m = model.m ?? new Menu();
         _itemRepository.EditCategory(m,email);
     }
 

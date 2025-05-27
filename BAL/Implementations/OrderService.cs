@@ -7,10 +7,10 @@ using NPOI.SS.Util;
 
 namespace BAL.Implementations
 {
-    public class OrderImple :  IOrderService
+    public class OrderService :  IOrderService
     {
         private readonly IOrderRepository _orderRepository;
-        public OrderImple(IOrderRepository orderRepository)
+        public OrderService(IOrderRepository orderRepository)
         {
             _orderRepository = orderRepository;
         }
@@ -125,7 +125,7 @@ namespace BAL.Implementations
 
                 List<Orderstatus> statusList = _orderRepository.getAllStatus();
                 string statusName = "";
-                if (status.Value == 0)
+                if (status!.Value == 0)
                 {
                     statusName = "All status";
                 }
@@ -208,7 +208,7 @@ namespace BAL.Implementations
 
                model = _orderRepository.GetAllOrdersByFilters(status, searchedOrder, filterBy, startDate, endDate,5,1,"asc","orderid",true);
 
-                List<Order> orders = model.orders;
+                List<Order> orders = model.orders  ?? new List<Order>();
 
                 cell = row.CreateCell(9);
                 cell.SetCellValue(orders.Count);
@@ -300,7 +300,7 @@ namespace BAL.Implementations
 
                     cellindex = cellindex + 3;
                     gridcell = gridrow.CreateCell(cellindex);
-                    gridcell.SetCellValue(order.Status.Statusname.Trim());
+                    gridcell.SetCellValue(order.Status!.Statusname.Trim());
                     gridcell.CellStyle = Data;
                     sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2));
                     ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 2), Data);
@@ -321,7 +321,7 @@ namespace BAL.Implementations
 
                     cellindex = cellindex + 2;
                     gridcell = gridrow.CreateCell(cellindex);
-                    gridcell.SetCellValue((double)order.Totalamount);
+                    gridcell.SetCellValue((double)order.Totalamount!);
                     gridcell.CellStyle = Data;
                     sheet.AddMergedRegion(new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1));
                     ApplyMergedCellStyle(sheet, new CellRangeAddress(rowIndex, rowIndex, cellindex, cellindex + 1), Data);

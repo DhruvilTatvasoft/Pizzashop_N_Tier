@@ -1,12 +1,12 @@
 using System.Data;
-using System.Security.Cryptography;
-using System.Transactions;
 using DAL.Data;
 using Dapper;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Configuration;
 using Npgsql;
 using NpgsqlTypes;
+using Newtonsoft.Json;
+using System.Transactions;
+using Newtonsoft.Json.Linq;
 
 public class MenuOrderAppRepository : IMenuOrderAppRepository
 {
@@ -62,14 +62,14 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
             if (orderDetails.orderid != 0)
             {
-                List<string> existingUniqueids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderDetails.orderid).Select(orderedItem => orderedItem.Uniqueid).ToList();
-                List<string> currentUniqueIds = orderDetails.uniqueids;
+                List<string> existingUniqueids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderDetails.orderid).Select(orderedItem => orderedItem.Uniqueid).ToList()!;
+                List<string> currentUniqueIds = orderDetails.uniqueids!;
                 List<string> itemsToDelete = existingUniqueids.Except(currentUniqueIds ?? new List<string>()).ToList();
 
                 foreach (var id in itemsToDelete)
                 {
-                    int itemDetailId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == id).Orderitemid;
-                    Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == id);
+                    int itemDetailId = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == id)!.Orderitemid;
+                    Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == id)!;
                     _context.Orderitems.Remove(orderedItem);
                     List<OrderItemModifier> itemsAndModifiers = _context.OrderItemModifiers.Where(OrderdItemModifiers => OrderdItemModifiers.Orderitemdetailid == itemDetailId).ToList();
                     _context.OrderItemModifiers.RemoveRange(itemsAndModifiers);
@@ -134,7 +134,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 bool itemUpdated = false;
                 if (orderedItem != null)
                 {
-                    orderedItem.Orderitemquantity = int.Parse(item.quantity);
+                    orderedItem.Orderitemquantity = int.Parse(item.quantity!);
                     orderedItem.Specialcomment = item.itemcomment;
                     _context.Orderitems.Update(orderedItem);
                     itemUpdated = true;
@@ -142,8 +142,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 else
                 {
                     orderedItem2.Orderid = order.Orderid;
-                    orderedItem2.Itemid = int.Parse(item.itemId);
-                    orderedItem2.Orderitemquantity = int.Parse(item.quantity);
+                    orderedItem2.Itemid = int.Parse(item.itemId!);
+                    orderedItem2.Orderitemquantity = int.Parse(item.quantity!);
                     orderedItem2.Createdby = 1;
                     orderedItem2.Modifiedby = 1;
                     orderedItem2.Specialcomment = item.itemcomment;
@@ -154,12 +154,12 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 _context.SaveChanges();
                 if (!itemUpdated)
                 {
-                    foreach (var modifierid in item.modifierIds)
+                    foreach (var modifierid in item.modifierIds!)
                     {
                         OrderItemModifier? itemModifier = new OrderItemModifier();
-                        itemModifier.ItemId = int.Parse(item.itemId);
+                        itemModifier.ItemId = int.Parse(item.itemId!);
                         itemModifier.Modifierid = int.Parse(modifierid);
-                        itemModifier.ModifierQuantity = int.Parse(item.quantity);
+                        itemModifier.ModifierQuantity = int.Parse(item.quantity!);
                         itemModifier.Orderitemdetailid = orderedItem2.Orderitemid;
                         itemModifier.Orderid = order.Orderid;
                         _context.OrderItemModifiers.Add(itemModifier);
@@ -201,7 +201,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             transaction.Commit();
             return order.Orderid;
         }
-        catch (Exception ex)
+        catch (Exception)
         {
             transaction.Rollback();
             return 0;
@@ -278,19 +278,40 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     cmd.Parameters.Add(new NpgsqlParameter("result_cur", NpgsqlDbType.Refcursor) { Direction = ParameterDirection.InputOutput, Value = "mycursor" });
                     cmd.ExecuteNonQuery();
                     var result = connection.Query<dynamic>($"FETCH ALL FROM mycursor;", transaction: transaction).ToList();
+
+                    HashSet<int> processedGroups = new HashSet<int>();
                     foreach (var row in result)
                     {
-                        ModifierModel modifierModel = new ModifierModel
+                        if (processedGroups.Contains(row.modifiergroupid))
                         {
-                            modifiergroup = new Modifiergroup
-                            {
-                                Modifiergroupid = row.modifiergroupid,
-                                Modifiergroupname = row.modifiergroupname
-                            },
-                            min_value = row.requiredminselection,
-                            max_value = row.allowedmaxselection,
+                            continue;
+                        }
+                        ModifierModel modifierModel = new ModifierModel();
+                        Modifiergroup mg = new Modifiergroup
+                        {
+                            Modifiergroupname = row.modifiergroupname,
+                            Modifiergroupid = row.modifiergroupid
                         };
+                        modifierModel.modifiergroup = mg;
+                        modifierModel.min_value = row.min_value;
+                        modifierModel.max_value = row.max_value;
+                        List<Modifier> modifierList = new List<Modifier>();
+                        foreach (var modifier in result)
+                        {
+                            if (modifier.modifiergroupid == row.modifiergroupid)
+                            {
+                                Modifier mod = new Modifier
+                                {
+                                    Modifierid = modifier.modifierid,
+                                    Modifiername = modifier.modifiername,
+                                    Modifierrate = modifier.modifierrate
+                                };
+                                modifierList.Add(mod);
+                            }
+                        }
+                        modifierModel.modifiers = modifierList;
                         model.Add(modifierModel);
+                        processedGroups.Add(row.modifiergroupid);
                     }
                 }
                 transaction.Commit();
@@ -321,149 +342,345 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         // }
         // return model;
     }
-    public Order getOrderfromOrderid(int orderId)
-    {
-        return _context.Orders.FirstOrDefault(order => order.Orderid == orderId)!;
-    }
     public void saveCustomerDetails(CustomerModel customer)
     {
-        Customer ExistingCustomer = _context.Customers.FirstOrDefault(Customer => Customer.Customerid == customer.customerId)!;
-        ExistingCustomer.Customername = customer.name;
-        ExistingCustomer.Email = customer.email;
-        ExistingCustomer.Phonenumber = customer.phone;
-        ExistingCustomer.Modifiedat = DateTime.Now;
-        Ordertable table = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == customer.customerId && orderedTable.Isdeleted == false)!;
-        table.TotalPersonCount = customer.PersonCount;
-        _context.Ordertables.Update(table);
-        Waitingtoken token = _context!.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false)!;
-        if (token != null)
+
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            token.Totalpersons = customer.PersonCount;
-            _context.Waitingtokens.Update(token);
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                using (var cmd = new NpgsqlCommand("CALL savecustomerdetails(@customerid,@customername,@email,@phone,@totalpersoncount)", connection, transaction))
+                {
+                    cmd.Parameters.AddWithValue("customerid", customer.customerId!); ;
+                    cmd.Parameters.AddWithValue("customername", customer.name); ;
+                    cmd.Parameters.AddWithValue("email", customer.email);
+                    cmd.Parameters.AddWithValue("phone", customer.phone);
+                    cmd.Parameters.AddWithValue("totalpersoncount", customer.PersonCount);
+                    cmd.ExecuteNonQuery();
+                }
+                transaction.Commit();
+            }
         }
-        _context.Customers.Update(ExistingCustomer);
-        _context.SaveChanges();
+        // Customer ExistingCustomer = _context.Customers.FirstOrDefault(Customer => Customer.Customerid == customer.customerId)!;
+        // ExistingCustomer.Customername = customer.name;
+        // ExistingCustomer.Email = customer.email;
+        // ExistingCustomer.Phonenumber = customer.phone;
+        // ExistingCustomer.Modifiedat = DateTime.Now;
+        // Ordertable table = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Customerid == customer.customerId && orderedTable.Isdeleted == false)!;
+        // table.TotalPersonCount = customer.PersonCount;
+        // _context.Ordertables.Update(table);
+        // Waitingtoken token = _context!.Waitingtokens.FirstOrDefault(token => token.Customerid == customer.customerId && token.Isdeleted == false)!;
+        // if (token != null)
+        // {
+        //     token.Totalpersons = customer.PersonCount;
+        //     _context.Waitingtokens.Update(token);
+        // }   
+        // _context.Customers.Update(ExistingCustomer);
+        // _context.SaveChanges();
     }
 
-    public void saveOrderWiseComment(MenuOrderAppModel model)
-    {
-        Order order = _context.Orders.FirstOrDefault(Order => Order.Orderid == model.orderid);
-        order.Ordercomment = model.order.Ordercomment;
-        _context.Orders.Update(order);
-        _context.SaveChanges();
-    }
+    // public void saveOrderWiseComment(MenuOrderAppModel model)
+    // {
+    //     Order order = _context.Orders.FirstOrDefault(Order => Order.Orderid == model.orderid);
+    //     order.Ordercomment = model.order.Ordercomment;
+    //     _context.Orders.Update(order);
+    //     _context.SaveChanges();
+    // }
 
     public MenuOrderAppModel getRunningTableOrder(int tableid)
     {
         OrderDetailsViewModel model = new OrderDetailsViewModel();
-        int orderid = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid && orderTable.Isdeleted == false)?.Orderid ?? 0;
-        List<int> itemids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == orderid).Select(orderedItem => orderedItem.Itemid).ToList();
-        List<Item> items = new List<Item>();
-        Order order = _context.Orders.FirstOrDefault(order => order.Orderid == orderid)!;
-        List<ItemDetail> itemDetails = new List<ItemDetail>();
-        CustomerModel customermodel = new CustomerModel();
-        foreach (var itemid in itemids)
-        {
-            // loading item
-            ItemDetail itemDetail = new ItemDetail();
-            itemDetail.itemId = itemid.ToString();
-            Item item = _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
-            itemDetail.item = item;
-            itemDetail.itemcomment = _context.Orderitems.FirstOrDefault(orderdItem => orderdItem.Orderid == orderid && orderdItem.Itemid == itemid)!.Specialcomment ?? "";
-            int itemQuantity = _context.Orderitems.FirstOrDefault(Orderitems => Orderitems.Orderid == orderid && Orderitems.Itemid == itemid)?.Orderitemquantity ?? 0;
-
-            // loading modifiers for item
-            List<Modifier> modifiersForItem = new List<Modifier>();
-            int orderedIteDetailId = _context.Orderitems.FirstOrDefault(orderedIteDetail => orderedIteDetail.Itemid == itemid && orderedIteDetail.Orderid == orderid)!.Orderitemid;
-            List<int> modifierIds = _context.OrderItemModifiers
-                .Where(orderedItemModifiers => orderedItemModifiers.Orderitemdetailid == orderedIteDetailId && orderedItemModifiers.Modifierid.HasValue)
-                .Select(orderedItemModifiers => orderedItemModifiers.Modifierid!.Value)
-                .ToList();
-            foreach (var modifierid in modifierIds)
-            {
-                Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid)!;
-                modifiersForItem.Add(modifier);
-            }
-            itemDetail.modifiers = modifiersForItem;
-            itemDetails.Add(itemDetail);
-        }
-        model.itemDetails = itemDetails;
-
-        // loading applied tax and fees
-        List<Ordertaxesandfee> appliedTaxAndFees = _context.Ordertaxesandfees.Where(appliedtax => appliedtax.Orderid == orderid).ToList();
-        List<appliedTaxDetails> appliedTaxDetails = new List<appliedTaxDetails>();
-        foreach (var tax in appliedTaxAndFees)
-        {
-            appliedTaxDetails taxandfees = new appliedTaxDetails();
-            taxandfees.taxname = tax.Taxname!;
-            taxandfees.taxPercentage = (float)tax.TaxPercentage!;
-            taxandfees.taxtype = tax.Taxtype!;
-        }
-        model.appliedTaxes = appliedTaxDetails;
-
-        // loading tables
-        List<int> tableids = _context.Ordertables.Where(table => table.Orderid == orderid).Select(table => table.Tableid).ToList();
-        List<Table> Ordertables = new List<Table>();
-        int customerid = 0;
-        int sectionid = 0;
-        foreach (var id in tableids)
-        {
-            Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
-            Ordertables.Add(table);
-            customerid = table.Customerid ?? customerid;
-            sectionid = table.Sectionid;
-        }
-        model.tables = Ordertables;
-        customermodel.tables = Ordertables;
-        customermodel.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid)!;
-
-        // loading customerdetails
-        Ordertable ordertable = _context.Ordertables.FirstOrDefault(ordertable => ordertable.Orderid == orderid && ordertable.Isdeleted == false)!;
-        Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == ordertable.Customerid)!;
-        customermodel.customerId = customer.Customerid;
-        customermodel.name = customer.Customername;
-        customermodel.email = customer.Email;
-        customermodel.PersonCount = _context.Ordertables.FirstOrDefault(ordertable => ordertable.Orderid == orderid).TotalPersonCount ?? 0;
-        customermodel.phone = customer.Phonenumber;
-        model.customerModel = customermodel;
-        customermodel.tableids = tableids;
-
-        //loading order comment and payment method
-        model.ordercomment = order.Ordercomment ?? "";
-        model.PaymentMethod = order.Paymentmethod;
         MenuOrderAppModel Model = new MenuOrderAppModel();
-        Model.orderDetailModel = model;
-        Model.customer = customermodel;
+        Model.orderDetailModel = loadingorderDetailsModel(tableid);
+        Model.customer = Model.orderDetailModel.customerModel;
         Model.isTableAssigned = true;
-        Model.orderid = orderid;
-        Model.orderComment = order.Ordercomment;
+        Model.orderid = Model.orderDetailModel.orderid ?? 0;
+        Model.orderComment = Model.orderDetailModel.ordercomment;
         return Model;
+    }
+
+    public OrderDetailsViewModel loadingorderDetailsModel(int tableid)
+    {
+        OrderDetailsViewModel resultmodel = new OrderDetailsViewModel();
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
+        {
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                var query = "Call get_order_details_for_table(@tableid, @result_json)";
+                using (var command = new NpgsqlCommand(query, connection, transaction))
+                {
+                    Ordertable? orderTable = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid && orderTable.Isdeleted == false);
+                    Order order = _context.Orders.FirstOrDefault(o => o.Orderid == orderTable!.Orderid) ?? new Order();
+                    List<int> tableids = _context.Ordertables.Where(table => table.Orderid == order.Orderid).Select(table => table.Tableid).ToList();
+                    command.Parameters.AddWithValue("tableid", tableid);
+                    List<Table> Ordertables = new List<Table>();
+                    foreach (var id in tableids)
+                    {
+                        Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
+                        Ordertables.Add(table);
+                    }
+                    var resultParameter = new NpgsqlParameter("result_json", NpgsqlDbType.Json)
+                    {
+                        Direction = ParameterDirection.InputOutput,
+                        Value = "[]"
+                    };
+                    command.Parameters.Add(resultParameter);
+                    command.ExecuteNonQuery();
+                    var result = resultParameter.Value.ToString();
+                    var model = JsonConvert.DeserializeObject<List<customerOrderDetailsViewModel>>(result!);
+                    CustomerModel customermodel = new CustomerModel();
+                    customermodel.tables = Ordertables;
+                    if (model != null && model.Count > 0)
+                    {
+                        customermodel.customerId = model[0].customerid;
+                        customermodel.name = model[0].customername;
+                        customermodel.email = model[0].email;
+                        customermodel.phone = model[0].Phonenumber;
+                        customermodel.PersonCount = model[0].personcount;
+                        customermodel.tableids = tableids;
+                    }
+
+                    string queryfortaxdetails = "call get_order_tax_details(@orderid,@result_json)";
+                    var commandfortaxdetails = new NpgsqlCommand(queryfortaxdetails, connection, transaction);
+                    commandfortaxdetails.Parameters.AddWithValue("orderid", order.Orderid);
+                    var taxResultParameter = new NpgsqlParameter("result_json", NpgsqlDbType.Json)
+                    {
+                        Direction = ParameterDirection.InputOutput,
+                        Value = "[]"
+                    };
+                    commandfortaxdetails.Parameters.Add(taxResultParameter);
+                    commandfortaxdetails.ExecuteNonQuery();
+                    var taxResult = taxResultParameter.Value.ToString();
+                    List<appliedTaxDetails>? appliedTaxDetails = JsonConvert.DeserializeObject<List<appliedTaxDetails>>(taxResult!);
+                    if (appliedTaxDetails == null)
+                    {
+                        appliedTaxDetails = new List<appliedTaxDetails>();
+                    }
+                    resultmodel.appliedTaxes = appliedTaxDetails;
+                    resultmodel.customerModel = customermodel;
+                    resultmodel.orderid = order.Orderid;
+                    resultmodel.ordercomment = order.Ordercomment ?? "";
+                    resultmodel.PaymentMethod = order.Paymentmethod ?? "";
+                }
+            }
+            return resultmodel;
+        }
+
+        // Ordertable orderTable = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid && orderTable.Isdeleted == false);
+        // Order order = orderTable != null ? _context.Orders.FirstOrDefault(o => o.Orderid == orderTable.Orderid) ?? new Order() : new Order();
+        // Customer customer = _context.Customers.FirstOrDefault(customer => customer.Customerid == orderTable.Customerid)!;
+        // List<int> itemids = _context.Orderitems.Where(orderedItem => orderedItem.Orderid == order.Orderid).Select(orderedItem => orderedItem.Itemid).ToList();
+        // List<int> tableids = _context.Ordertables.Where(table => table.Orderid == order.Orderid).Select(table => table.Tableid).ToList();
+        // List<Ordertaxesandfee> appliedTaxAndFees = _context.Ordertaxesandfees.Where(appliedtax => appliedtax.Orderid == order.Orderid).ToList();
+        // List<appliedTaxDetails> appliedTaxDetails = new List<appliedTaxDetails>();
+        // CustomerModel customermodel = new CustomerModel();
+        // OrderDetailsViewModel model = new OrderDetailsViewModel();
+        // List<Table> Ordertables = new List<Table>();
+        // foreach (var tax in appliedTaxAndFees)
+        // {
+        //     appliedTaxDetails taxandfees = new appliedTaxDetails();
+        //     taxandfees.taxname = tax.Taxname!;
+        //     taxandfees.taxPercentage = (float)tax.TaxPercentage!;
+        //     taxandfees.taxtype = tax.Taxtype!;
+        // }
+
+        // int customerid = 0;
+        // int sectionid = 0;
+
+        // foreach (var id in tableids)
+        // {
+        //     Table table = _context.Tables.FirstOrDefault(table => table.Tableid == id)!;
+        //     Ordertables.Add(table);
+        //     customerid = table.Customerid ?? customerid;
+        //     sectionid = table.Sectionid;
+        // }
+
+        // customermodel.tables = Ordertables;
+        // customermodel.section = _context.Sections.FirstOrDefault(section => section.Sectionid == sectionid)!;
+        // customermodel.customerId = customer.Customerid;
+        // customermodel.name = customer.Customername;
+        // customermodel.email = customer.Email;
+        // customermodel.PersonCount = orderTable.TotalPersonCount ?? 0;
+        // customermodel.phone = customer.Phonenumber;
+        // customermodel.tableids = tableids;
+
+        // model.tables = Ordertables;
+        // model.customerModel = customermodel;
+        // model.itemDetails = getItemDetailsModels(itemids, order.Orderid);
+        // model.orderid = order.Orderid;
+        // model.appliedTaxes = appliedTaxDetails;
+        // model.ordercomment = order.Ordercomment ?? "";
+        // model.PaymentMethod = order.Paymentmethod;
+
+        // return model;
+    }
+
+    public List<ItemDetail> getItemDetailsModels(List<int> itemids, int orderid)
+    {
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
+        {
+            connection.Open();
+            var transaction = connection.BeginTransaction();
+            using (var command = new NpgsqlCommand("CALL getItemAndModifiersForGivenOrder(@orderid, @categoryid, @is_ready, @result_json)", connection))
+            {
+                command.Parameters.AddWithValue("orderid", orderid);
+                command.Parameters.AddWithValue("categoryid", 0);
+                command.Parameters.AddWithValue("is_ready", DBNull.Value);
+                var resultParameter = new NpgsqlParameter("result_json", NpgsqlDbType.Json)
+                {
+                    Direction = ParameterDirection.InputOutput,
+                    Value = "[]"
+                };
+                command.Parameters.Add(resultParameter);
+                command.ExecuteNonQuery();
+                var result = resultParameter.Value.ToString();
+                List<OrderItemViewModelProc> itemmodifiersdata = result != null 
+                    ? JsonConvert.DeserializeObject<List<OrderItemViewModelProc>>(result) ?? new List<OrderItemViewModelProc>() 
+                    : new List<OrderItemViewModelProc>();
+                List<ItemDetail> itemdetailsList = new List<ItemDetail>();
+                HashSet<int> uniqueitemids = new HashSet<int>();
+                foreach (var data in itemmodifiersdata)
+                {
+                    ItemDetail itemDetail = new ItemDetail();
+                    if (uniqueitemids.Contains(data.orderitemdetailid))
+                    {
+                        ItemDetail? existingItemDetailObject = itemdetailsList.Find(obj => obj.uniqueid == data.unique_id);
+                        if (existingItemDetailObject != null)
+                        {
+                        }
+                        if (data.modifier_id != null)
+                        {
+                            Modifier newmodifier = new Modifier();
+                            newmodifier.Modifierid = data.modifier_id ?? 0;
+                            newmodifier.Modifiername = data.modifier_name ?? "";
+                            existingItemDetailObject!.modifiers!.Add(newmodifier);
+                        }
+                    }
+                    else
+                    {
+                        itemDetail.itemId = data.item_id.ToString();
+                        Item item = new Item();
+                        item.Itemid = data.item_id;
+                        item.Itemname = data.item_name;
+                        itemDetail.item = item;
+                        itemDetail.uniqueid = data.unique_id;
+                        itemDetail.itemcomment = data.itemcomment;
+                        if (data.modifier_id != null)
+                        {
+                            Modifier m = new Modifier();
+                            m.Modifierid = data.modifier_id ?? 0;
+                            m.Modifiername = data.modifier_name ?? "";
+                            List<Modifier> modifiers = new List<Modifier>();
+                            modifiers.Add(m);
+                            itemDetail.modifiers = modifiers;
+                        }
+                        itemdetailsList.Add(itemDetail);
+                    }
+                }
+                transaction.Commit();
+                return itemdetailsList;
+            }
+        }
+        // List<ItemDetail> itemDetails = new List<ItemDetail>();
+        // foreach (var itemid in itemids)
+        // {
+        //     ItemDetail itemDetail = new ItemDetail();
+        //     itemDetail.itemId = itemid.ToString();
+        //     Item item = _context.Items.FirstOrDefault(item => item.Itemid == itemid)!;
+        //     itemDetail.item = item;
+        //     Orderitem orderedItem = _context.Orderitems.FirstOrDefault(orderdItem => orderdItem.Orderid == orderid && orderdItem.Itemid == itemid);
+        //     itemDetail.itemcomment = orderedItem.Specialcomment ?? "";
+        //     int itemQuantity = orderedItem.Orderitemquantity ?? 0;
+        //     List<Modifier> modifiersForItem = new List<Modifier>();
+        //     int orderedIteDetailId = orderedItem.Orderitemid;
+        //     List<int> modifierIds = _context.OrderItemModifiers
+        //         .Where(orderedItemModifiers => orderedItemModifiers.Orderitemdetailid == orderedIteDetailId && orderedItemModifiers.Modifierid.HasValue)
+        //         .Select(orderedItemModifiers => orderedItemModifiers.Modifierid!.Value)
+        //         .ToList();
+        //     foreach (var modifierid in modifierIds)
+        //     {
+        //         Modifier modifier = _context.Modifiers.FirstOrDefault(modifier => modifier.Modifierid == modifierid)!;
+        //         modifiersForItem.Add(modifier);
+        //     }
+        //     itemDetail.modifiers = modifiersForItem;
+        //     itemDetails.Add(itemDetail);
+        // }
+        // return itemDetails;
     }
 
     public MenuOrderAppModel getAssignedTableDetails(int tableid)
     {
         MenuOrderAppModel model = new MenuOrderAppModel();
-        int customerid = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid)!.Customerid ?? 0;
-        Ordertable ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid && orderedTable.Isdeleted == false)!;
-        CustomerModel customermodel = new CustomerModel();
-        Customer customer = _context.Customers.FirstOrDefault(tableCustomer => tableCustomer.Customerid == ordertable.Customerid);
-        customermodel.customerId = customer.Customerid;
-        customermodel.name = customer.Customername;
-        customermodel.email = customer.Email;
-        Waitingtoken token = _context.Waitingtokens.FirstOrDefault(Token => Token.Customerid == customerid)!;
-        customermodel.PersonCount = ordertable.TotalPersonCount ?? 0;
-        customermodel.phone = customer.Phonenumber;
+        Ordertable? orderTable = _context.Ordertables.FirstOrDefault(orderTable => orderTable.Tableid == tableid && orderTable.Isdeleted == false);
         List<int> tableids = new List<int>
         {
             tableid
         };
-        customermodel.tableids = tableids;
-        model.customer = customermodel;
-        model.isTableAssigned = true;
-        // model.tokenid = token.Waitingtokenid;
-        model.categoryId = 0;
-        model.isTableAssigned = true;
-        return model;
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
+        {
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                string queryForCustomerdetails = "call get_order_details_for_table(@tableid, @result_json)";
+                using (var command = new NpgsqlCommand(queryForCustomerdetails, connection, transaction))
+                {
+                    command.Parameters.AddWithValue("tableid", tableid);
+                    var resultParameter = new NpgsqlParameter("result_json", NpgsqlDbType.Json)
+                    {
+                        Direction = ParameterDirection.InputOutput,
+                        Value = "[]"
+                    };
+                    command.Parameters.Add(resultParameter);
+                    command.ExecuteNonQuery();
+                    var result = resultParameter.Value.ToString();
+                    var customerdatamodel = JsonConvert.DeserializeObject<List<customerOrderDetailsViewModel>>(result!);
+                    CustomerModel customermodel = new CustomerModel();
+                    if (customerdatamodel != null && customerdatamodel.Count > 0)
+                    {
+                        customermodel.customerId = customerdatamodel[0].customerid;
+                        customermodel.name = customerdatamodel[0].customername;
+                        customermodel.email = customerdatamodel[0].email;
+                        customermodel.phone = customerdatamodel[0].Phonenumber;
+                        customermodel.PersonCount = customerdatamodel[0].personcount;
+                        Section section = new Section();
+                        section.Sectionid = customerdatamodel[0].sectionid;
+                        section.Sectionname = customerdatamodel[0].sectionname;
+                        customermodel.section = section;
+                        customermodel.tableids = tableids;
+                    }
+                    model.isTableAssigned = true;
+                    model.customer = customermodel;
+                    model.categoryId = 0;
+
+                }
+                transaction.Commit();
+            }
+
+            return model;
+        }
+        // MenuOrderAppModel model = new MenuOrderAppModel();
+        // int customerid = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid)!.Customerid ?? 0;
+        // Ordertable ordertable = _context.Ordertables.FirstOrDefault(orderedTable => orderedTable.Tableid == tableid && orderedTable.Isdeleted == false)!;
+        // CustomerModel customermodel = new CustomerModel();
+        // Customer customer = _context.Customers.FirstOrDefault(tableCustomer => tableCustomer.Customerid == ordertable.Customerid);
+        // customermodel.customerId = customer.Customerid;
+        // customermodel.name = customer.Customername;
+        // customermodel.email = customer.Email;
+        // Waitingtoken token = _context.Waitingtokens.FirstOrDefault(Token => Token.Customerid == customerid)!;
+        // customermodel.PersonCount = ordertable.TotalPersonCount ?? 0;
+        // customermodel.phone = customer.Phonenumber;
+        // List<int> tableids = new List<int>
+        // {
+        //     tableid
+        // };
+        // customermodel.tableids = tableids;
+        // model.customer = customermodel;
+        // model.isTableAssigned = true;
+        // model.categoryId = 0;
+        // model.isTableAssigned = true;
+        // return model;
     }
     public CustomerModel getcustomerDetails(int customerid, List<int>? tableid)
     {
@@ -515,7 +732,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 .Where(orderedItemModifier => orderedItemModifier.Orderitemdetailid == itemid && orderedItemModifier.Orderid == orderid)
                 .Select(orderedItemModifier => orderedItemModifier.Modifierid)
                 .Where(modifierId => modifierId.HasValue)
-                .Select(modifierId => modifierId.Value)
+                .Select(modifierId => modifierId!.Value)
                 .ToList();
             string uniqueid = "item_" + orderItemId + "_";
             foreach (var id in modifierids)
@@ -543,83 +760,157 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
     public void getOrderdItemQuantity(int? orderid, int itemid, MenuOrderAppModel model, List<int> modifiers)
     {
-        string uniqueid = "item_" + itemid + "_";
-        foreach (var id in modifiers)
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            uniqueid += id + "_";
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                using (var command = new NpgsqlCommand("Call get_orderitem_quantities(@orderid,@uniqueid,@result_json)", connection, transaction))
+                {
+                    string uniqueid = "item_" + itemid + "_";
+                    foreach (var id in modifiers)
+                    {
+                        uniqueid += id + "_";
+                    }
+                    uniqueid = uniqueid.TrimEnd('_');
+                    command.Parameters.AddWithValue("orderid", orderid!);
+                    command.Parameters.AddWithValue("uniqueid", uniqueid);
+                    var resultParameter = new NpgsqlParameter("result_json", NpgsqlDbType.Json)
+                    {
+                        Direction = ParameterDirection.InputOutput,
+                        Value = "[]"
+                    };
+                    command.Parameters.Add(resultParameter);
+                    command.ExecuteNonQuery();
+                    var result = resultParameter.Value.ToString();
+                    JArray array = JArray.Parse(result!);
+                    JObject firstItem = (JObject)array[0];
+                    model.itemQuantity = (int)firstItem["orderquantity"]!;
+                    model.readyQuantity = (int)firstItem["readyquantity"]!;
+                    model.itemcomment = (string)firstItem["itemcomment"]!;
+                }
+            }
+            connection.Close();
         }
-        uniqueid = uniqueid.TrimEnd('_');
-        Orderitem? orderedItem = _context.Orderitems.FirstOrDefault(orederedItem => orederedItem.Uniqueid == uniqueid);
-        if (orderedItem == null)
-        {
-            model.itemQuantity = 1;
-            model.itemcomment = "";
-        }
-        else
-        {
-            model.itemQuantity = orderedItem.Orderitemquantity ?? 1;
-            model.itemcomment = orderedItem.Specialcomment ?? "";
-            model.readyQuantity = orderedItem.Readyitemquanitiy ?? 0;
 
-        }
+        // string uniqueid = "item_" + itemid + "_";
+        // foreach (var id in modifiers)
+        // {
+        //     uniqueid += id + "_";
+        // }
+        // uniqueid = uniqueid.TrimEnd('_');
+        // Orderitem? orderedItem = _context.Orderitems.FirstOrDefault(orderedItem => orderedItem.Uniqueid == uniqueid && orderedItem.Orderid == orderid);
+        // if (orderedItem == null)
+        // {
+        //     model.itemQuantity = 1;
+        //     model.itemcomment = "";
+        // }
+        // else
+        // {
+        //     model.itemQuantity = orderedItem.Orderitemquantity ?? 1;
+        //     model.itemcomment = orderedItem.Specialcomment ?? "";
+        //     model.readyQuantity = orderedItem.Readyitemquanitiy ?? 0;
+        // }
     }
 
     public bool completeTheOrder(ItemDetail itemdetails)
     {
-        List<string> orderedItemIds = new List<string>();
-        orderedItemIds = itemdetails.uniqueids;
-        foreach (var itemid in orderedItemIds)
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy != item.Orderitemquantity)
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
             {
-                return false;
+                string query = "CALL complete_order_if_all_ready(@orderid,@success)";
+                var command = new NpgsqlCommand(query, connection, transaction);
+                command.Parameters.AddWithValue("orderid", itemdetails.orderid!);
+                var successParameter = new NpgsqlParameter("success", NpgsqlDbType.Boolean)
+                {
+                    Direction = ParameterDirection.InputOutput,
+                    Value = DBNull.Value
+                };
+                command.Parameters.Add(successParameter);
+                command.ExecuteNonQuery();
+                bool success = (bool)successParameter.Value;
+                transaction.Commit();
+                return success;
             }
         }
-        Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
-        order.Statusid = 1;
-        order.PaymentStatus = "Completed";
-        List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
-        foreach (var orderedTable in orderedTables)
-        {
-            orderedTable.Isdeleted = true;
-            Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
-            table.Status = true;
-            table.Statusname = "Available";
-            _context.Tables.Update(table);
-        }
-        _context.Orders.Update(order);
-        _context.SaveChanges();
-        return true;
+
+        // List<string> orderedItemIds = new List<string>();
+        // orderedItemIds = itemdetails.uniqueids;
+        // foreach (var itemid in orderedItemIds)
+        // {
+        //     Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
+        //     if (item.Readyitemquanitiy != item.Orderitemquantity)
+        //     {
+        //         return false;
+        //     }
+        // }
+        // Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
+        // order.Statusid = 1;
+        // order.PaymentStatus = "Completed";
+        // List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
+        // foreach (var orderedTable in orderedTables)
+        // {
+        //     orderedTable.Isdeleted = true;
+        //     Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
+        //     table.Status = true;
+        //     table.Statusname = "Available";
+        //     _context.Tables.Update(table);
+        // }
+        // _context.Orders.Update(order);
+        // _context.SaveChanges();
+        // return true;
     }
 
     public bool cancelTheOrder(ItemDetail itemdetails)
     {
-        List<string> orderedItemIds = new List<string>();
-        orderedItemIds = itemdetails.uniqueids;
-        foreach (var itemid in orderedItemIds)
+
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
-            if (item.Readyitemquanitiy > 0)
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
             {
-                return false;
+                string query = "CALL cancel_order(@orderid,@result)";
+                var command = new NpgsqlCommand(query, connection, transaction);
+                command.Parameters.AddWithValue("orderid", itemdetails.orderid!);
+                var resultParameter = new NpgsqlParameter("result", NpgsqlDbType.Boolean)
+                {
+                    Direction = ParameterDirection.InputOutput,
+                    Value = DBNull.Value
+                };
+                command.Parameters.Add(resultParameter);
+                command.ExecuteNonQuery();
+                bool result = (bool)resultParameter.Value;
+                transaction.Commit();
+                return result;
             }
         }
+        // List<string> orderedItemIds = new List<string>();
+        // orderedItemIds = itemdetails.uniqueids;
+        // foreach (var itemid in orderedItemIds)
+        // {
+        //     Orderitem item = _context.Orderitems.FirstOrDefault(Item => Item.Orderid == itemdetails.orderid && Item.Uniqueid == itemid)!;
+        //     if (item.Readyitemquanitiy > 0)
+        //     {
+        //         return false;
+        //     }
+        // }
 
-        Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
-        order.Statusid = 2;
-        List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
-        foreach (var orderedTable in orderedTables)
-        {
-            orderedTable.Isdeleted = true;
-            Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
-            table.Status = true;
-            table.Statusname = "Available";
-            _context.Tables.Update(table);
-        }
-        _context.Orders.Update(order);
-        _context.SaveChanges();
-        return true;
+        // Order order = _context.Orders.FirstOrDefault(currentOrder => currentOrder.Orderid == itemdetails.orderid)!;
+        // order.Statusid = 2;
+        // List<Ordertable> orderedTables = _context.Ordertables.Where(OrderedTable => OrderedTable.Orderid == itemdetails.orderid).ToList();
+        // foreach (var orderedTable in orderedTables)
+        // {
+        //     orderedTable.Isdeleted = true;
+        //     Table table = _context.Tables.FirstOrDefault(currentTable => currentTable.Tableid == orderedTable.Tableid)!;
+        //     table.Status = true;
+        //     table.Statusname = "Available";
+        //     _context.Tables.Update(table);
+        // }
+        // _context.Orders.Update(order);
+        // _context.SaveChanges();
+        // return true;
     }
     public void getDashBoardDetails(DashboardViewModel model, int timeId = 1, string toDate = "", string fromDate = "")
     {
@@ -673,7 +964,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 }
                 break;
         }
-        double totalSales = (double)query.Sum(h => h.Totalamount);
+        double totalSales = (double)query.Sum(h => h.Totalamount ?? 0);
         int totalOrders = query.Count();
         int noOfCustomers = customerQuery.Count();
         double avgOrderValue = totalOrders == 0 ? 0 : totalSales / totalOrders;
@@ -786,7 +1077,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             }).ToList();
             foreach (var sg in salesGroup)
                 if (dailySales.ContainsKey(sg.DayName))
-                    dailySales[sg.DayName] = (double)sg.Total;
+                    dailySales[sg.DayName] = (double)(sg.Total??0);
 
             foreach (var cg in customerGroup)
             {
@@ -818,7 +1109,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 .ToList();
 
             foreach (var item in grouped)
-                dailySales[item.Date] = (double)item.Total;
+                dailySales[item.Date] = (double)(item.Total ?? 0);
             foreach (var customer in groupedCustomer)
             {
                 totalCustomers[customer.Date] = customer.Total;
@@ -858,7 +1149,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             foreach (var sg in salesGroup)
             {
                 if (dailySales.ContainsKey(sg.Date))
-                    dailySales[sg.Date] = (double)sg.Total;
+                    dailySales[sg.Date] = (double)(sg.Total?? 0);
             }
             foreach (var cg in customerGroup)
             {
@@ -899,7 +1190,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     foreach (var sg in salesGroup)
                     {
                         if (dailySales.ContainsKey(sg.DayName))
-                            dailySales[sg.DayName] = (double)sg.Total;
+                            dailySales[sg.DayName] = (double)(sg.Total??0);
                     }
 
                     foreach (var cg in customerGroup)
@@ -932,7 +1223,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                         .ToList();
 
                     foreach (var item in grouped)
-                        dailySales[item.Date] = (double)item.Total;
+                        dailySales[item.Date] = (double)(item.Total??0);
 
                     foreach (var customer in groupedCustomer)
                     {

@@ -1,8 +1,4 @@
 using Microsoft.AspNetCore.Authorization;
-
-using System.Security.Claims;
-
-
 public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
 {
     private readonly IAuthServices _authServices;
@@ -16,14 +12,14 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
         _httpContextAccessor = httpContextAccessor;
     }
 
-    protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
+    protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, PermissionRequirement requirement)
     {
-        var Email = _httpContextAccessor.HttpContext.Request.Cookies["username"];
-        var roleName =  _authServices.GetUserRole(Email);
+        var Email = _httpContextAccessor.HttpContext!.Request.Cookies["username"];
+        var roleName = _authServices.GetUserRole(Email!);
         if (string.IsNullOrEmpty(roleName))
         {
             context.Fail();
-            return;
+            return Task.CompletedTask;
         }
         var RoleNameForPermission = roleName + "_CanViewOrderApp";
         var permissions = _rolesAndPermissionServices.GetPermissionForAuthorization(roleName);
@@ -35,5 +31,6 @@ public class PermissionHandler : AuthorizationHandler<PermissionRequirement>
         {
             context.Fail();
         }
+        return Task.CompletedTask;
     }
 }

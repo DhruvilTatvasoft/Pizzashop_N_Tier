@@ -3302,6 +3302,7 @@
           "Microsoft.EntityFrameworkCore.Design": "7.0.0",
           "Microsoft.EntityFrameworkCore.SqlServer": "7.0.10",
           "Microsoft.EntityFrameworkCore.Tools": "9.0.2",
+          "Newtonsoft.Json": "13.0.3",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "7.0.11",
           "Select.Pdf": "24.1.0",
           "System.Text.Encoding.CodePages": "7.0.0",
@@ -9693,11 +9694,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectUniqueName": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "projectName": "pizzashop_n_tier",
-      "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
+      "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\pizzashop_n_tier.csproj",
       "packagesPath": "C:\\Users\\pct78\\.nuget\\packages\\",
-      "outputPath": "c:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
+      "outputPath": "C:\\Users\\pct78\\pizzashop_N_tier\\pizzashop_n_tier\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\pct78\\AppData\\Roaming\\NuGet\\NuGet.Config"
@@ -9712,8 +9713,8 @@
         "net7.0": {
           "targetAlias": "net7.0",
           "projectReferences": {
-            "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
-              "projectPath": "c:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
+            "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj": {
+              "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\BAL\\BAL.csproj"
             },
             "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj": {
               "projectPath": "C:\\Users\\pct78\\pizzashop_N_tier\\DAL\\DAL.csproj"

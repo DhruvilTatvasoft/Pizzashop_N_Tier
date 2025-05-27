@@ -5,11 +5,11 @@ using DAL.Data;
 
 
 
-public class MenuOrderAppImple : IMenuOrderAppService
+public class MenuOrderAppService : IMenuOrderAppService
 {
     private readonly IMenuOrderAppRepository _menuOrderAppRepository;
 
-    public MenuOrderAppImple(IMenuOrderAppRepository menuOrderAppRepository)
+    public MenuOrderAppService(IMenuOrderAppRepository menuOrderAppRepository)
     {
         _menuOrderAppRepository = menuOrderAppRepository;
     }
@@ -88,10 +88,6 @@ public class MenuOrderAppImple : IMenuOrderAppService
         _menuOrderAppRepository.getOrderdItemQuantity(orderid, itemid, model, modifiers);
     }
 
-    public Order getOrderfromOrderid(int orderId)
-    {
-        return _menuOrderAppRepository.getOrderfromOrderid(orderId);
-    }
 
     public MenuOrderAppModel getRunningTableOrder(int tableid)
     {
@@ -113,9 +109,6 @@ public class MenuOrderAppImple : IMenuOrderAppService
         _menuOrderAppRepository.saveCustomerReview(model);
     }
 
-    public void saveOrderWiseComment(MenuOrderAppModel model)
-    {
-        _menuOrderAppRepository.saveOrderWiseComment(model);
-    }
+  
 
 }

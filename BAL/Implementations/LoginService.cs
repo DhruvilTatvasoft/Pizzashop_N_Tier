@@ -11,7 +11,7 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace BAL.Implementations;
 
-public class LoginImpl : ILogin
+public class LoginService : ILogin
 {
   private readonly IGenericRepository _repository;
 
@@ -20,7 +20,7 @@ public class LoginImpl : ILogin
   private readonly IJwtTokenGenService _jwtToken;
 
   private readonly IAESService _AesService;
-  public LoginImpl(IGenericRepository repository, IConfiguration configuration,IAESService AesService,IJwtTokenGenService jwtToken)
+  public LoginService(IGenericRepository repository, IConfiguration configuration,IAESService AesService,IJwtTokenGenService jwtToken)
   {
     _repository = repository;
     _configuration = configuration;
@@ -92,7 +92,7 @@ public class LoginImpl : ILogin
           var user = _repository.getuserFromDb(email);
           return user;
        }
-       catch(Exception e){
+       catch(Exception){
         Console.WriteLine("no user detail found !!!");
         return new User();
        }
@@ -104,17 +104,17 @@ public class LoginImpl : ILogin
         {
             firstname = user.Firstname,
             lastname = user.Lastname,
-            address = user.Address,
+            address = user.Address ?? "",
             City = _repository.getAllCities(),
             Country = _repository.getAllCountries(),
             State = _repository.getAllStates(),
-            Phone = user.Phonenumber,
+            Phone = user.Phonenumber ?? "",
             Zipcode = user.Zipcode,
             username = user.Username,
-            ProfilePath= user.Profilephoto,
-            stateid = (int)user.Stateid,
-            countryid = (int)user.Countryid,
-            cityid = (int)user.Cityid,
+            ProfilePath= user.Profilephoto ?? "",
+            stateid = (int)user.Stateid!,
+            countryid = (int)user.Countryid!,
+            cityid = (int)user.Cityid!,
             role = _repository.getRolename(user.Roleid),
             Role = _repository.getAllRoles().Select(r=>r.Rolename).ToList(),
             email = user.Email,

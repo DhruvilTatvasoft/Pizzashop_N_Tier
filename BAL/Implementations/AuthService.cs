@@ -1,10 +1,10 @@
 using DAL.Data;
 
-public class AuthServiceImpl : IAuthServices
+public class AuthService : IAuthServices
 {
     public readonly IGenericRepository _repository;
 
-    public AuthServiceImpl(IGenericRepository repository){
+    public AuthService(IGenericRepository repository){
         _repository = repository;
     }
     public string GetUserRole(string email)

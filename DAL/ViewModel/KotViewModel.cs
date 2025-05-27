@@ -51,5 +51,7 @@ public class itemDetails
     public int orderedQuantity { get; set; }
     public int readyQuantity { get; set; }
     public int inprogressQuantity { get; set; }
+
+    
 }
 

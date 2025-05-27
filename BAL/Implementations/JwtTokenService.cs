@@ -5,22 +5,22 @@ using DAL.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
-public class JwtTokenImple : IJwtTokenGenService
+public class JwtTokenService : IJwtTokenGenService
 {
 
     private readonly IConfiguration _configuration;
-    private readonly string _key;
+    private readonly string _key ;
     private readonly string _issuer;
     private readonly string _audience;
 
     private readonly IRoleAndPermissionRepository _roleAndPermissionRepository;
 
-    public JwtTokenImple(IConfiguration configuration, IRoleAndPermissionRepository roleAndPermissionRepository)
+    public JwtTokenService(IConfiguration configuration, IRoleAndPermissionRepository roleAndPermissionRepository)
     {
         _configuration = configuration;
-        _key = configuration["Jwt:SecretKey"];
-        _issuer = configuration["Jwt:Issuer"];
-        _audience = configuration["Jwt:Audience"];
+        _key = configuration["JWT:SecretKey"] !;
+        _issuer = configuration["JWT:Issuer"] !;
+        _audience = configuration["JWT:Audience"] !;
         _roleAndPermissionRepository = roleAndPermissionRepository;
     }
 
@@ -36,7 +36,7 @@ public class JwtTokenImple : IJwtTokenGenService
         List<Rolesandpermission> AllPermissions = _roleAndPermissionRepository.GetUserPermissions(role);
         var tokenHandler = new JwtSecurityTokenHandler();
 
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"]);
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:SecretKey"] !);
 
         var claims = new List<Claim>
             {
@@ -82,8 +82,9 @@ public class JwtTokenImple : IJwtTokenGenService
             {
                 ValidateIssuerSigningKey = true,
                 IssuerSigningKey = new SymmetricSecurityKey(key),
-                ValidateIssuer = true,
-                ValidateAudience = true,
+                ValidateIssuer = false,
+                ValidateAudience = false,
+                ValidateLifetime = false,
                 ValidIssuer = _issuer,
                 ValidAudience = _audience,
                 ClockSkew = TimeSpan.Zero

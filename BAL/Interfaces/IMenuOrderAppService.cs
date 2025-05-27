@@ -12,11 +12,9 @@ public interface IMenuOrderAppService
     List<Item> getItemsForcategory(int categoryid,string searchedItem,string ItemType);
     List<ModifierModel> getModifiersForItem(int itemid);
     void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers);
-    Order getOrderfromOrderid(int orderId);
     MenuOrderAppModel getRunningTableOrder(int tableid);
     void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel);
     byte[] GenerateQRCode(string text, int width = 250, int height = 250);
     void saveCustomerDetails(CustomerModel customer);
-    void saveOrderWiseComment(MenuOrderAppModel model);
     void saveCustomerReview(customerReviewViewModel model);
 }

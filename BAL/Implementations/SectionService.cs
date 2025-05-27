@@ -1,20 +1,20 @@
 using DAL.Data;
 
-public class SectionImpl : ISectionService
+public class SectionService : ISectionService
 {
     private readonly ISectionRepository _sectionRepository;
 
-    public SectionImpl(ISectionRepository sectionRepository){
+    public SectionService(ISectionRepository sectionRepository){
         _sectionRepository = sectionRepository;
     }
 
     public bool addNewSection(TableAndSectionViewModel model)
     {
         if(model.sectionId == 0){
-            return _sectionRepository.addNewSection(model.section);
+            return _sectionRepository.addNewSection(model.section ?? new Section());
         }
         else{
-            return _sectionRepository.updateSection(model.section);
+            return _sectionRepository.updateSection(model.section ?? new Section());
         }
     }
 
@@ -30,7 +30,7 @@ public class SectionImpl : ISectionService
 
     public bool updateSection(TableAndSectionViewModel model)
     {
-        return  _sectionRepository.updateSection(model.section);
+        return  _sectionRepository.updateSection(model.section ?? new Section());
     }
     public bool deleteSection(int sectionId){
         return _sectionRepository.deleteSection(sectionId);

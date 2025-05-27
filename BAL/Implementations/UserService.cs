@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Diagnostics;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
-public class UserImpl : IUser
+public class UserService : IUser
 {
 
     public IGenericRepository _repository;
@@ -16,7 +16,7 @@ public class UserImpl : IUser
     public IImagePath _imagePath;
 
     public IEmailGenService _emailService;
-    public UserImpl(IGenericRepository repository, IAESService aESService, IEmailGenService emailService,IImagePath imagePath)
+    public UserService(IGenericRepository repository, IAESService aESService, IEmailGenService emailService,IImagePath imagePath)
     {
         _repository = repository;
         _aesservice = aESService;
@@ -75,7 +75,7 @@ public class UserImpl : IUser
             List<State> statelist = _repository.getStatesForCountry(countryId);
             return statelist;
         }
-        catch (Exception e)
+        catch (Exception)
         {
             return new List<State>();
         }
@@ -120,14 +120,14 @@ public class UserImpl : IUser
 
             imagePath = $"/uploads/{uniqueFileName}";
         }
-        _repository.updateUserInDb(model, email, imagePath);
+        _repository.updateUserInDb(model, email, imagePath ?? "");
     }
 
     public void saveNewUser(UserDetailModel model, string email)
     {
         try
         {
-            var pass = _aesservice.Encrypt(model.password);
+            var pass = _aesservice.Encrypt(model.password!);
 
             string imagePath = _imagePath.getImagePath(model.profilePicPath);
             Console.WriteLine("saving user");
@@ -214,7 +214,7 @@ public class UserImpl : IUser
 
     public string getUserImagePath(int userid)
     {
-        if (userid == null)
+        if (userid == 0)
         {
             return "/images/manager.png";
         }

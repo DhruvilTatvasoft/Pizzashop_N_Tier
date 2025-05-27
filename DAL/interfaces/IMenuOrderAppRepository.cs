@@ -13,10 +13,9 @@ public interface IMenuOrderAppRepository
     List<Item> getItemsForcategory(int categoryid,string searchedItem,string ItemType);
     List<ModifierModel> getModifiersForItem(int itemid);
     void getOrderdItemQuantity(int? orderid, int itemid,MenuOrderAppModel model,List<int> modifiers);
-    Order getOrderfromOrderid(int orderId);
     MenuOrderAppModel getRunningTableOrder(int tableid);
     void loadOrderedItemsData(int? orderid, MenuOrderAppModel responseModel);
     void saveCustomerDetails(CustomerModel customer);
     void saveCustomerReview(customerReviewViewModel model);
-    void saveOrderWiseComment(MenuOrderAppModel model);
+    // void saveOrderWiseComment(MenuOrderAppModel model);
 }

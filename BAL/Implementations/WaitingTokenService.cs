@@ -7,10 +7,10 @@ using DAL.Data;
 
 namespace BAL.Implementations
 {
-    public class WaitingTokenImpl : IWaitingTokenService
+    public class WaitingTokenService : IWaitingTokenService
     {
         IWaitingTokenRepository _waitingTokenRepository;
-        public WaitingTokenImpl(IWaitingTokenRepository waitingTokenRepository){
+        public WaitingTokenService(IWaitingTokenRepository waitingTokenRepository){
             _waitingTokenRepository = waitingTokenRepository;
         }
 

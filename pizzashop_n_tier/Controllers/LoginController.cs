@@ -113,7 +113,7 @@ public class LoginController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> ForgetPass(string Email)
+    public  IActionResult ForgetPass(string Email)
     {
         if (Email == null)
         {
@@ -173,7 +173,7 @@ public class LoginController : Controller
     [HttpGet]
     public IActionResult ResetPass()
     {
-        string Email = HttpContext.Request.Query["email"];
+        string Email = HttpContext.Request.Query["email"]!;
         // string eMail = _aesService.Decrypt(Email); 
 
         var model = new PasswordModel

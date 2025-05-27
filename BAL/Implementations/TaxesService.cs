@@ -1,11 +1,11 @@
 using DAL.Data;
 
-public class TaxesImpl : ITaxService
+public class TaxesService : ITaxService
 {
 
     private readonly ITaxesRepository _taxesRepository;
 
-    public TaxesImpl(ITaxesRepository taxesRepository){
+    public TaxesService(ITaxesRepository taxesRepository){
         _taxesRepository = taxesRepository;
     }
 

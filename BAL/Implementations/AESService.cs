@@ -2,7 +2,7 @@ using System.Security.Cryptography;
 using System.Text;
 using BAL.Interfaces;
 
-public class AESImple : IAESService
+public class AESService : IAESService
 {
 
 
@@ -20,7 +20,7 @@ public class AESImple : IAESService
             aes.Mode = CipherMode.ECB;
             aes.Padding = PaddingMode.PKCS7;
 
-            byte[] encryptedBytes = null;
+            byte[] encryptedBytes;
             using (ICryptoTransform encryptor = aes.CreateEncryptor())
             {
                 encryptedBytes = encryptor.TransformFinalBlock(plainTextBytes, 0, plainTextBytes.Length);
@@ -47,7 +47,7 @@ public class AESImple : IAESService
             aes.Mode = CipherMode.ECB;
             aes.Padding = PaddingMode.PKCS7;
 
-            byte[] decryptedBytes = null;
+            byte[] decryptedBytes;
             using (ICryptoTransform decryptor = aes.CreateDecryptor())
             {
                 decryptedBytes = decryptor.TransformFinalBlock(encryptedBytes, 0, encryptedBytes.Length);

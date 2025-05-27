@@ -3,11 +3,11 @@ using DAL.Data;
 using DAL.interfaces;
 using Microsoft.AspNetCore.Routing.Template;
 
-public class ModifierImple : IModifierService
+public class ModifierService : IModifierService
 {
 
     private readonly IModifierRepository _modifierRepository;
-    public ModifierImple(IModifierRepository modifierRepository)
+    public ModifierService(IModifierRepository modifierRepository)
     {
         _modifierRepository = modifierRepository;
     }
