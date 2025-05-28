@@ -14,7 +14,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
     private readonly IConfiguration _configuration;
 
     public MenuOrderAppRepository(PizzashopCContext context, IConfiguration configuration)
-
     {
         _context = context;
         _configuration = configuration;
@@ -26,7 +25,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
         try
         {
             Order order = new Order();
-
             if (orderDetails.orderid != 0)
             {
                 order = _context.Orders.FirstOrDefault(existingOrder => existingOrder.Orderid == orderDetails.orderid)!;
@@ -39,7 +37,6 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             order.Totalamount = (decimal?)orderDetails.totalamount;
             order.PaymentStatus = "Pending";
             order.Statusid = 4;
-
             order.Sectionid = orderDetails.sectionid;
             order.Totalpersons = orderDetails.totalPersons;
             order.Paymentmethod = orderDetails.PaymentMethod;
@@ -536,8 +533,8 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                 command.Parameters.Add(resultParameter);
                 command.ExecuteNonQuery();
                 var result = resultParameter.Value.ToString();
-                List<OrderItemViewModelProc> itemmodifiersdata = result != null 
-                    ? JsonConvert.DeserializeObject<List<OrderItemViewModelProc>>(result) ?? new List<OrderItemViewModelProc>() 
+                List<OrderItemViewModelProc> itemmodifiersdata = result != null
+                    ? JsonConvert.DeserializeObject<List<OrderItemViewModelProc>>(result) ?? new List<OrderItemViewModelProc>()
                     : new List<OrderItemViewModelProc>();
                 List<ItemDetail> itemdetailsList = new List<ItemDetail>();
                 HashSet<int> uniqueitemids = new HashSet<int>();
@@ -1077,7 +1074,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             }).ToList();
             foreach (var sg in salesGroup)
                 if (dailySales.ContainsKey(sg.DayName))
-                    dailySales[sg.DayName] = (double)(sg.Total??0);
+                    dailySales[sg.DayName] = (double)(sg.Total ?? 0);
 
             foreach (var cg in customerGroup)
             {
@@ -1149,7 +1146,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
             foreach (var sg in salesGroup)
             {
                 if (dailySales.ContainsKey(sg.Date))
-                    dailySales[sg.Date] = (double)(sg.Total?? 0);
+                    dailySales[sg.Date] = (double)(sg.Total ?? 0);
             }
             foreach (var cg in customerGroup)
             {
@@ -1190,7 +1187,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                     foreach (var sg in salesGroup)
                     {
                         if (dailySales.ContainsKey(sg.DayName))
-                            dailySales[sg.DayName] = (double)(sg.Total??0);
+                            dailySales[sg.DayName] = (double)(sg.Total ?? 0);
                     }
 
                     foreach (var cg in customerGroup)
@@ -1223,7 +1220,7 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
                         .ToList();
 
                     foreach (var item in grouped)
-                        dailySales[item.Date] = (double)(item.Total??0);
+                        dailySales[item.Date] = (double)(item.Total ?? 0);
 
                     foreach (var customer in groupedCustomer)
                     {
@@ -1355,19 +1352,36 @@ public class MenuOrderAppRepository : IMenuOrderAppRepository
 
     public void saveCustomerReview(customerReviewViewModel model)
     {
-        Orderreview review = new Orderreview();
-        if (model.food != 0 && model.service != 0 && model.ambience != 0)
+        using (var connection = new NpgsqlConnection(_configuration.GetConnectionString("MyConnectionString")))
         {
-            review.Orderid = model.orderid;
-            review.Foodreview = model.food;
-            review.Servicereview = model.service;
-            review.Ambiencereview = model.ambience;
-            review.Averagerating = (model.food + model.service + model.ambience) / 3;
-            review.Createdat = DateTime.Now;
-            review.Comment = model.comment;
-            _context.Orderreviews.Add(review);
-            _context.SaveChanges();
+            connection.Open();
+            using (var transaction = connection.BeginTransaction())
+            {
+                using (var command = new NpgsqlCommand("CALL savecustomerreview(@orderid,@food,@service,@ambience,@comment)", connection, transaction))
+                {
+                    command.Parameters.AddWithValue("orderid", model.orderid);
+                    command.Parameters.AddWithValue("food", model.food ?? 0);
+                    command.Parameters.AddWithValue("service", model.service ?? 0);
+                    command.Parameters.AddWithValue("ambience", model.service ?? 0);
+                    command.Parameters.AddWithValue("comment", model.comment ?? "");
+                    command.ExecuteNonQuery();
+                    transaction.Commit();
+                }
+            }
         }
 
+        // Orderreview review = new Orderreview();
+        // review.Orderid = model.orderid;
+        // review.Foodreview = model.food;
+        // review.Servicereview = model.service;
+        // review.Ambiencereview = model.ambience;
+        // if (model.food != 0 && model.service != 0 && model.ambience != 0)
+        // {
+        //     review.Averagerating = (model.food + model.service + model.ambience) / 3;
+        // }
+        // review.Createdat = DateTime.Now;
+        // review.Comment = model.comment;
+        // _context.Orderreviews.Add(review);
+        // _context.SaveChanges();
     }
 }
